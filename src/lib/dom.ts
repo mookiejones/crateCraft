@@ -292,6 +292,7 @@ export interface ElementIds {
   "copy-logs": HTMLButtonElement;
   "about-title": HTMLHeadingElement;
   "about-version": HTMLParagraphElement;
+  "library-stays": HTMLDivElement;
   "copy-version": HTMLButtonElement;
   "version-copy-status": HTMLParagraphElement;
   "files-dialog": HTMLElement;

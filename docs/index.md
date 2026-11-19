@@ -2,7 +2,7 @@
 
 crateCraft is a window on your computer for the Serato DJ Pro library. Browse crates, fix track details, clean up duplicate copies, and move files without sending your music anywhere.
 
-The app talks only to this computer. It is not a website you log in to. Your tracks, crate names, and file paths stay here.
+The app talks only to this computer. It is not a website you log in to. Your tracks, crate names, and file paths stay here. **Settings**, then **About**, shows **Your library never leaves your machine**.
 
 The first time you open it, setup finds your library and saves a safety copy before anything can change.
 

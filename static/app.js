@@ -13889,6 +13889,7 @@ Error generating stack: ` + x.message + `
     "search.fieldLabel": "Search field",
     "search.tracks": "Search tracks",
     "settings.about": "About crateCraft",
+    "settings.libraryStays": "Your library never leaves your machine",
     "settings.colorway": "Theme",
     "settings.colorway.classic": "Classic",
     "settings.colorway.darkClub": "Dark Club",
@@ -14363,6 +14364,7 @@ Error generating stack: ` + x.message + `
     "tooltip.keepCopy": "Keep this copy: {name}. The others leave the library.",
     "tooltip.language": "Choose the language for this window. Same as the system follows this computer.",
     "tooltip.libraryCopies": "Verified copies of this library: this computer and complete snapshots.",
+    "tooltip.libraryStays": "Update checks and crash reports are separate, opt-in, and do not upload the library. A cover lookup sends a title and artist only when you ask.",
     "tooltip.libraryGeneration": "Opens the note that says whether the session log or the installed Serato decided this is Serato 4, Serato 5, or an unknown version.",
     "tooltip.linkMutual": "Also link that track back to this one.",
     "tooltip.linkNote": "Add a note for this link.",
@@ -15864,6 +15866,7 @@ Error generating stack: ` + x.message + `
     "search.fieldLabel": "Campo de búsqueda",
     "search.tracks": "Buscar pistas",
     "settings.about": "Acerca de crateCraft",
+    "settings.libraryStays": "Tu biblioteca no sale de este equipo",
     "settings.colorway": "Tema",
     "settings.colorway.classic": "Clásico",
     "settings.colorway.darkClub": "Club oscuro",
@@ -16338,6 +16341,7 @@ Error generating stack: ` + x.message + `
     "tooltip.keepCopy": "Conserva esta copia: {name}. Las demás salen de la biblioteca.",
     "tooltip.language": "Elige el idioma de esta ventana. Igual que el sistema sigue el idioma de este ordenador.",
     "tooltip.libraryCopies": "Copias verificadas de esta biblioteca: este equipo e instantáneas completas.",
+    "tooltip.libraryStays": "Las comprobaciones de actualización y los informes de fallos son aparte, son opcionales y no suben la biblioteca. Buscar carátula envía un título y un artista solo cuando lo pides.",
     "tooltip.libraryGeneration": "Abre la nota que dice si el registro de sesión o el Serato instalado decidió que esta biblioteca es Serato 4, Serato 5 o una versión desconocida.",
     "tooltip.linkMutual": "Enlaza también esa pista de vuelta a esta.",
     "tooltip.linkNote": "Añade una nota a este enlace.",
@@ -17549,6 +17553,7 @@ Error generating stack: ` + x.message + `
     minCopies: spec("tooltip.minCopies"),
     untrustedVolumes: spec("tooltip.untrustedVolumes"),
     libraryCopies: spec("tooltip.libraryCopies"),
+    libraryStays: spec("tooltip.libraryStays"),
     pruneSnapshot: spec("tooltip.pruneSnapshot"),
     gigLockApply: spec("tooltip.gigLockApply"),
     gigLockDrop: spec("tooltip.gigLockDrop"),
@@ -26638,296 +26643,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }), Button_default = Button;
 
-  // node_modules/@mui/material/FormControl/FormControl.mjs
+  // node_modules/@mui/material/Chip/Chip.mjs
   var React47 = __toESM(require_react(), 1);
 
-  // node_modules/@mui/material/FormControl/formControlClasses.mjs
-  function getFormControlUtilityClasses(slot) {
-    return generateUtilityClass("MuiFormControl", slot);
+  // node_modules/@mui/material/internal/svg-icons/Cancel.mjs
+  var import_jsx_runtime28 = __toESM(require_jsx_runtime(), 1), Cancel_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime28.jsx)("path", {
+    d: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
+  }), "Cancel");
+
+  // node_modules/@mui/material/Chip/chipClasses.mjs
+  function getChipUtilityClass(slot) {
+    return generateUtilityClass("MuiChip", slot);
   }
-  var formControlClasses = generateUtilityClasses("MuiFormControl", ["root", "marginNone", "marginNormal", "marginDense", "fullWidth", "disabled"]);
-
-  // node_modules/@mui/material/FormControl/FormControl.mjs
-  var import_jsx_runtime28 = __toESM(require_jsx_runtime(), 1), useUtilityClasses6 = (ownerState) => {
-    let {
-      classes: classes2,
-      margin: margin2,
-      fullWidth
-    } = ownerState, slots = {
-      root: ["root", margin2 !== "none" && `margin${capitalize_default(margin2)}`, fullWidth && "fullWidth"]
-    };
-    return composeClasses(slots, getFormControlUtilityClasses, classes2);
-  }, FormControlRoot = styled_default2("div", {
-    name: "MuiFormControl",
-    slot: "Root",
-    overridesResolver: (props, styles5) => {
-      let {
-        ownerState
-      } = props;
-      return [styles5.root, styles5[`margin${capitalize_default(ownerState.margin)}`], ownerState.fullWidth && styles5.fullWidth];
-    }
-  })({
-    display: "inline-flex",
-    flexDirection: "column",
-    position: "relative",
-    // Reset fieldset default style.
-    minWidth: 0,
-    padding: 0,
-    margin: 0,
-    border: 0,
-    verticalAlign: "top",
-    // Fix alignment issue on Safari.
-    variants: [{
-      props: {
-        margin: "normal"
-      },
-      style: {
-        marginTop: 16,
-        marginBottom: 8
-      }
-    }, {
-      props: {
-        margin: "dense"
-      },
-      style: {
-        marginTop: 8,
-        marginBottom: 4
-      }
-    }, {
-      props: {
-        fullWidth: !0
-      },
-      style: {
-        width: "100%"
-      }
-    }]
-  }), FormControl = /* @__PURE__ */ React47.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiFormControl"
-    }), {
-      children,
-      className,
-      color: color2 = "primary",
-      component = "div",
-      disabled = !1,
-      error: error2 = !1,
-      focused: visuallyFocused,
-      fullWidth = !1,
-      hiddenLabel = !1,
-      margin: margin2 = "none",
-      required = !1,
-      size = "medium",
-      variant = "outlined",
-      ...other
-    } = props, ownerState = {
-      ...props,
-      color: color2,
-      component,
-      disabled,
-      error: error2,
-      fullWidth,
-      hiddenLabel,
-      margin: margin2,
-      required,
-      size,
-      variant
-    }, classes2 = useUtilityClasses6(ownerState), [adornedStart, setAdornedStart] = React47.useState(() => {
-      let initialAdornedStart = !1;
-      return children && React47.Children.forEach(children, (child) => {
-        if (!isMuiElement_default(child, ["Input", "Select"]))
-          return;
-        let input = isMuiElement_default(child, ["Select"]) ? child.props.input : child;
-        input && isAdornedStart(input.props) && (initialAdornedStart = !0);
-      }), initialAdornedStart;
-    }), [filled, setFilled] = React47.useState(() => {
-      let initialFilled = !1;
-      return children && React47.Children.forEach(children, (child) => {
-        isMuiElement_default(child, ["Input", "Select"]) && (isFilled(child.props, !0) || isFilled(child.props.inputProps, !0)) && (initialFilled = !0);
-      }), initialFilled;
-    }), [focusedState, setFocused] = React47.useState(!1);
-    disabled && focusedState && setFocused(!1);
-    let focused = visuallyFocused !== void 0 && !disabled ? visuallyFocused : focusedState, registerEffect, registeredInput = React47.useRef(!1), onFilled = React47.useCallback(() => {
-      setFilled(!0);
-    }, []), onEmpty = React47.useCallback(() => {
-      setFilled(!1);
-    }, []), childContext = React47.useMemo(() => ({
-      adornedStart,
-      setAdornedStart,
-      color: color2,
-      disabled,
-      error: error2,
-      filled,
-      focused,
-      fullWidth,
-      hiddenLabel,
-      size,
-      onBlur: () => {
-        setFocused(!1);
-      },
-      onFocus: () => {
-        setFocused(!0);
-      },
-      onEmpty,
-      onFilled,
-      registerEffect,
-      required,
-      variant
-    }), [adornedStart, color2, disabled, error2, filled, focused, fullWidth, hiddenLabel, registerEffect, onEmpty, onFilled, required, size, variant]);
-    return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(FormControlContext_default.Provider, {
-      value: childContext,
-      children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(FormControlRoot, {
-        as: component,
-        ownerState,
-        className: clsx_default(classes2.root, className),
-        ref,
-        ...other,
-        children
-      })
-    });
-  }), FormControl_default = FormControl;
-
-  // node_modules/@mui/material/FormControlLabel/FormControlLabel.mjs
-  var React49 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/Typography/Typography.mjs
-  var React48 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/Typography/typographyClasses.mjs
-  function getTypographyUtilityClass(slot) {
-    return generateUtilityClass("MuiTypography", slot);
-  }
-  var typographyClasses = generateUtilityClasses("MuiTypography", ["root", "h1", "h2", "h3", "h4", "h5", "h6", "subtitle1", "subtitle2", "body1", "body2", "inherit", "button", "caption", "overline", "alignLeft", "alignRight", "alignCenter", "alignJustify", "noWrap", "gutterBottom"]), typographyClasses_default = typographyClasses;
-
-  // node_modules/@mui/material/Typography/Typography.mjs
-  var import_jsx_runtime29 = __toESM(require_jsx_runtime(), 1), useUtilityClasses7 = (ownerState) => {
-    let {
-      align,
-      gutterBottom,
-      noWrap,
-      variant,
-      classes: classes2
-    } = ownerState, slots = {
-      root: ["root", variant, ownerState.align !== "inherit" && `align${capitalize_default(align)}`, gutterBottom && "gutterBottom", noWrap && "noWrap"]
-    };
-    return composeClasses(slots, getTypographyUtilityClass, classes2);
-  }, TypographyRoot = styled_default2("span", {
-    name: "MuiTypography",
-    slot: "Root",
-    overridesResolver: (props, styles5) => {
-      let {
-        ownerState
-      } = props;
-      return [styles5.root, ownerState.variant && styles5[ownerState.variant], ownerState.align !== "inherit" && styles5[`align${capitalize_default(ownerState.align)}`], ownerState.noWrap && styles5.noWrap, ownerState.gutterBottom && styles5.gutterBottom];
-    }
-  })(memoTheme_default(({
-    theme
-  }) => ({
-    margin: 0,
-    variants: [{
-      props: {
-        variant: "inherit"
-      },
-      style: {
-        // Some elements, like <button> on Chrome have default font that doesn't inherit, reset this.
-        font: "inherit",
-        lineHeight: "inherit",
-        letterSpacing: "inherit"
-      }
-    }, ...Object.entries(theme.typography).filter(([variant, value]) => variant !== "inherit" && value && typeof value == "object").map(([variant, value]) => ({
-      props: {
-        variant
-      },
-      style: value
-    })), ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
-      props: {
-        color: color2
-      },
-      style: {
-        color: (theme.vars || theme).palette[color2].main
-      }
-    })), ...Object.entries(theme.palette?.text || {}).filter(([, value]) => typeof value == "string").map(([color2]) => ({
-      props: {
-        color: `text${capitalize_default(color2)}`
-      },
-      style: {
-        color: (theme.vars || theme).palette.text[color2]
-      }
-    })), {
-      props: ({
-        ownerState
-      }) => ownerState.align !== "inherit",
-      style: {
-        textAlign: "var(--Typography-textAlign)"
-      }
-    }, {
-      props: ({
-        ownerState
-      }) => ownerState.noWrap,
-      style: {
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap"
-      }
-    }, {
-      props: ({
-        ownerState
-      }) => ownerState.gutterBottom,
-      style: {
-        marginBottom: "0.35em"
-      }
-    }]
-  }))), defaultVariantMapping = {
-    h1: "h1",
-    h2: "h2",
-    h3: "h3",
-    h4: "h4",
-    h5: "h5",
-    h6: "h6",
-    subtitle1: "h6",
-    subtitle2: "h6",
-    body1: "p",
-    body2: "p",
-    inherit: "p"
-  }, Typography = /* @__PURE__ */ React48.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiTypography"
-    }), {
-      color: color2,
-      align = "inherit",
-      className,
-      component,
-      gutterBottom = !1,
-      noWrap = !1,
-      variant = "body1",
-      variantMapping = defaultVariantMapping,
-      ...other
-    } = props, ownerState = {
-      ...props,
-      align,
-      color: color2,
-      className,
-      component,
-      gutterBottom,
-      noWrap,
-      variant,
-      variantMapping
-    }, Component = component || variantMapping[variant] || defaultVariantMapping[variant] || "span", classes2 = useUtilityClasses7(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(TypographyRoot, {
-      as: Component,
-      ref,
-      className: clsx_default(classes2.root, className),
-      ...other,
-      ownerState,
-      style: {
-        ...align !== "inherit" && {
-          "--Typography-textAlign": align
-        },
-        ...other.style
-      }
-    });
-  }), Typography_default = Typography;
+  var chipClasses = generateUtilityClasses("MuiChip", ["root", "sizeSmall", "sizeMedium", "colorDefault", "colorError", "colorInfo", "colorPrimary", "colorSecondary", "colorSuccess", "colorWarning", "disabled", "clickable", "deletable", "outlined", "filled", "avatar", "icon", "label", "deleteIcon", "focusVisible"]), chipClasses_default = chipClasses;
 
   // node_modules/@mui/utils/appendOwnerState/appendOwnerState.mjs
   function appendOwnerState(elementType, otherProps, ownerState) {
@@ -27071,8 +26799,743 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return [elementType, props];
   }
 
+  // node_modules/@mui/material/Chip/Chip.mjs
+  var import_jsx_runtime29 = __toESM(require_jsx_runtime(), 1), useUtilityClasses6 = (ownerState) => {
+    let {
+      classes: classes2,
+      disabled,
+      size,
+      color: color2,
+      onDelete,
+      clickable,
+      variant
+    } = ownerState, slots = {
+      root: ["root", variant, disabled && "disabled", `size${capitalize_default(size)}`, `color${capitalize_default(color2)}`, clickable && "clickable", onDelete && "deletable"],
+      label: ["label"],
+      avatar: ["avatar"],
+      icon: ["icon"],
+      deleteIcon: ["deleteIcon"]
+    };
+    return composeClasses(slots, getChipUtilityClass, classes2);
+  }, ChipRoot = styled_default2("div", {
+    name: "MuiChip",
+    slot: "Root",
+    shouldForwardProp: (prop) => rootShouldForwardProp_default(prop) && prop !== "focusableWhenDisabled" && prop !== "skipFocusWhenDisabled",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props, {
+        color: color2,
+        clickable,
+        onDelete,
+        size,
+        variant
+      } = ownerState;
+      return [{
+        [`& .${chipClasses_default.avatar}`]: styles5.avatar
+      }, {
+        [`& .${chipClasses_default.icon}`]: styles5.icon
+      }, {
+        [`& .${chipClasses_default.deleteIcon}`]: styles5.deleteIcon
+      }, styles5.root, styles5[`size${capitalize_default(size)}`], styles5[`color${capitalize_default(color2)}`], clickable && styles5.clickable, onDelete && styles5.deletable, styles5[variant]];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => {
+    let textColor = theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[300];
+    return {
+      maxWidth: "100%",
+      fontFamily: theme.typography.fontFamily,
+      fontSize: theme.typography.pxToRem(13),
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      height: 32,
+      lineHeight: 1.5,
+      color: (theme.vars || theme).palette.text.primary,
+      backgroundColor: (theme.vars || theme).palette.action.selected,
+      borderRadius: 32 / 2,
+      whiteSpace: "nowrap",
+      ...getTransitionStyles(theme, ["background-color", "box-shadow"]),
+      // reset cursor explicitly in case ButtonBase is used
+      cursor: "unset",
+      // We disable the focus ring for mouse, touch and keyboard users.
+      outline: 0,
+      textDecoration: "none",
+      border: 0,
+      // Remove `button` border
+      padding: 0,
+      // Remove `button` padding
+      verticalAlign: "middle",
+      boxSizing: "border-box",
+      [`&.${chipClasses_default.disabled}`]: {
+        opacity: (theme.vars || theme).palette.action.disabledOpacity,
+        pointerEvents: "none"
+      },
+      [`& .${chipClasses_default.avatar}`]: {
+        marginLeft: 5,
+        marginRight: -6,
+        width: 24,
+        height: 24,
+        color: theme.vars ? theme.vars.palette.Chip.defaultAvatarColor : textColor,
+        fontSize: theme.typography.pxToRem(12)
+      },
+      [`& .${chipClasses_default.icon}`]: {
+        marginLeft: 5,
+        marginRight: -6
+      },
+      [`& .${chipClasses_default.deleteIcon}`]: {
+        WebkitTapHighlightColor: "transparent",
+        color: theme.alpha((theme.vars || theme).palette.text.primary, 0.26),
+        fontSize: 22,
+        cursor: "pointer",
+        margin: "0 5px 0 -6px",
+        "&:hover": {
+          color: theme.alpha((theme.vars || theme).palette.text.primary, 0.4)
+        }
+      },
+      variants: [{
+        props: {
+          color: "primary"
+        },
+        style: {
+          [`& .${chipClasses_default.avatar}`]: {
+            color: (theme.vars || theme).palette.primary.contrastText,
+            backgroundColor: (theme.vars || theme).palette.primary.dark
+          }
+        }
+      }, {
+        props: {
+          color: "secondary"
+        },
+        style: {
+          [`& .${chipClasses_default.avatar}`]: {
+            color: (theme.vars || theme).palette.secondary.contrastText,
+            backgroundColor: (theme.vars || theme).palette.secondary.dark
+          }
+        }
+      }, {
+        props: {
+          size: "small"
+        },
+        style: {
+          height: 24,
+          [`& .${chipClasses_default.avatar}`]: {
+            marginLeft: 4,
+            marginRight: -4,
+            width: 18,
+            height: 18,
+            fontSize: theme.typography.pxToRem(10)
+          },
+          [`& .${chipClasses_default.icon}`]: {
+            fontSize: 18,
+            marginLeft: 4,
+            marginRight: -4
+          },
+          [`& .${chipClasses_default.deleteIcon}`]: {
+            fontSize: 16,
+            marginRight: 4,
+            marginLeft: -4
+          }
+        }
+      }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["contrastText"])).map(([color2]) => ({
+        props: {
+          color: color2
+        },
+        style: {
+          backgroundColor: (theme.vars || theme).palette[color2].main,
+          color: (theme.vars || theme).palette[color2].contrastText,
+          [`& .${chipClasses_default.deleteIcon}`]: {
+            color: theme.alpha((theme.vars || theme).palette[color2].contrastText, 0.7),
+            "&:hover, &:active": {
+              color: (theme.vars || theme).palette[color2].contrastText
+            }
+          }
+        }
+      })), {
+        props: (props) => props.iconColor === props.color,
+        style: {
+          [`& .${chipClasses_default.icon}`]: {
+            color: theme.vars ? theme.vars.palette.Chip.defaultIconColor : textColor
+          }
+        }
+      }, {
+        props: (props) => props.iconColor === props.color && props.color !== "default",
+        style: {
+          [`& .${chipClasses_default.icon}`]: {
+            color: "inherit"
+          }
+        }
+      }, {
+        props: {
+          onDelete: !0
+        },
+        style: !theme.focusVisible && {
+          [`&.${chipClasses_default.focusVisible}`]: {
+            backgroundColor: theme.alpha((theme.vars || theme).palette.action.selected, `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`)
+          }
+        }
+      }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["dark"])).map(([color2]) => ({
+        props: {
+          color: color2,
+          onDelete: !0
+        },
+        style: !theme.focusVisible && {
+          [`&.${chipClasses_default.focusVisible}`]: {
+            background: (theme.vars || theme).palette[color2].dark
+          }
+        }
+      })), {
+        props: {
+          clickable: !0
+        },
+        style: {
+          userSelect: "none",
+          WebkitTapHighlightColor: "transparent",
+          cursor: "pointer",
+          "&:hover": {
+            backgroundColor: theme.alpha((theme.vars || theme).palette.action.selected, `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.hoverOpacity}`)
+          },
+          ...!theme.focusVisible && {
+            [`&.${chipClasses_default.focusVisible}`]: {
+              backgroundColor: theme.alpha((theme.vars || theme).palette.action.selected, `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`)
+            }
+          },
+          "&:active": {
+            boxShadow: (theme.vars || theme).shadows[1]
+          }
+        }
+      }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["dark"])).map(([color2]) => ({
+        props: {
+          color: color2,
+          clickable: !0
+        },
+        style: {
+          "&:hover": {
+            backgroundColor: (theme.vars || theme).palette[color2].dark
+          },
+          ...!theme.focusVisible && {
+            [`&.${chipClasses_default.focusVisible}`]: {
+              backgroundColor: (theme.vars || theme).palette[color2].dark
+            }
+          }
+        }
+      })), {
+        props: {
+          variant: "outlined"
+        },
+        style: {
+          backgroundColor: "transparent",
+          border: theme.vars ? `1px solid ${theme.vars.palette.Chip.defaultBorder}` : `1px solid ${theme.palette.mode === "light" ? theme.palette.grey[400] : theme.palette.grey[700]}`,
+          [`&.${chipClasses_default.clickable}:hover`]: {
+            backgroundColor: (theme.vars || theme).palette.action.hover
+          },
+          ...!theme.focusVisible && {
+            [`&.${chipClasses_default.focusVisible}`]: {
+              backgroundColor: (theme.vars || theme).palette.action.focus
+            }
+          },
+          [`& .${chipClasses_default.avatar}`]: {
+            marginLeft: 4
+          },
+          [`& .${chipClasses_default.icon}`]: {
+            marginLeft: 4
+          },
+          [`& .${chipClasses_default.deleteIcon}`]: {
+            marginRight: 5
+          }
+        }
+      }, {
+        props: {
+          size: "small",
+          variant: "outlined"
+        },
+        style: {
+          [`& .${chipClasses_default.avatar}`]: {
+            marginLeft: 2
+          },
+          [`& .${chipClasses_default.icon}`]: {
+            marginLeft: 2
+          },
+          [`& .${chipClasses_default.deleteIcon}`]: {
+            marginRight: 3
+          }
+        }
+      }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
+        props: {
+          variant: "outlined",
+          color: color2
+        },
+        style: {
+          color: (theme.vars || theme).palette[color2].main,
+          border: `1px solid ${theme.alpha((theme.vars || theme).palette[color2].main, 0.7)}`,
+          [`&.${chipClasses_default.clickable}:hover`]: {
+            backgroundColor: theme.alpha((theme.vars || theme).palette[color2].main, (theme.vars || theme).palette.action.hoverOpacity)
+          },
+          ...!theme.focusVisible && {
+            [`&.${chipClasses_default.focusVisible}`]: {
+              backgroundColor: theme.alpha((theme.vars || theme).palette[color2].main, (theme.vars || theme).palette.action.focusOpacity)
+            }
+          },
+          [`& .${chipClasses_default.deleteIcon}`]: {
+            color: theme.alpha((theme.vars || theme).palette[color2].main, 0.7),
+            "&:hover, &:active": {
+              color: (theme.vars || theme).palette[color2].main
+            }
+          }
+        }
+      }))]
+    };
+  })), ChipLabel = styled_default2("span", {
+    name: "MuiChip",
+    slot: "Label"
+  })({
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    paddingLeft: 12,
+    paddingRight: 12,
+    whiteSpace: "nowrap",
+    variants: [{
+      props: {
+        variant: "outlined"
+      },
+      style: {
+        paddingLeft: 11,
+        paddingRight: 11
+      }
+    }, {
+      props: {
+        size: "small"
+      },
+      style: {
+        paddingLeft: 8,
+        paddingRight: 8
+      }
+    }, {
+      props: {
+        size: "small",
+        variant: "outlined"
+      },
+      style: {
+        paddingLeft: 7,
+        paddingRight: 7
+      }
+    }]
+  });
+  function isDeleteKeyboardEvent(keyboardEvent) {
+    return keyboardEvent.key === "Backspace" || keyboardEvent.key === "Delete";
+  }
+  var Chip = /* @__PURE__ */ React47.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiChip"
+    }), {
+      avatar: avatarProp,
+      className,
+      clickable: clickableProp,
+      color: color2 = "default",
+      component: ComponentProp,
+      deleteIcon: deleteIconProp,
+      disabled = !1,
+      icon: iconProp,
+      label,
+      onClick,
+      onDelete,
+      onKeyDown: onKeyDown2,
+      onKeyUp,
+      size = "medium",
+      variant = "filled",
+      tabIndex,
+      skipFocusWhenDisabled = !1,
+      // TODO v6: Rename to `focusableWhenDisabled`.
+      slots = {},
+      slotProps = {},
+      ...other
+    } = props, {
+      nativeButton,
+      ...buttonBaseProps
+    } = other, chipRef = React47.useRef(null), handleRef = useForkRef_default(chipRef, ref), handleDeleteIconClick = (event) => {
+      event.stopPropagation(), onDelete(event);
+    }, handleKeyDown = (event) => {
+      event.currentTarget === event.target && isDeleteKeyboardEvent(event) && event.preventDefault(), onKeyDown2 && onKeyDown2(event);
+    }, handleKeyUp = (event) => {
+      event.currentTarget === event.target && onDelete && isDeleteKeyboardEvent(event) && onDelete(event), onKeyUp && onKeyUp(event);
+    }, clickable = clickableProp !== !1 && onClick ? !0 : clickableProp, component = clickable || onDelete ? ButtonBase_default : ComponentProp || "div", ownerState = {
+      ...props,
+      component,
+      disabled,
+      size,
+      color: color2,
+      iconColor: /* @__PURE__ */ React47.isValidElement(iconProp) && iconProp.props.color || color2,
+      onDelete: !!onDelete,
+      clickable,
+      variant
+    }, classes2 = useUtilityClasses6(ownerState), moreProps = component === ButtonBase_default ? {
+      component: ComponentProp || "div",
+      internalNativeButton: !1,
+      focusVisibleClassName: classes2.focusVisible,
+      ...onDelete && {
+        disableRipple: !0
+      },
+      ...nativeButton !== void 0 && {
+        nativeButton
+      }
+    } : {}, deleteIcon = null;
+    onDelete && (deleteIcon = deleteIconProp && /* @__PURE__ */ React47.isValidElement(deleteIconProp) ? /* @__PURE__ */ React47.cloneElement(deleteIconProp, {
+      className: clsx_default(deleteIconProp.props.className, classes2.deleteIcon),
+      onClick: handleDeleteIconClick
+    }) : /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Cancel_default, {
+      className: classes2.deleteIcon,
+      onClick: handleDeleteIconClick
+    }));
+    let avatar = null;
+    avatarProp && /* @__PURE__ */ React47.isValidElement(avatarProp) && (avatar = /* @__PURE__ */ React47.cloneElement(avatarProp, {
+      className: clsx_default(classes2.avatar, avatarProp.props.className)
+    }));
+    let icon = null;
+    iconProp && /* @__PURE__ */ React47.isValidElement(iconProp) && (icon = /* @__PURE__ */ React47.cloneElement(iconProp, {
+      className: clsx_default(classes2.icon, iconProp.props.className)
+    }));
+    let externalForwardedProps = {
+      slots,
+      slotProps
+    }, [RootSlot, rootProps] = useSlot("root", {
+      elementType: ChipRoot,
+      externalForwardedProps: {
+        ...externalForwardedProps,
+        ...buttonBaseProps
+      },
+      ownerState,
+      // The `component` prop is preserved because `Chip` relies on it for internal logic. If `shouldForwardComponentProp` were `false`, `useSlot` would remove the `component` prop, potentially breaking the component's behavior.
+      shouldForwardComponentProp: !0,
+      ref: handleRef,
+      className: clsx_default(classes2.root, className),
+      additionalProps: {
+        disabled: clickable && disabled ? !0 : void 0,
+        tabIndex: skipFocusWhenDisabled && disabled ? -1 : tabIndex,
+        ...moreProps
+      },
+      getSlotProps: (handlers) => ({
+        ...handlers,
+        onClick: (event) => {
+          handlers.onClick?.(event), onClick?.(event);
+        },
+        onKeyDown: (event) => {
+          handlers.onKeyDown?.(event), handleKeyDown(event);
+        },
+        onKeyUp: (event) => {
+          handlers.onKeyUp?.(event), handleKeyUp(event);
+        }
+      })
+    }), [LabelSlot, labelProps] = useSlot("label", {
+      elementType: ChipLabel,
+      externalForwardedProps,
+      ownerState,
+      className: classes2.label
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(RootSlot, {
+      as: component,
+      ...rootProps,
+      children: [avatar || icon, /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(LabelSlot, {
+        ...labelProps,
+        children: label
+      }), deleteIcon]
+    });
+  }), Chip_default = Chip;
+
+  // node_modules/@mui/material/FormControl/FormControl.mjs
+  var React48 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/FormControl/formControlClasses.mjs
+  function getFormControlUtilityClasses(slot) {
+    return generateUtilityClass("MuiFormControl", slot);
+  }
+  var formControlClasses = generateUtilityClasses("MuiFormControl", ["root", "marginNone", "marginNormal", "marginDense", "fullWidth", "disabled"]);
+
+  // node_modules/@mui/material/FormControl/FormControl.mjs
+  var import_jsx_runtime30 = __toESM(require_jsx_runtime(), 1), useUtilityClasses7 = (ownerState) => {
+    let {
+      classes: classes2,
+      margin: margin2,
+      fullWidth
+    } = ownerState, slots = {
+      root: ["root", margin2 !== "none" && `margin${capitalize_default(margin2)}`, fullWidth && "fullWidth"]
+    };
+    return composeClasses(slots, getFormControlUtilityClasses, classes2);
+  }, FormControlRoot = styled_default2("div", {
+    name: "MuiFormControl",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.root, styles5[`margin${capitalize_default(ownerState.margin)}`], ownerState.fullWidth && styles5.fullWidth];
+    }
+  })({
+    display: "inline-flex",
+    flexDirection: "column",
+    position: "relative",
+    // Reset fieldset default style.
+    minWidth: 0,
+    padding: 0,
+    margin: 0,
+    border: 0,
+    verticalAlign: "top",
+    // Fix alignment issue on Safari.
+    variants: [{
+      props: {
+        margin: "normal"
+      },
+      style: {
+        marginTop: 16,
+        marginBottom: 8
+      }
+    }, {
+      props: {
+        margin: "dense"
+      },
+      style: {
+        marginTop: 8,
+        marginBottom: 4
+      }
+    }, {
+      props: {
+        fullWidth: !0
+      },
+      style: {
+        width: "100%"
+      }
+    }]
+  }), FormControl = /* @__PURE__ */ React48.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiFormControl"
+    }), {
+      children,
+      className,
+      color: color2 = "primary",
+      component = "div",
+      disabled = !1,
+      error: error2 = !1,
+      focused: visuallyFocused,
+      fullWidth = !1,
+      hiddenLabel = !1,
+      margin: margin2 = "none",
+      required = !1,
+      size = "medium",
+      variant = "outlined",
+      ...other
+    } = props, ownerState = {
+      ...props,
+      color: color2,
+      component,
+      disabled,
+      error: error2,
+      fullWidth,
+      hiddenLabel,
+      margin: margin2,
+      required,
+      size,
+      variant
+    }, classes2 = useUtilityClasses7(ownerState), [adornedStart, setAdornedStart] = React48.useState(() => {
+      let initialAdornedStart = !1;
+      return children && React48.Children.forEach(children, (child) => {
+        if (!isMuiElement_default(child, ["Input", "Select"]))
+          return;
+        let input = isMuiElement_default(child, ["Select"]) ? child.props.input : child;
+        input && isAdornedStart(input.props) && (initialAdornedStart = !0);
+      }), initialAdornedStart;
+    }), [filled, setFilled] = React48.useState(() => {
+      let initialFilled = !1;
+      return children && React48.Children.forEach(children, (child) => {
+        isMuiElement_default(child, ["Input", "Select"]) && (isFilled(child.props, !0) || isFilled(child.props.inputProps, !0)) && (initialFilled = !0);
+      }), initialFilled;
+    }), [focusedState, setFocused] = React48.useState(!1);
+    disabled && focusedState && setFocused(!1);
+    let focused = visuallyFocused !== void 0 && !disabled ? visuallyFocused : focusedState, registerEffect, registeredInput = React48.useRef(!1), onFilled = React48.useCallback(() => {
+      setFilled(!0);
+    }, []), onEmpty = React48.useCallback(() => {
+      setFilled(!1);
+    }, []), childContext = React48.useMemo(() => ({
+      adornedStart,
+      setAdornedStart,
+      color: color2,
+      disabled,
+      error: error2,
+      filled,
+      focused,
+      fullWidth,
+      hiddenLabel,
+      size,
+      onBlur: () => {
+        setFocused(!1);
+      },
+      onFocus: () => {
+        setFocused(!0);
+      },
+      onEmpty,
+      onFilled,
+      registerEffect,
+      required,
+      variant
+    }), [adornedStart, color2, disabled, error2, filled, focused, fullWidth, hiddenLabel, registerEffect, onEmpty, onFilled, required, size, variant]);
+    return /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(FormControlContext_default.Provider, {
+      value: childContext,
+      children: /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(FormControlRoot, {
+        as: component,
+        ownerState,
+        className: clsx_default(classes2.root, className),
+        ref,
+        ...other,
+        children
+      })
+    });
+  }), FormControl_default = FormControl;
+
   // node_modules/@mui/material/FormControlLabel/FormControlLabel.mjs
-  var import_jsx_runtime30 = __toESM(require_jsx_runtime(), 1), useUtilityClasses8 = (ownerState) => {
+  var React50 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Typography/Typography.mjs
+  var React49 = __toESM(require_react(), 1);
+
+  // node_modules/@mui/material/Typography/typographyClasses.mjs
+  function getTypographyUtilityClass(slot) {
+    return generateUtilityClass("MuiTypography", slot);
+  }
+  var typographyClasses = generateUtilityClasses("MuiTypography", ["root", "h1", "h2", "h3", "h4", "h5", "h6", "subtitle1", "subtitle2", "body1", "body2", "inherit", "button", "caption", "overline", "alignLeft", "alignRight", "alignCenter", "alignJustify", "noWrap", "gutterBottom"]), typographyClasses_default = typographyClasses;
+
+  // node_modules/@mui/material/Typography/Typography.mjs
+  var import_jsx_runtime31 = __toESM(require_jsx_runtime(), 1), useUtilityClasses8 = (ownerState) => {
+    let {
+      align,
+      gutterBottom,
+      noWrap,
+      variant,
+      classes: classes2
+    } = ownerState, slots = {
+      root: ["root", variant, ownerState.align !== "inherit" && `align${capitalize_default(align)}`, gutterBottom && "gutterBottom", noWrap && "noWrap"]
+    };
+    return composeClasses(slots, getTypographyUtilityClass, classes2);
+  }, TypographyRoot = styled_default2("span", {
+    name: "MuiTypography",
+    slot: "Root",
+    overridesResolver: (props, styles5) => {
+      let {
+        ownerState
+      } = props;
+      return [styles5.root, ownerState.variant && styles5[ownerState.variant], ownerState.align !== "inherit" && styles5[`align${capitalize_default(ownerState.align)}`], ownerState.noWrap && styles5.noWrap, ownerState.gutterBottom && styles5.gutterBottom];
+    }
+  })(memoTheme_default(({
+    theme
+  }) => ({
+    margin: 0,
+    variants: [{
+      props: {
+        variant: "inherit"
+      },
+      style: {
+        // Some elements, like <button> on Chrome have default font that doesn't inherit, reset this.
+        font: "inherit",
+        lineHeight: "inherit",
+        letterSpacing: "inherit"
+      }
+    }, ...Object.entries(theme.typography).filter(([variant, value]) => variant !== "inherit" && value && typeof value == "object").map(([variant, value]) => ({
+      props: {
+        variant
+      },
+      style: value
+    })), ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
+      props: {
+        color: color2
+      },
+      style: {
+        color: (theme.vars || theme).palette[color2].main
+      }
+    })), ...Object.entries(theme.palette?.text || {}).filter(([, value]) => typeof value == "string").map(([color2]) => ({
+      props: {
+        color: `text${capitalize_default(color2)}`
+      },
+      style: {
+        color: (theme.vars || theme).palette.text[color2]
+      }
+    })), {
+      props: ({
+        ownerState
+      }) => ownerState.align !== "inherit",
+      style: {
+        textAlign: "var(--Typography-textAlign)"
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.noWrap,
+      style: {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap"
+      }
+    }, {
+      props: ({
+        ownerState
+      }) => ownerState.gutterBottom,
+      style: {
+        marginBottom: "0.35em"
+      }
+    }]
+  }))), defaultVariantMapping = {
+    h1: "h1",
+    h2: "h2",
+    h3: "h3",
+    h4: "h4",
+    h5: "h5",
+    h6: "h6",
+    subtitle1: "h6",
+    subtitle2: "h6",
+    body1: "p",
+    body2: "p",
+    inherit: "p"
+  }, Typography = /* @__PURE__ */ React49.forwardRef(function(inProps, ref) {
+    let props = useDefaultProps2({
+      props: inProps,
+      name: "MuiTypography"
+    }), {
+      color: color2,
+      align = "inherit",
+      className,
+      component,
+      gutterBottom = !1,
+      noWrap = !1,
+      variant = "body1",
+      variantMapping = defaultVariantMapping,
+      ...other
+    } = props, ownerState = {
+      ...props,
+      align,
+      color: color2,
+      className,
+      component,
+      gutterBottom,
+      noWrap,
+      variant,
+      variantMapping
+    }, Component = component || variantMapping[variant] || defaultVariantMapping[variant] || "span", classes2 = useUtilityClasses8(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(TypographyRoot, {
+      as: Component,
+      ref,
+      className: clsx_default(classes2.root, className),
+      ...other,
+      ownerState,
+      style: {
+        ...align !== "inherit" && {
+          "--Typography-textAlign": align
+        },
+        ...other.style
+      }
+    });
+  }), Typography_default = Typography;
+
+  // node_modules/@mui/material/FormControlLabel/FormControlLabel.mjs
+  var import_jsx_runtime32 = __toESM(require_jsx_runtime(), 1), useUtilityClasses9 = (ownerState) => {
     let {
       classes: classes2,
       disabled,
@@ -27156,7 +27619,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     [`&.${formControlLabelClasses_default.error}`]: {
       color: (theme.vars || theme).palette.error.main
     }
-  }))), FormControlLabel = /* @__PURE__ */ React49.forwardRef(function(inProps, ref) {
+  }))), FormControlLabel = /* @__PURE__ */ React50.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiFormControlLabel"
@@ -27191,7 +27654,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       labelPlacement,
       required,
       error: fcs.error
-    }, classes2 = useUtilityClasses8(ownerState), externalForwardedProps = {
+    }, classes2 = useUtilityClasses9(ownerState), externalForwardedProps = {
       slots,
       slotProps
     }, [TypographySlot, typographySlotProps] = useSlot("typography", {
@@ -27199,18 +27662,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       externalForwardedProps,
       ownerState
     }), label = labelProp;
-    return label != null && label.type !== Typography_default && !disableTypography && (label = /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(TypographySlot, {
+    return label != null && label.type !== Typography_default && !disableTypography && (label = /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(TypographySlot, {
       component: "span",
       ...typographySlotProps,
       className: clsx_default(classes2.label, typographySlotProps?.className),
       children: label
-    })), /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(FormControlLabelRoot, {
+    })), /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(FormControlLabelRoot, {
       className: clsx_default(classes2.root, className),
       ownerState,
       ref,
       ...other,
-      children: [/* @__PURE__ */ React49.cloneElement(control, controlProps), required ? /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("div", {
-        children: [label, /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(AsteriskComponent, {
+      children: [/* @__PURE__ */ React50.cloneElement(control, controlProps), required ? /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)("div", {
+        children: [label, /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(AsteriskComponent, {
           ownerState,
           "aria-hidden": !0,
           className: classes2.asterisk,
@@ -27221,11 +27684,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), FormControlLabel_default = FormControlLabel;
 
   // node_modules/@mui/material/InputLabel/InputLabel.mjs
-  var React51 = __toESM(require_react(), 1);
+  var React52 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/FormLabel/FormLabel.mjs
-  var React50 = __toESM(require_react(), 1);
-  var import_jsx_runtime31 = __toESM(require_jsx_runtime(), 1), useUtilityClasses9 = (ownerState) => {
+  var React51 = __toESM(require_react(), 1);
+  var import_jsx_runtime33 = __toESM(require_jsx_runtime(), 1), useUtilityClasses10 = (ownerState) => {
     let {
       classes: classes2,
       color: color2,
@@ -27285,7 +27748,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     [`&.${formLabelClasses_default.error}`]: {
       color: (theme.vars || theme).palette.error.main
     }
-  }))), FormLabel = /* @__PURE__ */ React50.forwardRef(function(inProps, ref) {
+  }))), FormLabel = /* @__PURE__ */ React51.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiFormLabel"
@@ -27312,14 +27775,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       filled: fcs.filled,
       focused: fcs.focused,
       required: fcs.required
-    }, classes2 = useUtilityClasses9(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)(FormLabelRoot, {
+    }, classes2 = useUtilityClasses10(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(FormLabelRoot, {
       as: component,
       ownerState,
       className: clsx_default(classes2.root, className),
       ref,
       ...other,
-      children: [children, fcs.required && /* @__PURE__ */ (0, import_jsx_runtime31.jsxs)(AsteriskComponent2, {
+      children: [children, fcs.required && /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(AsteriskComponent2, {
         ownerState,
         "aria-hidden": !0,
         className: classes2.asterisk,
@@ -27335,7 +27798,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var inputLabelClasses = generateUtilityClasses("MuiInputLabel", ["root", "focused", "disabled", "error", "required", "asterisk", "formControl", "sizeSmall", "shrink", "animated", "standard", "filled", "outlined"]), inputLabelClasses_default = inputLabelClasses;
 
   // node_modules/@mui/material/InputLabel/InputLabel.mjs
-  var import_jsx_runtime32 = __toESM(require_jsx_runtime(), 1), useUtilityClasses10 = (ownerState) => {
+  var import_jsx_runtime34 = __toESM(require_jsx_runtime(), 1), useUtilityClasses11 = (ownerState) => {
     let {
       classes: classes2,
       formControl,
@@ -27487,7 +27950,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         transform: "translate(14px, -9px) scale(0.75)"
       }
     }]
-  }))), InputLabel = /* @__PURE__ */ React51.forwardRef(function(inProps, ref) {
+  }))), InputLabel = /* @__PURE__ */ React52.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       name: "MuiInputLabel",
       props: inProps
@@ -27512,8 +27975,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       variant: fcs.variant,
       required: fcs.required,
       focused: fcs.focused
-    }, classes2 = useUtilityClasses10(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(InputLabelRoot, {
+    }, classes2 = useUtilityClasses11(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(InputLabelRoot, {
       "data-shrink": shrink,
       ref,
       className: clsx_default(classes2.root, className),
@@ -27524,19 +27987,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), InputLabel_default = InputLabel;
 
   // node_modules/@mui/material/Select/Select.mjs
-  var React78 = __toESM(require_react(), 1);
+  var React79 = __toESM(require_react(), 1);
 
   // node_modules/@mui/utils/getReactElementRef/getReactElementRef.mjs
-  var React52 = __toESM(require_react(), 1);
+  var React53 = __toESM(require_react(), 1);
   function getReactElementRef(element) {
-    return parseInt(React52.version, 10) >= 19 ? element?.props?.ref || null : element?.ref || null;
+    return parseInt(React53.version, 10) >= 19 ? element?.props?.ref || null : element?.ref || null;
   }
 
   // node_modules/@mui/material/Select/SelectInput.mjs
-  var React74 = __toESM(require_react(), 1);
+  var React75 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Menu/Menu.mjs
-  var React71 = __toESM(require_react(), 1);
+  var React72 = __toESM(require_react(), 1);
 
   // node_modules/@mui/utils/useSlotProps/useSlotProps.mjs
   function useSlotProps(parameters) {
@@ -27561,19 +28024,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var useSlotProps_default = useSlotProps;
 
   // node_modules/@mui/material/MenuList/MenuList.mjs
-  var React59 = __toESM(require_react(), 1);
+  var React60 = __toESM(require_react(), 1);
 
   // node_modules/@mui/utils/useRovingTabIndex/RovingTabIndexContext.mjs
-  var React53 = __toESM(require_react(), 1), RovingTabIndexContext = /* @__PURE__ */ React53.createContext(void 0);
+  var React54 = __toESM(require_react(), 1), RovingTabIndexContext = /* @__PURE__ */ React54.createContext(void 0);
   function useRovingTabIndexContext() {
-    let context = React53.useContext(RovingTabIndexContext);
+    let context = React54.useContext(RovingTabIndexContext);
     if (context === void 0)
       throw new Error("MUI: RovingTabIndexContext is missing. Roving tab index items must be placed within a roving tab index provider.");
     return context;
   }
 
   // node_modules/@mui/utils/useRovingTabIndex/useRovingTabIndex.mjs
-  var React54 = __toESM(require_react(), 1);
+  var React55 = __toESM(require_react(), 1);
 
   // node_modules/@mui/utils/fastObjectShallowCompare/fastObjectShallowCompare.mjs
   var is = Object.is;
@@ -27601,24 +28064,24 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       isRtl = !1,
       isItemFocusable: itemFilter = isItemFocusable,
       wrap: wrap2 = !0
-    } = params, [activeItemIdState, setActiveItemIdState] = React54.useState(activeItemIdProp), [previousActiveItemIdProp, setPreviousActiveItemIdProp] = React54.useState(activeItemIdProp), activeItemIdCandidate = activeItemIdState;
+    } = params, [activeItemIdState, setActiveItemIdState] = React55.useState(activeItemIdProp), [previousActiveItemIdProp, setPreviousActiveItemIdProp] = React55.useState(activeItemIdProp), activeItemIdCandidate = activeItemIdState;
     activeItemIdProp !== previousActiveItemIdProp && (setPreviousActiveItemIdProp(activeItemIdProp), activeItemIdProp !== void 0 && activeItemIdProp !== activeItemIdState && (activeItemIdCandidate = activeItemIdProp, setActiveItemIdState(activeItemIdProp)));
-    let containerRef = React54.useRef(null), itemMapRef = React54.useRef(/* @__PURE__ */ new Map()), [mapTick, setMapTick] = React54.useState(0), orderedItems = React54.useMemo(() => getOrderedItems(itemMapRef.current), [mapTick]), resolvedActiveItemId = resolveActiveItemId(activeItemIdCandidate, orderedItems, itemFilter, getDefaultActiveItemId), activeItemIdRef = React54.useRef(resolvedActiveItemId);
+    let containerRef = React55.useRef(null), itemMapRef = React55.useRef(/* @__PURE__ */ new Map()), [mapTick, setMapTick] = React55.useState(0), orderedItems = React55.useMemo(() => getOrderedItems(itemMapRef.current), [mapTick]), resolvedActiveItemId = resolveActiveItemId(activeItemIdCandidate, orderedItems, itemFilter, getDefaultActiveItemId), activeItemIdRef = React55.useRef(resolvedActiveItemId);
     activeItemIdRef.current = resolvedActiveItemId;
-    let getActiveItem = React54.useCallback(() => {
+    let getActiveItem = React55.useCallback(() => {
       let snapshot2 = getOrderedItems(itemMapRef.current), resolvedItemId = resolveActiveItemId(activeItemIdRef.current, snapshot2, itemFilter, getDefaultActiveItemId);
       return getItemById(snapshot2, resolvedItemId);
-    }, [getDefaultActiveItemId, itemFilter]), getItemMap = React54.useCallback(() => itemMapRef.current, []), registerItem = useEventCallback_default((item) => {
+    }, [getDefaultActiveItemId, itemFilter]), getItemMap = React55.useCallback(() => itemMapRef.current, []), registerItem = useEventCallback_default((item) => {
       let previousItem = itemMapRef.current.get(item.id);
       fastObjectShallowCompare(previousItem ?? null, item) || (itemMapRef.current.set(item.id, item), setMapTick((value) => value + 1));
     }), unregisterItem = useEventCallback_default((itemId) => {
       itemMapRef.current.delete(itemId) && setMapTick((value) => value + 1);
     }), setActiveItemId = useEventCallback_default((itemId) => {
       setActiveItemIdState(itemId);
-    }), isItemActive = React54.useCallback((itemId) => activeItemIdRef.current === itemId, []), focusItem = React54.useCallback((currentIndex, direction, wrap3, isItemFocusableOverride) => {
+    }), isItemActive = React55.useCallback((itemId) => activeItemIdRef.current === itemId, []), focusItem = React55.useCallback((currentIndex, direction, wrap3, isItemFocusableOverride) => {
       let snapshot2 = getNavigableItemsSnapshot(itemMapRef.current), nextItem = getNextActiveItem(snapshot2, currentIndex, direction, wrap3, isItemFocusableOverride ?? itemFilter);
       return nextItem ? (nextItem.element?.focus(), setActiveItemIdState(nextItem.id), nextItem) : null;
-    }, [itemFilter]), getContainerProps = React54.useCallback((ref, onFocusProp, onKeyDownProp) => ({
+    }, [itemFilter]), getContainerProps = React55.useCallback((ref, onFocusProp, onKeyDownProp) => ({
       onFocus: (event) => {
         onFocusProp?.(event);
         let snapshot2 = getNavigableItemsSnapshot(itemMapRef.current), focusedIndex = findItemIndexByElement(snapshot2, event.target);
@@ -27651,11 +28114,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ref: handleRefs(ref, (elementNode) => {
         containerRef.current = elementNode;
       })
-    }), [focusItem, isRtl, orientation, wrap2]), focusNext = React54.useCallback((isItemFocusableOverride) => {
+    }), [focusItem, isRtl, orientation, wrap2]), focusNext = React55.useCallback((isItemFocusableOverride) => {
       let snapshot2 = getNavigableItemsSnapshot(itemMapRef.current), currentFocus = activeElement(ownerDocument(containerRef.current)), currentIndex = currentFocus === containerRef.current ? -1 : getCurrentActiveItemIndex(snapshot2, currentFocus, activeItemIdRef.current);
       return focusItem(currentIndex, "next", !0, isItemFocusableOverride)?.id ?? null;
     }, [focusItem]);
-    return React54.useMemo(() => ({
+    return React55.useMemo(() => ({
       activeItemId: resolvedActiveItemId,
       focusNext,
       getActiveItem,
@@ -27672,16 +28135,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       activeItemId,
       registerItem,
       unregisterItem
-    } = rootContext, elementRef = React54.useRef(null), item = React54.useMemo(() => ({
+    } = rootContext, elementRef = React55.useRef(null), item = React55.useMemo(() => ({
       disabled: params.disabled ?? !1,
       element: null,
       focusableWhenDisabled: params.focusableWhenDisabled ?? !1,
       id: params.id,
       selected: params.selected ?? !1,
       textValue: params.textValue
-    }), [params.disabled, params.focusableWhenDisabled, params.id, params.selected, params.textValue]), latestItemRef = React54.useRef(item);
+    }), [params.disabled, params.focusableWhenDisabled, params.id, params.selected, params.textValue]), latestItemRef = React55.useRef(item);
     latestItemRef.current = item;
-    let handleElementRef = React54.useCallback((element) => {
+    let handleElementRef = React55.useCallback((element) => {
       if (elementRef.current = element, element == null) {
         queueMicrotask(() => {
           elementRef.current == null && unregisterItem(params.id);
@@ -27842,10 +28305,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/material/List/List.mjs
-  var React56 = __toESM(require_react(), 1);
+  var React57 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/List/ListContext.mjs
-  var React55 = __toESM(require_react(), 1), ListContext = /* @__PURE__ */ React55.createContext({}), ListContext_default = ListContext;
+  var React56 = __toESM(require_react(), 1), ListContext = /* @__PURE__ */ React56.createContext({}), ListContext_default = ListContext;
 
   // node_modules/@mui/material/List/listClasses.mjs
   function getListUtilityClass(slot) {
@@ -27854,7 +28317,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var listClasses = generateUtilityClasses("MuiList", ["root", "padding", "dense", "subheader"]);
 
   // node_modules/@mui/material/List/List.mjs
-  var import_jsx_runtime33 = __toESM(require_jsx_runtime(), 1), useUtilityClasses11 = (ownerState) => {
+  var import_jsx_runtime35 = __toESM(require_jsx_runtime(), 1), useUtilityClasses12 = (ownerState) => {
     let {
       classes: classes2,
       disablePadding,
@@ -27896,7 +28359,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         // Prevent overlap with iOS overlay scrollbars.
       }
     }]
-  }), List = /* @__PURE__ */ React56.forwardRef(function(inProps, ref) {
+  }), List = /* @__PURE__ */ React57.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiList"
@@ -27908,17 +28371,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       disablePadding = !1,
       subheader,
       ...other
-    } = props, context = React56.useMemo(() => ({
+    } = props, context = React57.useMemo(() => ({
       dense
     }), [dense]), ownerState = {
       ...props,
       component,
       dense,
       disablePadding
-    }, classes2 = useUtilityClasses11(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(ListContext_default.Provider, {
+    }, classes2 = useUtilityClasses12(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(ListContext_default.Provider, {
       value: context,
-      children: /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(ListRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)(ListRoot, {
         as: component,
         className: clsx_default(classes2.root, className),
         ref,
@@ -27945,23 +28408,23 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/material/Select/utils/SelectFocusSourceContext.mjs
-  var React57 = __toESM(require_react(), 1), SelectFocusSourceContext = /* @__PURE__ */ React57.createContext(null);
+  var React58 = __toESM(require_react(), 1), SelectFocusSourceContext = /* @__PURE__ */ React58.createContext(null);
   function useSelectFocusSource() {
-    return React57.useContext(SelectFocusSourceContext);
+    return React58.useContext(SelectFocusSourceContext);
   }
   var SelectFocusSourceProvider = SelectFocusSourceContext.Provider;
 
   // node_modules/@mui/material/MenuList/MenuListContext.mjs
-  var React58 = __toESM(require_react(), 1), MenuListContext = /* @__PURE__ */ React58.createContext(void 0);
+  var React59 = __toESM(require_react(), 1), MenuListContext = /* @__PURE__ */ React59.createContext(void 0);
   function useMenuListContext() {
-    let context = React58.useContext(MenuListContext);
+    let context = React59.useContext(MenuListContext);
     if (context === void 0)
       throw new Error("MUI: MenuListContext is missing. MenuItems must be placed within Menu or MenuList.");
     return context;
   }
 
   // node_modules/@mui/material/MenuList/MenuList.mjs
-  var import_jsx_runtime34 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime36 = __toESM(require_jsx_runtime(), 1);
   function getItemText(itemOrElement) {
     let element = itemOrElement?.element ?? itemOrElement;
     if (!element)
@@ -27983,7 +28446,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function focusInitialItem(element, focusSource) {
     focusWithVisible(element, focusSource);
   }
-  var MenuList = /* @__PURE__ */ React59.forwardRef(function(inProps, ref) {
+  var MenuList = /* @__PURE__ */ React60.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiMenuList"
@@ -28000,12 +28463,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onKeyDown: onKeyDown2,
       variant = "selectedMenu",
       ...other
-    } = props, listRef = React59.useRef(null), hasFocusedInitialTargetRef = React59.useRef(!1), [suppressInitialFocusVisible, setSuppressInitialFocusVisible] = React59.useState(!1), focusSource = useSelectFocusSource(), textCriteriaRef = React59.useRef({
+    } = props, listRef = React60.useRef(null), hasFocusedInitialTargetRef = React60.useRef(!1), [suppressInitialFocusVisible, setSuppressInitialFocusVisible] = React60.useState(!1), focusSource = useSelectFocusSource(), textCriteriaRef = React60.useRef({
       keys: [],
       repeating: !0,
       previousKeyMatched: !0,
       lastTime: null
-    }), getDefaultActiveItemId = React59.useCallback((items) => variant === "selectedMenu" ? items.find((item) => item.selected && isItemFocusable(item))?.id ?? items.find((item) => isItemFocusable(item))?.id ?? null : items.find((item) => isItemFocusable(item))?.id ?? null, [variant]), rovingContainer = useRovingTabIndexRoot({
+    }), getDefaultActiveItemId = React60.useCallback((items) => variant === "selectedMenu" ? items.find((item) => item.selected && isItemFocusable(item))?.id ?? items.find((item) => isItemFocusable(item))?.id ?? null : items.find((item) => isItemFocusable(item))?.id ?? null, [variant]), rovingContainer = useRovingTabIndexRoot({
       activeItemId: void 0,
       getDefaultActiveItemId,
       orientation: "vertical",
@@ -28035,7 +28498,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         return;
       }
       focusInitialTarget();
-    }, [activeItemId, autoFocusActiveItem, autoFocusList, focusInitialTarget]), React59.useImperativeHandle(actions3, () => ({
+    }, [activeItemId, autoFocusActiveItem, autoFocusList, focusInitialTarget]), React60.useImperativeHandle(actions3, () => ({
       adjustStyleForScrollbar: (containerElement, {
         direction
       }) => {
@@ -28056,7 +28519,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         return currentFocus && contains_default(listRef.current, currentFocus) ? currentFocus : focusInitialTarget(!0);
       }
     }), [focusInitialTarget]);
-    let rovingContainerProps = getContainerProps(void 0, other.onFocus), handleRef = useForkRef_default(listRef, rovingContainerProps.ref, ref), menuListContextValue = React59.useMemo(() => ({
+    let rovingContainerProps = getContainerProps(void 0, other.onFocus), handleRef = useForkRef_default(listRef, rovingContainerProps.ref, ref), menuListContextValue = React60.useMemo(() => ({
       itemsFocusableWhenDisabled: disabledItemsFocusable,
       suppressInitialFocusVisible,
       variant
@@ -28073,7 +28536,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }
       onKeyDown2 && onKeyDown2(event);
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(List_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(List_default, {
       role: "menu",
       ref: handleRef,
       className,
@@ -28081,9 +28544,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       tabIndex: -1,
       ...other,
       onFocus: rovingContainerProps.onFocus,
-      children: /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(MenuListContext.Provider, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(MenuListContext.Provider, {
         value: menuListContextValue,
-        children: /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(RovingTabIndexContext.Provider, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(RovingTabIndexContext.Provider, {
           value: rovingContainer,
           children
         })
@@ -28092,13 +28555,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), MenuList_default = MenuList;
 
   // node_modules/@mui/material/Popover/Popover.mjs
-  var React70 = __toESM(require_react(), 1);
+  var React71 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Grow/Grow.mjs
-  var React62 = __toESM(require_react(), 1);
+  var React63 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/Transition.mjs
-  var React61 = __toESM(require_react(), 1);
+  var React62 = __toESM(require_react(), 1);
 
   // node_modules/@mui/utils/useValueAsRef/useValueAsRef.mjs
   function useValueAsRef(value) {
@@ -28120,7 +28583,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react6 = __toESM(require_react()), TransitionGroupContext_default = import_react6.default.createContext(null);
 
   // node_modules/@mui/material/internal/Transition.mjs
-  var import_jsx_runtime35 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime37 = __toESM(require_jsx_runtime(), 1);
   function resolveTimeouts(timeout) {
     if (timeout == null)
       return {
@@ -28168,9 +28631,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onExited,
       children,
       ...childProps
-    } = props, parentGroup = React61.useContext(TransitionGroupContext_default), shouldEnterOnMount = parentGroup && !parentGroup.isMounting ? enter : appear, [status4, setStatus] = React61.useState(() => inProp ? shouldEnterOnMount ? "exited" : "entered" : mountOnEnter || unmountOnExit ? "unmounted" : "exited"), statusRef = React61.useRef(status4);
+    } = props, parentGroup = React62.useContext(TransitionGroupContext_default), shouldEnterOnMount = parentGroup && !parentGroup.isMounting ? enter : appear, [status4, setStatus] = React62.useState(() => inProp ? shouldEnterOnMount ? "exited" : "entered" : mountOnEnter || unmountOnExit ? "unmounted" : "exited"), statusRef = React62.useRef(status4);
     statusRef.current = status4, inProp && status4 === "unmounted" && (statusRef.current = "exited", setStatus("exited"));
-    let shouldAppearOnMountRef = React61.useRef(inProp && shouldEnterOnMount), mountedRef = React61.useRef(!1), nextCallbackRef = React61.useRef(null), lastFiredStatusRef = React61.useRef(status4), isAppearingRef = React61.useRef(!1), transitionReduceMotionRef = React61.useRef(reduceMotion), propsRef = useValueAsRef({
+    let shouldAppearOnMountRef = React62.useRef(inProp && shouldEnterOnMount), mountedRef = React62.useRef(!1), nextCallbackRef = React62.useRef(null), lastFiredStatusRef = React62.useRef(status4), isAppearingRef = React62.useRef(!1), transitionReduceMotionRef = React62.useRef(reduceMotion), propsRef = useValueAsRef({
       timeout,
       addEndListener,
       reduceMotion,
@@ -28187,16 +28650,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       unmountOnExit,
       nodeRef,
       parentGroup
-    }), cancelPendingCallback = React61.useCallback(() => {
+    }), cancelPendingCallback = React62.useCallback(() => {
       nextCallbackRef.current !== null && (nextCallbackRef.current.cancel(), nextCallbackRef.current = null);
-    }, []), makeCallback = React61.useCallback((handler) => {
+    }, []), makeCallback = React62.useCallback((handler) => {
       let active2 = !0, wrapped = () => {
         active2 && (active2 = !1, nextCallbackRef.current = null, handler());
       };
       return wrapped.cancel = () => {
         active2 = !1;
       }, nextCallbackRef.current = wrapped, wrapped;
-    }, []), scheduleTransitionEnd = React61.useCallback((nextStatus, currentStatus) => {
+    }, []), scheduleTransitionEnd = React62.useCallback((nextStatus, currentStatus) => {
       let timeoutId, clearTimer = () => {
         timeoutId !== void 0 && (clearTimeout(timeoutId), timeoutId = void 0);
       }, done = makeCallback(() => {
@@ -28222,21 +28685,21 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         return;
       }
       scheduleTimer(transitionReduceMotion ? 0 : authoredTimeout ?? 0);
-    }, [makeCallback, propsRef]), performEnter = React61.useCallback((mounting) => {
+    }, [makeCallback, propsRef]), performEnter = React62.useCallback((mounting) => {
       let current3 = propsRef.current, isAppearing = current3.parentGroup ? current3.parentGroup.isMounting : mounting;
       if (isAppearingRef.current = isAppearing, !mounting && !current3.enter) {
         statusRef.current = "entered", setStatus("entered");
         return;
       }
       transitionReduceMotionRef.current = current3.reduceMotion, current3.onEnter?.(isAppearing), statusRef.current = "entering", setStatus("entering");
-    }, [propsRef]), performExit = React61.useCallback(() => {
+    }, [propsRef]), performExit = React62.useCallback(() => {
       let current3 = propsRef.current;
       if (!current3.exit) {
         statusRef.current = "exited", setStatus("exited");
         return;
       }
       transitionReduceMotionRef.current = current3.reduceMotion, current3.onExit?.(), statusRef.current = "exiting", setStatus("exiting");
-    }, [propsRef]), updateStatus = React61.useCallback((mounting, nextStatus) => {
+    }, [propsRef]), updateStatus = React62.useCallback((mounting, nextStatus) => {
       if (cancelPendingCallback(), nextStatus === "entering") {
         let current3 = propsRef.current;
         if (current3.mountOnEnter || current3.unmountOnExit) {
@@ -28263,7 +28726,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       statusChanged && (lastFiredStatusRef.current = status4);
       let current3 = propsRef.current;
       status4 === "entering" ? (statusChanged && current3.onEntering?.(isAppearingRef.current), nextCallbackRef.current === null && statusRef.current === status4 && scheduleTransitionEnd("entered", "entering")) : status4 === "exiting" ? (statusChanged && current3.onExiting?.(), nextCallbackRef.current === null && statusRef.current === status4 && scheduleTransitionEnd("exited", "exiting")) : status4 === "entered" && statusChanged ? current3.onEntered?.(isAppearingRef.current) : status4 === "exited" && statusChanged && current3.onExited?.();
-    }, [propsRef, scheduleTransitionEnd, status4]), status4 === "unmounted" ? null : /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(TransitionGroupContext_default.Provider, {
+    }, [propsRef, scheduleTransitionEnd, status4]), status4 === "unmounted" ? null : /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(TransitionGroupContext_default.Provider, {
       value: null,
       children: children(status4, childProps)
     });
@@ -28271,7 +28734,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var Transition_default = Transition;
 
   // node_modules/@mui/material/Grow/Grow.mjs
-  var import_jsx_runtime36 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime38 = __toESM(require_jsx_runtime(), 1);
   function getScale(value) {
     return `scale(${value}, ${value ** 2})`;
   }
@@ -28296,7 +28759,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     opacity: 0,
     transform: getScale(0.75),
     visibility: "hidden"
-  }, Grow = /* @__PURE__ */ React62.forwardRef(function(props, ref) {
+  }, Grow = /* @__PURE__ */ React63.forwardRef(function(props, ref) {
     let {
       addEndListener,
       appear = !0,
@@ -28313,7 +28776,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       style: style4,
       timeout = "auto",
       ...other
-    } = props, autoTimeout = React62.useRef(null), theme = useTheme4(), reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), nodeRef = React62.useRef(null), handleRef = useForkRef_default(nodeRef, getReactElementRef(children), ref), handleEntering = normalizedTransitionCallback(nodeRef, onEntering), handleEnter = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
+    } = props, autoTimeout = React63.useRef(null), theme = useTheme4(), reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), nodeRef = React63.useRef(null), handleRef = useForkRef_default(nodeRef, getReactElementRef(children), ref), handleEntering = normalizedTransitionCallback(nodeRef, onEntering), handleEnter = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
       reducedMotion.shouldReduceMotion || reflow(node2);
       let {
         duration: transitionDuration,
@@ -28367,7 +28830,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }), handleExited = normalizedTransitionCallback(nodeRef, (node2) => {
       node2.style.transition = "", onExited && onExited(node2);
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(Transition_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Transition_default, {
       appear,
       in: inProp,
       nodeRef,
@@ -28389,7 +28852,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         ...restChildProps
       }) => {
         let childStyle = getTransitionChildStyle(state2, inProp, styles2, hiddenStyles, style4, children.props.style);
-        return /* @__PURE__ */ React62.cloneElement(children, {
+        return /* @__PURE__ */ React63.cloneElement(children, {
           style: childStyle,
           ref: handleRef,
           ...restChildProps
@@ -28529,10 +28992,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   };
 
   // node_modules/@mui/material/Modal/Modal.mjs
-  var React68 = __toESM(require_react(), 1);
+  var React69 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Unstable_TrapFocus/FocusTrap.mjs
-  var React63 = __toESM(require_react(), 1);
+  var React64 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/utils/focusable.mjs
   var FOCUSABLE_ATTRIBUTE = "data-mui-focusable";
@@ -28541,7 +29004,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/material/Unstable_TrapFocus/FocusTrap.mjs
-  var import_jsx_runtime37 = __toESM(require_jsx_runtime(), 1), candidatesSelector = ["input", "select", "textarea", "a[href]", "button", "[tabindex]", "audio[controls]", "video[controls]", '[contenteditable]:not([contenteditable="false"])'].join(",");
+  var import_jsx_runtime39 = __toESM(require_jsx_runtime(), 1), candidatesSelector = ["input", "select", "textarea", "a[href]", "button", "[tabindex]", "audio[controls]", "video[controls]", '[contenteditable]:not([contenteditable="false"])'].join(",");
   function getTabIndex(node2) {
     let tabindexAttr = parseInt(node2.getAttribute("tabindex") || "", 10);
     return Number.isNaN(tabindexAttr) ? node2.contentEditable === "true" || (node2.nodeName === "AUDIO" || node2.nodeName === "VIDEO" || node2.nodeName === "DETAILS") && node2.getAttribute("tabindex") === null ? 0 : node2.tabIndex : tabindexAttr;
@@ -28578,17 +29041,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       getTabbable = defaultGetTabbable,
       isEnabled = defaultIsEnabled,
       open
-    } = props, ignoreNextEnforceFocus = React63.useRef(!1), sentinelStart = React63.useRef(null), sentinelEnd = React63.useRef(null), nodeToRestore = React63.useRef(null), reactFocusEventTarget = React63.useRef(null), activated = React63.useRef(!1), rootRef = React63.useRef(null), handleRef = useForkRef(getReactElementRef(children), rootRef), lastKeydown = React63.useRef(null);
-    React63.useEffect(() => {
+    } = props, ignoreNextEnforceFocus = React64.useRef(!1), sentinelStart = React64.useRef(null), sentinelEnd = React64.useRef(null), nodeToRestore = React64.useRef(null), reactFocusEventTarget = React64.useRef(null), activated = React64.useRef(!1), rootRef = React64.useRef(null), handleRef = useForkRef(getReactElementRef(children), rootRef), lastKeydown = React64.useRef(null);
+    React64.useEffect(() => {
       !open || !rootRef.current || (activated.current = !disableAutoFocus);
-    }, [disableAutoFocus, open]), React63.useEffect(() => {
+    }, [disableAutoFocus, open]), React64.useEffect(() => {
       if (ignoreNextEnforceFocus.current = !1, !open || !rootRef.current)
         return;
       let doc = ownerDocument(rootRef.current), activeElement2 = getActiveElement_default(doc), focusTarget = getFocusTarget(rootRef.current) ?? rootRef.current;
       return contains_default(rootRef.current, activeElement2) || (focusTarget.hasAttribute("tabIndex") || focusTarget.setAttribute("tabIndex", "-1"), activated.current && focusTarget.focus()), () => {
         !disableRestoreFocus && nodeToRestore.current && (ignoreNextEnforceFocus.current = !0, nodeToRestore.current.focus(), nodeToRestore.current = null);
       };
-    }, [open]), React63.useEffect(() => {
+    }, [open]), React64.useEffect(() => {
       if (!open || !rootRef.current)
         return;
       let doc = ownerDocument(rootRef.current), loopFocus = (nativeEvent) => {
@@ -28653,16 +29116,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, handleFocusSentinel = (event) => {
       nodeToRestore.current === null && (nodeToRestore.current = event.relatedTarget), activated.current = !0;
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime37.jsxs)(React63.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime37.jsx)("div", {
+    return /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(React64.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime39.jsx)("div", {
         tabIndex: open ? 0 : -1,
         onFocus: handleFocusSentinel,
         ref: sentinelStart,
         "data-testid": "sentinelStart"
-      }), /* @__PURE__ */ React63.cloneElement(children, {
+      }), /* @__PURE__ */ React64.cloneElement(children, {
         ref: handleRef,
         onFocus
-      }), /* @__PURE__ */ (0, import_jsx_runtime37.jsx)("div", {
+      }), /* @__PURE__ */ (0, import_jsx_runtime39.jsx)("div", {
         tabIndex: open ? 0 : -1,
         onFocus: handleFocusSentinel,
         ref: sentinelEnd,
@@ -28673,16 +29136,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var FocusTrap_default = FocusTrap;
 
   // node_modules/@mui/material/Portal/Portal.mjs
-  var React64 = __toESM(require_react(), 1), ReactDOM = __toESM(require_react_dom(), 1);
+  var React65 = __toESM(require_react(), 1), ReactDOM = __toESM(require_react_dom(), 1);
   function getContainer(container2) {
     return typeof container2 == "function" ? container2() : container2;
   }
-  var Portal = /* @__PURE__ */ React64.forwardRef(function(props, forwardedRef) {
+  var Portal = /* @__PURE__ */ React65.forwardRef(function(props, forwardedRef) {
     let {
       children,
       container: container2,
       disablePortal = !1
-    } = props, [mountNode, setMountNode] = React64.useState(null), handleRef = useForkRef(/* @__PURE__ */ React64.isValidElement(children) ? getReactElementRef(children) : null, forwardedRef);
+    } = props, [mountNode, setMountNode] = React65.useState(null), handleRef = useForkRef(/* @__PURE__ */ React65.isValidElement(children) ? getReactElementRef(children) : null, forwardedRef);
     return useEnhancedEffect_default(() => {
       disablePortal || setMountNode(getContainer(container2) || document.body);
     }, [container2, disablePortal]), useEnhancedEffect_default(() => {
@@ -28690,17 +29153,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         return setRef(forwardedRef, mountNode), () => {
           setRef(forwardedRef, null);
         };
-    }, [forwardedRef, mountNode, disablePortal]), disablePortal ? /* @__PURE__ */ React64.isValidElement(children) ? /* @__PURE__ */ React64.cloneElement(children, {
+    }, [forwardedRef, mountNode, disablePortal]), disablePortal ? /* @__PURE__ */ React65.isValidElement(children) ? /* @__PURE__ */ React65.cloneElement(children, {
       ref: handleRef
     }) : children : mountNode && /* @__PURE__ */ ReactDOM.createPortal(children, mountNode);
   }), Portal_default = Portal;
 
   // node_modules/@mui/material/Backdrop/Backdrop.mjs
-  var React66 = __toESM(require_react(), 1);
+  var React67 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Fade/Fade.mjs
-  var React65 = __toESM(require_react(), 1);
-  var import_jsx_runtime38 = __toESM(require_jsx_runtime(), 1), styles3 = {
+  var React66 = __toESM(require_react(), 1);
+  var import_jsx_runtime40 = __toESM(require_jsx_runtime(), 1), styles3 = {
     entering: {
       opacity: 1
     },
@@ -28716,7 +29179,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }, hiddenStyles2 = {
     opacity: 0,
     visibility: "hidden"
-  }, Fade = /* @__PURE__ */ React65.forwardRef(function(props, ref) {
+  }, Fade = /* @__PURE__ */ React66.forwardRef(function(props, ref) {
     let theme = useTheme4(), defaultTimeout = {
       enter: theme.transitions.duration.enteringScreen,
       exit: theme.transitions.duration.leavingScreen
@@ -28736,7 +29199,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       style: style4,
       timeout = defaultTimeout,
       ...other
-    } = props, reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), nodeRef = React65.useRef(null), handleRef = useForkRef_default(nodeRef, getReactElementRef(children), ref), handleEntering = normalizedTransitionCallback(nodeRef, onEntering), handleEnter = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
+    } = props, reducedMotion = useReducedMotion(theme.motion.reducedMotion, disablePrefersReducedMotion), nodeRef = React66.useRef(null), handleRef = useForkRef_default(nodeRef, getReactElementRef(children), ref), handleEntering = normalizedTransitionCallback(nodeRef, onEntering), handleEnter = normalizedTransitionCallback(nodeRef, (node2, isAppearing) => {
       reducedMotion.shouldReduceMotion || reflow(node2);
       let transitionProps = getTransitionProps({
         style: style4,
@@ -28772,7 +29235,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }), handleExited = normalizedTransitionCallback(nodeRef, (node2) => {
       node2.style.transition = "", onExited && onExited(node2);
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Transition_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(Transition_default, {
       appear,
       in: inProp,
       nodeRef,
@@ -28793,7 +29256,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         ...restChildProps
       }) => {
         let childStyle = getTransitionChildStyle(state2, inProp, styles3, hiddenStyles2, style4, children.props.style);
-        return /* @__PURE__ */ React65.cloneElement(children, {
+        return /* @__PURE__ */ React66.cloneElement(children, {
           style: childStyle,
           ref: handleRef,
           ...restChildProps
@@ -28809,7 +29272,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var backdropClasses = generateUtilityClasses("MuiBackdrop", ["root", "invisible"]);
 
   // node_modules/@mui/material/Backdrop/Backdrop.mjs
-  var import_jsx_runtime39 = __toESM(require_jsx_runtime(), 1), useUtilityClasses12 = (ownerState) => {
+  var import_jsx_runtime41 = __toESM(require_jsx_runtime(), 1), useUtilityClasses13 = (ownerState) => {
     let {
       classes: classes2,
       invisible
@@ -28845,7 +29308,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         backgroundColor: "transparent"
       }
     }]
-  }), Backdrop = /* @__PURE__ */ React66.forwardRef(function(inProps, ref) {
+  }), Backdrop = /* @__PURE__ */ React67.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiBackdrop"
@@ -28863,7 +29326,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ...props,
       component,
       invisible
-    }, classes2 = useUtilityClasses12(ownerState), externalForwardedProps = {
+    }, classes2 = useUtilityClasses13(ownerState), externalForwardedProps = {
       component,
       slots,
       slotProps
@@ -28877,12 +29340,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(TransitionSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(TransitionSlot, {
       in: open,
       timeout: transitionDuration,
       ...other,
       ...transitionProps,
-      children: /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(RootSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(RootSlot, {
         ...rootProps,
         ref,
         children
@@ -28891,7 +29354,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), Backdrop_default = Backdrop;
 
   // node_modules/@mui/material/Modal/useModal.mjs
-  var React67 = __toESM(require_react(), 1);
+  var React68 = __toESM(require_react(), 1);
   function getContainer2(container2) {
     return typeof container2 == "function" ? container2() : container2;
   }
@@ -28911,7 +29374,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onClose,
       open,
       rootRef
-    } = parameters, modal = React67.useRef({}), mountNodeRef = React67.useRef(null), lastMountNodeRef = React67.useRef(null), modalRef = React67.useRef(null), handleRef = useForkRef(modalRef, rootRef), [exited, setExited] = React67.useState(!open), hasTransition = getHasTransition(children), ariaHiddenProp = !0;
+    } = parameters, modal = React68.useRef({}), mountNodeRef = React68.useRef(null), lastMountNodeRef = React68.useRef(null), modalRef = React68.useRef(null), handleRef = useForkRef(modalRef, rootRef), [exited, setExited] = React68.useState(!open), hasTransition = getHasTransition(children), ariaHiddenProp = !0;
     (parameters["aria-hidden"] === "false" || parameters["aria-hidden"] === !1) && (ariaHiddenProp = !1);
     let getDoc = () => ownerDocument(mountNodeRef.current), getModal = () => (modal.current.modalRef = modalRef.current, modal.current.mount = mountNodeRef.current, modal.current), handleMounted = () => {
       manager.mount(getModal(), {
@@ -28922,12 +29385,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       manager.add(getModal(), resolvedContainer), modalRef.current && handleMounted();
     }), isTopModal = () => manager.isTopModal(getModal()), handlePortalRef = useEventCallback_default((node2) => {
       mountNodeRef.current = node2, node2 && (lastMountNodeRef.current = node2, open && isTopModal() ? handleMounted() : modalRef.current && ariaHidden(modalRef.current, ariaHiddenProp));
-    }), handleClose = React67.useCallback(() => {
+    }), handleClose = React68.useCallback(() => {
       manager.remove(getModal(), ariaHiddenProp);
     }, [ariaHiddenProp]);
-    React67.useEffect(() => () => {
+    React68.useEffect(() => () => {
       handleClose();
-    }, [handleClose]), React67.useEffect(() => {
+    }, [handleClose]), React68.useEffect(() => {
       open ? handleOpen() : (!hasTransition || !closeAfterTransition) && handleClose();
     }, [open, handleClose, hasTransition, closeAfterTransition, handleOpen]);
     let createHandleKeyDown = (otherHandlers) => (event) => {
@@ -28994,7 +29457,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var modalClasses = generateUtilityClasses("MuiModal", ["root", "hidden", "backdrop"]);
 
   // node_modules/@mui/material/Modal/Modal.mjs
-  var import_jsx_runtime40 = __toESM(require_jsx_runtime(), 1), useUtilityClasses13 = (ownerState) => {
+  var import_jsx_runtime42 = __toESM(require_jsx_runtime(), 1), useUtilityClasses14 = (ownerState) => {
     let {
       open,
       exited,
@@ -29035,7 +29498,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     slot: "Backdrop"
   })({
     zIndex: -1
-  }), Modal = /* @__PURE__ */ React68.forwardRef(function(inProps, ref) {
+  }), Modal = /* @__PURE__ */ React69.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       name: "MuiModal",
       props: inProps
@@ -29087,7 +29550,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }), ownerState = {
       ...propsWithDefaults,
       exited
-    }, classes2 = useUtilityClasses13(ownerState), childProps = {};
+    }, classes2 = useUtilityClasses14(ownerState), childProps = {};
     if (children.props.tabIndex === void 0 && (childProps.tabIndex = "-1"), hasTransition) {
       let {
         onEnter,
@@ -29122,28 +29585,28 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       className: classes2?.backdrop,
       ownerState
     });
-    return !keepMounted && !open && (!hasTransition || exited) ? null : /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(Portal_default, {
+    return !keepMounted && !open && (!hasTransition || exited) ? null : /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Portal_default, {
       ref: portalRef,
       container: portalContainer,
       disablePortal,
-      children: /* @__PURE__ */ (0, import_jsx_runtime40.jsxs)(RootSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)(RootSlot, {
         ...rootProps,
-        children: [hideBackdrop ? null : /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(BackdropSlot, {
+        children: [hideBackdrop ? null : /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(BackdropSlot, {
           ...backdropProps
-        }), /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(FocusTrap_default, {
+        }), /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(FocusTrap_default, {
           disableEnforceFocus,
           disableAutoFocus,
           disableRestoreFocus,
           isEnabled: isTopModal,
           open,
-          children: /* @__PURE__ */ React68.cloneElement(children, childProps)
+          children: /* @__PURE__ */ React69.cloneElement(children, childProps)
         })]
       })
     });
   }), Modal_default = Modal;
 
   // node_modules/@mui/material/Paper/Paper.mjs
-  var React69 = __toESM(require_react(), 1);
+  var React70 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Paper/paperClasses.mjs
   function getPaperUtilityClass(slot) {
@@ -29152,7 +29615,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var paperClasses = generateUtilityClasses("MuiPaper", ["root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24"]);
 
   // node_modules/@mui/material/Paper/Paper.mjs
-  var import_jsx_runtime41 = __toESM(require_jsx_runtime(), 1), useUtilityClasses14 = (ownerState) => {
+  var import_jsx_runtime43 = __toESM(require_jsx_runtime(), 1), useUtilityClasses15 = (ownerState) => {
     let {
       square,
       elevation,
@@ -29200,7 +29663,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         backgroundImage: "var(--Paper-overlay)"
       }
     }]
-  }))), Paper = /* @__PURE__ */ React69.forwardRef(function(inProps, ref) {
+  }))), Paper = /* @__PURE__ */ React70.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiPaper"
@@ -29217,8 +29680,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       elevation,
       square,
       variant
-    }, classes2 = useUtilityClasses14(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(PaperRoot, {
+    }, classes2 = useUtilityClasses15(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(PaperRoot, {
       as: component,
       ownerState,
       className: clsx_default(classes2.root, className),
@@ -29246,7 +29709,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var popoverClasses = generateUtilityClasses("MuiPopover", ["root", "paper"]);
 
   // node_modules/@mui/material/Popover/Popover.mjs
-  var import_jsx_runtime42 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime44 = __toESM(require_jsx_runtime(), 1);
   function getOffsetTop(rect, vertical) {
     let offset2 = 0;
     return typeof vertical == "number" ? offset2 = vertical : vertical === "center" ? offset2 = rect.height / 2 : vertical === "bottom" && (offset2 = rect.height), offset2;
@@ -29261,7 +29724,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function resolveAnchorEl(anchorEl) {
     return typeof anchorEl == "function" ? anchorEl() : anchorEl;
   }
-  var useUtilityClasses15 = (ownerState) => {
+  var useUtilityClasses16 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -29287,7 +29750,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     maxHeight: "calc(100% - 32px)",
     // We disable the focus ring for mouse, touch and keyboard users.
     outline: 0
-  }), Popover = /* @__PURE__ */ React70.forwardRef(function(inProps, ref) {
+  }), Popover = /* @__PURE__ */ React71.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiPopover"
@@ -29316,7 +29779,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       transitionDuration: transitionDurationProp = "auto",
       disableScrollLock = !1,
       ...other
-    } = props, paperRef = React70.useRef(), ownerState = {
+    } = props, paperRef = React71.useRef(), ownerState = {
       ...props,
       anchorOrigin,
       anchorReference,
@@ -29324,7 +29787,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       marginThreshold,
       transformOrigin: transformOrigin2,
       transitionDuration: transitionDurationProp
-    }, classes2 = useUtilityClasses15(ownerState), getAnchorOffset = React70.useCallback(() => {
+    }, classes2 = useUtilityClasses16(ownerState), getAnchorOffset = React71.useCallback(() => {
       if (anchorReference === "anchorPosition")
         return anchorPosition;
       let resolvedAnchorEl = resolveAnchorEl(anchorEl), anchorRect = (resolvedAnchorEl && resolvedAnchorEl.nodeType === 1 ? resolvedAnchorEl : ownerDocument_default(paperRef.current).body).getBoundingClientRect();
@@ -29332,10 +29795,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         top: anchorRect.top + getOffsetTop(anchorRect, anchorOrigin.vertical),
         left: anchorRect.left + getOffsetLeft(anchorRect, anchorOrigin.horizontal)
       };
-    }, [anchorEl, anchorOrigin.horizontal, anchorOrigin.vertical, anchorPosition, anchorReference]), getTransformOrigin = React70.useCallback((elemRect) => ({
+    }, [anchorEl, anchorOrigin.horizontal, anchorOrigin.vertical, anchorPosition, anchorReference]), getTransformOrigin = React71.useCallback((elemRect) => ({
       vertical: getOffsetTop(elemRect, transformOrigin2.vertical),
       horizontal: getOffsetLeft(elemRect, transformOrigin2.horizontal)
-    }), [transformOrigin2.horizontal, transformOrigin2.vertical]), getPositioningStyle = React70.useCallback((element) => {
+    }), [transformOrigin2.horizontal, transformOrigin2.vertical]), getPositioningStyle = React71.useCallback((element) => {
       let elemRect = {
         width: element.offsetWidth,
         height: element.offsetHeight
@@ -29366,26 +29829,26 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         left: `${Math.round(left2)}px`,
         transformOrigin: getTransformOriginValue(elemTransformOrigin)
       };
-    }, [anchorEl, anchorReference, getAnchorOffset, getTransformOrigin, marginThreshold]), [isPositioned, setIsPositioned] = React70.useState(open), setPositioningStyles = React70.useCallback(() => {
+    }, [anchorEl, anchorReference, getAnchorOffset, getTransformOrigin, marginThreshold]), [isPositioned, setIsPositioned] = React71.useState(open), setPositioningStyles = React71.useCallback(() => {
       let element = paperRef.current;
       if (!element)
         return;
       let positioning = getPositioningStyle(element);
       positioning.top != null && element.style.setProperty("top", positioning.top), positioning.left != null && (element.style.left = positioning.left), element.style.transformOrigin = positioning.transformOrigin, setIsPositioned(!0);
     }, [getPositioningStyle]);
-    React70.useEffect(() => (disableScrollLock && window.addEventListener("scroll", setPositioningStyles), () => window.removeEventListener("scroll", setPositioningStyles)), [anchorEl, disableScrollLock, setPositioningStyles]);
+    React71.useEffect(() => (disableScrollLock && window.addEventListener("scroll", setPositioningStyles), () => window.removeEventListener("scroll", setPositioningStyles)), [anchorEl, disableScrollLock, setPositioningStyles]);
     let handleEntering = () => {
       setPositioningStyles();
     }, handleExited = () => {
       setIsPositioned(!1);
     };
-    React70.useEffect(() => {
+    React71.useEffect(() => {
       open && setPositioningStyles();
-    }), React70.useImperativeHandle(action, () => open ? {
+    }), React71.useImperativeHandle(action, () => open ? {
       updatePosition: () => {
         setPositioningStyles();
       }
-    } : null, [open, setPositioningStyles]), React70.useEffect(() => {
+    } : null, [open, setPositioningStyles]), React71.useEffect(() => {
       if (!open)
         return;
       let handleResize = debounce_default(() => {
@@ -29457,7 +29920,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       },
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(RootSlot, {
       ...rootProps,
       ...!isHostComponent_default(RootSlot) && {
         slots: rootSlotsProp,
@@ -29465,10 +29928,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         disableAutoFocus,
         disableScrollLock
       },
-      children: /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(TransitionSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(TransitionSlot, {
         ...transitionSlotProps,
         timeout: transitionDuration,
-        children: /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(PaperSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(PaperSlot, {
           ...paperProps,
           children
         })
@@ -29483,13 +29946,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var menuClasses = generateUtilityClasses("MuiMenu", ["root", "paper", "list"]);
 
   // node_modules/@mui/material/Menu/Menu.mjs
-  var import_jsx_runtime43 = __toESM(require_jsx_runtime(), 1), RTL_ORIGIN = {
+  var import_jsx_runtime45 = __toESM(require_jsx_runtime(), 1), RTL_ORIGIN = {
     vertical: "top",
     horizontal: "right"
   }, LTR_ORIGIN = {
     vertical: "top",
     horizontal: "left"
-  }, useUtilityClasses16 = (ownerState) => {
+  }, useUtilityClasses17 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -29518,7 +29981,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   })({
     // We disable the focus ring for mouse, touch and keyboard users.
     outline: 0
-  }), Menu = /* @__PURE__ */ React71.forwardRef(function(inProps, ref) {
+  }), Menu = /* @__PURE__ */ React72.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiMenu"
@@ -29541,7 +30004,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       disableAutoFocusItem,
       transitionDuration,
       variant
-    }, classes2 = useUtilityClasses16(ownerState), shouldManageInitialFocus = autoFocus && open, shouldAutoFocusActiveItem = shouldManageInitialFocus && !disableAutoFocusItem, menuListActionsRef = React71.useRef(null), handleEntering = (element, _isAppearing) => {
+    }, classes2 = useUtilityClasses17(ownerState), shouldManageInitialFocus = autoFocus && open, shouldAutoFocusActiveItem = shouldManageInitialFocus && !disableAutoFocusItem, menuListActionsRef = React72.useRef(null), handleEntering = (element, _isAppearing) => {
       menuListActionsRef.current && (menuListActionsRef.current.adjustStyleForScrollbar(element, {
         direction: isRtl ? "rtl" : "ltr"
       }), shouldManageInitialFocus && menuListActionsRef.current.focusInitialTarget?.());
@@ -29574,7 +30037,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }),
       ownerState
     }), resolvedTransitionProps = typeof slotProps.transition == "function" ? slotProps.transition(ownerState) : slotProps.transition;
-    return /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
       MenuRoot,
       {
         disableAutoFocus: autoFocus,
@@ -29607,7 +30070,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         ownerState,
         ...other,
         classes: PopoverClasses,
-        children: /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(ListSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(ListSlot, {
           actions: menuListActionsRef,
           autoFocus: shouldManageInitialFocus,
           autoFocusItem: shouldAutoFocusActiveItem,
@@ -29620,7 +30083,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), Menu_default = Menu;
 
   // node_modules/@mui/material/NativeSelect/NativeSelectInput.mjs
-  var React72 = __toESM(require_react(), 1);
+  var React73 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/InputAdornment/inputAdornmentClasses.mjs
   function getInputAdornmentUtilityClass(slot) {
@@ -29629,7 +30092,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var inputAdornmentClasses = generateUtilityClasses("MuiInputAdornment", ["root", "filled", "standard", "outlined", "positionStart", "positionEnd", "disablePointerEvents", "hiddenLabel", "sizeSmall"]), inputAdornmentClasses_default = inputAdornmentClasses;
 
   // node_modules/@mui/material/NativeSelect/NativeSelectInput.mjs
-  var import_jsx_runtime44 = __toESM(require_jsx_runtime(), 1), useUtilityClasses17 = (ownerState) => {
+  var import_jsx_runtime46 = __toESM(require_jsx_runtime(), 1), useUtilityClasses18 = (ownerState) => {
     let {
       classes: classes2,
       variant,
@@ -29794,7 +30257,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       } = props;
       return [styles5.icon, ownerState.variant && styles5[`icon${capitalize_default(ownerState.variant)}`], ownerState.open && styles5.iconOpen];
     }
-  })({}), NativeSelectInput = /* @__PURE__ */ React72.forwardRef(function(props, ref) {
+  })({}), NativeSelectInput = /* @__PURE__ */ React73.forwardRef(function(props, ref) {
     let {
       className,
       disabled,
@@ -29808,15 +30271,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       disabled,
       variant,
       error: error2
-    }, classes2 = useUtilityClasses17(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime44.jsxs)(React72.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime44.jsx)(NativeSelectSelect, {
+    }, classes2 = useUtilityClasses18(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime46.jsxs)(React73.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime46.jsx)(NativeSelectSelect, {
         ownerState,
         className: clsx_default(classes2.select, className),
         disabled,
         ref: inputRef || ref,
         ...other
-      }), props.multiple ? null : /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(NativeSelectIcon, {
+      }), props.multiple ? null : /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(NativeSelectIcon, {
         as: IconComponent,
         ownerState,
         className: classes2.icon
@@ -29831,7 +30294,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var selectClasses = generateUtilityClasses("MuiSelect", ["root", "select", "multiple", "filled", "outlined", "standard", "disabled", "focused", "icon", "iconOpen", "nativeInput", "error"]), selectClasses_default = selectClasses;
 
   // node_modules/@mui/material/Select/utils/closedTypeahead.mjs
-  var React73 = __toESM(require_react(), 1);
+  var React74 = __toESM(require_react(), 1);
   function hasOwnValueProp(child) {
     return Object.prototype.hasOwnProperty.call(child.props, "value");
   }
@@ -29839,8 +30302,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (typeof node2 == "string" || typeof node2 == "number")
       return String(node2);
     let text2 = "";
-    return React73.Children.forEach(node2, (child) => {
-      typeof child == "string" || typeof child == "number" ? text2 += String(child) : /* @__PURE__ */ React73.isValidElement(child) && (text2 += getTextFromReactNode(child.props.children));
+    return React74.Children.forEach(node2, (child) => {
+      typeof child == "string" || typeof child == "number" ? text2 += String(child) : /* @__PURE__ */ React74.isValidElement(child) && (text2 += getTextFromReactNode(child.props.children));
     }), text2;
   }
   function getMatchingOptionIndex(options, search, startIndex = 0) {
@@ -29861,7 +30324,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let options = [], selectedIndex = -1;
     for (let index = 0; index < childrenArray.length; index += 1) {
       let child = childrenArray[index];
-      if (!/* @__PURE__ */ React73.isValidElement(child) || !hasOwnValueProp(child) || child.props.disabled)
+      if (!/* @__PURE__ */ React74.isValidElement(child) || !hasOwnValueProp(child) || child.props.disabled)
         continue;
       let label = getTextFromReactNode(child.props.children).trim().toLowerCase();
       label !== "" && (selectedIndex === -1 && areEqualValues(value, child.props.value) && (selectedIndex = options.length), options.push({
@@ -29877,7 +30340,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/material/Select/SelectInput.mjs
-  var import_jsx_runtime45 = __toESM(require_jsx_runtime(), 1), _span, OPENING_MOUSE_UP_BOUNDARY_OFFSET = 2, SELECTED_MOUSE_UP_DELAY = 400, UNSELECTED_MOUSE_UP_DELAY = 200, TYPEAHEAD_RESET_MS = 750, SPACE = " ", ARROW_UP = "ArrowUp", ARROW_DOWN = "ArrowDown", ENTER = "Enter";
+  var import_jsx_runtime47 = __toESM(require_jsx_runtime(), 1), _span, OPENING_MOUSE_UP_BOUNDARY_OFFSET = 2, SELECTED_MOUSE_UP_DELAY = 400, UNSELECTED_MOUSE_UP_DELAY = 200, TYPEAHEAD_RESET_MS = 750, SPACE = " ", ARROW_UP = "ArrowUp", ARROW_DOWN = "ArrowDown", ENTER = "Enter";
   function isMouseEventInsideElement(event, element) {
     if (!element)
       return !1;
@@ -29941,7 +30404,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     pointerEvents: "none",
     width: "100%",
     boxSizing: "border-box"
-  }), useUtilityClasses18 = (ownerState) => {
+  }), useUtilityClasses19 = (ownerState) => {
     let {
       classes: classes2,
       variant,
@@ -29955,7 +30418,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       icon: ["icon", open && "iconOpen", disabled && "disabled"],
       nativeInput: ["nativeInput"]
     }, getSelectUtilityClasses, classes2);
-  }, SelectInput = /* @__PURE__ */ React74.forwardRef(function(props, ref) {
+  }, SelectInput = /* @__PURE__ */ React75.forwardRef(function(props, ref) {
     let {
       "aria-describedby": ariaDescribedby,
       "aria-label": ariaLabel,
@@ -30002,46 +30465,46 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       controlled: openProp,
       default: defaultOpen,
       name: "Select"
-    }), inputRef = React74.useRef(null), displayRef = React74.useRef(null), paperRef = React74.useRef(null), openRef = React74.useRef(!1), hasSelectedItemInListRef = React74.useRef(!1), openingMouseUpListenerCleanupRef = React74.useRef(null), didPointerDownOnItemRef = React74.useRef(!1), selectionRef = React74.useRef({
+    }), inputRef = React75.useRef(null), displayRef = React75.useRef(null), paperRef = React75.useRef(null), openRef = React75.useRef(!1), hasSelectedItemInListRef = React75.useRef(!1), openingMouseUpListenerCleanupRef = React75.useRef(null), didPointerDownOnItemRef = React75.useRef(!1), selectionRef = React75.useRef({
       allowSelectedMouseUp: !1,
       allowUnselectedMouseUp: !1
-    }), closedTypeaheadRef = React74.useRef({
+    }), closedTypeaheadRef = React75.useRef({
       buffer: "",
       previousSearchIndex: null,
       matchedIndex: null
-    }), selectedMouseUpTimer = useTimeout(), unselectedMouseUpTimer = useTimeout(), typeaheadResetTimer = useTimeout(), [displayNode, setDisplayNode] = React74.useState(null), {
+    }), selectedMouseUpTimer = useTimeout(), unselectedMouseUpTimer = useTimeout(), typeaheadResetTimer = useTimeout(), [displayNode, setDisplayNode] = React75.useState(null), {
       current: isOpenControlled
-    } = React74.useRef(openProp != null), [menuMinWidthState, setMenuMinWidthState] = React74.useState(), [openInteractionType, setOpenInteractionType] = React74.useState(null), handleRef = useForkRef_default(ref, inputRefProp), handleDisplayRef = React74.useCallback((node2) => {
+    } = React75.useRef(openProp != null), [menuMinWidthState, setMenuMinWidthState] = React75.useState(), [openInteractionType, setOpenInteractionType] = React75.useState(null), handleRef = useForkRef_default(ref, inputRefProp), handleDisplayRef = React75.useCallback((node2) => {
       displayRef.current = node2, node2 && setDisplayNode(node2);
     }, []), anchorElement = displayNode?.parentNode;
-    React74.useImperativeHandle(handleRef, () => ({
+    React75.useImperativeHandle(handleRef, () => ({
       focus: () => {
         displayRef.current.focus();
       },
       node: inputRef.current,
       value
     }), [value]);
-    let open = displayNode !== null && openState, resetClosedTypeahead = React74.useCallback(() => {
+    let open = displayNode !== null && openState, resetClosedTypeahead = React75.useCallback(() => {
       typeaheadResetTimer.clear(), closedTypeaheadRef.current.buffer = "", closedTypeaheadRef.current.previousSearchIndex = null, closedTypeaheadRef.current.matchedIndex = null;
     }, [typeaheadResetTimer]);
     useEnhancedEffect_default2(() => {
       openRef.current = open, open && resetClosedTypeahead();
     }, [open, resetClosedTypeahead]);
-    let clearSelectionTimers = React74.useCallback(() => {
+    let clearSelectionTimers = React75.useCallback(() => {
       selectedMouseUpTimer.clear(), unselectedMouseUpTimer.clear();
-    }, [selectedMouseUpTimer, unselectedMouseUpTimer]), resetMouseUpSelection = React74.useCallback(() => {
+    }, [selectedMouseUpTimer, unselectedMouseUpTimer]), resetMouseUpSelection = React75.useCallback(() => {
       clearSelectionTimers(), didPointerDownOnItemRef.current = !1, selectionRef.current = {
         allowSelectedMouseUp: !1,
         allowUnselectedMouseUp: !1
       };
-    }, [clearSelectionTimers]), clearOpeningMouseUpListener = React74.useCallback(() => {
+    }, [clearSelectionTimers]), clearOpeningMouseUpListener = React75.useCallback(() => {
       openingMouseUpListenerCleanupRef.current && (openingMouseUpListenerCleanupRef.current(), openingMouseUpListenerCleanupRef.current = null);
     }, []);
-    React74.useEffect(() => {
+    React75.useEffect(() => {
       open || (resetMouseUpSelection(), clearOpeningMouseUpListener());
-    }, [open, resetMouseUpSelection, clearOpeningMouseUpListener]), React74.useEffect(() => () => {
+    }, [open, resetMouseUpSelection, clearOpeningMouseUpListener]), React75.useEffect(() => () => {
       resetMouseUpSelection(), clearOpeningMouseUpListener(), resetClosedTypeahead();
-    }, [resetMouseUpSelection, clearOpeningMouseUpListener, resetClosedTypeahead]), React74.useEffect(() => {
+    }, [resetMouseUpSelection, clearOpeningMouseUpListener, resetClosedTypeahead]), React75.useEffect(() => {
       if (!open || !anchorElement || autoWidth || typeof ResizeObserver > "u")
         return;
       let observer = new ResizeObserver(() => {
@@ -30050,11 +30513,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       return observer.observe(anchorElement), () => {
         observer.disconnect();
       };
-    }, [open, anchorElement, autoWidth]), React74.useEffect(() => {
+    }, [open, anchorElement, autoWidth]), React75.useEffect(() => {
       defaultOpen && openState && displayNode && !isOpenControlled && (setMenuMinWidthState(autoWidth ? null : anchorElement.clientWidth), displayRef.current.focus());
-    }, [displayNode, autoWidth]), React74.useEffect(() => {
+    }, [displayNode, autoWidth]), React75.useEffect(() => {
       autoFocus && displayRef.current.focus();
-    }, [autoFocus]), React74.useEffect(() => {
+    }, [autoFocus]), React75.useEffect(() => {
       if (!labelId)
         return;
       let label = ownerDocument_default(displayRef.current).getElementById(labelId);
@@ -30094,7 +30557,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }, update(!0, event);
     }, handleClose = (event) => {
       update(!1, event);
-    }, childrenArray = React74.Children.toArray(children), handleChange = (event) => {
+    }, childrenArray = React75.Children.toArray(children), handleChange = (event) => {
       let child = childrenArray.find((childItem) => childItem.props.value === event.target.value);
       child !== void 0 && (setValueState(child.props.value), onChange && onChange(event, child));
     }, handleValueChange = (event, child, newValue) => {
@@ -30169,7 +30632,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       value
     }) || displayEmpty) && (renderValue ? display = renderValue(value) : computeDisplay = !0);
     let items = childrenArray.map((child) => {
-      if (!/* @__PURE__ */ React74.isValidElement(child))
+      if (!/* @__PURE__ */ React75.isValidElement(child))
         return null;
       let selected;
       if (multiple) {
@@ -30178,7 +30641,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         selected = value.some((v) => areEqualValues(v, child.props.value)), selected && computeDisplay && displayMultiple.push(child.props.children);
       } else
         selected = areEqualValues(value, child.props.value), selected && computeDisplay && (displaySingle = child.props.children);
-      return selected && (foundMatch = !0), /* @__PURE__ */ React74.cloneElement(child, {
+      return selected && (foundMatch = !0), /* @__PURE__ */ React75.cloneElement(child, {
         "aria-selected": selected ? "true" : "false",
         onMouseDown: (event) => {
           didPointerDownOnItemRef.current = !0, child.props.onMouseDown?.(event);
@@ -30213,9 +30676,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       value,
       open,
       error: error2
-    }, classes2 = useUtilityClasses18(ownerState), menuPaperSlotProps = typeof MenuProps.slotProps?.paper == "function" ? MenuProps.slotProps.paper(ownerState) : MenuProps.slotProps?.paper, handlePaperRef = useForkRef_default(menuPaperSlotProps?.ref, paperRef), menuListSlotProps = typeof MenuProps.slotProps?.list == "function" ? MenuProps.slotProps.list(ownerState) : MenuProps.slotProps?.list, listboxId = useId(), nativeInputId = useId();
-    return /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)(React74.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime45.jsx)(SelectSelect, {
+    }, classes2 = useUtilityClasses19(ownerState), menuPaperSlotProps = typeof MenuProps.slotProps?.paper == "function" ? MenuProps.slotProps.paper(ownerState) : MenuProps.slotProps?.paper, handlePaperRef = useForkRef_default(menuPaperSlotProps?.ref, paperRef), menuListSlotProps = typeof MenuProps.slotProps?.list == "function" ? MenuProps.slotProps.list(ownerState) : MenuProps.slotProps?.list, listboxId = useId(), nativeInputId = useId();
+    return /* @__PURE__ */ (0, import_jsx_runtime47.jsxs)(React75.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime47.jsx)(SelectSelect, {
         as: "div",
         ref: handleDisplayRef,
         tabIndex,
@@ -30240,13 +30703,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         id: buttonId,
         children: isEmpty3(display) ? (
           // notranslate needed while Google Translate will not fix zero-width space issue
-          _span || (_span = /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("span", {
+          _span || (_span = /* @__PURE__ */ (0, import_jsx_runtime47.jsx)("span", {
             className: "notranslate",
             "aria-hidden": !0,
             children: "​"
           }))
         ) : display
-      }), /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(SelectNativeInput, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(SelectNativeInput, {
         "aria-invalid": error2,
         value: Array.isArray(value) ? value.join(",") : value,
         name,
@@ -30262,13 +30725,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         ...other,
         id: other.id ?? nativeInputId,
         ownerState
-      }), /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(SelectIcon, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(SelectIcon, {
         as: IconComponent,
         className: classes2.icon,
         ownerState
-      }), /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(SelectFocusSourceProvider, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(SelectFocusSourceProvider, {
         value: openInteractionType,
-        children: /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(Menu_default, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(Menu_default, {
           id: `menu-${name || ""}`,
           anchorEl: anchorElement,
           open,
@@ -30308,13 +30771,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), SelectInput_default = SelectInput;
 
   // node_modules/@mui/material/internal/svg-icons/ArrowDropDown.mjs
-  var import_jsx_runtime46 = __toESM(require_jsx_runtime(), 1), ArrowDropDown_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime46.jsx)("path", {
+  var import_jsx_runtime48 = __toESM(require_jsx_runtime(), 1), ArrowDropDown_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime48.jsx)("path", {
     d: "M7 10l5 5 5-5z"
   }), "ArrowDropDown");
 
   // node_modules/@mui/material/Input/Input.mjs
-  var React75 = __toESM(require_react(), 1);
-  var import_jsx_runtime47 = __toESM(require_jsx_runtime(), 1), useUtilityClasses19 = (ownerState) => {
+  var React76 = __toESM(require_react(), 1);
+  var import_jsx_runtime49 = __toESM(require_jsx_runtime(), 1), useUtilityClasses20 = (ownerState) => {
     let {
       classes: classes2,
       disableUnderline
@@ -30421,7 +30884,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     name: "MuiInput",
     slot: "Input",
     overridesResolver: inputOverridesResolver
-  })({}), Input = /* @__PURE__ */ React75.forwardRef(function(inProps, ref) {
+  })({}), Input = /* @__PURE__ */ React76.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiInput"
@@ -30436,14 +30899,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       slots = {},
       type = "text",
       ...other
-    } = props, classes2 = useUtilityClasses19(props), inputComponentsProps = {
+    } = props, classes2 = useUtilityClasses20(props), inputComponentsProps = {
       root: {
         ownerState: {
           disableUnderline
         }
       }
     }, componentsProps = slotProps ? deepmerge(slotProps, inputComponentsProps) : inputComponentsProps, RootSlot = slots.root ?? InputRoot, InputSlot = slots.input ?? InputInput;
-    return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(InputBase_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime49.jsx)(InputBase_default, {
       slots: {
         root: RootSlot,
         input: InputSlot
@@ -30462,8 +30925,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var Input_default = Input;
 
   // node_modules/@mui/material/FilledInput/FilledInput.mjs
-  var React76 = __toESM(require_react(), 1);
-  var import_jsx_runtime48 = __toESM(require_jsx_runtime(), 1), useUtilityClasses20 = (ownerState) => {
+  var React77 = __toESM(require_react(), 1);
+  var import_jsx_runtime50 = __toESM(require_jsx_runtime(), 1), useUtilityClasses21 = (ownerState) => {
     let {
       classes: classes2,
       disableUnderline,
@@ -30705,7 +31168,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         paddingRight: 0
       }
     }]
-  }))), FilledInput = /* @__PURE__ */ React76.forwardRef(function(inProps, ref) {
+  }))), FilledInput = /* @__PURE__ */ React77.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiFilledInput"
@@ -30729,7 +31192,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       inputComponent,
       multiline,
       type
-    }, classes2 = useUtilityClasses20(props), filledInputComponentsProps = {
+    }, classes2 = useUtilityClasses21(props), filledInputComponentsProps = {
       root: {
         ownerState
       },
@@ -30737,7 +31200,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         ownerState
       }
     }, componentsProps = slotProps ? deepmerge(filledInputComponentsProps, slotProps) : filledInputComponentsProps, RootSlot = slots.root ?? FilledInputRoot, InputSlot = slots.input ?? FilledInputInput;
-    return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(InputBase_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(InputBase_default, {
       slots: {
         root: RootSlot,
         input: InputSlot
@@ -30756,10 +31219,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var FilledInput_default = FilledInput;
 
   // node_modules/@mui/material/OutlinedInput/OutlinedInput.mjs
-  var React77 = __toESM(require_react(), 1);
+  var React78 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/OutlinedInput/NotchedOutline.mjs
-  var import_jsx_runtime49 = __toESM(require_jsx_runtime(), 1), _span2, NotchedOutlineRoot = styled_default2("fieldset", {
+  var import_jsx_runtime51 = __toESM(require_jsx_runtime(), 1), _span2, NotchedOutlineRoot = styled_default2("fieldset", {
     name: "MuiNotchedOutlined",
     shouldForwardProp: rootShouldForwardProp_default
   })({
@@ -30855,18 +31318,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       notched,
       withLabel
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime49.jsx)(NotchedOutlineRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(NotchedOutlineRoot, {
       "aria-hidden": !0,
       className,
       ownerState,
       ...other,
-      children: /* @__PURE__ */ (0, import_jsx_runtime49.jsx)(NotchedOutlineLegend, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(NotchedOutlineLegend, {
         ownerState,
-        children: withLabel ? /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("span", {
+        children: withLabel ? /* @__PURE__ */ (0, import_jsx_runtime51.jsx)("span", {
           children: label
         }) : (
           // notranslate needed while Google Translate will not fix zero-width space issue
-          _span2 || (_span2 = /* @__PURE__ */ (0, import_jsx_runtime49.jsx)("span", {
+          _span2 || (_span2 = /* @__PURE__ */ (0, import_jsx_runtime51.jsx)("span", {
             className: "notranslate",
             "aria-hidden": !0,
             children: "​"
@@ -30877,7 +31340,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/material/OutlinedInput/OutlinedInput.mjs
-  var import_jsx_runtime50 = __toESM(require_jsx_runtime(), 1), useUtilityClasses21 = (ownerState) => {
+  var import_jsx_runtime52 = __toESM(require_jsx_runtime(), 1), useUtilityClasses22 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState, composedClasses = composeClasses({
@@ -31032,7 +31495,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         paddingRight: 0
       }
     }]
-  }))), OutlinedInput = /* @__PURE__ */ React77.forwardRef(function(inProps, ref) {
+  }))), OutlinedInput = /* @__PURE__ */ React78.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiOutlinedInput"
@@ -31046,7 +31509,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       slotProps = {},
       type = "text",
       ...other
-    } = props, classes2 = useUtilityClasses21(props), [fcs, muiFormControl] = useFormControlState({
+    } = props, classes2 = useUtilityClasses22(props), [fcs, muiFormControl] = useFormControlState({
       props,
       states: ["color", "disabled", "error", "focused", "hiddenLabel", "size", "required"]
     }), ownerState = {
@@ -31071,18 +31534,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         slotProps
       },
       additionalProps: {
-        label: label != null && label !== "" && fcs.required ? /* @__PURE__ */ (0, import_jsx_runtime50.jsxs)(React77.Fragment, {
+        label: label != null && label !== "" && fcs.required ? /* @__PURE__ */ (0, import_jsx_runtime52.jsxs)(React78.Fragment, {
           children: [label, " ", "*"]
         }) : label
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(InputBase_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime52.jsx)(InputBase_default, {
       slots: {
         root: RootSlot,
         input: InputSlot
       },
       slotProps,
-      renderSuffix: (state2) => /* @__PURE__ */ (0, import_jsx_runtime50.jsx)(NotchedSlot, {
+      renderSuffix: (state2) => /* @__PURE__ */ (0, import_jsx_runtime52.jsx)(NotchedSlot, {
         ...notchedProps,
         notched: typeof notched < "u" ? notched : !!(state2.startAdornment || state2.filled || state2.focused)
       }),
@@ -31102,7 +31565,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var OutlinedInput_default = OutlinedInput;
 
   // node_modules/@mui/material/Select/Select.mjs
-  var import_jsx_runtime51 = __toESM(require_jsx_runtime(), 1), useUtilityClasses22 = (ownerState) => {
+  var import_jsx_runtime53 = __toESM(require_jsx_runtime(), 1), useUtilityClasses23 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState, composedClasses = composeClasses({
@@ -31116,7 +31579,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     name: "MuiSelect",
     slot: "Root",
     shouldForwardProp: (prop) => rootShouldForwardProp_default(prop) && prop !== "variant"
-  }, StyledInput = styled_default2(Input_default, styledRootConfig)(""), StyledOutlinedInput = styled_default2(OutlinedInput_default, styledRootConfig)(""), StyledFilledInput = styled_default2(FilledInput_default, styledRootConfig)(""), Select = /* @__PURE__ */ React78.forwardRef(function(inProps, ref) {
+  }, StyledInput = styled_default2(Input_default, styledRootConfig)(""), StyledOutlinedInput = styled_default2(OutlinedInput_default, styledRootConfig)(""), StyledFilledInput = styled_default2(FilledInput_default, styledRootConfig)(""), Select = /* @__PURE__ */ React79.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       name: "MuiSelect",
       props: inProps
@@ -31150,23 +31613,23 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ...props,
       variant,
       classes: classesProp
-    }, classes2 = useUtilityClasses22(ownerState), {
+    }, classes2 = useUtilityClasses23(ownerState), {
       root,
       ...restOfClasses
     } = classes2, InputComponent = input || {
-      standard: /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(StyledInput, {
+      standard: /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(StyledInput, {
         ownerState
       }),
-      outlined: /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(StyledOutlinedInput, {
+      outlined: /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(StyledOutlinedInput, {
         label,
         ownerState
       }),
-      filled: /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(StyledFilledInput, {
+      filled: /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(StyledFilledInput, {
         ownerState
       })
     }[variant], inputComponentRef = useForkRef_default(ref, getReactElementRef(InputComponent));
-    return /* @__PURE__ */ (0, import_jsx_runtime51.jsx)(React78.Fragment, {
-      children: /* @__PURE__ */ React78.cloneElement(InputComponent, {
+    return /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(React79.Fragment, {
+      children: /* @__PURE__ */ React79.cloneElement(InputComponent, {
         // Most of the logic is implemented in `SelectInput`.
         // The `Select` component is a simple API wrapper to expose something better to play with.
         inputComponent,
@@ -31228,10 +31691,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), Stack_default = Stack;
 
   // node_modules/@mui/material/Switch/Switch.mjs
-  var React80 = __toESM(require_react(), 1);
+  var React81 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/SwitchBase.mjs
-  var React79 = __toESM(require_react(), 1);
+  var React80 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/switchBaseClasses.mjs
   function getSwitchBaseUtilityClass(slot) {
@@ -31240,7 +31703,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var switchBaseClasses = generateUtilityClasses("PrivateSwitchBase", ["root", "checked", "disabled", "input", "edgeStart", "edgeEnd"]);
 
   // node_modules/@mui/material/internal/SwitchBase.mjs
-  var import_jsx_runtime52 = __toESM(require_jsx_runtime(), 1), useUtilityClasses23 = (ownerState) => {
+  var import_jsx_runtime54 = __toESM(require_jsx_runtime(), 1), useUtilityClasses24 = (ownerState) => {
     let {
       classes: classes2,
       checked,
@@ -31303,7 +31766,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     margin: 0,
     padding: 0,
     zIndex: 1
-  }), SwitchBase = /* @__PURE__ */ React79.forwardRef(function(props, ref) {
+  }), SwitchBase = /* @__PURE__ */ React80.forwardRef(function(props, ref) {
     let {
       autoFocus,
       checked: checkedProp,
@@ -31351,7 +31814,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       disabled,
       disableFocusRipple,
       edge
-    }, classes2 = useUtilityClasses23(ownerState), externalForwardedProps = {
+    }, classes2 = useUtilityClasses24(ownerState), externalForwardedProps = {
       slots,
       slotProps
     }, [RootSlot, rootSlotProps] = useSlot("root", {
@@ -31408,9 +31871,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime52.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime54.jsxs)(RootSlot, {
       ...rootSlotProps,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime52.jsx)(InputSlot, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime54.jsx)(InputSlot, {
         ...inputSlotProps
       }), checked ? checkedIcon : icon]
     });
@@ -31423,7 +31886,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var switchClasses = generateUtilityClasses("MuiSwitch", ["root", "edgeStart", "edgeEnd", "switchBase", "colorPrimary", "colorSecondary", "sizeSmall", "sizeMedium", "checked", "disabled", "input", "thumb", "track"]), switchClasses_default = switchClasses;
 
   // node_modules/@mui/material/Switch/Switch.mjs
-  var import_jsx_runtime53 = __toESM(require_jsx_runtime(), 1), useUtilityClasses24 = (ownerState) => {
+  var import_jsx_runtime55 = __toESM(require_jsx_runtime(), 1), useUtilityClasses25 = (ownerState) => {
     let {
       classes: classes2,
       edge,
@@ -31636,7 +32099,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     width: 20,
     height: 20,
     borderRadius: "50%"
-  }))), Switch = /* @__PURE__ */ React80.forwardRef(function(inProps, ref) {
+  }))), Switch = /* @__PURE__ */ React81.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiSwitch"
@@ -31654,7 +32117,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       color: color2,
       edge,
       size
-    }, classes2 = useUtilityClasses24(ownerState), externalInputProps = slotProps.input, externalForwardedProps = {
+    }, classes2 = useUtilityClasses25(ownerState), externalInputProps = slotProps.input, externalForwardedProps = {
       slots,
       slotProps
     }, [RootSlot, rootSlotProps] = useSlot("root", {
@@ -31670,7 +32133,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       elementType: SwitchThumb,
       externalForwardedProps,
       ownerState
-    }), icon = /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(ThumbSlot, {
+    }), icon = /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(ThumbSlot, {
       ...thumbSlotProps
     }), [TrackSlot, trackSlotProps] = useSlot("track", {
       className: classes2.track,
@@ -31678,9 +32141,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime53.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)(RootSlot, {
       ...rootSlotProps,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime53.jsx)(SwitchSwitchBase, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime55.jsx)(SwitchSwitchBase, {
         type: "checkbox",
         icon,
         checkedIcon: icon,
@@ -31707,18 +32170,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             role: "switch"
           })
         }
-      }), /* @__PURE__ */ (0, import_jsx_runtime53.jsx)(TrackSlot, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(TrackSlot, {
         ...trackSlotProps
       })]
     });
   }), Switch_default = Switch;
 
   // node_modules/@mui/material/TextField/TextField.mjs
-  var React82 = __toESM(require_react(), 1);
+  var React83 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/FormHelperText/FormHelperText.mjs
-  var React81 = __toESM(require_react(), 1);
-  var import_jsx_runtime54 = __toESM(require_jsx_runtime(), 1), _span3, useUtilityClasses25 = (ownerState) => {
+  var React82 = __toESM(require_react(), 1);
+  var import_jsx_runtime56 = __toESM(require_jsx_runtime(), 1), _span3, useUtilityClasses26 = (ownerState) => {
     let {
       classes: classes2,
       contained,
@@ -31773,7 +32236,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         marginRight: 14
       }
     }]
-  }))), FormHelperText = /* @__PURE__ */ React81.forwardRef(function(inProps, ref) {
+  }))), FormHelperText = /* @__PURE__ */ React82.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiFormHelperText"
@@ -31805,8 +32268,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       required: fcs.required
     };
     delete ownerState.ownerState;
-    let classes2 = useUtilityClasses25(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime54.jsx)(FormHelperTextRoot, {
+    let classes2 = useUtilityClasses26(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime56.jsx)(FormHelperTextRoot, {
       as: component,
       className: clsx_default(classes2.root, className),
       ref,
@@ -31814,7 +32277,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ownerState,
       children: children === " " ? (
         // notranslate needed while Google Translate will not fix zero-width space issue
-        _span3 || (_span3 = /* @__PURE__ */ (0, import_jsx_runtime54.jsx)("span", {
+        _span3 || (_span3 = /* @__PURE__ */ (0, import_jsx_runtime56.jsx)("span", {
           className: "notranslate",
           "aria-hidden": !0,
           children: "​"
@@ -31830,11 +32293,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var textFieldClasses = generateUtilityClasses("MuiTextField", ["root"]);
 
   // node_modules/@mui/material/TextField/TextField.mjs
-  var import_jsx_runtime55 = __toESM(require_jsx_runtime(), 1), variantComponent = {
+  var import_jsx_runtime57 = __toESM(require_jsx_runtime(), 1), variantComponent = {
     standard: Input_default,
     filled: FilledInput_default,
     outlined: OutlinedInput_default
-  }, useUtilityClasses26 = (ownerState) => {
+  }, useUtilityClasses27 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -31844,7 +32307,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }, TextFieldRoot = styled_default2(FormControl_default, {
     name: "MuiTextField",
     slot: "Root"
-  })({}), TextField = /* @__PURE__ */ React82.forwardRef(function(inProps, ref) {
+  })({}), TextField = /* @__PURE__ */ React83.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTextField"
@@ -31890,7 +32353,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       required,
       select,
       variant
-    }, classes2 = useUtilityClasses26(ownerState), id = useId(idOverride), helperTextId = helperText && id ? `${id}-helper-text` : void 0, inputLabelId = label && id ? `${id}-label` : void 0, InputComponent = variantComponent[variant], externalForwardedProps = {
+    }, classes2 = useUtilityClasses27(ownerState), id = useId(idOverride), helperTextId = helperText && id ? `${id}-helper-text` : void 0, inputLabelId = label && id ? `${id}-label` : void 0, InputComponent = variantComponent[variant], externalForwardedProps = {
       slots,
       slotProps
     }, [SelectSlot, selectProps] = useSlot("select", {
@@ -31934,7 +32397,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       elementType: FormHelperText_default,
       externalForwardedProps,
       ownerState
-    }), InputElement = /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(InputSlot, {
+    }), InputElement = /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(InputSlot, {
       "aria-describedby": helperTextId,
       autoComplete,
       autoFocus,
@@ -31959,9 +32422,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       },
       ...inputProps
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime55.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime57.jsxs)(RootSlot, {
       ...rootProps,
-      children: [label != null && label !== "" && /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(InputLabelSlot, {
+      children: [label != null && label !== "" && /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(InputLabelSlot, {
         htmlFor: select && !nativeSelect ? void 0 : id,
         id: inputLabelId,
         ...select && !nativeSelect && {
@@ -31969,7 +32432,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         },
         ...inputLabelProps,
         children: label
-      }), select ? /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(SelectSlot, {
+      }), select ? /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(SelectSlot, {
         "aria-describedby": helperTextId,
         id,
         labelId: inputLabelId,
@@ -31977,7 +32440,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         input: InputElement,
         ...selectProps,
         children
-      }) : InputElement, helperText && /* @__PURE__ */ (0, import_jsx_runtime55.jsx)(FormHelperTextSlot, {
+      }) : InputElement, helperText && /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(FormHelperTextSlot, {
         id: helperTextId,
         ...formHelperTextProps,
         children: helperText
@@ -31986,12 +32449,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), TextField_default = TextField;
 
   // src/containers/SettingsContext.tsx
-  var import_react7 = __toESM(require_react(), 1), import_jsx_runtime56 = __toESM(require_jsx_runtime(), 1), SettingsContext = (0, import_react7.createContext)(null);
+  var import_react7 = __toESM(require_react(), 1), import_jsx_runtime58 = __toESM(require_jsx_runtime(), 1), SettingsContext = (0, import_react7.createContext)(null);
   function SettingsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime56.jsx)(SettingsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(SettingsContext, { value, children });
   }
   function useSettings() {
     let value = (0, import_react7.useContext)(SettingsContext);
@@ -32001,10 +32464,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/components/MuiThemeProof.tsx
-  var import_jsx_runtime57 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime59 = __toESM(require_jsx_runtime(), 1);
   function MuiThemeProof() {
     let theme = useTheme4(), { colorway } = useSettings();
-    return /* @__PURE__ */ (0, import_jsx_runtime57.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime59.jsx)(
       "span",
       {
         id: "mui-theme-proof",
@@ -32020,10 +32483,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var import_react8 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Table/Table.mjs
-  var React84 = __toESM(require_react(), 1);
+  var React85 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Table/TableContext.mjs
-  var React83 = __toESM(require_react(), 1), TableContext = /* @__PURE__ */ React83.createContext(), TableContext_default = TableContext;
+  var React84 = __toESM(require_react(), 1), TableContext = /* @__PURE__ */ React84.createContext(), TableContext_default = TableContext;
 
   // node_modules/@mui/material/Table/tableClasses.mjs
   function getTableUtilityClass(slot) {
@@ -32032,7 +32495,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableClasses = generateUtilityClasses("MuiTable", ["root", "stickyHeader"]);
 
   // node_modules/@mui/material/Table/Table.mjs
-  var import_jsx_runtime58 = __toESM(require_jsx_runtime(), 1), useUtilityClasses27 = (ownerState) => {
+  var import_jsx_runtime60 = __toESM(require_jsx_runtime(), 1), useUtilityClasses28 = (ownerState) => {
     let {
       classes: classes2,
       stickyHeader
@@ -32071,7 +32534,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         borderCollapse: "separate"
       }
     }]
-  }))), defaultComponent = "table", Table = /* @__PURE__ */ React84.forwardRef(function(inProps, ref) {
+  }))), defaultComponent = "table", Table = /* @__PURE__ */ React85.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTable"
@@ -32088,14 +32551,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       padding: padding2,
       size,
       stickyHeader
-    }, classes2 = useUtilityClasses27(ownerState), table = React84.useMemo(() => ({
+    }, classes2 = useUtilityClasses28(ownerState), table = React85.useMemo(() => ({
       padding: padding2,
       size,
       stickyHeader
     }), [padding2, size, stickyHeader]);
-    return /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(TableContext_default.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime60.jsx)(TableContext_default.Provider, {
       value: table,
-      children: /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(TableRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime60.jsx)(TableRoot, {
         as: component,
         role: component === defaultComponent ? null : "table",
         ref,
@@ -32107,10 +32570,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), Table_default = Table;
 
   // node_modules/@mui/material/TableBody/TableBody.mjs
-  var React86 = __toESM(require_react(), 1);
+  var React87 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Table/Tablelvl2Context.mjs
-  var React85 = __toESM(require_react(), 1), Tablelvl2Context = /* @__PURE__ */ React85.createContext(), Tablelvl2Context_default = Tablelvl2Context;
+  var React86 = __toESM(require_react(), 1), Tablelvl2Context = /* @__PURE__ */ React86.createContext(), Tablelvl2Context_default = Tablelvl2Context;
 
   // node_modules/@mui/material/TableBody/tableBodyClasses.mjs
   function getTableBodyUtilityClass(slot) {
@@ -32119,7 +32582,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableBodyClasses = generateUtilityClasses("MuiTableBody", ["root"]);
 
   // node_modules/@mui/material/TableBody/TableBody.mjs
-  var import_jsx_runtime59 = __toESM(require_jsx_runtime(), 1), useUtilityClasses28 = (ownerState) => {
+  var import_jsx_runtime61 = __toESM(require_jsx_runtime(), 1), useUtilityClasses29 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -32133,7 +32596,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     display: "table-row-group"
   }), tablelvl2 = {
     variant: "body"
-  }, defaultComponent2 = "tbody", TableBody = /* @__PURE__ */ React86.forwardRef(function(inProps, ref) {
+  }, defaultComponent2 = "tbody", TableBody = /* @__PURE__ */ React87.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTableBody"
@@ -32144,10 +32607,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     } = props, ownerState = {
       ...props,
       component
-    }, classes2 = useUtilityClasses28(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime59.jsx)(Tablelvl2Context_default.Provider, {
+    }, classes2 = useUtilityClasses29(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime61.jsx)(Tablelvl2Context_default.Provider, {
       value: tablelvl2,
-      children: /* @__PURE__ */ (0, import_jsx_runtime59.jsx)(TableBodyRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime61.jsx)(TableBodyRoot, {
         className: clsx_default(classes2.root, className),
         as: component,
         ref,
@@ -32159,7 +32622,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), TableBody_default = TableBody;
 
   // node_modules/@mui/material/TableCell/TableCell.mjs
-  var React87 = __toESM(require_react(), 1);
+  var React88 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/TableCell/tableCellClasses.mjs
   function getTableCellUtilityClass(slot) {
@@ -32168,7 +32631,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableCellClasses = generateUtilityClasses("MuiTableCell", ["root", "head", "body", "footer", "sizeSmall", "sizeMedium", "paddingCheckbox", "paddingNone", "alignLeft", "alignCenter", "alignRight", "alignJustify", "stickyHeader"]), tableCellClasses_default = tableCellClasses;
 
   // node_modules/@mui/material/TableCell/TableCell.mjs
-  var import_jsx_runtime60 = __toESM(require_jsx_runtime(), 1), useUtilityClasses29 = (ownerState) => {
+  var import_jsx_runtime62 = __toESM(require_jsx_runtime(), 1), useUtilityClasses30 = (ownerState) => {
     let {
       classes: classes2,
       variant,
@@ -32297,7 +32760,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         backgroundColor: (theme.vars || theme).palette.background.default
       }
     }]
-  }))), TableCell = /* @__PURE__ */ React87.forwardRef(function(inProps, ref) {
+  }))), TableCell = /* @__PURE__ */ React88.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTableCell"
@@ -32311,7 +32774,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       sortDirection,
       variant: variantProp,
       ...other
-    } = props, table = React87.useContext(TableContext_default), tablelvl23 = React87.useContext(Tablelvl2Context_default), isHeadCell = tablelvl23 && tablelvl23.variant === "head", component;
+    } = props, table = React88.useContext(TableContext_default), tablelvl23 = React88.useContext(Tablelvl2Context_default), isHeadCell = tablelvl23 && tablelvl23.variant === "head", component;
     componentProp ? component = componentProp : component = isHeadCell ? "th" : "td";
     let scope = scopeProp;
     component === "td" ? scope = void 0 : !scope && isHeadCell && (scope = "col");
@@ -32324,8 +32787,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       sortDirection,
       stickyHeader: variant === "head" && table && table.stickyHeader,
       variant
-    }, classes2 = useUtilityClasses29(ownerState), ariaSort = null;
-    return sortDirection && (ariaSort = sortDirection === "asc" ? "ascending" : "descending"), /* @__PURE__ */ (0, import_jsx_runtime60.jsx)(TableCellRoot, {
+    }, classes2 = useUtilityClasses30(ownerState), ariaSort = null;
+    return sortDirection && (ariaSort = sortDirection === "asc" ? "ascending" : "descending"), /* @__PURE__ */ (0, import_jsx_runtime62.jsx)(TableCellRoot, {
       as: component,
       ref,
       className: clsx_default(classes2.root, className),
@@ -32337,7 +32800,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), TableCell_default = TableCell;
 
   // node_modules/@mui/material/TableHead/TableHead.mjs
-  var React88 = __toESM(require_react(), 1);
+  var React89 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/TableHead/tableHeadClasses.mjs
   function getTableHeadUtilityClass(slot) {
@@ -32346,7 +32809,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableHeadClasses = generateUtilityClasses("MuiTableHead", ["root"]);
 
   // node_modules/@mui/material/TableHead/TableHead.mjs
-  var import_jsx_runtime61 = __toESM(require_jsx_runtime(), 1), useUtilityClasses30 = (ownerState) => {
+  var import_jsx_runtime63 = __toESM(require_jsx_runtime(), 1), useUtilityClasses31 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -32360,7 +32823,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     display: "table-header-group"
   }), tablelvl22 = {
     variant: "head"
-  }, defaultComponent3 = "thead", TableHead = /* @__PURE__ */ React88.forwardRef(function(inProps, ref) {
+  }, defaultComponent3 = "thead", TableHead = /* @__PURE__ */ React89.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTableHead"
@@ -32371,10 +32834,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     } = props, ownerState = {
       ...props,
       component
-    }, classes2 = useUtilityClasses30(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime61.jsx)(Tablelvl2Context_default.Provider, {
+    }, classes2 = useUtilityClasses31(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Tablelvl2Context_default.Provider, {
       value: tablelvl22,
-      children: /* @__PURE__ */ (0, import_jsx_runtime61.jsx)(TableHeadRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(TableHeadRoot, {
         as: component,
         className: clsx_default(classes2.root, className),
         ref,
@@ -32386,7 +32849,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), TableHead_default = TableHead;
 
   // node_modules/@mui/material/TableRow/TableRow.mjs
-  var React89 = __toESM(require_react(), 1);
+  var React90 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/TableRow/tableRowClasses.mjs
   function getTableRowUtilityClass(slot) {
@@ -32395,7 +32858,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tableRowClasses = generateUtilityClasses("MuiTableRow", ["root", "selected", "hover", "head", "footer"]), tableRowClasses_default = tableRowClasses;
 
   // node_modules/@mui/material/TableRow/TableRow.mjs
-  var import_jsx_runtime62 = __toESM(require_jsx_runtime(), 1), useUtilityClasses31 = (ownerState) => {
+  var import_jsx_runtime64 = __toESM(require_jsx_runtime(), 1), useUtilityClasses32 = (ownerState) => {
     let {
       classes: classes2,
       selected,
@@ -32432,7 +32895,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         backgroundColor: theme.alpha((theme.vars || theme).palette.primary.main, `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.hoverOpacity}`)
       }
     }
-  }))), defaultComponent4 = "tr", TableRow = /* @__PURE__ */ React89.forwardRef(function(inProps, ref) {
+  }))), defaultComponent4 = "tr", TableRow = /* @__PURE__ */ React90.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiTableRow"
@@ -32442,15 +32905,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       hover = !1,
       selected = !1,
       ...other
-    } = props, tablelvl23 = React89.useContext(Tablelvl2Context_default), ownerState = {
+    } = props, tablelvl23 = React90.useContext(Tablelvl2Context_default), ownerState = {
       ...props,
       component,
       hover,
       selected,
       head: tablelvl23 && tablelvl23.variant === "head",
       footer: tablelvl23 && tablelvl23.variant === "footer"
-    }, classes2 = useUtilityClasses31(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime62.jsx)(TableRowRoot, {
+    }, classes2 = useUtilityClasses32(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(TableRowRoot, {
       as: component,
       ref,
       className: clsx_default(classes2.root, className),
@@ -32734,7 +33197,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/components/ShortcutTable.tsx
-  var import_jsx_runtime63 = __toESM(require_jsx_runtime(), 1), HOLD_KEYS = /* @__PURE__ */ new Set(["Shift", "Control", "Alt", "Meta"]);
+  var import_jsx_runtime65 = __toESM(require_jsx_runtime(), 1), HOLD_KEYS = /* @__PURE__ */ new Set(["Shift", "Control", "Alt", "Meta"]);
   function tooltipRef2(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -32773,10 +33236,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       let rows = CATALOG.filter((row) => row.group !== group ? !1 : matchesFilter(row, query, chordsFor(row, overrides)));
       return { group, rows };
     }).filter((item) => item.rows.length > 0), [overrides, query]);
-    return /* @__PURE__ */ (0, import_jsx_runtime63.jsxs)(Box_default, { id: "shortcuts-section", className: "shortcuts-section", component: "section", "aria-labelledby": "shortcuts-title", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Typography_default, { id: "shortcuts-title", variant: "h6", component: "h3", tabIndex: -1, ref: tooltipRef2(tips.shortcuts), children: t("shortcuts.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Typography_default, { id: "shortcuts-intro", component: "p", children: t("shortcuts.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)(Box_default, { id: "shortcuts-section", className: "shortcuts-section", component: "section", "aria-labelledby": "shortcuts-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(Typography_default, { id: "shortcuts-title", variant: "h6", component: "h3", tabIndex: -1, ref: tooltipRef2(tips.shortcuts), children: t("shortcuts.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(Typography_default, { id: "shortcuts-intro", component: "p", children: t("shortcuts.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(
         TextField_default,
         {
           id: "shortcuts-filter",
@@ -32789,7 +33252,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           onChange: (event) => setFilter(event.target.value)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(
         Button_default,
         {
           id: "shortcuts-reset-all",
@@ -32804,33 +33267,33 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           children: t("shortcuts.resetAll")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Box_default, { id: "shortcuts-body", children: groups.map(({ group, rows }) => /* @__PURE__ */ (0, import_jsx_runtime63.jsxs)(Box_default, { sx: { mt: 2 }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Typography_default, { variant: "subtitle1", component: "h3", children: t(GROUP_HEADING[group]) }),
-        group === "playback" ? /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Typography_default, { className: "dialog-note", component: "p", children: t("shortcuts.playNote") }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime63.jsxs)(Table_default, { className: "shortcut-table", size: "small", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(TableHead_default, { children: /* @__PURE__ */ (0, import_jsx_runtime63.jsxs)(TableRow_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(TableCell_default, { component: "th", scope: "col", children: t("shortcuts.action") }),
-            /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(TableCell_default, { component: "th", scope: "col", children: t("shortcuts.key") }),
-            /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(TableCell_default, { component: "th", scope: "col" })
+      /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(Box_default, { id: "shortcuts-body", children: groups.map(({ group, rows }) => /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)(Box_default, { sx: { mt: 2 }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(Typography_default, { variant: "subtitle1", component: "h3", children: t(GROUP_HEADING[group]) }),
+        group === "playback" ? /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(Typography_default, { className: "dialog-note", component: "p", children: t("shortcuts.playNote") }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)(Table_default, { className: "shortcut-table", size: "small", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(TableHead_default, { children: /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)(TableRow_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(TableCell_default, { component: "th", scope: "col", children: t("shortcuts.action") }),
+            /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(TableCell_default, { component: "th", scope: "col", children: t("shortcuts.key") }),
+            /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(TableCell_default, { component: "th", scope: "col" })
           ] }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(TableBody_default, { children: rows.map((row) => {
+          /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(TableBody_default, { children: rows.map((row) => {
             let chords = chordsFor(row, overrides), overridden = row.live && !!overrides[row.id];
-            return /* @__PURE__ */ (0, import_jsx_runtime63.jsxs)(
+            return /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)(
               TableRow_default,
               {
                 "data-shortcut-id": row.id,
                 sx: row.live ? void 0 : { opacity: 0.65 },
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(TableCell_default, { component: "th", scope: "row", children: catalogActionLabel(row.id) }),
-                  /* @__PURE__ */ (0, import_jsx_runtime63.jsxs)(TableCell_default, { children: [
-                    capturingId === row.id ? t("shortcuts.capturing") : chords.map((chord2, index) => /* @__PURE__ */ (0, import_jsx_runtime63.jsxs)("span", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(TableCell_default, { component: "th", scope: "row", children: catalogActionLabel(row.id) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)(TableCell_default, { children: [
+                    capturingId === row.id ? t("shortcuts.capturing") : chords.map((chord2, index) => /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)("span", { children: [
                       index > 0 ? " or " : null,
-                      /* @__PURE__ */ (0, import_jsx_runtime63.jsx)("kbd", { children: chordLabel(chord2) })
+                      /* @__PURE__ */ (0, import_jsx_runtime65.jsx)("kbd", { children: chordLabel(chord2) })
                     ] }, `${row.id}-${index}`)),
-                    row.live ? null : /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Typography_default, { component: "span", sx: { ml: 1 }, color: "text.secondary", children: t("shortcuts.unavailable") })
+                    row.live ? null : /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(Typography_default, { component: "span", sx: { ml: 1 }, color: "text.secondary", children: t("shortcuts.unavailable") })
                   ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(TableCell_default, { children: row.live ? /* @__PURE__ */ (0, import_jsx_runtime63.jsxs)(import_jsx_runtime63.Fragment, { children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(TableCell_default, { children: row.live ? /* @__PURE__ */ (0, import_jsx_runtime65.jsxs)(import_jsx_runtime65.Fragment, { children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(
                       Button_default,
                       {
                         "data-shortcut-change": "",
@@ -32843,7 +33306,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                         children: t("shortcuts.change")
                       }
                     ),
-                    overridden ? /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(
+                    overridden ? /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(
                       Button_default,
                       {
                         "data-shortcut-reset": "",
@@ -32865,12 +33328,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }) })
         ] })
       ] }, group)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime63.jsx)(Typography_default, { id: "shortcuts-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: status4 })
+      /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(Typography_default, { id: "shortcuts-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: status4 })
     ] });
   }
 
   // src/pages/SettingsPanel.tsx
-  var import_jsx_runtime64 = __toESM(require_jsx_runtime(), 1), COLORWAY_KEY = {
+  var import_jsx_runtime66 = __toESM(require_jsx_runtime(), 1), COLORWAY_KEY = {
     "serato-like": "settings.colorway.seratoLike",
     "dark-club": "settings.colorway.darkClub",
     light: "settings.colorway.light",
@@ -32890,12 +33353,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function SettingsPanel() {
     let settings = useSettings(), preview = `/img/icons/placeholder-${settings.colorway}.svg`;
-    return /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(Stack_default, { "data-settings-react": "true", "data-settings-page": "true", spacing: 2, sx: { maxWidth: 720 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "settings-title", variant: "h5", component: "h2", children: t("settings.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(Stack_default, { "data-settings-react": "true", "data-settings-page": "true", spacing: 2, sx: { maxWidth: 720 }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "settings-title", variant: "h5", component: "h2", children: t("settings.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         FormControlLabel_default,
         {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          control: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Switch_default,
             {
               id: "telemetry-toggle",
@@ -32910,11 +33373,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.share")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "telemetry-note", className: "dialog-note", component: "p", children: telemetryNote() }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "telemetry-note", className: "dialog-note", component: "p", children: telemetryNote() }),
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         FormControlLabel_default,
         {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          control: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Switch_default,
             {
               id: "update-toggle",
@@ -32929,10 +33392,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.updates")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         FormControlLabel_default,
         {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          control: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Switch_default,
             {
               id: "update-prereleases",
@@ -32947,11 +33410,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.updatesPrereleases")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "update-status", className: "dialog-note", component: "p", role: "status", "aria-live": "polite", children: settings.updateStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(Stack_default, { className: "colorway-row", direction: "row", spacing: 2, sx: { alignItems: "center" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(InputLabel_default, { htmlFor: "colorway-select", shrink: !0, children: t("settings.colorway") }),
-          /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "update-status", className: "dialog-note", component: "p", role: "status", "aria-live": "polite", children: settings.updateStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(Stack_default, { className: "colorway-row", direction: "row", spacing: 2, sx: { alignItems: "center" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(InputLabel_default, { htmlFor: "colorway-select", shrink: !0, children: t("settings.colorway") }),
+          /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Select_default,
             {
               native: !0,
@@ -32962,11 +33425,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               onChange: (event) => {
                 settings.saveColorway(selectValue(event));
               },
-              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime64.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
+              children: COLORWAYS.map((id) => /* @__PURE__ */ (0, import_jsx_runtime66.jsx)("option", { value: id, children: t(COLORWAY_KEY[id]) }, id))
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
           Box_default,
           {
             component: "img",
@@ -32979,11 +33442,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(MuiThemeProof, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(MuiThemeProof, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         FormControlLabel_default,
         {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          control: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Switch_default,
             {
               id: "icon-follows-theme",
@@ -32997,10 +33460,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.iconFollowsTheme")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         FormControlLabel_default,
         {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          control: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Switch_default,
             {
               id: "gig-lock",
@@ -33014,9 +33477,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.gigLock")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(InputLabel_default, { htmlFor: "min-copies", shrink: !0, children: t("settings.minCopies") }),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(InputLabel_default, { htmlFor: "min-copies", shrink: !0, children: t("settings.minCopies") }),
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
           Select_default,
           {
             native: !0,
@@ -33027,11 +33490,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             onChange: (event) => {
               settings.saveMinCopies(Number(selectValue(event)));
             },
-            children: [1, 2, 3, 4, 5, 6, 7, 8, 9].map((count) => /* @__PURE__ */ (0, import_jsx_runtime64.jsx)("option", { value: String(count), children: count }, count))
+            children: [1, 2, 3, 4, 5, 6, 7, 8, 9].map((count) => /* @__PURE__ */ (0, import_jsx_runtime66.jsx)("option", { value: String(count), children: count }, count))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         TextField_default,
         {
           id: "untrusted-volumes",
@@ -33046,10 +33509,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "icon-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.iconStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(InputLabel_default, { htmlFor: "language-select", shrink: !0, children: t("settings.language") }),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "icon-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.iconStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(InputLabel_default, { htmlFor: "language-select", shrink: !0, children: t("settings.language") }),
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(
           Select_default,
           {
             native: !0,
@@ -33061,18 +33524,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               settings.saveLanguage(selectValue(event));
             },
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime64.jsx)("option", { value: "", children: t("settings.languageSystem") }),
-              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime64.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
+              /* @__PURE__ */ (0, import_jsx_runtime66.jsx)("option", { value: "", children: t("settings.languageSystem") }),
+              LANGUAGES.map((code) => /* @__PURE__ */ (0, import_jsx_runtime66.jsx)("option", { value: code, lang: code, children: LANGUAGE_NAMES[code] }, code))
             ]
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "language-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.languageStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(ShortcutTable, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "language-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.languageStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(ShortcutTable, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         FormControlLabel_default,
         {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          control: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Switch_default,
             {
               id: "protect-bpm",
@@ -33086,10 +33549,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.protectBpm")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         FormControlLabel_default,
         {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          control: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Switch_default,
             {
               id: "protect-key",
@@ -33103,10 +33566,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.protectKey")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         FormControlLabel_default,
         {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+          control: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
             Switch_default,
             {
               id: "protect-cues",
@@ -33120,10 +33583,21 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.protectCues")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(Box_default, { className: "about", component: "section", "aria-labelledby": "about-title", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "about-title", variant: "h6", component: "h3", children: t("settings.about") }),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "about-version", className: "about-version", component: "p", children: settings.aboutVersion }),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { component: "p", children: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(Box_default, { className: "about", component: "section", "aria-labelledby": "about-title", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "about-title", variant: "h6", component: "h3", children: t("settings.about") }),
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "about-version", className: "about-version", component: "p", children: settings.aboutVersion }),
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
+          Chip_default,
+          {
+            id: "library-stays",
+            size: "small",
+            tabIndex: 0,
+            label: t("settings.libraryStays"),
+            ref: tooltipRef3(tips.libraryStays),
+            sx: { alignSelf: "flex-start", height: "auto", "& .MuiChip-label": { whiteSpace: "normal" } }
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { component: "p", children: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
           "a",
           {
             id: "about-github",
@@ -33132,7 +33606,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("help.github")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Stack_default, { className: "dialog-actions", direction: "row", spacing: 1, children: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Stack_default, { className: "dialog-actions", direction: "row", spacing: 1, children: /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
           Button_default,
           {
             id: "copy-version",
@@ -33145,10 +33619,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("settings.copyVersion")
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "version-copy-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "version-copy-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.versionCopyStatus })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(Stack_default, { className: "dialog-actions", direction: "row", spacing: 1, sx: { flexWrap: "wrap" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsxs)(Stack_default, { className: "dialog-actions", direction: "row", spacing: 1, sx: { flexWrap: "wrap" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
           Button_default,
           {
             id: "rerun-wizard",
@@ -33160,7 +33634,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("settings.rerunSetup")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
           Button_default,
           {
             id: "open-logs",
@@ -33174,7 +33648,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("settings.openLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
           Button_default,
           {
             id: "copy-logs",
@@ -33188,7 +33662,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             children: t("settings.copyLogs")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
           Button_default,
           {
             id: "settings-close",
@@ -33200,8 +33674,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "settings-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(Typography_default, { id: "settings-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.settingsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(
         "textarea",
         {
           id: "log-fallback",
@@ -33594,7 +34068,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/app/mui-theme-root.tsx
-  var import_jsx_runtime65 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime67 = __toESM(require_jsx_runtime(), 1);
   function MuiThemeRoot({ children }) {
     let [colorway, setColorway] = (0, import_react10.useState)(() => getSettingsState().colorway);
     (0, import_react10.useEffect)(() => subscribeSettings(() => {
@@ -33603,16 +34077,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       });
     }), []);
     let theme = (0, import_react10.useMemo)(() => createAppTheme(colorway), [colorway]);
-    return /* @__PURE__ */ (0, import_jsx_runtime65.jsx)(ThemeProvider4, { theme, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime67.jsx)(ThemeProvider4, { theme, children });
   }
 
   // src/containers/CrateContext.tsx
-  var import_react11 = __toESM(require_react(), 1), import_jsx_runtime66 = __toESM(require_jsx_runtime(), 1), CrateContext = (0, import_react11.createContext)(null);
+  var import_react11 = __toESM(require_react(), 1), import_jsx_runtime68 = __toESM(require_jsx_runtime(), 1), CrateContext = (0, import_react11.createContext)(null);
   function CrateProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime66.jsx)(CrateContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime68.jsx)(CrateContext, { value, children });
   }
   function useCrates() {
     let value = (0, import_react11.useContext)(CrateContext);
@@ -33622,12 +34096,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/FilesContext.tsx
-  var import_react12 = __toESM(require_react(), 1), import_jsx_runtime67 = __toESM(require_jsx_runtime(), 1), FilesContext = (0, import_react12.createContext)(null);
+  var import_react12 = __toESM(require_react(), 1), import_jsx_runtime69 = __toESM(require_jsx_runtime(), 1), FilesContext = (0, import_react12.createContext)(null);
   function FilesProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime67.jsx)(FilesContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime69.jsx)(FilesContext, { value, children });
   }
   function useFiles() {
     let value = (0, import_react12.useContext)(FilesContext);
@@ -33637,12 +34111,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/GigContext.tsx
-  var import_react13 = __toESM(require_react(), 1), import_jsx_runtime68 = __toESM(require_jsx_runtime(), 1), GigContext = (0, import_react13.createContext)(null);
+  var import_react13 = __toESM(require_react(), 1), import_jsx_runtime70 = __toESM(require_jsx_runtime(), 1), GigContext = (0, import_react13.createContext)(null);
   function GigStateProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime68.jsx)(GigContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime70.jsx)(GigContext, { value, children });
   }
   function useGig() {
     let value = (0, import_react13.useContext)(GigContext);
@@ -33652,12 +34126,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/HealthContext.tsx
-  var import_react14 = __toESM(require_react(), 1), import_jsx_runtime69 = __toESM(require_jsx_runtime(), 1), HealthContext = (0, import_react14.createContext)(null);
+  var import_react14 = __toESM(require_react(), 1), import_jsx_runtime71 = __toESM(require_jsx_runtime(), 1), HealthContext = (0, import_react14.createContext)(null);
   function HealthProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime69.jsx)(HealthContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime71.jsx)(HealthContext, { value, children });
   }
   function useHealth() {
     let value = (0, import_react14.useContext)(HealthContext);
@@ -33667,12 +34141,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/JobContext.tsx
-  var import_react15 = __toESM(require_react(), 1), import_jsx_runtime70 = __toESM(require_jsx_runtime(), 1), JobContext = (0, import_react15.createContext)(null);
+  var import_react15 = __toESM(require_react(), 1), import_jsx_runtime72 = __toESM(require_jsx_runtime(), 1), JobContext = (0, import_react15.createContext)(null);
   function JobProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime70.jsx)(JobContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime72.jsx)(JobContext, { value, children });
   }
   function useJobs() {
     let value = (0, import_react15.useContext)(JobContext);
@@ -33682,12 +34156,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/NoticeContext.tsx
-  var import_react16 = __toESM(require_react(), 1), import_jsx_runtime71 = __toESM(require_jsx_runtime(), 1), NoticeContext = (0, import_react16.createContext)(null);
+  var import_react16 = __toESM(require_react(), 1), import_jsx_runtime73 = __toESM(require_jsx_runtime(), 1), NoticeContext = (0, import_react16.createContext)(null);
   function NoticeProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime71.jsx)(NoticeContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime73.jsx)(NoticeContext, { value, children });
   }
   function useNotice() {
     let value = (0, import_react16.useContext)(NoticeContext);
@@ -33697,7 +34171,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/HistoryContext.tsx
-  var import_react17 = __toESM(require_react(), 1), import_jsx_runtime72 = __toESM(require_jsx_runtime(), 1), historyActions = {
+  var import_react17 = __toESM(require_react(), 1), import_jsx_runtime74 = __toESM(require_jsx_runtime(), 1), historyActions = {
     loadHistory: async () => {
     },
     openSession: async (_id) => {
@@ -33720,7 +34194,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime72.jsx)(HistoryContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime74.jsx)(HistoryContext, { value, children });
   }
   function useHistory() {
     let value = (0, import_react17.useContext)(HistoryContext);
@@ -33730,12 +34204,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/StatsContext.tsx
-  var import_react18 = __toESM(require_react(), 1), import_jsx_runtime73 = __toESM(require_jsx_runtime(), 1), StatsContext = (0, import_react18.createContext)(null);
+  var import_react18 = __toESM(require_react(), 1), import_jsx_runtime75 = __toESM(require_jsx_runtime(), 1), StatsContext = (0, import_react18.createContext)(null);
   function StatsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime73.jsx)(StatsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(StatsContext, { value, children });
   }
   function useStats() {
     let value = (0, import_react18.useContext)(StatsContext);
@@ -33745,12 +34219,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/PlayerContext.tsx
-  var import_react19 = __toESM(require_react(), 1), import_jsx_runtime74 = __toESM(require_jsx_runtime(), 1), PlayerContext = (0, import_react19.createContext)(null);
+  var import_react19 = __toESM(require_react(), 1), import_jsx_runtime76 = __toESM(require_jsx_runtime(), 1), PlayerContext = (0, import_react19.createContext)(null);
   function PlayerProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime74.jsx)(PlayerContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(PlayerContext, { value, children });
   }
   function usePlayer() {
     let value = (0, import_react19.useContext)(PlayerContext);
@@ -34109,7 +34583,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/WaveformContext.tsx
-  var import_jsx_runtime75 = __toESM(require_jsx_runtime(), 1), defaultUi = {
+  var import_jsx_runtime77 = __toESM(require_jsx_runtime(), 1), defaultUi = {
     pps: 80,
     phase: "idle",
     overviewSource: ""
@@ -34128,13 +34602,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       };
     }, [ui]);
-    return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(WaveformContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime77.jsx)(WaveformContext, { value, children });
   }
   function WaveformClockProvider({
     clock,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(WaveformClockContext, { value: clock, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime77.jsx)(WaveformClockContext, { value: clock, children });
   }
   function useWaveform() {
     let value = (0, import_react20.useContext)(WaveformContext);
@@ -34582,29 +35056,29 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var React99 = __toESM(require_react(), 1);
 
   // node_modules/@mui/utils/useForcedRerendering/useForcedRerendering.mjs
-  var React90 = __toESM(require_react(), 1);
+  var React91 = __toESM(require_react(), 1);
   function useForcedRerendering() {
-    let [, setState] = React90.useState({});
-    return React90.useCallback(() => {
+    let [, setState] = React91.useState({});
+    return React91.useCallback(() => {
       setState({});
     }, []);
   }
 
   // node_modules/@mui/material/useAutocomplete/useAutocomplete.mjs
-  var React93 = __toESM(require_react(), 1);
+  var React94 = __toESM(require_react(), 1);
 
   // node_modules/@mui/utils/usePreviousProps/usePreviousProps.mjs
-  var React91 = __toESM(require_react(), 1);
+  var React92 = __toESM(require_react(), 1);
   function usePreviousProps(value) {
-    let ref = React91.useRef({});
-    return React91.useEffect(() => {
+    let ref = React92.useRef({});
+    return React92.useEffect(() => {
       ref.current = value;
     }), ref.current;
   }
   var usePreviousProps_default = usePreviousProps;
 
   // node_modules/@mui/material/useAutocomplete/utils/useOptionValue.mjs
-  var React92 = __toESM(require_react(), 1);
+  var React93 = __toESM(require_react(), 1);
   var defaultGetOptionValue = (option) => option, defaultResolveFromOptions = (option) => ({
     option
   });
@@ -34616,7 +35090,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     multiple,
     value
   }) {
-    let getOptionValue = getOptionValueProp ?? defaultGetOptionValue, hasOptionValueMapping = getOptionValueProp !== void 0, reportedErrorMessages = React92.useMemo(() => /* @__PURE__ */ new Set(), []), isOptionEqualToValue = React92.useCallback((option, value2) => getOptionValueProp !== void 0 && freeSolo && typeof value2 == "string" ? !1 : isOptionEqualToValueProp ? isOptionEqualToValueProp(option, value2) : getOptionValue(option) === value2, [freeSolo, getOptionValue, getOptionValueProp, isOptionEqualToValueProp]), optionValueMap = React92.useMemo(() => getOptionValueProp === void 0 || isOptionEqualToValueProp ? null : new Map(options.map((option) => [getOptionValueProp(option), option])), [getOptionValueProp, isOptionEqualToValueProp, options]), resolveFromOptions = React92.useMemo(() => {
+    let getOptionValue = getOptionValueProp ?? defaultGetOptionValue, hasOptionValueMapping = getOptionValueProp !== void 0, reportedErrorMessages = React93.useMemo(() => /* @__PURE__ */ new Set(), []), isOptionEqualToValue = React93.useCallback((option, value2) => getOptionValueProp !== void 0 && freeSolo && typeof value2 == "string" ? !1 : isOptionEqualToValueProp ? isOptionEqualToValueProp(option, value2) : getOptionValue(option) === value2, [freeSolo, getOptionValue, getOptionValueProp, isOptionEqualToValueProp]), optionValueMap = React93.useMemo(() => getOptionValueProp === void 0 || isOptionEqualToValueProp ? null : new Map(options.map((option) => [getOptionValueProp(option), option])), [getOptionValueProp, isOptionEqualToValueProp, options]), resolveFromOptions = React93.useMemo(() => {
       if (!hasOptionValueMapping)
         return defaultResolveFromOptions;
       if (isOptionEqualToValueProp) {
@@ -34640,7 +35114,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       } : optionValueMap.has(value2) ? {
         option: optionValueMap.get(value2)
       } : null;
-    }, [freeSolo, hasOptionValueMapping, isOptionEqualToValueProp, optionValueMap, options]), selectedGeneratedOptionsRef = React92.useRef([]), getOptionFromValue = React92.useCallback((value2) => {
+    }, [freeSolo, hasOptionValueMapping, isOptionEqualToValueProp, optionValueMap, options]), selectedGeneratedOptionsRef = React93.useRef([]), getOptionFromValue = React93.useCallback((value2) => {
       let resolved = resolveFromOptions(value2);
       if (resolved !== null)
         return resolved;
@@ -34648,11 +35122,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       return index === -1 ? null : {
         option: selectedGeneratedOptionsRef.current[index]
       };
-    }, [resolveFromOptions, isOptionEqualToValue]), selectedValues = React92.useMemo(() => multiple ? value : value != null ? [value] : [], [multiple, value]), selectedValuesSet = React92.useMemo(() => isOptionEqualToValueProp || selectedValues.length === 0 ? null : new Set(hasOptionValueMapping && freeSolo ? selectedValues.filter((selectedValue2) => typeof selectedValue2 != "string") : selectedValues), [freeSolo, hasOptionValueMapping, isOptionEqualToValueProp, selectedValues]), isOptionSelected = React92.useCallback((option) => selectedValuesSet ? selectedValuesSet.has(getOptionValue(option)) : selectedValues.some((value2) => value2 != null && isOptionEqualToValue(option, value2)), [getOptionValue, isOptionEqualToValue, selectedValues, selectedValuesSet]);
-    React92.useEffect(() => {
+    }, [resolveFromOptions, isOptionEqualToValue]), selectedValues = React93.useMemo(() => multiple ? value : value != null ? [value] : [], [multiple, value]), selectedValuesSet = React93.useMemo(() => isOptionEqualToValueProp || selectedValues.length === 0 ? null : new Set(hasOptionValueMapping && freeSolo ? selectedValues.filter((selectedValue2) => typeof selectedValue2 != "string") : selectedValues), [freeSolo, hasOptionValueMapping, isOptionEqualToValueProp, selectedValues]), isOptionSelected = React93.useCallback((option) => selectedValuesSet ? selectedValuesSet.has(getOptionValue(option)) : selectedValues.some((value2) => value2 != null && isOptionEqualToValue(option, value2)), [getOptionValue, isOptionEqualToValue, selectedValues, selectedValuesSet]);
+    React93.useEffect(() => {
       selectedGeneratedOptionsRef.current.length > 0 && (selectedGeneratedOptionsRef.current = hasOptionValueMapping ? selectedGeneratedOptionsRef.current.filter(isOptionSelected) : []);
     });
-    let rememberSelectedOption = React92.useCallback((option, optionValue) => {
+    let rememberSelectedOption = React93.useCallback((option, optionValue) => {
       !hasOptionValueMapping || resolveFromOptions(optionValue) !== null || (selectedGeneratedOptionsRef.current = [...selectedGeneratedOptionsRef.current.filter((selectedOption) => isOptionSelected(selectedOption) && !isOptionEqualToValue(selectedOption, optionValue)), option]);
     }, [hasOptionValueMapping, resolveFromOptions, isOptionSelected, isOptionEqualToValue, freeSolo, reportedErrorMessages]);
     return {
@@ -34779,12 +35253,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       let optionLabel = getOptionLabelProp(option);
       return typeof optionLabel != "string" ? String(optionLabel) : optionLabel;
     };
-    let ignoreFocus = React93.useRef(!1), firstFocus = React93.useRef(!0), inputRef = React93.useRef(null), inputValueEditedRef = React93.useRef(!1), listboxRef = React93.useRef(null), ignoreNextBackspaceRef = React93.useRef(!1), windowLostFocus = React93.useRef(!1), [anchorEl, setAnchorEl] = React93.useState(null), [focusedItem, setFocusedItem] = React93.useState(-1), defaultHighlighted = autoHighlight ? 0 : -1, highlightedIndexRef = React93.useRef(defaultHighlighted), highlightReasonRef = React93.useRef(null), touchScrolledRef = React93.useRef(!1), isTouchRef = React93.useRef(!1), [initialInputValue] = React93.useState(() => getInputValue(defaultValue ?? valueProp, multiple, getOptionLabel, void 0, getOptionFromValue)), [inputValue, setInputValueState] = useControlled({
+    let ignoreFocus = React94.useRef(!1), firstFocus = React94.useRef(!0), inputRef = React94.useRef(null), inputValueEditedRef = React94.useRef(!1), listboxRef = React94.useRef(null), ignoreNextBackspaceRef = React94.useRef(!1), windowLostFocus = React94.useRef(!1), [anchorEl, setAnchorEl] = React94.useState(null), [focusedItem, setFocusedItem] = React94.useState(-1), defaultHighlighted = autoHighlight ? 0 : -1, highlightedIndexRef = React94.useRef(defaultHighlighted), highlightReasonRef = React94.useRef(null), touchScrolledRef = React94.useRef(!1), isTouchRef = React94.useRef(!1), [initialInputValue] = React94.useState(() => getInputValue(defaultValue ?? valueProp, multiple, getOptionLabel, void 0, getOptionFromValue)), [inputValue, setInputValueState] = useControlled({
       controlled: inputValueProp,
       default: initialInputValue,
       name: componentName,
       state: "inputValue"
-    }), [focused, setFocused] = React93.useState(!1), resetInputValue = React93.useCallback((event, newValue, reason) => {
+    }), [focused, setFocused] = React94.useState(!1), resetInputValue = React94.useCallback((event, newValue, reason) => {
       if (!(multiple ? value.length < newValue.length : newValue !== null) && !clearOnBlur && !(reason === "reset" && freeSolo && !multiple && newValue === null))
         return;
       let newInputValue = getInputValue(newValue, multiple, getOptionLabel, renderValue, getOptionFromValue);
@@ -34794,7 +35268,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       default: !1,
       name: componentName,
       state: "open"
-    }), [inputPristine, setInputPristine] = React93.useState(!0), selectedOption = !multiple && value != null ? getOptionFromValue(value) : null, hasSelectedOption = selectedOption !== null, inputValueIsSelectedValue = selectedOption !== null && inputValue === getOptionLabel(selectedOption.option), popupOpen = open && !readOnly, filteredOptions = popupOpen ? filterOptions(
+    }), [inputPristine, setInputPristine] = React94.useState(!0), selectedOption = !multiple && value != null ? getOptionFromValue(value) : null, hasSelectedOption = selectedOption !== null, inputValueIsSelectedValue = selectedOption !== null && inputValue === getOptionLabel(selectedOption.option), popupOpen = open && !readOnly, filteredOptions = popupOpen ? filterOptions(
       options.filter((option) => !(filterSelectedOptions && isOptionSelected(option))),
       // we use the empty string to manipulate `filterOptions` to not filter any options
       // i.e. the filter predicate always returns true
@@ -34808,14 +35282,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       inputValue,
       hasSelectedOption
     });
-    React93.useEffect(() => {
+    React94.useEffect(() => {
       let valueChange = value !== previousProps.value, shouldSyncResolvedOption = getOptionValueProp !== void 0 && previousProps.hasSelectedOption === !1 && hasSelectedOption && inputValue === "" && !inputValueEditedRef.current;
       focused && !valueChange && !shouldSyncResolvedOption || freeSolo && (!valueChange && !shouldSyncResolvedOption || value == null && previousProps.value === void 0) || resetInputValue(null, value, "reset");
     }, [value, resetInputValue, focused, previousProps.value, previousProps.hasSelectedOption, freeSolo, getOptionValueProp, hasSelectedOption, inputValue]);
     let listboxAvailable = open && filteredOptions.length > 0 && !readOnly, focusItem = useEventCallback_default((itemToFocus) => {
       itemToFocus === -1 ? inputRef.current.focus() : anchorEl.querySelector(`[data-item-index="${itemToFocus}"]`).focus();
     });
-    React93.useEffect(() => {
+    React94.useEffect(() => {
       multiple && focusedItem > value.length - 1 && (setFocusedItem(-1), focusItem(-1));
     }, [value, multiple, focusedItem, focusItem]);
     function validOptionIndex(index, direction) {
@@ -34923,7 +35397,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           return filteredOptions.findIndex((option) => getOptionLabel(option) === getOptionLabel(previousHighlightedOption));
       }
       return -1;
-    }, syncHighlightedIndex = React93.useCallback(() => {
+    }, syncHighlightedIndex = React94.useCallback(() => {
       if (!popupOpen)
         return;
       let previousHighlightedOptionIndex = getPreviousHighlightedOptionIndex();
@@ -34984,9 +35458,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     ]), handleListboxRef = useEventCallback_default((node2) => {
       setRef(listboxRef, node2), node2 && syncHighlightedIndex();
     });
-    React93.useEffect(() => {
+    React94.useEffect(() => {
       (filteredOptionsChanged || popupOpen && !disableCloseOnSelect) && syncHighlightedIndex();
-    }, [syncHighlightedIndex, filteredOptionsChanged, popupOpen, disableCloseOnSelect]), React93.useEffect(() => {
+    }, [syncHighlightedIndex, filteredOptionsChanged, popupOpen, disableCloseOnSelect]), React94.useEffect(() => {
       if (typeof window > "u")
         return;
       let handleWindowBlur = () => {
@@ -35322,10 +35796,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var useAutocomplete_default = useAutocomplete;
 
   // node_modules/@mui/material/Popper/Popper.mjs
-  var React95 = __toESM(require_react(), 1);
+  var React96 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Popper/BasePopper.mjs
-  var React94 = __toESM(require_react(), 1);
+  var React95 = __toESM(require_react(), 1);
 
   // node_modules/@popperjs/core/lib/enums.js
   var top = "top", bottom = "bottom", right = "right", left = "left", auto = "auto", basePlacements = [top, bottom, right, left], start = "start", end = "end", clippingParents = "clippingParents", viewport = "viewport", popper = "popper", reference = "reference", variationPlacements = /* @__PURE__ */ basePlacements.reduce(function(acc, placement) {
@@ -36346,7 +36820,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var popperClasses = generateUtilityClasses("MuiPopper", ["root"]);
 
   // node_modules/@mui/material/Popper/BasePopper.mjs
-  var import_jsx_runtime76 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime78 = __toESM(require_jsx_runtime(), 1);
   function flipPlacement(placement, direction) {
     if (direction === "ltr")
       return placement;
@@ -36369,14 +36843,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function isHTMLElement2(element) {
     return element.nodeType !== void 0;
   }
-  var useUtilityClasses32 = (ownerState) => {
+  var useUtilityClasses33 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
     return composeClasses({
       root: ["root"]
     }, getPopperUtilityClass, classes2);
-  }, defaultPopperOptions = {}, PopperTooltip = /* @__PURE__ */ React94.forwardRef(function(props, forwardedRef) {
+  }, defaultPopperOptions = {}, PopperTooltip = /* @__PURE__ */ React95.forwardRef(function(props, forwardedRef) {
     let {
       anchorEl,
       children,
@@ -36394,12 +36868,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ownerState: ownerStateProp,
       // prevent from spreading to DOM, it can come from the parent component e.g. Select.
       ...other
-    } = props, tooltipRef14 = React94.useRef(null), ownRef = useForkRef(tooltipRef14, forwardedRef), popperRef = React94.useRef(null), handlePopperRef = useForkRef(popperRef, popperRefProp), handlePopperRefRef = React94.useRef(handlePopperRef);
+    } = props, tooltipRef14 = React95.useRef(null), ownRef = useForkRef(tooltipRef14, forwardedRef), popperRef = React95.useRef(null), handlePopperRef = useForkRef(popperRef, popperRefProp), handlePopperRefRef = React95.useRef(handlePopperRef);
     useEnhancedEffect_default(() => {
       handlePopperRefRef.current = handlePopperRef;
-    }, [handlePopperRef]), React94.useImperativeHandle(popperRefProp, () => popperRef.current, []);
-    let rtlPlacement = flipPlacement(initialPlacement, direction), [placement, setPlacement] = React94.useState(rtlPlacement), resolvedAnchorElement = React94.useMemo(() => resolveAnchorEl2(anchorEl), [anchorEl]);
-    React94.useEffect(() => {
+    }, [handlePopperRef]), React95.useImperativeHandle(popperRefProp, () => popperRef.current, []);
+    let rtlPlacement = flipPlacement(initialPlacement, direction), [placement, setPlacement] = React95.useState(rtlPlacement), resolvedAnchorElement = React95.useMemo(() => resolveAnchorEl2(anchorEl), [anchorEl]);
+    React95.useEffect(() => {
       popperRef.current && popperRef.current.forceUpdate();
     }), useEnhancedEffect_default(() => {
       if (!resolvedAnchorElement || !open)
@@ -36449,7 +36923,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       placement
     };
     TransitionProps !== null && (childProps.TransitionProps = TransitionProps);
-    let classes2 = useUtilityClasses32(props), Root = slots.root ?? "div", rootProps = useSlotProps_default({
+    let classes2 = useUtilityClasses33(props), Root = slots.root ?? "div", rootProps = useSlotProps_default({
       elementType: Root,
       externalSlotProps: slotProps.root,
       externalForwardedProps: other,
@@ -36460,11 +36934,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ownerState: props,
       className: classes2.root
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(Root, {
+    return /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(Root, {
       ...rootProps,
       children: typeof children == "function" ? children(childProps) : children
     });
-  }), Popper = /* @__PURE__ */ React94.forwardRef(function(props, forwardedRef) {
+  }), Popper = /* @__PURE__ */ React95.forwardRef(function(props, forwardedRef) {
     let {
       anchorEl,
       children,
@@ -36482,7 +36956,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       slotProps = {},
       slots = {},
       ...other
-    } = props, [exited, setExited] = React94.useState(!0), handleEnter = () => {
+    } = props, [exited, setExited] = React95.useState(!0), handleEnter = () => {
       setExited(!1);
     }, handleExited = () => {
       setExited(!0);
@@ -36501,10 +36975,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onEnter: handleEnter,
       onExited: handleExited
     } : void 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(Portal_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(Portal_default, {
       disablePortal,
       container: container2,
-      children: /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(PopperTooltip, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(PopperTooltip, {
         anchorEl,
         direction,
         disablePortal,
@@ -36533,10 +37007,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), BasePopper_default = Popper;
 
   // node_modules/@mui/material/Popper/Popper.mjs
-  var import_jsx_runtime77 = __toESM(require_jsx_runtime(), 1), PopperRoot = styled_default2(BasePopper_default, {
+  var import_jsx_runtime79 = __toESM(require_jsx_runtime(), 1), PopperRoot = styled_default2(BasePopper_default, {
     name: "MuiPopper",
     slot: "Root"
-  })({}), Popper3 = /* @__PURE__ */ React95.forwardRef(function(inProps, ref) {
+  })({}), Popper3 = /* @__PURE__ */ React96.forwardRef(function(inProps, ref) {
     let isRtl = useRtl(), props = useDefaultProps2({
       props: inProps,
       name: "MuiPopper"
@@ -36568,7 +37042,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       transition: transition2,
       ...other
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime77.jsx)(PopperRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime79.jsx)(PopperRoot, {
       as: component,
       direction: isRtl ? "rtl" : "ltr",
       slots,
@@ -36579,7 +37053,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), Popper_default = Popper3;
 
   // node_modules/@mui/material/ListSubheader/ListSubheader.mjs
-  var React96 = __toESM(require_react(), 1);
+  var React97 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/ListSubheader/listSubheaderClasses.mjs
   function getListSubheaderUtilityClass(slot) {
@@ -36588,7 +37062,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var listSubheaderClasses = generateUtilityClasses("MuiListSubheader", ["root", "colorPrimary", "colorInherit", "gutters", "inset", "sticky"]);
 
   // node_modules/@mui/material/ListSubheader/ListSubheader.mjs
-  var import_jsx_runtime78 = __toESM(require_jsx_runtime(), 1), useUtilityClasses33 = (ownerState) => {
+  var import_jsx_runtime80 = __toESM(require_jsx_runtime(), 1), useUtilityClasses34 = (ownerState) => {
     let {
       classes: classes2,
       color: color2,
@@ -36658,7 +37132,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         backgroundColor: (theme.vars || theme).palette.background.paper
       }
     }]
-  }))), ListSubheader = /* @__PURE__ */ React96.forwardRef(function(inProps, ref) {
+  }))), ListSubheader = /* @__PURE__ */ React97.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiListSubheader"
@@ -36677,8 +37151,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       disableGutters,
       disableSticky,
       inset
-    }, classes2 = useUtilityClasses33(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(ListSubheaderRoot, {
+    }, classes2 = useUtilityClasses34(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime80.jsx)(ListSubheaderRoot, {
       as: component,
       className: clsx_default(classes2.root, className),
       ref,
@@ -36688,7 +37162,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), ListSubheader_default = ListSubheader;
 
   // node_modules/@mui/material/IconButton/IconButton.mjs
-  var React97 = __toESM(require_react(), 1);
+  var React98 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/IconButton/iconButtonClasses.mjs
   function getIconButtonUtilityClass(slot) {
@@ -36697,7 +37171,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge", "loading", "loadingIndicator", "loadingWrapper"]), iconButtonClasses_default = iconButtonClasses;
 
   // node_modules/@mui/material/IconButton/IconButton.mjs
-  var import_jsx_runtime79 = __toESM(require_jsx_runtime(), 1), useUtilityClasses34 = (ownerState) => {
+  var import_jsx_runtime81 = __toESM(require_jsx_runtime(), 1), useUtilityClasses35 = (ownerState) => {
     let {
       classes: classes2,
       disabled,
@@ -36838,7 +37312,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         display: "flex"
       }
     }]
-  })), IconButton = /* @__PURE__ */ React97.forwardRef(function(inProps, ref) {
+  })), IconButton = /* @__PURE__ */ React98.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiIconButton"
@@ -36854,7 +37328,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       loading = null,
       loadingIndicator: loadingIndicatorProp,
       ...other
-    } = props, loadingId = useId_default(idProp), loadingIndicator = loadingIndicatorProp ?? /* @__PURE__ */ (0, import_jsx_runtime79.jsx)(CircularProgress_default, {
+    } = props, loadingId = useId_default(idProp), loadingIndicator = loadingIndicatorProp ?? /* @__PURE__ */ (0, import_jsx_runtime81.jsx)(CircularProgress_default, {
       "aria-labelledby": loadingId,
       color: "inherit",
       size: 16
@@ -36867,8 +37341,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       loading,
       loadingIndicator,
       size
-    }, classes2 = useUtilityClasses34(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime79.jsxs)(IconButtonRoot, {
+    }, classes2 = useUtilityClasses35(ownerState);
+    return /* @__PURE__ */ (0, import_jsx_runtime81.jsxs)(IconButtonRoot, {
       id: loading ? loadingId : idProp,
       className: clsx_default(classes2.root, className),
       centerRipple: !0,
@@ -36879,12 +37353,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ...other,
       ownerState,
       children: [typeof loading == "boolean" && // use plain HTML span to minimize the runtime overhead
-      /* @__PURE__ */ (0, import_jsx_runtime79.jsx)("span", {
+      /* @__PURE__ */ (0, import_jsx_runtime81.jsx)("span", {
         className: classes2.loadingWrapper,
         style: {
           display: "contents"
         },
-        children: /* @__PURE__ */ (0, import_jsx_runtime79.jsx)(IconButtonLoadingIndicator, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime81.jsx)(IconButtonLoadingIndicator, {
           className: classes2.loadingIndicator,
           ownerState,
           children: loading && loadingIndicator
@@ -36892,464 +37366,6 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }), children]
     });
   }), IconButton_default = IconButton;
-
-  // node_modules/@mui/material/Chip/Chip.mjs
-  var React98 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/material/internal/svg-icons/Cancel.mjs
-  var import_jsx_runtime80 = __toESM(require_jsx_runtime(), 1), Cancel_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime80.jsx)("path", {
-    d: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
-  }), "Cancel");
-
-  // node_modules/@mui/material/Chip/chipClasses.mjs
-  function getChipUtilityClass(slot) {
-    return generateUtilityClass("MuiChip", slot);
-  }
-  var chipClasses = generateUtilityClasses("MuiChip", ["root", "sizeSmall", "sizeMedium", "colorDefault", "colorError", "colorInfo", "colorPrimary", "colorSecondary", "colorSuccess", "colorWarning", "disabled", "clickable", "deletable", "outlined", "filled", "avatar", "icon", "label", "deleteIcon", "focusVisible"]), chipClasses_default = chipClasses;
-
-  // node_modules/@mui/material/Chip/Chip.mjs
-  var import_jsx_runtime81 = __toESM(require_jsx_runtime(), 1), useUtilityClasses35 = (ownerState) => {
-    let {
-      classes: classes2,
-      disabled,
-      size,
-      color: color2,
-      onDelete,
-      clickable,
-      variant
-    } = ownerState, slots = {
-      root: ["root", variant, disabled && "disabled", `size${capitalize_default(size)}`, `color${capitalize_default(color2)}`, clickable && "clickable", onDelete && "deletable"],
-      label: ["label"],
-      avatar: ["avatar"],
-      icon: ["icon"],
-      deleteIcon: ["deleteIcon"]
-    };
-    return composeClasses(slots, getChipUtilityClass, classes2);
-  }, ChipRoot = styled_default2("div", {
-    name: "MuiChip",
-    slot: "Root",
-    shouldForwardProp: (prop) => rootShouldForwardProp_default(prop) && prop !== "focusableWhenDisabled" && prop !== "skipFocusWhenDisabled",
-    overridesResolver: (props, styles5) => {
-      let {
-        ownerState
-      } = props, {
-        color: color2,
-        clickable,
-        onDelete,
-        size,
-        variant
-      } = ownerState;
-      return [{
-        [`& .${chipClasses_default.avatar}`]: styles5.avatar
-      }, {
-        [`& .${chipClasses_default.icon}`]: styles5.icon
-      }, {
-        [`& .${chipClasses_default.deleteIcon}`]: styles5.deleteIcon
-      }, styles5.root, styles5[`size${capitalize_default(size)}`], styles5[`color${capitalize_default(color2)}`], clickable && styles5.clickable, onDelete && styles5.deletable, styles5[variant]];
-    }
-  })(memoTheme_default(({
-    theme
-  }) => {
-    let textColor = theme.palette.mode === "light" ? theme.palette.grey[700] : theme.palette.grey[300];
-    return {
-      maxWidth: "100%",
-      fontFamily: theme.typography.fontFamily,
-      fontSize: theme.typography.pxToRem(13),
-      display: "inline-flex",
-      alignItems: "center",
-      justifyContent: "center",
-      height: 32,
-      lineHeight: 1.5,
-      color: (theme.vars || theme).palette.text.primary,
-      backgroundColor: (theme.vars || theme).palette.action.selected,
-      borderRadius: 32 / 2,
-      whiteSpace: "nowrap",
-      ...getTransitionStyles(theme, ["background-color", "box-shadow"]),
-      // reset cursor explicitly in case ButtonBase is used
-      cursor: "unset",
-      // We disable the focus ring for mouse, touch and keyboard users.
-      outline: 0,
-      textDecoration: "none",
-      border: 0,
-      // Remove `button` border
-      padding: 0,
-      // Remove `button` padding
-      verticalAlign: "middle",
-      boxSizing: "border-box",
-      [`&.${chipClasses_default.disabled}`]: {
-        opacity: (theme.vars || theme).palette.action.disabledOpacity,
-        pointerEvents: "none"
-      },
-      [`& .${chipClasses_default.avatar}`]: {
-        marginLeft: 5,
-        marginRight: -6,
-        width: 24,
-        height: 24,
-        color: theme.vars ? theme.vars.palette.Chip.defaultAvatarColor : textColor,
-        fontSize: theme.typography.pxToRem(12)
-      },
-      [`& .${chipClasses_default.icon}`]: {
-        marginLeft: 5,
-        marginRight: -6
-      },
-      [`& .${chipClasses_default.deleteIcon}`]: {
-        WebkitTapHighlightColor: "transparent",
-        color: theme.alpha((theme.vars || theme).palette.text.primary, 0.26),
-        fontSize: 22,
-        cursor: "pointer",
-        margin: "0 5px 0 -6px",
-        "&:hover": {
-          color: theme.alpha((theme.vars || theme).palette.text.primary, 0.4)
-        }
-      },
-      variants: [{
-        props: {
-          color: "primary"
-        },
-        style: {
-          [`& .${chipClasses_default.avatar}`]: {
-            color: (theme.vars || theme).palette.primary.contrastText,
-            backgroundColor: (theme.vars || theme).palette.primary.dark
-          }
-        }
-      }, {
-        props: {
-          color: "secondary"
-        },
-        style: {
-          [`& .${chipClasses_default.avatar}`]: {
-            color: (theme.vars || theme).palette.secondary.contrastText,
-            backgroundColor: (theme.vars || theme).palette.secondary.dark
-          }
-        }
-      }, {
-        props: {
-          size: "small"
-        },
-        style: {
-          height: 24,
-          [`& .${chipClasses_default.avatar}`]: {
-            marginLeft: 4,
-            marginRight: -4,
-            width: 18,
-            height: 18,
-            fontSize: theme.typography.pxToRem(10)
-          },
-          [`& .${chipClasses_default.icon}`]: {
-            fontSize: 18,
-            marginLeft: 4,
-            marginRight: -4
-          },
-          [`& .${chipClasses_default.deleteIcon}`]: {
-            fontSize: 16,
-            marginRight: 4,
-            marginLeft: -4
-          }
-        }
-      }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["contrastText"])).map(([color2]) => ({
-        props: {
-          color: color2
-        },
-        style: {
-          backgroundColor: (theme.vars || theme).palette[color2].main,
-          color: (theme.vars || theme).palette[color2].contrastText,
-          [`& .${chipClasses_default.deleteIcon}`]: {
-            color: theme.alpha((theme.vars || theme).palette[color2].contrastText, 0.7),
-            "&:hover, &:active": {
-              color: (theme.vars || theme).palette[color2].contrastText
-            }
-          }
-        }
-      })), {
-        props: (props) => props.iconColor === props.color,
-        style: {
-          [`& .${chipClasses_default.icon}`]: {
-            color: theme.vars ? theme.vars.palette.Chip.defaultIconColor : textColor
-          }
-        }
-      }, {
-        props: (props) => props.iconColor === props.color && props.color !== "default",
-        style: {
-          [`& .${chipClasses_default.icon}`]: {
-            color: "inherit"
-          }
-        }
-      }, {
-        props: {
-          onDelete: !0
-        },
-        style: !theme.focusVisible && {
-          [`&.${chipClasses_default.focusVisible}`]: {
-            backgroundColor: theme.alpha((theme.vars || theme).palette.action.selected, `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`)
-          }
-        }
-      }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["dark"])).map(([color2]) => ({
-        props: {
-          color: color2,
-          onDelete: !0
-        },
-        style: !theme.focusVisible && {
-          [`&.${chipClasses_default.focusVisible}`]: {
-            background: (theme.vars || theme).palette[color2].dark
-          }
-        }
-      })), {
-        props: {
-          clickable: !0
-        },
-        style: {
-          userSelect: "none",
-          WebkitTapHighlightColor: "transparent",
-          cursor: "pointer",
-          "&:hover": {
-            backgroundColor: theme.alpha((theme.vars || theme).palette.action.selected, `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.hoverOpacity}`)
-          },
-          ...!theme.focusVisible && {
-            [`&.${chipClasses_default.focusVisible}`]: {
-              backgroundColor: theme.alpha((theme.vars || theme).palette.action.selected, `${(theme.vars || theme).palette.action.selectedOpacity} + ${(theme.vars || theme).palette.action.focusOpacity}`)
-            }
-          },
-          "&:active": {
-            boxShadow: (theme.vars || theme).shadows[1]
-          }
-        }
-      }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter(["dark"])).map(([color2]) => ({
-        props: {
-          color: color2,
-          clickable: !0
-        },
-        style: {
-          "&:hover": {
-            backgroundColor: (theme.vars || theme).palette[color2].dark
-          },
-          ...!theme.focusVisible && {
-            [`&.${chipClasses_default.focusVisible}`]: {
-              backgroundColor: (theme.vars || theme).palette[color2].dark
-            }
-          }
-        }
-      })), {
-        props: {
-          variant: "outlined"
-        },
-        style: {
-          backgroundColor: "transparent",
-          border: theme.vars ? `1px solid ${theme.vars.palette.Chip.defaultBorder}` : `1px solid ${theme.palette.mode === "light" ? theme.palette.grey[400] : theme.palette.grey[700]}`,
-          [`&.${chipClasses_default.clickable}:hover`]: {
-            backgroundColor: (theme.vars || theme).palette.action.hover
-          },
-          ...!theme.focusVisible && {
-            [`&.${chipClasses_default.focusVisible}`]: {
-              backgroundColor: (theme.vars || theme).palette.action.focus
-            }
-          },
-          [`& .${chipClasses_default.avatar}`]: {
-            marginLeft: 4
-          },
-          [`& .${chipClasses_default.icon}`]: {
-            marginLeft: 4
-          },
-          [`& .${chipClasses_default.deleteIcon}`]: {
-            marginRight: 5
-          }
-        }
-      }, {
-        props: {
-          size: "small",
-          variant: "outlined"
-        },
-        style: {
-          [`& .${chipClasses_default.avatar}`]: {
-            marginLeft: 2
-          },
-          [`& .${chipClasses_default.icon}`]: {
-            marginLeft: 2
-          },
-          [`& .${chipClasses_default.deleteIcon}`]: {
-            marginRight: 3
-          }
-        }
-      }, ...Object.entries(theme.palette).filter(createSimplePaletteValueFilter()).map(([color2]) => ({
-        props: {
-          variant: "outlined",
-          color: color2
-        },
-        style: {
-          color: (theme.vars || theme).palette[color2].main,
-          border: `1px solid ${theme.alpha((theme.vars || theme).palette[color2].main, 0.7)}`,
-          [`&.${chipClasses_default.clickable}:hover`]: {
-            backgroundColor: theme.alpha((theme.vars || theme).palette[color2].main, (theme.vars || theme).palette.action.hoverOpacity)
-          },
-          ...!theme.focusVisible && {
-            [`&.${chipClasses_default.focusVisible}`]: {
-              backgroundColor: theme.alpha((theme.vars || theme).palette[color2].main, (theme.vars || theme).palette.action.focusOpacity)
-            }
-          },
-          [`& .${chipClasses_default.deleteIcon}`]: {
-            color: theme.alpha((theme.vars || theme).palette[color2].main, 0.7),
-            "&:hover, &:active": {
-              color: (theme.vars || theme).palette[color2].main
-            }
-          }
-        }
-      }))]
-    };
-  })), ChipLabel = styled_default2("span", {
-    name: "MuiChip",
-    slot: "Label"
-  })({
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    paddingLeft: 12,
-    paddingRight: 12,
-    whiteSpace: "nowrap",
-    variants: [{
-      props: {
-        variant: "outlined"
-      },
-      style: {
-        paddingLeft: 11,
-        paddingRight: 11
-      }
-    }, {
-      props: {
-        size: "small"
-      },
-      style: {
-        paddingLeft: 8,
-        paddingRight: 8
-      }
-    }, {
-      props: {
-        size: "small",
-        variant: "outlined"
-      },
-      style: {
-        paddingLeft: 7,
-        paddingRight: 7
-      }
-    }]
-  });
-  function isDeleteKeyboardEvent(keyboardEvent) {
-    return keyboardEvent.key === "Backspace" || keyboardEvent.key === "Delete";
-  }
-  var Chip = /* @__PURE__ */ React98.forwardRef(function(inProps, ref) {
-    let props = useDefaultProps2({
-      props: inProps,
-      name: "MuiChip"
-    }), {
-      avatar: avatarProp,
-      className,
-      clickable: clickableProp,
-      color: color2 = "default",
-      component: ComponentProp,
-      deleteIcon: deleteIconProp,
-      disabled = !1,
-      icon: iconProp,
-      label,
-      onClick,
-      onDelete,
-      onKeyDown: onKeyDown2,
-      onKeyUp,
-      size = "medium",
-      variant = "filled",
-      tabIndex,
-      skipFocusWhenDisabled = !1,
-      // TODO v6: Rename to `focusableWhenDisabled`.
-      slots = {},
-      slotProps = {},
-      ...other
-    } = props, {
-      nativeButton,
-      ...buttonBaseProps
-    } = other, chipRef = React98.useRef(null), handleRef = useForkRef_default(chipRef, ref), handleDeleteIconClick = (event) => {
-      event.stopPropagation(), onDelete(event);
-    }, handleKeyDown = (event) => {
-      event.currentTarget === event.target && isDeleteKeyboardEvent(event) && event.preventDefault(), onKeyDown2 && onKeyDown2(event);
-    }, handleKeyUp = (event) => {
-      event.currentTarget === event.target && onDelete && isDeleteKeyboardEvent(event) && onDelete(event), onKeyUp && onKeyUp(event);
-    }, clickable = clickableProp !== !1 && onClick ? !0 : clickableProp, component = clickable || onDelete ? ButtonBase_default : ComponentProp || "div", ownerState = {
-      ...props,
-      component,
-      disabled,
-      size,
-      color: color2,
-      iconColor: /* @__PURE__ */ React98.isValidElement(iconProp) && iconProp.props.color || color2,
-      onDelete: !!onDelete,
-      clickable,
-      variant
-    }, classes2 = useUtilityClasses35(ownerState), moreProps = component === ButtonBase_default ? {
-      component: ComponentProp || "div",
-      internalNativeButton: !1,
-      focusVisibleClassName: classes2.focusVisible,
-      ...onDelete && {
-        disableRipple: !0
-      },
-      ...nativeButton !== void 0 && {
-        nativeButton
-      }
-    } : {}, deleteIcon = null;
-    onDelete && (deleteIcon = deleteIconProp && /* @__PURE__ */ React98.isValidElement(deleteIconProp) ? /* @__PURE__ */ React98.cloneElement(deleteIconProp, {
-      className: clsx_default(deleteIconProp.props.className, classes2.deleteIcon),
-      onClick: handleDeleteIconClick
-    }) : /* @__PURE__ */ (0, import_jsx_runtime81.jsx)(Cancel_default, {
-      className: classes2.deleteIcon,
-      onClick: handleDeleteIconClick
-    }));
-    let avatar = null;
-    avatarProp && /* @__PURE__ */ React98.isValidElement(avatarProp) && (avatar = /* @__PURE__ */ React98.cloneElement(avatarProp, {
-      className: clsx_default(classes2.avatar, avatarProp.props.className)
-    }));
-    let icon = null;
-    iconProp && /* @__PURE__ */ React98.isValidElement(iconProp) && (icon = /* @__PURE__ */ React98.cloneElement(iconProp, {
-      className: clsx_default(classes2.icon, iconProp.props.className)
-    }));
-    let externalForwardedProps = {
-      slots,
-      slotProps
-    }, [RootSlot, rootProps] = useSlot("root", {
-      elementType: ChipRoot,
-      externalForwardedProps: {
-        ...externalForwardedProps,
-        ...buttonBaseProps
-      },
-      ownerState,
-      // The `component` prop is preserved because `Chip` relies on it for internal logic. If `shouldForwardComponentProp` were `false`, `useSlot` would remove the `component` prop, potentially breaking the component's behavior.
-      shouldForwardComponentProp: !0,
-      ref: handleRef,
-      className: clsx_default(classes2.root, className),
-      additionalProps: {
-        disabled: clickable && disabled ? !0 : void 0,
-        tabIndex: skipFocusWhenDisabled && disabled ? -1 : tabIndex,
-        ...moreProps
-      },
-      getSlotProps: (handlers) => ({
-        ...handlers,
-        onClick: (event) => {
-          handlers.onClick?.(event), onClick?.(event);
-        },
-        onKeyDown: (event) => {
-          handlers.onKeyDown?.(event), handleKeyDown(event);
-        },
-        onKeyUp: (event) => {
-          handlers.onKeyUp?.(event), handleKeyUp(event);
-        }
-      })
-    }), [LabelSlot, labelProps] = useSlot("label", {
-      elementType: ChipLabel,
-      externalForwardedProps,
-      ownerState,
-      className: classes2.label
-    });
-    return /* @__PURE__ */ (0, import_jsx_runtime81.jsxs)(RootSlot, {
-      as: component,
-      ...rootProps,
-      children: [avatar || icon, /* @__PURE__ */ (0, import_jsx_runtime81.jsx)(LabelSlot, {
-        ...labelProps,
-        children: label
-      }), deleteIcon]
-    });
-  }), Chip_default = Chip;
 
   // node_modules/@mui/material/internal/svg-icons/Close.mjs
   var import_jsx_runtime82 = __toESM(require_jsx_runtime(), 1), Close_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime82.jsx)("path", {

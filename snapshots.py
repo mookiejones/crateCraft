@@ -16,7 +16,8 @@ Protect Library is the plist key ``library_protect`` (1 on, 0 off). A missing
 or unreadable value is unknown and blocks. Serato 5.1.0 is listed and stays
 read-only until a schema probe is recorded. An unlisted dotted version is
 unknown and blocks. Lucid and Flexible beatgrid storage has no confirmed
-layout, so it is not parsed or written. Crate and database writes do not
+layout, so it is not parsed or written. Pioneer ``export.pdb`` is not a
+Serato file and is not parsed. Crate and database writes do not
 touch those bytes. Snapshots stay available. A restore also refuses while
 a Serato DJ process is running.
 
