@@ -538,6 +538,31 @@ export interface RelatedPayload {
   track?: { asset_id?: number; in_library?: boolean };
 }
 
+export interface VersionFamilyTrack {
+  id: number;
+  title: string;
+  artist: string;
+}
+
+export interface VersionFamilyGroup {
+  artist: string;
+  stem: string;
+  title: string;
+  crate_name: string;
+  note?: string;
+  track_ids: number[];
+  tracks: VersionFamilyTrack[];
+}
+
+export interface VersionFamilyPlan {
+  preview?: boolean;
+  written?: boolean;
+  groups?: VersionFamilyGroup[];
+  crates?: Array<{ id?: number; name?: string; track_ids?: number[] }>;
+  links?: number;
+  error?: string;
+}
+
 export interface RekordboxSettings {
   hot_loops?: boolean;
   memory_cues?: boolean;

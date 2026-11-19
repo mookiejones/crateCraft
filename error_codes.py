@@ -24,6 +24,7 @@ from collections.abc import Mapping
 
 import crate_trees
 import folder_sync
+import version_family
 import legacy_library
 import music_mirror
 import smart_presets
@@ -47,6 +48,7 @@ ERROR_CODES: dict[str, str] = {
     "The request body is not JSON.": "body_not_json",
     "The request body is not an object.": "body_not_object",
     "That upload is too large.": "upload_too_large",
+    version_family.CONFIRM: "version_needs_confirm",
     "That action is not available.": "action_unavailable",
     "No Serato library was found on this computer.": "no_library",
     "No older Serato library was found.": "no_legacy_library",

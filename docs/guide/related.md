@@ -69,6 +69,19 @@ The crate contains the saved related tracks that are in the same space. The open
 
 While Serato is open, the button stays off and the note says **Quit Serato before writing the crate.**
 
+## Versions of the same song
+
+**Find versions** looks for an acapella, an instrumental, and an original of the same song by the same artist. A remix with a different title stays out. Nothing is written yet.
+
+1. Open the track.
+2. Under **Mixes well with**, click **Find versions**.
+3. **Prelisten** plays that version in the player.
+4. Quit Serato, then click **Save version crate**.
+
+Save stores two-way links. The row says **Version**. It also makes a Serato crate named `Versions of` plus the song title. Click **Save version crate** again when that crate and those links are already there. Nothing changes. The snapshot taken before the write is the undo. Tags in the audio file stay as they are.
+
+Tick **Version of this track** before **Save link** to store the same note on a link you pick yourself.
+
 ## While a track is playing
 
 The live view is a different app, [serato-listener](https://github.com/mookiejones/serato-listener). crateCraft is where you save links and read suggestions. The listener is what you open while a deck is playing.

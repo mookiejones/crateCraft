@@ -73,6 +73,8 @@ One row is one saved relationship.
 
 Notes such as `blend out of` and `acapella over` are ordinary text. The file does not store Serato asset ids, crate ids, or suggestion scores.
 
+The note `version` means the two tracks are acapella, instrumental, or original versions of one recording by the same artist. `POST /api/version-family` with `action` `preview` lists those families and does not write. `action` `apply` with `confirm` true stores mutual links with that note in this file and, when Serato is quit, a normal crate named `Versions of` plus the shared title. A second apply that finds the crate and the links already in place does not write. The note is not a Serato tag. Audio tags are not rewritten.
+
 ## Resolving a track
 
 1. Canonicalize the path without reading the file. Expand a leading `~`. Collapse `.` and `..`. Keep an absolute path absolute. Join a relative path to the home directory. Do not follow symlinks.
