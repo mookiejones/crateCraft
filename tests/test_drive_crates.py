@@ -48,6 +48,10 @@ class DriveCrateTests(unittest.TestCase):
             self.assertEqual(snapshots.parse_serato_bytes(crate.read_bytes()), ["Music/a.mp3"])
             rows = snapshots.parse_database_v2((serato / "database V2").read_bytes())
             self.assertEqual([row.get("path") for row in rows], ["Music/a.mp3"])
+            backslash = str(root).replace("/", "\\") + "\\Music\\b.mp3"
+            again = sync_volume(_volume(root), [backslash], "House", add=True, overwrite=True)
+            self.assertEqual(again.status, "written")
+            self.assertIn("Music/b.mp3", snapshots.parse_serato_bytes(crate.read_bytes()))
 
     def test_unplugged_drive_is_not_connected_and_writes_nothing(self) -> None:
         """A volume root that is not there is not connected.

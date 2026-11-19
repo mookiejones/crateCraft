@@ -208,13 +208,13 @@ def _relative(path: str, volume: volumes.Volume) -> str:
             return ""
         rest = path[2:].lstrip("\\/")
         return rest.replace("\\", "/")
-    root = volume.root.rstrip("/\\")
+    # Windows Path strings use backslashes. Compare both forms as forward slashes.
+    normalized = path.replace("\\", "/")
+    root = volume.root.replace("\\", "/").rstrip("/")
     prefix = root + "/"
-    if path == root:
+    if normalized == root or not normalized.startswith(prefix):
         return ""
-    if not path.startswith(prefix):
-        return ""
-    return path[len(prefix) :].replace("\\", "/")
+    return normalized[len(prefix) :]
 
 
 def _chunk(tag: str, data: bytes) -> bytes:
