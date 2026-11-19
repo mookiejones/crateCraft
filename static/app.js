@@ -17862,6 +17862,7 @@ Error generating stack: ` + x.message + `
       "crate-prompt-input": tips.cratePromptName,
       "crate-prompt-cancel": tips.cratePromptCancel,
       "crate-prompt-confirm": tips.cratePromptConfirm,
+      "overwrite-same-name": tips.overwriteSameName,
       "confirm-cancel": tips.confirmCancel,
       "confirm-confirm": tips.confirmAction,
       "rekordbox-cancel": tips.rekordboxCancel,
