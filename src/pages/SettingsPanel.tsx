@@ -8,6 +8,7 @@
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
@@ -260,6 +261,14 @@ export function SettingsPanel() {
       <Box className="about" component="section" aria-labelledby="about-title">
         <Typography id="about-title" variant="h6" component="h3">{t("settings.about")}</Typography>
         <Typography id="about-version" className="about-version" component="p">{settings.aboutVersion}</Typography>
+        <Chip
+          id="library-stays"
+          size="small"
+          tabIndex={0}
+          label={t("settings.libraryStays")}
+          ref={tooltipRef(tips.libraryStays)}
+          sx={{ alignSelf: "flex-start", height: "auto", "& .MuiChip-label": { whiteSpace: "normal" } }}
+        />
         <Typography component="p">
           <a
             id="about-github"

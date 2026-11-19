@@ -53,6 +53,7 @@ import setup_flow
 import smart_presets
 import smart_rules
 import snapshots
+import suspicious_cues
 import tag_cleanup
 import tempo_drift
 import telemetry
@@ -1770,6 +1771,35 @@ def request_hosts_allowed(host: str | None, origin: str | None) -> bool:
     return named.lower() in _LOCAL_HOSTS
 
 
+def static_content_security_policy() -> str:
+    """Return the Content-Security-Policy for a file from ``static/``.
+
+    ``connect-src 'self'`` is the desktop equivalent of ``connect-src
+    'none'`` for off-machine network. The page may call this computer.
+    ``connect-src 'none'`` would block same-origin ``/api`` fetches.
+    ``connect-src`` does not name another machine.
+
+    ``default-src 'self'`` keeps scripts on this computer. ``style-src``
+    also allows MUI's injected style tags and the Google font stylesheet
+    already linked from ``index.html``. ``font-src`` allows those font
+    files. ``img-src`` allows a cover thumbnail that is a ``data:`` URL.
+    ``object-src 'none'`` and ``base-uri 'none'`` block plugins and a
+    replaced document base.
+
+    Returns:
+        The header value.
+    """
+    return (
+        "default-src 'self'; "
+        "connect-src 'self'; "
+        "object-src 'none'; "
+        "base-uri 'none'; "
+        "img-src 'self' data:; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com"
+    )
+
+
 class Handler(BaseHTTPRequestHandler):
     """Serve the JSON API and the files in static/."""
 
@@ -2236,6 +2266,7 @@ class Handler(BaseHTTPRequestHandler):
                     losting = parsed.path == "/api/lost-tags"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
+                    cueing = parsed.path == "/api/suspicious-cues"
                     history = parsed.path == "/api/history-stats"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
@@ -2256,6 +2287,8 @@ class Handler(BaseHTTPRequestHandler):
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
                         or (bitrate_crate and payload.get("action") == "preview")
+                        or (cueing and payload.get("action") == "preview")
+                        or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
                         or (
                             mirroring
                             and (
@@ -2343,6 +2376,10 @@ class Handler(BaseHTTPRequestHandler):
                         result = bitrate_check.action(request)
                         if request.get("action") == "create" and result.get("written"):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif cueing:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = suspicious_cues.action(request)
                     elif mirroring:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
@@ -3325,7 +3362,9 @@ class Handler(BaseHTTPRequestHandler):
         The request is joined to ``static/`` and passed through
         ``os.path.realpath``. The result must sit inside that directory.
         A path that climbs out, including one that only shares a prefix
-        with the directory name, returns 404.
+        with the directory name, returns 404. A file that is served
+        includes ``Content-Security-Policy`` from
+        :func:`static_content_security_policy`.
         """
         rel = "index.html" if url_path in {"", "/"} else url_path.lstrip("/")
         root = os.path.realpath(STATIC)
@@ -3346,10 +3385,30 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Content-Type", kind)
                 self.send_header("Content-Length", str(len(body)))
                 self.send_header("Cache-Control", "no-store")
+                self.send_header("Content-Security-Policy", static_content_security_policy())
                 self.end_headers()
                 self.wfile.write(body)
                 return
         self.send_error(404)
+
+
+def _check_app_upgrade() -> None:
+    """Record this crateCraft version, and snapshot a library before an update.
+
+    A missing ``master.sqlite`` only records the version. A failed snapshot,
+    including one skipped because Serato DJ is still open, is logged.
+    Writes in this process stay off. The server still starts. Quit Serato
+    and open crateCraft again to retry.
+
+    Returns:
+        None.
+    """
+    try:
+        snapshots.current_store().check_app_upgrade(app_config.APP_VERSION)
+    except Exception:
+        app_log.logger.exception(
+            "A snapshot before this crateCraft update could not be saved."
+        )
 
 
 def serve(port: int | None = None, *, require_library: bool = True) -> ThreadingHTTPServer:
@@ -3361,10 +3420,14 @@ def serve(port: int | None = None, *, require_library: bool = True) -> Threading
         require_library: When true, a library chosen on an earlier launch
             is used when that file is still a Serato library, then
             telemetry and the snapshot watch start after the bind if the
-            master database exists. A missing database still serves the
-            page, so the first-run wizard can explain what to do. The
-            release smoke check passes false so a runner without Serato
-            does not start telemetry or open a remembered library either.
+            master database exists. Before that watch, and before an
+            interrupted file change is finished, a new crateCraft version
+            snapshots the library only while Serato DJ is not running. A
+            missing database records the version
+            and still serves the page, so the first-run wizard can explain
+            what to do. The release smoke check passes false so a runner
+            without Serato does not start telemetry, record a version, or
+            open a remembered library either.
 
     Returns:
         A server that is listening and not yet serving. ``shutdown_token``
@@ -3380,12 +3443,14 @@ def serve(port: int | None = None, *, require_library: bool = True) -> Threading
     app_log.configure()
     if require_library and library_present:
         app_log.logger.info("Library file: %s", db_path())
+        _check_app_upgrade()
         try:
             files.recover_interrupted()
         except Exception:
             app_log.logger.exception("An interrupted file change could not be finished.")
     elif require_library:
         app_log.logger.info("No Serato library file yet. The setup wizard will explain the next step.")
+        _check_app_upgrade()
     bind_port = PORT if port is None else port
     try:
         httpd = ThreadingHTTPServer((HOST, bind_port), Handler)

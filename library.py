@@ -339,12 +339,29 @@ def read_conn(path: Path | None = None) -> sqlite3.Connection:
     return conn
 
 
+def is_library_filename(name: str) -> bool:
+    """Return whether a file name is the Serato library database.
+
+    Pioneer ``export.pdb`` is not a Serato file. crateCraft does not parse
+    it and does not open it as the library.
+
+    Args:
+        name: File name, not a directory path.
+
+    Returns:
+        True only for ``master.sqlite``.
+    """
+    return name == "master.sqlite"
+
+
 def is_serato_database(path: Path) -> bool:
     """Return whether a file is a Serato master database.
 
     Args:
-        path: Candidate file. A missing file, a shortcut, or any other
-            SQLite file is not a Serato library.
+        path: Candidate file. A missing file, a shortcut, a file that is
+            not named ``master.sqlite`` (including ``export.pdb``), or any
+            other SQLite file is not a Serato library. ``export.pdb`` is
+            not opened.
 
     Returns:
         True when a temporary copy has the ``asset``, ``container``, and
@@ -352,6 +369,8 @@ def is_serato_database(path: Path) -> bool:
         so the check creates no ``-wal``, ``-shm``, or journal file there.
     """
     candidate = Path(path)
+    if not is_library_filename(candidate.name):
+        return False
     try:
         if candidate.is_symlink() or not candidate.is_file():
             return False
@@ -546,7 +565,7 @@ def use_library_file(path: Path) -> None:
     candidate = Path(path)
     if (
         not candidate.is_absolute()
-        or candidate.name != "master.sqlite"
+        or not is_library_filename(candidate.name)
         or "\x00" in str(candidate)
     ):
         raise LibraryError("That folder is not the Serato library on this computer.")
@@ -2006,7 +2025,10 @@ def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
     once and this function does not take a second one while the session is open.
     Restore passes ``snapshot=False`` because it already saved a snapshot and
     is holding the restore journal. A nested snapshot would open the store
-    again and roll that journal back.
+    again and roll that journal back. A failed snapshot before a crateCraft
+    update, including one skipped because Serato is still open, refuses
+    the write after the Serato-open check and before the Serato version
+    gate. That refusal is not Protect Library.
 
     Args:
         snapshot: When true, save a snapshot before the transaction opens.
@@ -2021,7 +2043,8 @@ def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
         SeratoOpen: If Serato holds the lock, the database is locked, or
             opening the write transaction raises any ``OperationalError``.
             The message then carries the SQLite text.
-        LibraryError: If the version gate refuses the library.
+        LibraryError: If a snapshot before a crateCraft update failed, or
+            the Serato version gate refuses the library.
     """
     info = status()
     if info["open"]:
@@ -2029,6 +2052,9 @@ def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
     import snapshots
     import safe_write
 
+    upgrade_block = snapshots.library_write_block()
+    if upgrade_block:
+        raise LibraryError(upgrade_block, 409)
     blocked = snapshots.write_block_message()
     if blocked:
         raise LibraryError(blocked, 409)

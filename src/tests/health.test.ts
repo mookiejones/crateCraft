@@ -29,6 +29,7 @@ const report: LibraryHealthReport = {
     count: 1,
     tracks: [{ id: 13, name: "NoArt", artist: "D", file: "noart.mp3" }],
   },
+  suspicious_cues: { count: 0, tracks: [] },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
   unused: {
@@ -51,6 +52,7 @@ const clear: LibraryHealthReport = {
   no_key: { count: 0, tracks: [] },
   no_beatgrid: { count: 0, tracks: [] },
   no_artwork: { count: 0, tracks: [] },
+  suspicious_cues: { count: 0, tracks: [] },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
   unused: { count: 0, files: [] },
