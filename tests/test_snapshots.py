@@ -837,6 +837,53 @@ class SnapshotTests(unittest.TestCase):
             self.assertEqual(seen, [exe])
             self.assertTrue(snapshots.write_block_message(found))
 
+    def test_510_is_known_unprobed_and_later_builds_stay_unknown(self) -> None:
+        """List 5.1.0 and keep writes off until a schema probe is recorded.
+
+        4.x and probed 5.0.0 with Protect Library off stay writable.
+        5.1.0 with Protect off is still read-only. 5.1.1, 5.2.0, and 6.0.0
+        stay unknown. Snapshots stay allowed because the gate is the same
+        write-block path as an unknown version.
+
+        Returns:
+            None. The test fails if 5.1.0 can write, or if 5.0.0 / 4.x
+            are blocked, or if a later unlisted build is treated as Serato 5.
+        """
+        self.assertIsNone(
+            snapshots.write_block_notice(
+                snapshots.SeratoInstall("4.0.10", "4010213", "off")
+            )
+        )
+        self.assertIsNone(
+            snapshots.write_block_notice(
+                snapshots.SeratoInstall("4.1.0", "4.1.0.1", "off")
+            )
+        )
+        self.assertIsNone(
+            snapshots.write_block_notice(
+                snapshots.SeratoInstall("5.0.0", "5.0.0.1251", "off")
+            )
+        )
+        notice = snapshots.write_block_notice(
+            snapshots.SeratoInstall("5.1.0", "5.1.0.1", "off")
+        )
+        assert notice is not None
+        self.assertEqual(notice.code, "serato_version_unprobed")
+        self.assertEqual(notice.params, {"version": "5.1.0", "build": "5.1.0.1"})
+        self.assertIn("5.1.0", notice.text)
+        self.assertIn("5.1.0", snapshots.KNOWN_UNPROBED_VERSIONS)
+        for version, build in (
+            ("5.1.1", "5.1.1.1"),
+            ("5.2.0", "5.2.0.1"),
+            ("6.0.0", "6.0.0.1"),
+        ):
+            with self.subTest(version=version):
+                blocked = snapshots.write_block_notice(
+                    snapshots.SeratoInstall(version, build, "off")
+                )
+                assert blocked is not None
+                self.assertEqual(blocked.code, "serato_version_unknown")
+
     def test_process_list_failure_blocks_restore_and_is_rechecked(self) -> None:
         """Treat a lister error or timeout as Serato still running.
 

@@ -519,6 +519,28 @@ class ErrorCodeTests(unittest.TestCase):
         self.assertEqual(notice.text, template.format(build="9.9"))
         self.assertIsNone(snapshots.write_block_notice(snapshots.SeratoInstall("4.1.0", "4.1.0.1", "off")))
 
+    def test_unprobed_510_notice_carries_version_and_build(self) -> None:
+        """5.1.0 uses the unprobed template, not the unknown-version one.
+
+        Returns:
+            None.
+        """
+        install = snapshots.SeratoInstall("5.1.0", "5.1.0.1", "off")
+        notice = snapshots.write_block_notice(install)
+        assert notice is not None
+        self.assertEqual(notice.code, "serato_version_unprobed")
+        self.assertEqual(notice.params, {"version": "5.1.0", "build": "5.1.0.1"})
+        template = _catalog("en")["error.serato_version_unprobed"]
+        assert isinstance(template, str)
+        self.assertEqual(
+            notice.text, template.format(version="5.1.0", build="5.1.0.1")
+        )
+        self.assertIsNone(
+            snapshots.write_block_notice(
+                snapshots.SeratoInstall("5.0.0", "5.0.0.1251", "off")
+            )
+        )
+
     def test_history_column_and_search_fit_a_longer_language(self) -> None:
         """Spanish history headers fit and crate actions can wrap when narrow.
 
