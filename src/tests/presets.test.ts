@@ -1,7 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { el } from "../lib/dom";
 import { setLocale } from "../lib/i18n";
-import { isPresetCrate, presetFoot, presetName, readPresetForm, syncPresetButtons, syncPresetFields } from "../lib/crates/preset-view";
+import {
+  addGroup,
+  addRule,
+  isPresetCrate,
+  presetFoot,
+  presetName,
+  readPresetForm,
+  resetRuleForm,
+  RULE_CAP,
+  syncPresetButtons,
+  syncPresetFields,
+} from "../lib/crates/preset-view";
 import { createPreset, openPresetDialog, previewPreset, refreshActivePreset, refreshPresetsOnOpen } from "../lib/crates/presets";
 import { state } from "../lib/state";
 import { unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
@@ -56,6 +67,7 @@ beforeEach(() => {
   vi.mocked(views.lockDown).mockClear();
   vi.mocked(views.selectCrate).mockClear();
   vi.mocked(views.setNotice).mockClear();
+  resetRuleForm();
 });
 
 afterEach(async () => {
@@ -119,6 +131,107 @@ describe("readPresetForm", () => {
     expect(el("preset-bpm").closest("label")?.hidden).toBe(false);
     expect(el("preset-key").closest("label")?.hidden).toBe(true);
     expect(el("preset-months").closest("label")?.hidden).toBe(true);
+    expect(rulesKind()?.hidden).toBe(true);
+    choose("rules");
+    expect(rulesKind()?.hidden).toBe(false);
+    expect(el("preset-bpm").closest("label")?.hidden).toBe(true);
+  });
+});
+
+function rulesKind(): HTMLElement | null {
+  const wrap = el("preset-rule-list").closest("[data-preset-kind]");
+  return wrap instanceof HTMLElement ? wrap : null;
+}
+
+function ruleAttr(index = 0): HTMLSelectElement {
+  return document.querySelectorAll<HTMLSelectElement>(".preset-rule-attr")[index]!;
+}
+
+function ruleOp(index = 0): HTMLSelectElement {
+  return document.querySelectorAll<HTMLSelectElement>(".preset-rule-op")[index]!;
+}
+
+function ruleValue(index = 0): HTMLInputElement {
+  return document.querySelectorAll<HTMLInputElement>(".preset-rule-value")[index]!;
+}
+
+describe("custom rules", () => {
+  it("starts with one empty genre CONTAINS leaf and refuses until the value is filled", () => {
+    choose("rules");
+    expect(ruleAttr().value).toBe("genre");
+    expect(ruleOp().value).toBe("CONTAINS");
+    expect(ruleValue().value).toBe("");
+    expect(readPresetForm()).toBeNull();
+    ruleValue().value = "House";
+    expect(readPresetForm()).toEqual({
+      kind: "rules",
+      conjunction: "AND",
+      rules: [{ attribute: "genre", operation: "CONTAINS", value: "House" }],
+    });
+  });
+
+  it("reads a mixed AND/OR group and a crate limit", () => {
+    choose("rules");
+    state.activeCrate = 5;
+    el("preset-scope").checked = true;
+    el("preset-conjunction").value = "AND";
+    ruleValue().value = "House";
+    addGroup();
+    const groupConjunction = document.querySelector(".preset-rule-conjunction") as HTMLSelectElement;
+    groupConjunction.value = "OR";
+    ruleAttr(1).value = "key";
+    ruleAttr(1).dispatchEvent(new Event("change", { bubbles: true }));
+    ruleOp(1).value = "IS";
+    ruleValue(1).value = "8A";
+    expect(readPresetForm()).toEqual({
+      kind: "rules",
+      conjunction: "AND",
+      crate: 5,
+      rules: [
+        { attribute: "genre", operation: "CONTAINS", value: "House" },
+        { conjunction: "OR", rules: [{ attribute: "key", operation: "IS", value: "8A" }] },
+      ],
+    });
+  });
+
+  it("stops at twenty root items", () => {
+    choose("rules");
+    for (let i = 1; i < RULE_CAP; i += 1) addRule();
+    expect(document.querySelectorAll(".preset-rule-row")).toHaveLength(RULE_CAP);
+    expect(el("preset-add-rule").disabled).toBe(true);
+    expect(el("preset-add-group").disabled).toBe(true);
+    addRule();
+    addGroup();
+    expect(document.querySelectorAll(".preset-rule-row")).toHaveLength(RULE_CAP);
+  });
+
+  it("sends a date as YYYYMMDD", () => {
+    choose("rules");
+    ruleAttr().value = "time_added";
+    ruleAttr().dispatchEvent(new Event("change", { bubbles: true }));
+    expect(ruleOp().value).toBe("AFTER");
+    expect(ruleValue().type).toBe("date");
+    ruleValue().value = "2026-11-18";
+    expect(readPresetForm()).toEqual({
+      kind: "rules",
+      conjunction: "AND",
+      rules: [{ attribute: "time_added", operation: "AFTER", partial_date: 20261118 }],
+    });
+  });
+
+  it("resets the operation when the attribute kind changes", () => {
+    choose("rules");
+    ruleAttr().value = "bpm";
+    ruleAttr().dispatchEvent(new Event("change", { bubbles: true }));
+    expect(ruleOp().value).toBe("GREATER_THAN_OR_EQUAL_TO");
+    expect(ruleValue().type).toBe("number");
+    expect(ruleValue().value).toBe("");
+  });
+
+  it("names the custom-rules kind in the page language", () => {
+    expect(presetName({ kind: "rules", conjunction: "AND", rules: [{ attribute: "genre", operation: "CONTAINS", value: "House" }] })).toBe("Custom rules");
+    setLocale("es");
+    expect(presetName({ kind: "rules", conjunction: "AND", rules: [{ attribute: "genre", operation: "CONTAINS", value: "House" }] })).toBe("Reglas personalizadas");
   });
 });
 
@@ -256,6 +369,31 @@ describe("preset dialog", () => {
     answer({ body: { id: 9, name: "Warmup ⟳", added: 1 } });
     await createPreset();
     expect(calls[0]?.body.name).toBe("Warmup");
+  });
+
+  it("swaps the intro when preview says the crate will be live", async () => {
+    choose("rules");
+    ruleValue().value = "House";
+    answer({ body: { count: 4, native: true } });
+    await previewPreset();
+    expect(el("preset-intro").dataset.i18n).toBe("presets.introNative");
+    expect(el("preset-intro").textContent).toMatch(/live smart crate/);
+    expect(el("preset-create").disabled).toBe(false);
+  });
+
+  it("keeps the copy-crate intro when a crate limit is on", async () => {
+    choose("harmonic");
+    el("preset-key").value = "8A";
+    state.activeCrate = 5;
+    el("preset-scope").checked = true;
+    answer({ body: { count: 2, native: false } });
+    await previewPreset();
+    expect(el("preset-intro").dataset.i18n).toBe("presets.intro");
+    expect(calls[0]?.body).toEqual({
+      action: "preview",
+      space: "Serato Library",
+      preset: { kind: "harmonic", key: "8A", crate: 5 },
+    });
   });
 
   it("locks the page and closes when Serato holds the library", async () => {

@@ -13056,6 +13056,7 @@ Error generating stack: ` + x.message + `
     "error.preset_bad_genre": "Choose a genre.",
     "error.preset_bad_key": "Choose a musical key for the harmonic preset.",
     "error.preset_bad_months": "Choose between 1 and 240 months.",
+    "error.preset_bad_rules": "Choose at least one complete rule.",
     "error.preset_crate_gone": "That preset crate is no longer in the library.",
     "error.preset_not_a_preset_crate": "That crate was not made from a preset.",
     "error.preset_unknown": "That crate preset is not available.",
@@ -13642,8 +13643,23 @@ Error generating stack: ` + x.message + `
     "portable.title": "Portable drive",
     "portable.unreachable": "This drive could not be checked.",
     "portable.unreadable": "This drive could not be read.",
+    "presets.addGroup": "Add group",
+    "presets.addRule": "Add rule",
+    "presets.attr.album": "Album",
+    "presets.attr.artist": "Artist",
+    "presets.attr.bpm": "BPM",
+    "presets.attr.comments": "Comments",
+    "presets.attr.genre": "Genre",
+    "presets.attr.key": "Key",
+    "presets.attr.name": "Title",
+    "presets.attr.stems_analyze_state": "Stems",
+    "presets.attr.time_added": "Date added",
+    "presets.attr.type": "Type",
     "presets.bpm": "BPM",
     "presets.button": "Preset",
+    "presets.conjunction": "Match",
+    "presets.conjunction.and": "All of these",
+    "presets.conjunction.or": "Any of these",
     "presets.counting": "Counting tracks…",
     "presets.create": "Create crate",
     "presets.created": {
@@ -13651,11 +13667,13 @@ Error generating stack: ` + x.message + `
       other: "{name} saved with {count} tracks."
     },
     "presets.intro": "The app picks the tracks and saves a normal crate whose name ends in ⟳. Serato plays it like any crate. It refreshes when this app opens while Serato is closed, or when you press Refresh.",
+    "presets.introNative": "When the rules fit what Serato stores, this app writes a live smart crate. Serato updates it on its own. Mixed AND/OR, play history, and a crate limit stay a normal crate whose name ends in ⟳.",
     "presets.key": "Key",
     "presets.keyHelp": "Camelot, like 8A, or a key name, like Am.",
     "presets.kind": "Preset",
     "presets.kind.bpm": "BPM range",
     "presets.kind.harmonic": "Mixes with a key",
+    "presets.kind.rules": "Custom rules",
     "presets.kind.unplayed": "Not played lately",
     "presets.matches": {
       one: "{count} track matches.",
@@ -13665,10 +13683,21 @@ Error generating stack: ` + x.message + `
     "presets.name": "Crate name",
     "presets.name.bpm": "BPM {bpm} ±{range}",
     "presets.name.harmonic": "Mixes with {key}",
+    "presets.name.rules": "Custom rules",
     "presets.name.unplayed": {
       one: "Not played in {count} month",
       other: "Not played in {count} months"
     },
+    "presets.op.AFTER": "After",
+    "presets.op.BEFORE": "Before",
+    "presets.op.CONTAINS": "Contains",
+    "presets.op.DOES_NOT_CONTAIN": "Does not contain",
+    "presets.op.GREATER_THAN_OR_EQUAL_TO": "≥",
+    "presets.op.IS": "Is",
+    "presets.op.IS_NOT": "Is not",
+    "presets.op.LESS_THAN_OR_EQUAL_TO": "≤",
+    "presets.removeGroup": "Remove group",
+    "presets.removeRule": "Remove",
     "presets.range": "Plus or minus",
     "presets.refresh": "Refresh",
     "presets.refreshed": "{name} refreshed: {added} added, {removed} removed.",
@@ -14359,7 +14388,15 @@ Error generating stack: ` + x.message + `
     "tooltip.presetKey": "The key to mix from. Tracks one step either way on the Camelot wheel, and the relative key, are included.",
     "tooltip.presetKind": "Choose which tracks the crate collects.",
     "tooltip.presetMonths": "Tracks with no play in this many months, including tracks never played.",
-    "tooltip.presetName": "The crate name. ⟳ is added at the end.",
+    "tooltip.presetAddGroup": "Add a group of rules with its own AND or OR. Mixed groups stay a copy crate.",
+    "tooltip.presetAddRule": "Add one more rule. Twenty is the cap.",
+    "tooltip.presetConjunction": "All of these must match, or any of these may match.",
+    "tooltip.presetName": "The crate name. ⟳ is added at the end for a copy crate. A live smart crate keeps the name as typed.",
+    "tooltip.presetRemoveGroup": "Remove this group of rules.",
+    "tooltip.presetRemoveRule": "Remove this rule.",
+    "tooltip.presetRuleAttr": "The track field this rule looks at. Title is stored as name.",
+    "tooltip.presetRuleOp": "How the field is compared.",
+    "tooltip.presetRuleValue": "The value the field is compared with.",
     "tooltip.presetRange": "How far above or below that tempo a track can be.",
     "tooltip.presetScope": "Look only at tracks in the selected crate and the crates inside it.",
     "tooltip.previous": "Play the previous track in this list.",
@@ -14960,6 +14997,7 @@ Error generating stack: ` + x.message + `
     "error.preset_bad_genre": "Elige un género.",
     "error.preset_bad_key": "Elige una tonalidad para el preajuste armónico.",
     "error.preset_bad_months": "Elige entre 1 y 240 meses.",
+    "error.preset_bad_rules": "Elige al menos una regla completa.",
     "error.preset_crate_gone": "Esa caja de preajuste ya no está en la biblioteca.",
     "error.preset_not_a_preset_crate": "Esa caja no se creó a partir de un preajuste.",
     "error.preset_unknown": "Ese preajuste de caja no está disponible.",
@@ -15546,8 +15584,23 @@ Error generating stack: ` + x.message + `
     "portable.title": "Unidad portátil",
     "portable.unreachable": "No se ha podido comprobar esta unidad.",
     "portable.unreadable": "No se ha podido leer esta unidad.",
+    "presets.addGroup": "Añadir grupo",
+    "presets.addRule": "Añadir regla",
+    "presets.attr.album": "Álbum",
+    "presets.attr.artist": "Artista",
+    "presets.attr.bpm": "BPM",
+    "presets.attr.comments": "Comentarios",
+    "presets.attr.genre": "Género",
+    "presets.attr.key": "Tonalidad",
+    "presets.attr.name": "Título",
+    "presets.attr.stems_analyze_state": "Stems",
+    "presets.attr.time_added": "Fecha de añadido",
+    "presets.attr.type": "Tipo",
     "presets.bpm": "BPM",
     "presets.button": "Preajuste",
+    "presets.conjunction": "Coincidir",
+    "presets.conjunction.and": "Todas estas",
+    "presets.conjunction.or": "Cualquiera de estas",
     "presets.counting": "Contando pistas…",
     "presets.create": "Crear caja",
     "presets.created": {
@@ -15555,11 +15608,13 @@ Error generating stack: ` + x.message + `
       other: "{name} guardada con {count} pistas."
     },
     "presets.intro": "La app elige las pistas y guarda una caja normal cuyo nombre termina en ⟳. Serato la reproduce como cualquier caja. Se actualiza cuando esta app se abre con Serato cerrado, o cuando pulsas Actualizar.",
+    "presets.introNative": "Cuando las reglas caben en lo que Serato guarda, esta app escribe una caja inteligente en vivo. Serato la actualiza por su cuenta. AND/OR mezclados, el historial de reproducción y un límite de caja siguen siendo una caja normal cuyo nombre termina en ⟳.",
     "presets.key": "Tonalidad",
     "presets.keyHelp": "Camelot, como 8A, o un nombre de tonalidad, como Am.",
     "presets.kind": "Preajuste",
     "presets.kind.bpm": "Rango de BPM",
     "presets.kind.harmonic": "Mezcla con una tonalidad",
+    "presets.kind.rules": "Reglas personalizadas",
     "presets.kind.unplayed": "Sin tocar últimamente",
     "presets.matches": {
       one: "Coincide {count} pista.",
@@ -15569,10 +15624,21 @@ Error generating stack: ` + x.message + `
     "presets.name": "Nombre de la caja",
     "presets.name.bpm": "BPM {bpm} ±{range}",
     "presets.name.harmonic": "Mezcla con {key}",
+    "presets.name.rules": "Reglas personalizadas",
     "presets.name.unplayed": {
       one: "Sin tocar en {count} mes",
       other: "Sin tocar en {count} meses"
     },
+    "presets.op.AFTER": "Después",
+    "presets.op.BEFORE": "Antes",
+    "presets.op.CONTAINS": "Contiene",
+    "presets.op.DOES_NOT_CONTAIN": "No contiene",
+    "presets.op.GREATER_THAN_OR_EQUAL_TO": "≥",
+    "presets.op.IS": "Es",
+    "presets.op.IS_NOT": "No es",
+    "presets.op.LESS_THAN_OR_EQUAL_TO": "≤",
+    "presets.removeGroup": "Quitar grupo",
+    "presets.removeRule": "Quitar",
     "presets.range": "Más o menos",
     "presets.refresh": "Actualizar",
     "presets.refreshed": "{name} actualizada: {added} añadidas, {removed} quitadas.",
@@ -16263,7 +16329,15 @@ Error generating stack: ` + x.message + `
     "tooltip.presetKey": "La tonalidad de partida. Se incluyen las pistas un paso a cada lado en la rueda Camelot y la tonalidad relativa.",
     "tooltip.presetKind": "Elige qué pistas reúne la caja.",
     "tooltip.presetMonths": "Pistas sin tocar en estos meses, incluidas las que nunca se tocaron.",
-    "tooltip.presetName": "El nombre de la caja. Se añade ⟳ al final.",
+    "tooltip.presetAddGroup": "Añade un grupo de reglas con su propio AND u OR. Los grupos mezclados siguen siendo una caja copia.",
+    "tooltip.presetAddRule": "Añade una regla más. El tope es veinte.",
+    "tooltip.presetConjunction": "Deben coincidir todas, o puede coincidir cualquiera.",
+    "tooltip.presetName": "El nombre de la caja. Se añade ⟳ al final en una caja copia. Una caja inteligente en vivo conserva el nombre tal como lo escribes.",
+    "tooltip.presetRemoveGroup": "Quita este grupo de reglas.",
+    "tooltip.presetRemoveRule": "Quita esta regla.",
+    "tooltip.presetRuleAttr": "El campo de la pista que mira esta regla. El título se guarda como name.",
+    "tooltip.presetRuleOp": "Cómo se compara el campo.",
+    "tooltip.presetRuleValue": "El valor con el que se compara el campo.",
     "tooltip.presetRange": "Cuánto puede subir o bajar una pista respecto a ese tempo.",
     "tooltip.presetScope": "Mira solo las pistas de la caja elegida y de las cajas que contiene.",
     "tooltip.previous": "Reproduce la pista anterior de esta lista.",
@@ -17169,12 +17243,993 @@ Error generating stack: ` + x.message + `
     return rows;
   }
 
+  // src/lib/ui/tooltip-strings.ts
+  function spec(key, params) {
+    return params ? { key, params } : { key };
+  }
+  var tips = {
+    space: spec("tooltip.space"),
+    crateSearch: spec("tooltip.crateSearch"),
+    mergeDuplicates: spec("tooltip.mergeDuplicates"),
+    useInCrates: spec("tooltip.useInCrates"),
+    cratesReplaceSearch: spec("tooltip.cratesReplaceSearch"),
+    cratesReplaceKeep: spec("tooltip.cratesReplaceKeep"),
+    cratesReplaceRetire: spec("tooltip.cratesReplaceRetire"),
+    cratesReplaceCancel: spec("tooltip.cratesReplaceCancel"),
+    cratesReplaceConfirm: spec("tooltip.cratesReplaceConfirm"),
+    relink: spec("tooltip.relink"),
+    relinkRoot: spec("tooltip.relinkRoot"),
+    relinkFind: spec("tooltip.relinkFind"),
+    relinkAcceptHigh: spec("tooltip.relinkAcceptHigh"),
+    relinkConfirm: spec("tooltip.relinkConfirm"),
+    relinkCancel: spec("tooltip.relinkCancel"),
+    relinkInclude: spec("tooltip.relinkInclude"),
+    relinkPick: spec("tooltip.relinkPick"),
+    crateNew: spec("tooltip.crateNew"),
+    crateMore: spec("tooltip.crateMore"),
+    crateBrowserMore: spec("tooltip.crateBrowserMore"),
+    crateRename: spec("tooltip.crateRename"),
+    crateSplit: spec("tooltip.crateSplit"),
+    crateSaveView: spec("tooltip.crateSaveView"),
+    cratePromptName: spec("tooltip.cratePromptName"),
+    cratePromptCancel: spec("tooltip.cratePromptCancel"),
+    cratePromptConfirm: spec("tooltip.cratePromptConfirm"),
+    relocatePath: spec("tooltip.relocatePath"),
+    relocateCancel: spec("tooltip.relocateCancel"),
+    relocateConfirm: spec("tooltip.relocateConfirm"),
+    confirmCancel: spec("tooltip.confirmCancel"),
+    confirmAction: spec("tooltip.confirmAction"),
+    forceWrite: spec("tooltip.forceWrite"),
+    crateColor: spec("tooltip.crateColor"),
+    crateDelete: spec("tooltip.crateDelete"),
+    cratePreset: spec("tooltip.cratePreset"),
+    crateTree: spec("tooltip.crateTree"),
+    crateTreeKind: spec("tooltip.crateTreeKind"),
+    crateTreeLow: spec("tooltip.crateTreeLow"),
+    crateTreeHigh: spec("tooltip.crateTreeHigh"),
+    crateTreeWidth: spec("tooltip.crateTreeWidth"),
+    crateTreeStep: spec("tooltip.crateTreeStep"),
+    crateTreeMinTracks: spec("tooltip.crateTreeMinTracks"),
+    crateTreeLimit: spec("tooltip.crateTreeLimit"),
+    crateTreeScope: spec("tooltip.crateTreeScope"),
+    crateTreeName: spec("tooltip.crateTreeName"),
+    crateTreeCancel: spec("tooltip.crateTreeCancel"),
+    crateTreeCreate: spec("tooltip.crateTreeCreate"),
+    crateFolderSync: spec("tooltip.crateFolderSync"),
+    crateRenameFromTags: spec("tooltip.crateRenameFromTags"),
+    crateRefresh: spec("tooltip.crateRefresh"),
+    folderSyncPath: spec("tooltip.folderSyncPath"),
+    folderSyncSubcrates: spec("tooltip.folderSyncSubcrates"),
+    folderSyncFull: spec("tooltip.folderSyncFull"),
+    folderSyncCancel: spec("tooltip.folderSyncCancel"),
+    folderSyncRun: spec("tooltip.folderSyncRun"),
+    presetKind: spec("tooltip.presetKind"),
+    presetKey: spec("tooltip.presetKey"),
+    presetBpm: spec("tooltip.presetBpm"),
+    presetRange: spec("tooltip.presetRange"),
+    presetMonths: spec("tooltip.presetMonths"),
+    presetConjunction: spec("tooltip.presetConjunction"),
+    presetAddRule: spec("tooltip.presetAddRule"),
+    presetAddGroup: spec("tooltip.presetAddGroup"),
+    presetRuleAttr: spec("tooltip.presetRuleAttr"),
+    presetRuleOp: spec("tooltip.presetRuleOp"),
+    presetRuleValue: spec("tooltip.presetRuleValue"),
+    presetRemoveRule: spec("tooltip.presetRemoveRule"),
+    presetRemoveGroup: spec("tooltip.presetRemoveGroup"),
+    presetScope: spec("tooltip.presetScope"),
+    presetName: spec("tooltip.presetName"),
+    presetCancel: spec("tooltip.presetCancel"),
+    presetCreate: spec("tooltip.presetCreate"),
+    shortcuts: spec("tooltip.shortcuts"),
+    shortcutsFilter: spec("tooltip.shortcutsFilter"),
+    shortcutsResetAll: spec("tooltip.shortcutsResetAll"),
+    shortcutsChange: spec("tooltip.shortcutsChange"),
+    shortcutsReset: spec("tooltip.shortcutsReset"),
+    drawerToggle: spec("tooltip.drawerToggle"),
+    skipToContent: spec("tooltip.skipToContent"),
+    playColumn: spec("tooltip.playColumn"),
+    columnMenu: spec("tooltip.columnMenu"),
+    columnResize: spec("tooltip.columnResize"),
+    gridCell: spec("tooltip.gridCell"),
+    gridPagination: spec("tooltip.gridPagination"),
+    help: spec("tooltip.help"),
+    helpBug: spec("tooltip.helpBug"),
+    helpFeature: spec("tooltip.helpFeature"),
+    helpGithub: spec("tooltip.helpGithub"),
+    helpReleases: spec("tooltip.helpReleases"),
+    helpClose: spec("tooltip.helpClose"),
+    helpHappened: spec("tooltip.helpHappened"),
+    helpExpected: spec("tooltip.helpExpected"),
+    helpNames: spec("tooltip.helpNames"),
+    helpCopyLog: spec("tooltip.helpCopyLog"),
+    helpOpen: spec("tooltip.helpOpen"),
+    helpReport: spec("tooltip.helpReport"),
+    settings: spec("tooltip.settings"),
+    search: spec("tooltip.search"),
+    searchField: spec("tooltip.searchField"),
+    exportM3u: spec("tooltip.exportM3u"),
+    exportRekordbox: spec("tooltip.exportRekordbox"),
+    fieldEditApply: spec("tooltip.fieldEditApply"),
+    fieldEditCheckbox: spec("tooltip.fieldEditCheckbox"),
+    fieldEditField: spec("tooltip.fieldEditField"),
+    fieldEditPreview: spec("tooltip.fieldEditPreview"),
+    fieldEditValue: spec("tooltip.fieldEditValue"),
+    fieldEditWriteFiles: spec("tooltip.fieldEditWriteFiles"),
+    memoryCues: spec("tooltip.memoryCues"),
+    hotLoops: spec("tooltip.hotLoops"),
+    rekordboxKey: spec("tooltip.rekordboxKey"),
+    importM3u: spec("tooltip.importM3u"),
+    importFile: spec("tooltip.importFile"),
+    reload: spec("tooltip.reload"),
+    filesUp: spec("tooltip.filesUp"),
+    filesSearch: spec("tooltip.filesSearch"),
+    filesRefresh: spec("tooltip.filesRefresh"),
+    filesElsewhere: spec("tooltip.filesElsewhere"),
+    filesMusicFolders: spec("tooltip.filesMusicFolders"),
+    filesRename: spec("tooltip.filesRename"),
+    filesRenameFromTags: spec("tooltip.filesRenameFromTags"),
+    filesMove: spec("tooltip.filesMove"),
+    filesMoveFolder: spec("tooltip.filesMoveFolder"),
+    filesReplace: spec("tooltip.filesReplace"),
+    filesDelete: spec("tooltip.filesDelete"),
+    filesMoveHere: spec("tooltip.filesMoveHere"),
+    filesPickCancel: spec("tooltip.filesPickCancel"),
+    operationsRefresh: spec("tooltip.operationsRefresh"),
+    operationsList: spec("tooltip.operationsList"),
+    operationsRetry: spec("tooltip.operationsRetry"),
+    snapshotsRefresh: spec("tooltip.snapshotsRefresh"),
+    snapshotsTake: spec("tooltip.snapshotsTake"),
+    musicMirrorDest: spec("tooltip.musicMirrorDest"),
+    musicMirrorPreview: spec("tooltip.musicMirrorPreview"),
+    musicMirrorCopy: spec("tooltip.musicMirrorCopy"),
+    musicMirrorRestore: spec("tooltip.musicMirrorRestore"),
+    musicMirrorCrate: spec("tooltip.musicMirrorCrate"),
+    musicMirrorRelink: spec("tooltip.musicMirrorRelink"),
+    backupDrives: spec("tooltip.backupDrives"),
+    snapshotsUndo: spec("tooltip.snapshotsUndo"),
+    consentDecline: spec("tooltip.consentDecline"),
+    consentAccept: spec("tooltip.consentAccept"),
+    telemetry: spec("tooltip.telemetry"),
+    copyVersion: spec("tooltip.copyVersion"),
+    rerunWizard: spec("tooltip.rerunWizard"),
+    openLogs: spec("tooltip.openLogs"),
+    copyLogs: spec("tooltip.copyLogs"),
+    settingsClose: spec("tooltip.settingsClose"),
+    logFallback: spec("tooltip.logFallback"),
+    mergeTrash: spec("tooltip.mergeTrash"),
+    mergeCancel: spec("tooltip.mergeCancel"),
+    mergeConfirm: spec("tooltip.mergeConfirm"),
+    mergeConfirmTrash: spec("tooltip.mergeConfirmTrash"),
+    merging: spec("tooltip.merging"),
+    rekordboxCancel: spec("tooltip.rekordboxCancel"),
+    rekordboxDownload: spec("tooltip.rekordboxDownload"),
+    filesName: spec("tooltip.filesName"),
+    filesReplacement: spec("tooltip.filesReplacement"),
+    filesCancel: spec("tooltip.filesCancel"),
+    filesReview: spec("tooltip.filesReview"),
+    filesConfirm: spec("tooltip.filesConfirm"),
+    filesMoveTrash: spec("tooltip.filesMoveTrash"),
+    shortcutsClose: spec("tooltip.shortcutsClose"),
+    quickOpen: spec("tooltip.quickOpen"),
+    quickOpenRetry: spec("tooltip.quickOpenRetry"),
+    quickOpenClose: spec("tooltip.quickOpenClose"),
+    snapshotCancel: spec("tooltip.snapshotCancel"),
+    snapshotConfirm: spec("tooltip.snapshotConfirm"),
+    wizardFolderUp: spec("tooltip.wizardFolderUp"),
+    wizardFolderUse: spec("tooltip.wizardFolderUse"),
+    wizardFolderClose: spec("tooltip.wizardFolderClose"),
+    wizardNo: spec("tooltip.wizardNo"),
+    wizardYes: spec("tooltip.wizardYes"),
+    wizardUpdatesNo: spec("tooltip.wizardUpdatesNo"),
+    wizardUpdatesYes: spec("tooltip.wizardUpdatesYes"),
+    updateToggle: spec("tooltip.updateToggle"),
+    updatePrereleases: spec("tooltip.updatePrereleases"),
+    updateDownload: spec("tooltip.updateDownload"),
+    updateSkip: spec("tooltip.updateSkip"),
+    updateDismiss: spec("tooltip.updateDismiss"),
+    wizardBack: spec("tooltip.wizardBack"),
+    wizardCancel: spec("tooltip.wizardCancel"),
+    wizardSecondary: spec("tooltip.wizardSecondary"),
+    trackList: spec("tooltip.trackList"),
+    filesList: spec("tooltip.filesList"),
+    portableClose: spec("tooltip.portableClose"),
+    snapshotsList: spec("tooltip.snapshotsList"),
+    splitter: spec("tooltip.splitter"),
+    previous: spec("tooltip.previous"),
+    next: spec("tooltip.next"),
+    seek: spec("tooltip.seek"),
+    volume: spec("tooltip.volume"),
+    zoomIn: spec("tooltip.zoomIn"),
+    zoomOut: spec("tooltip.zoomOut"),
+    overview: spec("tooltip.overview"),
+    smartRules: spec("tooltip.smartRules"),
+    saveRules: spec("tooltip.saveRules"),
+    saveTrack: spec("tooltip.saveTrack"),
+    trackColor: spec("tooltip.trackColor"),
+    trackRating: spec("tooltip.trackRating"),
+    beatgridLock: spec("tooltip.beatgridLock"),
+    relocate: spec("tooltip.relocate"),
+    removeTrack: spec("tooltip.removeTrack"),
+    prepareAdd: spec("tooltip.prepareAdd"),
+    prepareRemove: spec("tooltip.prepareRemove"),
+    updateRelated: spec("tooltip.updateRelated"),
+    relatedCrateOnly: spec("tooltip.relatedCrateOnly"),
+    findRelated: spec("tooltip.findRelated"),
+    linkNote: spec("tooltip.linkNote"),
+    linkRating: spec("tooltip.linkRating"),
+    language: spec("tooltip.language"),
+    colorway: spec("tooltip.colorway"),
+    iconFollowsTheme: spec("tooltip.iconFollowsTheme"),
+    gigLock: spec("tooltip.gigLock"),
+    minCopies: spec("tooltip.minCopies"),
+    untrustedVolumes: spec("tooltip.untrustedVolumes"),
+    libraryCopies: spec("tooltip.libraryCopies"),
+    pruneSnapshot: spec("tooltip.pruneSnapshot"),
+    gigLockApply: spec("tooltip.gigLockApply"),
+    gigLockDrop: spec("tooltip.gigLockDrop"),
+    gigLockPreview: spec("tooltip.gigLockPreview"),
+    gigLockUndo: spec("tooltip.gigLockUndo"),
+    libraryGeneration: spec("tooltip.libraryGeneration"),
+    linkMutual: spec("tooltip.linkMutual"),
+    saveLink: spec("tooltip.saveLink"),
+    showSearchCopies: spec("tooltip.showSearchCopies"),
+    hideSearchCopies: spec("tooltip.hideSearchCopies"),
+    openInLibrary: spec("tooltip.openInLibrary"),
+    runSetup: spec("tooltip.runSetup"),
+    snapshotsRetry: spec("tooltip.snapshotsRetry"),
+    reviewRestore: spec("tooltip.reviewRestore"),
+    allTracks: spec("tooltip.allTracks"),
+    navLibrary: spec("tooltip.navLibrary"),
+    navHealth: spec("tooltip.navHealth"),
+    navGig: spec("tooltip.navGig"),
+    viewCrates: spec("tooltip.viewCrates"),
+    viewHistory: spec("tooltip.viewHistory"),
+    viewStats: spec("tooltip.viewStats"),
+    viewCompare: spec("tooltip.viewCompare"),
+    compareShow: spec("tooltip.compareShow"),
+    compareSave: spec("tooltip.compareSave"),
+    compareA: spec("tooltip.compareA"),
+    compareB: spec("tooltip.compareB"),
+    compareSubcrates: spec("tooltip.compareSubcrates"),
+    statsRefresh: spec("tooltip.statsRefresh"),
+    statsCsv: spec("tooltip.statsCsv"),
+    statsPeriod: spec("tooltip.statsPeriod"),
+    statsFrom: spec("tooltip.statsFrom"),
+    statsTo: spec("tooltip.statsTo"),
+    statsIdleDays: spec("tooltip.statsIdleDays"),
+    statsIdleCrate: spec("tooltip.statsIdleCrate"),
+    viewMissing: spec("tooltip.viewMissing"),
+    viewDuplicates: spec("tooltip.viewDuplicates"),
+    viewStems: spec("tooltip.viewStems"),
+    viewFiles: spec("tooltip.viewFiles"),
+    viewSnapshots: spec("tooltip.viewSnapshots"),
+    viewGig: spec("tooltip.viewGig"),
+    viewPortable: spec("tooltip.viewPortable"),
+    viewDrift: spec("tooltip.viewDrift"),
+    portableDrive: spec("tooltip.portableDrive"),
+    portableRun: spec("tooltip.portableRun"),
+    driftRefresh: spec("tooltip.driftRefresh"),
+    viewHealth: spec("tooltip.viewHealth"),
+    viewScan: spec("tooltip.viewScan"),
+    viewBitrate: spec("tooltip.viewBitrate"),
+    viewTags: spec("tooltip.viewTags"),
+    viewLost: spec("tooltip.viewLost"),
+    lostApply: spec("tooltip.lostApply"),
+    lostRefresh: spec("tooltip.lostRefresh"),
+    healthRefresh: spec("tooltip.healthRefresh"),
+    healthSection: spec("tooltip.healthSection"),
+    healthOpenMissing: spec("tooltip.healthOpenMissing"),
+    healthOpenDuplicates: spec("tooltip.healthOpenDuplicates"),
+    healthOpenFiles: spec("tooltip.healthOpenFiles"),
+    healthOpenBitrate: spec("tooltip.healthOpenBitrate"),
+    healthTrack: spec("tooltip.healthTrack"),
+    healthFindArt: spec("tooltip.healthFindArt"),
+    healthArtCancel: spec("tooltip.healthArtCancel"),
+    healthArtEmbed: spec("tooltip.healthArtEmbed"),
+    healthArtPick: spec("tooltip.healthArtPick"),
+    tagsGenre: spec("tooltip.tagsGenre"),
+    tagsArtist: spec("tooltip.tagsArtist"),
+    tagsTitles: spec("tooltip.tagsTitles"),
+    tagsRefresh: spec("tooltip.tagsRefresh"),
+    tagsPreview: spec("tooltip.tagsPreview"),
+    tagsApply: spec("tooltip.tagsApply"),
+    tagsApplyTitles: spec("tooltip.tagsApplyTitles"),
+    tagsApplyMappings: spec("tooltip.tagsApplyMappings"),
+    tagsGroup: spec("tooltip.tagsGroup"),
+    tagsSpelling: spec("tooltip.tagsSpelling"),
+    tagsWriteFiles: spec("tooltip.tagsWriteFiles"),
+    gigRefresh: spec("tooltip.gigRefresh"),
+    scanQuick: spec("tooltip.scanQuick"),
+    scanFull: spec("tooltip.scanFull"),
+    bitrateRefresh: spec("tooltip.bitrateRefresh"),
+    bitrateSave: spec("tooltip.bitrateSave"),
+    bitrateConfirm: spec("tooltip.bitrateConfirm"),
+    gigBack: spec("tooltip.gigBack"),
+    gigNext: spec("tooltip.gigNext"),
+    gigExit: spec("tooltip.gigExit"),
+    gigRevert: spec("tooltip.gigRevert"),
+    gigGroup: spec("tooltip.gigGroup"),
+    gigShowAll: spec("tooltip.gigShowAll"),
+    sortTitle: spec("tooltip.sortTitle"),
+    sortArtist: spec("tooltip.sortArtist"),
+    sortBpm: spec("tooltip.sortBpm"),
+    sortKey: spec("tooltip.sortKey"),
+    sortLength: spec("tooltip.sortLength"),
+    sortDeck: spec("tooltip.sortDeck"),
+    sortPlayed: spec("tooltip.sortPlayed"),
+    sortStart: spec("tooltip.sortStart"),
+    sortOrder: spec("tooltip.sortOrder"),
+    sortCrateName: spec("tooltip.sortCrateName"),
+    sortAdded: spec("tooltip.sortAdded")
+  };
+  function playTip(action, name) {
+    return name ? spec("tooltip.transportNamed", { action, name }) : spec("tooltip.transport", { action });
+  }
+  function sortTip(key, label) {
+    let message = {
+      name: "tooltip.sortTitle",
+      artist: "tooltip.sortArtist",
+      bpm: "tooltip.sortBpm",
+      key: "tooltip.sortKey",
+      energy: "tooltip.sortEnergy",
+      genre: "tooltip.sortGenre",
+      time_added: "tooltip.sortDateAdded",
+      last_played: "tooltip.sortLastPlayed",
+      play_count: "tooltip.sortPlays",
+      length_ms: "tooltip.sortLength",
+      deck: "tooltip.sortDeck",
+      played: "tooltip.sortPlayed",
+      start: "tooltip.sortStart"
+    }[key];
+    return message ? spec(message) : spec("tooltip.sortBy", { label });
+  }
+  function navTip(id) {
+    return {
+      library: tips.navLibrary,
+      files: tips.viewFiles,
+      health: tips.navHealth,
+      backups: tips.viewSnapshots,
+      gig: tips.navGig
+    }[id];
+  }
+  function viewTip(view) {
+    return {
+      crates: tips.viewCrates,
+      history: tips.viewHistory,
+      stats: tips.viewStats,
+      compare: tips.viewCompare,
+      missing: tips.viewMissing,
+      duplicates: tips.viewDuplicates,
+      stems: tips.viewStems,
+      files: tips.viewFiles,
+      snapshots: tips.viewSnapshots,
+      gig: tips.viewGig,
+      portable: tips.viewPortable,
+      drift: tips.viewDrift,
+      health: tips.viewHealth,
+      scan: tips.viewScan,
+      bitrate: tips.viewBitrate,
+      tags: tips.viewTags,
+      lost: tips.viewLost
+    }[view];
+  }
+  function crateSortTip(key) {
+    if (key === "order") return tips.sortOrder;
+    if (key === "name") return tips.sortCrateName;
+    if (key === "added") return tips.sortAdded;
+  }
+  function staticTip(id) {
+    return {
+      space: tips.space,
+      "crate-search": tips.crateSearch,
+      "merge-duplicates": tips.mergeDuplicates,
+      "open-relink": tips.relink,
+      "relink-root": tips.relinkRoot,
+      "relink-find": tips.relinkFind,
+      "relink-accept-high": tips.relinkAcceptHigh,
+      "relink-confirm": tips.relinkConfirm,
+      "relink-cancel": tips.relinkCancel,
+      "crate-new": tips.crateNew,
+      "crate-actions-more": tips.crateMore,
+      "crate-browser-more": tips.crateBrowserMore,
+      "crate-split": tips.crateSplit,
+      "crate-save-view": tips.crateSaveView,
+      "crate-rename": tips.crateRename,
+      "crate-color": tips.crateColor,
+      "crate-delete": tips.crateDelete,
+      "crate-preset": tips.cratePreset,
+      "crate-tree": tips.crateTree,
+      "crate-tree-kind": tips.crateTreeKind,
+      "crate-tree-low": tips.crateTreeLow,
+      "crate-tree-high": tips.crateTreeHigh,
+      "crate-tree-width": tips.crateTreeWidth,
+      "crate-tree-step": tips.crateTreeStep,
+      "crate-tree-min-tracks": tips.crateTreeMinTracks,
+      "crate-tree-limit": tips.crateTreeLimit,
+      "crate-tree-scope": tips.crateTreeScope,
+      "crate-tree-name": tips.crateTreeName,
+      "crate-tree-cancel": tips.crateTreeCancel,
+      "crate-tree-create": tips.crateTreeCreate,
+      "crate-folder-sync": tips.crateFolderSync,
+      "crate-rename-from-tags": tips.crateRenameFromTags,
+      "crate-refresh": tips.crateRefresh,
+      "folder-sync-path": tips.folderSyncPath,
+      "folder-sync-subcrates": tips.folderSyncSubcrates,
+      "folder-sync-full": tips.folderSyncFull,
+      "folder-sync-cancel": tips.folderSyncCancel,
+      "folder-sync-run": tips.folderSyncRun,
+      "preset-kind": tips.presetKind,
+      "preset-key": tips.presetKey,
+      "preset-bpm": tips.presetBpm,
+      "preset-range": tips.presetRange,
+      "preset-months": tips.presetMonths,
+      "preset-conjunction": tips.presetConjunction,
+      "preset-add-rule": tips.presetAddRule,
+      "preset-add-group": tips.presetAddGroup,
+      "preset-scope": tips.presetScope,
+      "preset-name": tips.presetName,
+      "preset-cancel": tips.presetCancel,
+      "preset-create": tips.presetCreate,
+      "drawer-toggle": tips.drawerToggle,
+      "skip-to-content": tips.skipToContent,
+      "open-help": tips.help,
+      "shortcuts-title": tips.shortcuts,
+      "shortcuts-filter": tips.shortcutsFilter,
+      "shortcuts-reset-all": tips.shortcutsResetAll,
+      "open-settings": tips.settings,
+      search: tips.search,
+      "sheet-scope-all": tips.allTracks,
+      "search-field": tips.searchField,
+      "export-m3u": tips.exportM3u,
+      "export-rekordbox": tips.exportRekordbox,
+      "rekordbox-memory": tips.memoryCues,
+      "rekordbox-hot-loops": tips.hotLoops,
+      "rekordbox-key": tips.rekordboxKey,
+      "import-m3u": tips.importM3u,
+      "import-file": tips.importFile,
+      reload: tips.reload,
+      "files-up": tips.filesUp,
+      "files-search": tips.filesSearch,
+      "files-refresh": tips.filesRefresh,
+      "files-elsewhere": tips.filesElsewhere,
+      "files-rename": tips.filesRename,
+      "files-rename-from-tags": tips.filesRenameFromTags,
+      "files-move": tips.filesMove,
+      "files-move-folder": tips.filesMoveFolder,
+      "files-replace": tips.filesReplace,
+      "files-delete": tips.filesDelete,
+      "files-move-here": tips.filesMoveHere,
+      "files-pick-cancel": tips.filesPickCancel,
+      "operations-refresh": tips.operationsRefresh,
+      "operations-list": tips.operationsList,
+      "snapshots-refresh": tips.snapshotsRefresh,
+      "gig-refresh": tips.gigRefresh,
+      "drift-refresh": tips.driftRefresh,
+      "health-refresh": tips.healthRefresh,
+      "album-art-cancel": tips.healthArtCancel,
+      "album-art-embed": tips.healthArtEmbed,
+      "stats-refresh": tips.statsRefresh,
+      "stats-csv": tips.statsCsv,
+      "stats-period": tips.statsPeriod,
+      "stats-from": tips.statsFrom,
+      "stats-to": tips.statsTo,
+      "stats-idle-days": tips.statsIdleDays,
+      "compare-a": tips.compareA,
+      "compare-b": tips.compareB,
+      "compare-subcrates": tips.compareSubcrates,
+      "compare-refresh": tips.compareShow,
+      "scan-quick": tips.scanQuick,
+      "scan-full": tips.scanFull,
+      "bitrate-refresh": tips.bitrateRefresh,
+      "bitrate-save": tips.bitrateSave,
+      "tags-genre": tips.tagsGenre,
+      "tags-artist": tips.tagsArtist,
+      "tags-titles": tips.tagsTitles,
+      "tags-refresh": tips.tagsRefresh,
+      "lost-refresh": tips.lostRefresh,
+      "lost-apply": tips.lostApply,
+      "snapshots-take": tips.snapshotsTake,
+      "music-mirror-dest": tips.musicMirrorDest,
+      "music-mirror-preview": tips.musicMirrorPreview,
+      "music-mirror-copy": tips.musicMirrorCopy,
+      "music-mirror-restore": tips.musicMirrorRestore,
+      "music-mirror-crate": tips.musicMirrorCrate,
+      "music-mirror-relink": tips.musicMirrorRelink,
+      "snapshots-drives": tips.backupDrives,
+      "snapshots-undo-button": tips.snapshotsUndo,
+      "consent-decline": tips.consentDecline,
+      "consent-accept": tips.consentAccept,
+      "telemetry-toggle": tips.telemetry,
+      "copy-version": tips.copyVersion,
+      "rerun-wizard": tips.rerunWizard,
+      "open-logs": tips.openLogs,
+      "copy-logs": tips.copyLogs,
+      "about-github": tips.helpGithub,
+      "help-bug": tips.helpBug,
+      "help-feature": tips.helpFeature,
+      "help-github": tips.helpGithub,
+      "help-releases": tips.helpReleases,
+      "help-close": tips.helpClose,
+      "help-happened": tips.helpHappened,
+      "help-expected": tips.helpExpected,
+      "help-names": tips.helpNames,
+      "help-copy-log": tips.helpCopyLog,
+      "help-open-github": tips.helpOpen,
+      "help-report-close": tips.helpClose,
+      "help-log-fallback": tips.helpReport,
+      "settings-close": tips.settingsClose,
+      "log-fallback": tips.logFallback,
+      "language-select": tips.language,
+      "colorway-select": tips.colorway,
+      "icon-follows-theme": tips.iconFollowsTheme,
+      "gig-lock": tips.gigLock,
+      "min-copies": tips.minCopies,
+      "untrusted-volumes": tips.untrustedVolumes,
+      "library-generation": tips.libraryGeneration,
+      "merge-trash": tips.mergeTrash,
+      "merge-cancel": tips.mergeCancel,
+      "merge-confirm": tips.mergeConfirm,
+      "crates-replace-search": tips.cratesReplaceSearch,
+      "crates-replace-keep": tips.cratesReplaceKeep,
+      "crates-replace-retire": tips.cratesReplaceRetire,
+      "crates-replace-cancel": tips.cratesReplaceCancel,
+      "crates-replace-confirm": tips.cratesReplaceConfirm,
+      "crate-prompt-input": tips.cratePromptName,
+      "crate-prompt-cancel": tips.cratePromptCancel,
+      "crate-prompt-confirm": tips.cratePromptConfirm,
+      "confirm-cancel": tips.confirmCancel,
+      "confirm-confirm": tips.confirmAction,
+      "rekordbox-cancel": tips.rekordboxCancel,
+      "rekordbox-download": tips.rekordboxDownload,
+      "files-name": tips.filesName,
+      "files-replacement": tips.filesReplacement,
+      "files-cancel": tips.filesCancel,
+      "files-review": tips.filesReview,
+      "files-confirm": tips.filesConfirm,
+      "portable-close": tips.portableClose,
+      "portable-drive": tips.portableDrive,
+      "portable-check": tips.portableRun,
+      "quick-open-query": tips.quickOpen,
+      "quick-open-retry": tips.quickOpenRetry,
+      "quick-open-close": tips.quickOpenClose,
+      "snapshot-cancel": tips.snapshotCancel,
+      "snapshot-confirm": tips.snapshotConfirm,
+      "wizard-folder-up": tips.wizardFolderUp,
+      "wizard-folder-use": tips.wizardFolderUse,
+      "wizard-folder-close": tips.wizardFolderClose,
+      "wizard-no": tips.wizardNo,
+      "wizard-yes": tips.wizardYes,
+      "wizard-updates-no": tips.wizardUpdatesNo,
+      "wizard-updates-yes": tips.wizardUpdatesYes,
+      "update-toggle": tips.updateToggle,
+      "update-prereleases": tips.updatePrereleases,
+      "update-download": tips.updateDownload,
+      "update-skip": tips.updateSkip,
+      "update-dismiss": tips.updateDismiss,
+      "wizard-back": tips.wizardBack,
+      "wizard-cancel": tips.wizardCancel,
+      "wizard-secondary": tips.wizardSecondary,
+      "wizard-primary": spec("tooltip.wizard.getStarted"),
+      list: tips.trackList,
+      "list-b": tips.trackList,
+      "files-list": tips.filesList,
+      "snapshots-list": tips.snapshotsList,
+      "track-splitter": tips.splitter
+    }[id];
+  }
+  function expandCrate(name) {
+    return spec("tooltip.expandCrate", { name });
+  }
+  function collapseCrate(name) {
+    return spec("tooltip.collapseCrate", { name });
+  }
+  function openCrate(name) {
+    return spec("tooltip.openCrate", { name });
+  }
+  function sessionTip(name) {
+    return spec("tooltip.session", { name });
+  }
+  function playRow(name) {
+    return spec("tooltip.playRow", { name });
+  }
+  function cueTip(label) {
+    return spec("tooltip.cue", { label });
+  }
+  function editField(label) {
+    return spec("tooltip.editField", { label });
+  }
+  function revealTip(manager2) {
+    return spec("tooltip.reveal", { name: manager2 });
+  }
+  function openCopy(name) {
+    return spec("tooltip.openCopy", { name });
+  }
+  function openReplaceCopy(name) {
+    return spec("tooltip.openReplaceCopy", { name });
+  }
+  function openRelated(name) {
+    return spec("tooltip.openRelated", { name });
+  }
+  function removeRelatedTip(name) {
+    return spec("tooltip.removeRelated", { name });
+  }
+  function chooseRelated(name) {
+    return spec("tooltip.chooseRelated", { name });
+  }
+  function saveSuggestion(name) {
+    return spec("tooltip.saveSuggestion", { name });
+  }
+  function membershipTip(name) {
+    return spec("tooltip.membership", { name });
+  }
+  function openCrumb(name) {
+    return spec("tooltip.openCrumb", { name });
+  }
+  function openFile(name) {
+    return spec("tooltip.openFile", { name });
+  }
+  function portableCheck(name) {
+    return spec("tooltip.portableCheck", { name });
+  }
+  function missingDrive(name) {
+    return spec("tooltip.missingDrive", { name });
+  }
+  function fileShortcut(name) {
+    return spec("tooltip.fileShortcut", { name });
+  }
+  function selectFile(name, path = "") {
+    return path && path !== name ? spec("tooltip.selectFilePath", { name, path }) : spec("tooltip.selectFile", { name });
+  }
+  function keepCopy(name) {
+    return spec("tooltip.keepCopy", { name });
+  }
+  function quickOpenHit(kind2, title2, detail2) {
+    return detail2 ? spec("tooltip.quickOpenHitDetail", { kind: kind2, title: title2, detail: detail2 }) : spec("tooltip.quickOpenHit", { kind: kind2, title: title2 });
+  }
+
+  // src/lib/ui/tooltip.ts
+  var TOOLTIP_ID = "app-tooltip", TOOLTIP_HOVER_MS = 400, INTERACTIVE_SELECTOR = [
+    "button",
+    "input:not([type='hidden'])",
+    "select",
+    "textarea",
+    "a[href]",
+    "summary",
+    "[role='slider']",
+    "[role='button']",
+    "[role='tab']",
+    "[role='menuitem']",
+    "[role='menuitemcheckbox']",
+    "[role='menuitemradio']",
+    "[role='switch']",
+    "[role='option']",
+    "[role='separator']",
+    "[role='checkbox']",
+    "[role='radio']",
+    "[tabindex]:not([tabindex='-1'])"
+  ].join(","), installed = !1, current = null, timer = 0, priorDescribedBy = "", tipParams = /* @__PURE__ */ new WeakMap();
+  function writeTooltip(element) {
+    let key = element.dataset.tooltipKey ?? "";
+    if (!hasKey(key)) throw new Error(`Unknown tooltip key ${key}.`);
+    let value = t(key, tipParams.get(element)).trim();
+    if (!value) throw new Error("A control tooltip cannot be empty.");
+    element.dataset.tooltip = value;
+  }
+  function syncOpenTooltip() {
+    if (!current) return;
+    let tip = document.getElementById(TOOLTIP_ID);
+    tip instanceof HTMLElement && (tip.textContent = current.dataset.tooltip ?? "");
+  }
+  function setTooltip(element, spec2) {
+    element.dataset.tooltipKey = spec2.key, spec2.params ? tipParams.set(element, spec2.params) : tipParams.delete(element), writeTooltip(element), element.removeAttribute("title"), current === element && syncOpenTooltip();
+  }
+  function tooltipRef(spec2) {
+    return (element) => {
+      element && setTooltip(element, spec2);
+    };
+  }
+  function buttonEl(spec2) {
+    let element = document.createElement("button");
+    return element.type = "button", setTooltip(element, spec2), element;
+  }
+  function inputEl(spec2) {
+    let element = document.createElement("input");
+    return setTooltip(element, spec2), element;
+  }
+  function selectEl(spec2) {
+    let element = document.createElement("select");
+    return setTooltip(element, spec2), element;
+  }
+  function textareaEl(spec2) {
+    let element = document.createElement("textarea");
+    return setTooltip(element, spec2), element;
+  }
+  function applyStaticTooltips(root = document) {
+    root.querySelectorAll("[id]").forEach((node2) => {
+      let text2 = staticTip(node2.id);
+      text2 && setTooltip(node2, text2);
+    }), root.querySelectorAll("[data-nav]").forEach((node2) => {
+      let text2 = navTip(node2.dataset.nav ?? "");
+      text2 && setTooltip(node2, text2);
+    }), root.querySelectorAll("[data-view]").forEach((node2) => {
+      let text2 = viewTip(node2.dataset.view ?? "");
+      text2 && setTooltip(node2, text2);
+    }), root.querySelectorAll("[data-sort]").forEach((node2) => {
+      let label = node2.textContent?.trim() || node2.dataset.sort || "";
+      setTooltip(node2, sortTip(node2.dataset.sort ?? "", label));
+    }), root.querySelectorAll("[data-crate-sort]").forEach((node2) => {
+      let text2 = crateSortTip(node2.dataset.crateSort ?? "");
+      text2 && setTooltip(node2, text2);
+    });
+  }
+  function refreshTooltips(root = document) {
+    if (root.querySelectorAll("[data-tooltip-key]").forEach((node2) => writeTooltip(node2)), current && !current.isConnected) {
+      hide();
+      return;
+    }
+    syncOpenTooltip();
+  }
+  function installTooltips() {
+    installed || (installed = !0, document.addEventListener("pointerover", onPointerOver), document.addEventListener("pointerout", onPointerOut), document.addEventListener("focusin", onFocusIn), document.addEventListener("focusout", onFocusOut), document.addEventListener("keydown", onKeyDown), document.addEventListener("scroll", onScroll, !0));
+  }
+  function onPointerOver(event) {
+    if (event.pointerType && event.pointerType !== "mouse") return;
+    let target = tooltipTarget(event.target);
+    target && schedule(target, hoverDelay());
+  }
+  function onPointerOut(event) {
+    if (event.pointerType && event.pointerType !== "mouse") return;
+    let target = tooltipTarget(event.target);
+    !target || tooltipTarget(event.relatedTarget) === target || current === target && hide();
+  }
+  function onFocusIn(event) {
+    let target = tooltipTarget(event.target);
+    target && schedule(target, 0);
+  }
+  function onFocusOut(event) {
+    if (tooltipTarget(event.relatedTarget)) return;
+    let target = tooltipTarget(event.target);
+    target && current === target && hide();
+  }
+  function onKeyDown(event) {
+    event.key !== "Escape" || !current || hide();
+  }
+  function onScroll() {
+    current && hide();
+  }
+  function schedule(target, delay) {
+    if (window.clearTimeout(timer), timer = 0, delay <= 0) {
+      show(target);
+      return;
+    }
+    timer = window.setTimeout(() => show(target), delay);
+  }
+  function show(target) {
+    let text2 = target.dataset.tooltip?.trim() ?? "";
+    if (!text2) return;
+    current && current !== target && restoreDescribedBy(current), current = target;
+    let tip = ensureTip();
+    tip.textContent = text2, openTip(tip), place(target, tip), addDescribedBy(target);
+  }
+  function hide() {
+    window.clearTimeout(timer), timer = 0, current && restoreDescribedBy(current), current = null;
+    let tip = document.getElementById(TOOLTIP_ID);
+    tip instanceof HTMLElement && closeTip(tip);
+  }
+  function hoverDelay() {
+    return typeof matchMedia != "function" ? TOOLTIP_HOVER_MS : matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : TOOLTIP_HOVER_MS;
+  }
+  function tooltipTarget(node2) {
+    if (!(node2 instanceof Element)) return null;
+    let direct = node2.closest("[data-tooltip]");
+    if (direct?.dataset.tooltip?.trim()) return direct;
+    let label = node2 instanceof HTMLLabelElement ? node2 : node2.closest("label");
+    if (!(label instanceof HTMLLabelElement)) return null;
+    if (label.control instanceof HTMLElement && label.control.dataset.tooltip?.trim()) return label.control;
+    let nested = label.querySelector("[data-tooltip]");
+    return nested?.dataset.tooltip?.trim() ? nested : null;
+  }
+  function ensureTip() {
+    let existing = document.getElementById(TOOLTIP_ID);
+    if (existing instanceof HTMLElement) return existing;
+    let tip = document.createElement("div");
+    return tip.id = TOOLTIP_ID, tip.className = "app-tooltip", tip.setAttribute("role", "tooltip"), tip.hidden = !0, tip.setAttribute("popover", "manual"), document.body.append(tip), tip;
+  }
+  function openTip(tip) {
+    if (tip.hidden = !1, typeof tip.showPopover == "function")
+      try {
+        tip.matches(":popover-open") || tip.showPopover();
+      } catch {
+      }
+  }
+  function closeTip(tip) {
+    if (typeof tip.hidePopover == "function")
+      try {
+        tip.matches(":popover-open") && tip.hidePopover();
+      } catch {
+      }
+    tip.hidden = !0;
+  }
+  function place(target, tip) {
+    let rect = target.getBoundingClientRect(), gap2 = 8, margin2 = 8;
+    tip.style.position = "fixed", tip.style.margin = "0", tip.style.left = "0px", tip.style.top = "0px";
+    let tipRect = tip.getBoundingClientRect(), top2 = rect.bottom + gap2, left2 = rect.left;
+    top2 + tipRect.height > window.innerHeight - margin2 && (top2 = Math.max(margin2, rect.top - gap2 - tipRect.height)), left2 + tipRect.width > window.innerWidth - margin2 && (left2 = window.innerWidth - margin2 - tipRect.width), tip.style.left = `${Math.round(Math.max(margin2, left2))}px`, tip.style.top = `${Math.round(Math.max(margin2, top2))}px`;
+  }
+  function addDescribedBy(target) {
+    if (target.dataset.tooltipLive === "1") return;
+    target.dataset.tooltipLive = "1", priorDescribedBy = target.getAttribute("aria-describedby") ?? "";
+    let ids = priorDescribedBy.split(/\s+/).filter((id) => id.length > 0 && id !== TOOLTIP_ID);
+    ids.push(TOOLTIP_ID), target.setAttribute("aria-describedby", ids.join(" "));
+  }
+  function restoreDescribedBy(target) {
+    target.dataset.tooltipLive === "1" && (delete target.dataset.tooltipLive, priorDescribedBy ? target.setAttribute("aria-describedby", priorDescribedBy) : target.removeAttribute("aria-describedby"), priorDescribedBy = "");
+  }
+
   // src/lib/crates/preset-view.ts
+  var RULE_CAP = 20, STRING_ATTRS = ["album", "artist", "comments", "genre", "key", "name", "type"], UINT32_ATTRS = ["bpm", "stems_analyze_state"], TIME_ATTRS = ["time_added"], ALL_ATTRS = [...STRING_ATTRS, ...UINT32_ATTRS, ...TIME_ATTRS], STRING_OPS = ["IS", "CONTAINS", "IS_NOT", "DOES_NOT_CONTAIN"], UINT32_OPS = ["GREATER_THAN_OR_EQUAL_TO", "LESS_THAN_OR_EQUAL_TO"], TIME_OPS = ["AFTER", "BEFORE"], ruleItems = [defaultLeaf()];
+  function isGroup(item) {
+    return "conjunction" in item && "rules" in item && !("attribute" in item);
+  }
+  function defaultLeaf() {
+    return { attribute: "genre", operation: "CONTAINS", value: "" };
+  }
+  function defaultGroup() {
+    return { conjunction: "AND", rules: [defaultLeaf()] };
+  }
+  function attrKind(attribute) {
+    return UINT32_ATTRS.includes(attribute) ? "UINT32" : TIME_ATTRS.includes(attribute) ? "TIME" : "STRING";
+  }
+  function defaultOp(attribute) {
+    let kind2 = attrKind(attribute);
+    return kind2 === "UINT32" ? "GREATER_THAN_OR_EQUAL_TO" : kind2 === "TIME" ? "AFTER" : "CONTAINS";
+  }
+  function opsFor(attribute) {
+    let kind2 = attrKind(attribute);
+    return kind2 === "UINT32" ? UINT32_OPS : kind2 === "TIME" ? TIME_OPS : STRING_OPS;
+  }
+  function messageKey(prefix2, name) {
+    let key = `${prefix2}${name}`;
+    if (!hasKey(key)) throw new Error(key);
+    return key;
+  }
+  function fillSelect(select, values3, prefix2, current3) {
+    select.replaceChildren();
+    for (let value of values3) {
+      let option = document.createElement("option");
+      option.value = value;
+      let key = messageKey(prefix2, value);
+      option.dataset.i18n = key, option.textContent = t(key), select.append(option);
+    }
+    select.value = values3.includes(current3) ? current3 : values3[0] ?? "";
+  }
+  function fillConjunction(select, current3) {
+    select.replaceChildren();
+    for (let value of ["AND", "OR"]) {
+      let option = document.createElement("option");
+      option.value = value;
+      let key = value === "AND" ? "presets.conjunction.and" : "presets.conjunction.or";
+      option.dataset.i18n = key, option.textContent = t(key), select.append(option);
+    }
+    select.value = current3 === "OR" ? "OR" : "AND";
+  }
+  function ymdFromInput(text2) {
+    let match2 = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text2.trim());
+    if (!match2) return null;
+    let packed = +`${match2[1]}${match2[2]}${match2[3]}`;
+    return !Number.isInteger(packed) || packed < 19000101 || packed > 21001231 ? null : packed;
+  }
+  function completeLeaf(leaf) {
+    let attribute = leaf.attribute === "title" ? "name" : leaf.attribute, operation = leaf.operation, kind2 = attrKind(attribute);
+    if (kind2 === "TIME") {
+      let date = ymdFromInput(leaf.value);
+      return date == null || !TIME_OPS.includes(operation) ? null : { attribute, operation, partial_date: date };
+    }
+    if (kind2 === "UINT32") {
+      let number = Number(leaf.value.trim());
+      return !Number.isInteger(number) || number < 0 || !UINT32_OPS.includes(operation) ? null : { attribute, operation, value: number };
+    }
+    let value = leaf.value.trim();
+    return !value || !STRING_OPS.includes(operation) || !STRING_ATTRS.includes(attribute) ? null : { attribute, operation, value };
+  }
+  function readLeafRow(row, leaf) {
+    let attr = row.querySelector(".preset-rule-attr"), op = row.querySelector(".preset-rule-op"), value = row.querySelector(".preset-rule-value");
+    attr instanceof HTMLSelectElement && (leaf.attribute = attr.value), op instanceof HTMLSelectElement && (leaf.operation = op.value), value instanceof HTMLInputElement && (leaf.value = value.value);
+  }
+  function syncFromDom() {
+    [...el("preset-rule-list").children].forEach((child, index) => {
+      let item = ruleItems[index];
+      if (item) {
+        if (child.classList.contains("preset-rule-group")) {
+          if (!isGroup(item)) return;
+          let conjunction = child.querySelector(".preset-rule-conjunction");
+          conjunction instanceof HTMLSelectElement && (conjunction.value === "AND" || conjunction.value === "OR") && (item.conjunction = conjunction.value), [...child.querySelectorAll(".preset-rule-row")].forEach((row, leafIndex) => {
+            let leaf = item.rules[leafIndex];
+            leaf && readLeafRow(row, leaf);
+          });
+          return;
+        }
+        isGroup(item) || readLeafRow(child, item);
+      }
+    });
+  }
+  function paintLeafRow(leaf) {
+    let row = document.createElement("div");
+    row.className = "preset-rule-row";
+    let attr = selectEl(tips.presetRuleAttr);
+    attr.className = "preset-rule-attr", attr.setAttribute("aria-label", t("tooltip.presetRuleAttr")), fillSelect(attr, ALL_ATTRS, "presets.attr.", leaf.attribute), attr.addEventListener("change", () => {
+      let next3 = attr.value;
+      next3 !== leaf.attribute && (syncFromDom(), leaf.attribute = next3, leaf.operation = defaultOp(next3), leaf.value = "", paintRuleList());
+    });
+    let op = selectEl(tips.presetRuleOp);
+    op.className = "preset-rule-op", op.setAttribute("aria-label", t("tooltip.presetRuleOp")), fillSelect(op, opsFor(leaf.attribute), "presets.op.", leaf.operation);
+    let value = inputEl(tips.presetRuleValue);
+    value.className = "preset-rule-value", value.setAttribute("aria-label", t("tooltip.presetRuleValue")), value.autocomplete = "off";
+    let kind2 = attrKind(leaf.attribute);
+    kind2 === "TIME" ? value.type = "date" : kind2 === "UINT32" ? (value.type = "number", value.min = "0", value.step = "1", value.inputMode = "numeric") : (value.type = "text", value.spellcheck = !1), value.value = leaf.value;
+    let remove = buttonEl(tips.presetRemoveRule);
+    return remove.dataset.i18n = "presets.removeRule", remove.textContent = t("presets.removeRule"), remove.addEventListener("click", () => {
+      syncFromDom(), removeItem(leaf);
+    }), row.append(attr, op, value, remove), row;
+  }
+  function paintGroup(group) {
+    let wrap2 = document.createElement("div");
+    wrap2.className = "preset-rule-group";
+    let head = document.createElement("div");
+    head.className = "preset-rule-group-head";
+    let conjunction = selectEl(tips.presetConjunction);
+    conjunction.className = "preset-rule-conjunction", conjunction.setAttribute("aria-label", t("tooltip.presetConjunction")), fillConjunction(conjunction, group.conjunction);
+    let remove = buttonEl(tips.presetRemoveGroup);
+    remove.dataset.i18n = "presets.removeGroup", remove.textContent = t("presets.removeGroup"), remove.addEventListener("click", () => {
+      syncFromDom(), removeItem(group);
+    }), head.append(conjunction, remove), wrap2.append(head);
+    for (let leaf of group.rules) wrap2.append(paintLeafRow(leaf));
+    let add = buttonEl(tips.presetAddRule);
+    return add.className = "preset-add-group-rule", add.dataset.i18n = "presets.addRule", add.textContent = t("presets.addRule"), add.disabled = group.rules.length >= RULE_CAP, add.addEventListener("click", () => {
+      syncFromDom(), !(group.rules.length >= RULE_CAP) && (group.rules.push(defaultLeaf()), paintRuleList());
+    }), wrap2.append(add), wrap2;
+  }
+  function removeItem(target) {
+    let rootIndex = ruleItems.indexOf(target);
+    if (rootIndex >= 0) {
+      ruleItems.splice(rootIndex, 1), paintRuleList();
+      return;
+    }
+    for (let item of ruleItems) {
+      if (!isGroup(item)) continue;
+      let leafIndex = item.rules.indexOf(target);
+      if (leafIndex >= 0) {
+        item.rules.splice(leafIndex, 1), paintRuleList();
+        return;
+      }
+    }
+  }
+  function paintRuleList() {
+    let list = el("preset-rule-list");
+    list.replaceChildren();
+    for (let item of ruleItems)
+      list.append(isGroup(item) ? paintGroup(item) : paintLeafRow(item));
+    let atCap = ruleItems.length >= RULE_CAP;
+    el("preset-add-rule").disabled = atCap, el("preset-add-group").disabled = atCap, applyStatic(list);
+  }
+  function resetRuleForm() {
+    ruleItems = [defaultLeaf()], el("preset-conjunction").value = "AND", paintRuleList(), syncPresetIntro(!1);
+  }
+  function addRule() {
+    syncFromDom(), !(ruleItems.length >= RULE_CAP) && (ruleItems.push(defaultLeaf()), paintRuleList());
+  }
+  function addGroup() {
+    syncFromDom(), !(ruleItems.length >= RULE_CAP) && (ruleItems.push(defaultGroup()), paintRuleList());
+  }
+  function syncPresetIntro(native) {
+    let key = native ? "presets.introNative" : "presets.intro", intro = el("preset-intro");
+    intro.dataset.i18n = key, intro.textContent = t(key);
+  }
   function presetName(preset) {
     return preset.kind === "harmonic" ? t("presets.name.harmonic", { key: preset.key }) : preset.kind === "bpm" ? t("presets.name.bpm", {
       bpm: formatNumber(preset.bpm, { maximumFractionDigits: 1 }),
       range: formatNumber(preset.range, { maximumFractionDigits: 1 })
-    }) : t("presets.name.unplayed", { count: preset.months });
+    }) : preset.kind === "rules" ? t("presets.name.rules") : t("presets.name.unplayed", { count: preset.months });
   }
   function numberFrom(input) {
     let text2 = input.value.trim();
@@ -17186,6 +18241,29 @@ Error generating stack: ` + x.message + `
     if (state.activeCrate === "all") return null;
     let crate = state.crates.find((item) => item.id === state.activeCrate);
     return crate && !crate.smart ? crate : null;
+  }
+  function readRulesForm(crate) {
+    syncFromDom();
+    let conjunction = el("preset-conjunction").value;
+    if (conjunction !== "AND" && conjunction !== "OR" || !ruleItems.length || ruleItems.length > RULE_CAP) return null;
+    let rules = [];
+    for (let item of ruleItems) {
+      if (isGroup(item)) {
+        if (!item.rules.length || item.rules.length > RULE_CAP) return null;
+        let leaves = [];
+        for (let leaf of item.rules) {
+          let complete2 = completeLeaf(leaf);
+          if (!complete2) return null;
+          leaves.push(complete2);
+        }
+        rules.push({ conjunction: item.conjunction, rules: leaves });
+        continue;
+      }
+      let complete = completeLeaf(item);
+      if (!complete) return null;
+      rules.push(complete);
+    }
+    return { kind: "rules", conjunction, rules, ...crate };
   }
   function readPresetForm() {
     let kind2 = el("preset-kind").value, scope = scopeCrate(), crate = scope && el("preset-scope").checked ? { crate: scope.id } : {};
@@ -17201,12 +18279,13 @@ Error generating stack: ` + x.message + `
       let months = numberFrom(el("preset-months")) ?? 12;
       return !Number.isInteger(months) || months < 1 || months > 240 ? null : { kind: kind2, months, ...crate };
     }
-    return null;
+    return kind2 === "rules" ? readRulesForm(crate) : null;
   }
   function syncPresetFields() {
     let kind2 = el("preset-kind").value;
     for (let field2 of document.querySelectorAll("#preset-dialog [data-preset-kind]"))
       field2.hidden = field2.dataset.presetKind !== kind2;
+    kind2 === "rules" && paintRuleList();
   }
   function isPresetCrate(id) {
     return id !== "all" && Object.hasOwn(state.presets, String(id));
@@ -17372,19 +18451,19 @@ Error generating stack: ` + x.message + `
   }
 
   // src/lib/ui/notice-store.ts
-  var current = null, listeners3 = /* @__PURE__ */ new Set();
+  var current2 = null, listeners3 = /* @__PURE__ */ new Set();
   function emit2() {
     for (let listener of listeners3) listener();
   }
   function getNotice() {
-    return current;
+    return current2;
   }
   function setNotice(text2, severity = "info") {
     let trimmed = text2.trim();
-    current = trimmed ? { text: trimmed, severity } : null, emit2();
+    current2 = trimmed ? { text: trimmed, severity } : null, emit2();
   }
   function dismissNotice() {
-    current !== null && (current = null, emit2());
+    current2 !== null && (current2 = null, emit2());
   }
   function subscribeNotice(listener) {
     return listeners3.add(listener), () => {
@@ -31566,818 +32645,6 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }
     let key = ACTION_KEY[id];
     return key ? t(key) : id;
-  }
-
-  // src/lib/ui/tooltip-strings.ts
-  function spec(key, params) {
-    return params ? { key, params } : { key };
-  }
-  var tips = {
-    space: spec("tooltip.space"),
-    crateSearch: spec("tooltip.crateSearch"),
-    mergeDuplicates: spec("tooltip.mergeDuplicates"),
-    useInCrates: spec("tooltip.useInCrates"),
-    cratesReplaceSearch: spec("tooltip.cratesReplaceSearch"),
-    cratesReplaceKeep: spec("tooltip.cratesReplaceKeep"),
-    cratesReplaceRetire: spec("tooltip.cratesReplaceRetire"),
-    cratesReplaceCancel: spec("tooltip.cratesReplaceCancel"),
-    cratesReplaceConfirm: spec("tooltip.cratesReplaceConfirm"),
-    relink: spec("tooltip.relink"),
-    relinkRoot: spec("tooltip.relinkRoot"),
-    relinkFind: spec("tooltip.relinkFind"),
-    relinkAcceptHigh: spec("tooltip.relinkAcceptHigh"),
-    relinkConfirm: spec("tooltip.relinkConfirm"),
-    relinkCancel: spec("tooltip.relinkCancel"),
-    relinkInclude: spec("tooltip.relinkInclude"),
-    relinkPick: spec("tooltip.relinkPick"),
-    crateNew: spec("tooltip.crateNew"),
-    crateMore: spec("tooltip.crateMore"),
-    crateBrowserMore: spec("tooltip.crateBrowserMore"),
-    crateRename: spec("tooltip.crateRename"),
-    crateSplit: spec("tooltip.crateSplit"),
-    crateSaveView: spec("tooltip.crateSaveView"),
-    cratePromptName: spec("tooltip.cratePromptName"),
-    cratePromptCancel: spec("tooltip.cratePromptCancel"),
-    cratePromptConfirm: spec("tooltip.cratePromptConfirm"),
-    relocatePath: spec("tooltip.relocatePath"),
-    relocateCancel: spec("tooltip.relocateCancel"),
-    relocateConfirm: spec("tooltip.relocateConfirm"),
-    confirmCancel: spec("tooltip.confirmCancel"),
-    confirmAction: spec("tooltip.confirmAction"),
-    forceWrite: spec("tooltip.forceWrite"),
-    crateColor: spec("tooltip.crateColor"),
-    crateDelete: spec("tooltip.crateDelete"),
-    cratePreset: spec("tooltip.cratePreset"),
-    crateTree: spec("tooltip.crateTree"),
-    crateTreeKind: spec("tooltip.crateTreeKind"),
-    crateTreeLow: spec("tooltip.crateTreeLow"),
-    crateTreeHigh: spec("tooltip.crateTreeHigh"),
-    crateTreeWidth: spec("tooltip.crateTreeWidth"),
-    crateTreeStep: spec("tooltip.crateTreeStep"),
-    crateTreeMinTracks: spec("tooltip.crateTreeMinTracks"),
-    crateTreeLimit: spec("tooltip.crateTreeLimit"),
-    crateTreeScope: spec("tooltip.crateTreeScope"),
-    crateTreeName: spec("tooltip.crateTreeName"),
-    crateTreeCancel: spec("tooltip.crateTreeCancel"),
-    crateTreeCreate: spec("tooltip.crateTreeCreate"),
-    crateFolderSync: spec("tooltip.crateFolderSync"),
-    crateRenameFromTags: spec("tooltip.crateRenameFromTags"),
-    crateRefresh: spec("tooltip.crateRefresh"),
-    folderSyncPath: spec("tooltip.folderSyncPath"),
-    folderSyncSubcrates: spec("tooltip.folderSyncSubcrates"),
-    folderSyncFull: spec("tooltip.folderSyncFull"),
-    folderSyncCancel: spec("tooltip.folderSyncCancel"),
-    folderSyncRun: spec("tooltip.folderSyncRun"),
-    presetKind: spec("tooltip.presetKind"),
-    presetKey: spec("tooltip.presetKey"),
-    presetBpm: spec("tooltip.presetBpm"),
-    presetRange: spec("tooltip.presetRange"),
-    presetMonths: spec("tooltip.presetMonths"),
-    presetScope: spec("tooltip.presetScope"),
-    presetName: spec("tooltip.presetName"),
-    presetCancel: spec("tooltip.presetCancel"),
-    presetCreate: spec("tooltip.presetCreate"),
-    shortcuts: spec("tooltip.shortcuts"),
-    shortcutsFilter: spec("tooltip.shortcutsFilter"),
-    shortcutsResetAll: spec("tooltip.shortcutsResetAll"),
-    shortcutsChange: spec("tooltip.shortcutsChange"),
-    shortcutsReset: spec("tooltip.shortcutsReset"),
-    drawerToggle: spec("tooltip.drawerToggle"),
-    skipToContent: spec("tooltip.skipToContent"),
-    playColumn: spec("tooltip.playColumn"),
-    columnMenu: spec("tooltip.columnMenu"),
-    columnResize: spec("tooltip.columnResize"),
-    gridCell: spec("tooltip.gridCell"),
-    gridPagination: spec("tooltip.gridPagination"),
-    help: spec("tooltip.help"),
-    helpBug: spec("tooltip.helpBug"),
-    helpFeature: spec("tooltip.helpFeature"),
-    helpGithub: spec("tooltip.helpGithub"),
-    helpReleases: spec("tooltip.helpReleases"),
-    helpClose: spec("tooltip.helpClose"),
-    helpHappened: spec("tooltip.helpHappened"),
-    helpExpected: spec("tooltip.helpExpected"),
-    helpNames: spec("tooltip.helpNames"),
-    helpCopyLog: spec("tooltip.helpCopyLog"),
-    helpOpen: spec("tooltip.helpOpen"),
-    helpReport: spec("tooltip.helpReport"),
-    settings: spec("tooltip.settings"),
-    search: spec("tooltip.search"),
-    searchField: spec("tooltip.searchField"),
-    exportM3u: spec("tooltip.exportM3u"),
-    exportRekordbox: spec("tooltip.exportRekordbox"),
-    fieldEditApply: spec("tooltip.fieldEditApply"),
-    fieldEditCheckbox: spec("tooltip.fieldEditCheckbox"),
-    fieldEditField: spec("tooltip.fieldEditField"),
-    fieldEditPreview: spec("tooltip.fieldEditPreview"),
-    fieldEditValue: spec("tooltip.fieldEditValue"),
-    fieldEditWriteFiles: spec("tooltip.fieldEditWriteFiles"),
-    memoryCues: spec("tooltip.memoryCues"),
-    hotLoops: spec("tooltip.hotLoops"),
-    rekordboxKey: spec("tooltip.rekordboxKey"),
-    importM3u: spec("tooltip.importM3u"),
-    importFile: spec("tooltip.importFile"),
-    reload: spec("tooltip.reload"),
-    filesUp: spec("tooltip.filesUp"),
-    filesSearch: spec("tooltip.filesSearch"),
-    filesRefresh: spec("tooltip.filesRefresh"),
-    filesElsewhere: spec("tooltip.filesElsewhere"),
-    filesMusicFolders: spec("tooltip.filesMusicFolders"),
-    filesRename: spec("tooltip.filesRename"),
-    filesRenameFromTags: spec("tooltip.filesRenameFromTags"),
-    filesMove: spec("tooltip.filesMove"),
-    filesMoveFolder: spec("tooltip.filesMoveFolder"),
-    filesReplace: spec("tooltip.filesReplace"),
-    filesDelete: spec("tooltip.filesDelete"),
-    filesMoveHere: spec("tooltip.filesMoveHere"),
-    filesPickCancel: spec("tooltip.filesPickCancel"),
-    operationsRefresh: spec("tooltip.operationsRefresh"),
-    operationsList: spec("tooltip.operationsList"),
-    operationsRetry: spec("tooltip.operationsRetry"),
-    snapshotsRefresh: spec("tooltip.snapshotsRefresh"),
-    snapshotsTake: spec("tooltip.snapshotsTake"),
-    musicMirrorDest: spec("tooltip.musicMirrorDest"),
-    musicMirrorPreview: spec("tooltip.musicMirrorPreview"),
-    musicMirrorCopy: spec("tooltip.musicMirrorCopy"),
-    musicMirrorRestore: spec("tooltip.musicMirrorRestore"),
-    musicMirrorCrate: spec("tooltip.musicMirrorCrate"),
-    musicMirrorRelink: spec("tooltip.musicMirrorRelink"),
-    backupDrives: spec("tooltip.backupDrives"),
-    snapshotsUndo: spec("tooltip.snapshotsUndo"),
-    consentDecline: spec("tooltip.consentDecline"),
-    consentAccept: spec("tooltip.consentAccept"),
-    telemetry: spec("tooltip.telemetry"),
-    copyVersion: spec("tooltip.copyVersion"),
-    rerunWizard: spec("tooltip.rerunWizard"),
-    openLogs: spec("tooltip.openLogs"),
-    copyLogs: spec("tooltip.copyLogs"),
-    settingsClose: spec("tooltip.settingsClose"),
-    logFallback: spec("tooltip.logFallback"),
-    mergeTrash: spec("tooltip.mergeTrash"),
-    mergeCancel: spec("tooltip.mergeCancel"),
-    mergeConfirm: spec("tooltip.mergeConfirm"),
-    mergeConfirmTrash: spec("tooltip.mergeConfirmTrash"),
-    merging: spec("tooltip.merging"),
-    rekordboxCancel: spec("tooltip.rekordboxCancel"),
-    rekordboxDownload: spec("tooltip.rekordboxDownload"),
-    filesName: spec("tooltip.filesName"),
-    filesReplacement: spec("tooltip.filesReplacement"),
-    filesCancel: spec("tooltip.filesCancel"),
-    filesReview: spec("tooltip.filesReview"),
-    filesConfirm: spec("tooltip.filesConfirm"),
-    filesMoveTrash: spec("tooltip.filesMoveTrash"),
-    shortcutsClose: spec("tooltip.shortcutsClose"),
-    quickOpen: spec("tooltip.quickOpen"),
-    quickOpenRetry: spec("tooltip.quickOpenRetry"),
-    quickOpenClose: spec("tooltip.quickOpenClose"),
-    snapshotCancel: spec("tooltip.snapshotCancel"),
-    snapshotConfirm: spec("tooltip.snapshotConfirm"),
-    wizardFolderUp: spec("tooltip.wizardFolderUp"),
-    wizardFolderUse: spec("tooltip.wizardFolderUse"),
-    wizardFolderClose: spec("tooltip.wizardFolderClose"),
-    wizardNo: spec("tooltip.wizardNo"),
-    wizardYes: spec("tooltip.wizardYes"),
-    wizardUpdatesNo: spec("tooltip.wizardUpdatesNo"),
-    wizardUpdatesYes: spec("tooltip.wizardUpdatesYes"),
-    updateToggle: spec("tooltip.updateToggle"),
-    updatePrereleases: spec("tooltip.updatePrereleases"),
-    updateDownload: spec("tooltip.updateDownload"),
-    updateSkip: spec("tooltip.updateSkip"),
-    updateDismiss: spec("tooltip.updateDismiss"),
-    wizardBack: spec("tooltip.wizardBack"),
-    wizardCancel: spec("tooltip.wizardCancel"),
-    wizardSecondary: spec("tooltip.wizardSecondary"),
-    trackList: spec("tooltip.trackList"),
-    filesList: spec("tooltip.filesList"),
-    portableClose: spec("tooltip.portableClose"),
-    snapshotsList: spec("tooltip.snapshotsList"),
-    splitter: spec("tooltip.splitter"),
-    previous: spec("tooltip.previous"),
-    next: spec("tooltip.next"),
-    seek: spec("tooltip.seek"),
-    volume: spec("tooltip.volume"),
-    zoomIn: spec("tooltip.zoomIn"),
-    zoomOut: spec("tooltip.zoomOut"),
-    overview: spec("tooltip.overview"),
-    smartRules: spec("tooltip.smartRules"),
-    saveRules: spec("tooltip.saveRules"),
-    saveTrack: spec("tooltip.saveTrack"),
-    trackColor: spec("tooltip.trackColor"),
-    trackRating: spec("tooltip.trackRating"),
-    beatgridLock: spec("tooltip.beatgridLock"),
-    relocate: spec("tooltip.relocate"),
-    removeTrack: spec("tooltip.removeTrack"),
-    prepareAdd: spec("tooltip.prepareAdd"),
-    prepareRemove: spec("tooltip.prepareRemove"),
-    updateRelated: spec("tooltip.updateRelated"),
-    relatedCrateOnly: spec("tooltip.relatedCrateOnly"),
-    findRelated: spec("tooltip.findRelated"),
-    linkNote: spec("tooltip.linkNote"),
-    linkRating: spec("tooltip.linkRating"),
-    language: spec("tooltip.language"),
-    colorway: spec("tooltip.colorway"),
-    iconFollowsTheme: spec("tooltip.iconFollowsTheme"),
-    gigLock: spec("tooltip.gigLock"),
-    minCopies: spec("tooltip.minCopies"),
-    untrustedVolumes: spec("tooltip.untrustedVolumes"),
-    libraryCopies: spec("tooltip.libraryCopies"),
-    pruneSnapshot: spec("tooltip.pruneSnapshot"),
-    gigLockApply: spec("tooltip.gigLockApply"),
-    gigLockDrop: spec("tooltip.gigLockDrop"),
-    gigLockPreview: spec("tooltip.gigLockPreview"),
-    gigLockUndo: spec("tooltip.gigLockUndo"),
-    libraryGeneration: spec("tooltip.libraryGeneration"),
-    linkMutual: spec("tooltip.linkMutual"),
-    saveLink: spec("tooltip.saveLink"),
-    showSearchCopies: spec("tooltip.showSearchCopies"),
-    hideSearchCopies: spec("tooltip.hideSearchCopies"),
-    openInLibrary: spec("tooltip.openInLibrary"),
-    runSetup: spec("tooltip.runSetup"),
-    snapshotsRetry: spec("tooltip.snapshotsRetry"),
-    reviewRestore: spec("tooltip.reviewRestore"),
-    allTracks: spec("tooltip.allTracks"),
-    navLibrary: spec("tooltip.navLibrary"),
-    navHealth: spec("tooltip.navHealth"),
-    navGig: spec("tooltip.navGig"),
-    viewCrates: spec("tooltip.viewCrates"),
-    viewHistory: spec("tooltip.viewHistory"),
-    viewStats: spec("tooltip.viewStats"),
-    viewCompare: spec("tooltip.viewCompare"),
-    compareShow: spec("tooltip.compareShow"),
-    compareSave: spec("tooltip.compareSave"),
-    compareA: spec("tooltip.compareA"),
-    compareB: spec("tooltip.compareB"),
-    compareSubcrates: spec("tooltip.compareSubcrates"),
-    statsRefresh: spec("tooltip.statsRefresh"),
-    statsCsv: spec("tooltip.statsCsv"),
-    statsPeriod: spec("tooltip.statsPeriod"),
-    statsFrom: spec("tooltip.statsFrom"),
-    statsTo: spec("tooltip.statsTo"),
-    statsIdleDays: spec("tooltip.statsIdleDays"),
-    statsIdleCrate: spec("tooltip.statsIdleCrate"),
-    viewMissing: spec("tooltip.viewMissing"),
-    viewDuplicates: spec("tooltip.viewDuplicates"),
-    viewStems: spec("tooltip.viewStems"),
-    viewFiles: spec("tooltip.viewFiles"),
-    viewSnapshots: spec("tooltip.viewSnapshots"),
-    viewGig: spec("tooltip.viewGig"),
-    viewPortable: spec("tooltip.viewPortable"),
-    viewDrift: spec("tooltip.viewDrift"),
-    portableDrive: spec("tooltip.portableDrive"),
-    portableRun: spec("tooltip.portableRun"),
-    driftRefresh: spec("tooltip.driftRefresh"),
-    viewHealth: spec("tooltip.viewHealth"),
-    viewScan: spec("tooltip.viewScan"),
-    viewBitrate: spec("tooltip.viewBitrate"),
-    viewTags: spec("tooltip.viewTags"),
-    viewLost: spec("tooltip.viewLost"),
-    lostApply: spec("tooltip.lostApply"),
-    lostRefresh: spec("tooltip.lostRefresh"),
-    healthRefresh: spec("tooltip.healthRefresh"),
-    healthSection: spec("tooltip.healthSection"),
-    healthOpenMissing: spec("tooltip.healthOpenMissing"),
-    healthOpenDuplicates: spec("tooltip.healthOpenDuplicates"),
-    healthOpenFiles: spec("tooltip.healthOpenFiles"),
-    healthOpenBitrate: spec("tooltip.healthOpenBitrate"),
-    healthTrack: spec("tooltip.healthTrack"),
-    healthFindArt: spec("tooltip.healthFindArt"),
-    healthArtCancel: spec("tooltip.healthArtCancel"),
-    healthArtEmbed: spec("tooltip.healthArtEmbed"),
-    healthArtPick: spec("tooltip.healthArtPick"),
-    tagsGenre: spec("tooltip.tagsGenre"),
-    tagsArtist: spec("tooltip.tagsArtist"),
-    tagsTitles: spec("tooltip.tagsTitles"),
-    tagsRefresh: spec("tooltip.tagsRefresh"),
-    tagsPreview: spec("tooltip.tagsPreview"),
-    tagsApply: spec("tooltip.tagsApply"),
-    tagsApplyTitles: spec("tooltip.tagsApplyTitles"),
-    tagsApplyMappings: spec("tooltip.tagsApplyMappings"),
-    tagsGroup: spec("tooltip.tagsGroup"),
-    tagsSpelling: spec("tooltip.tagsSpelling"),
-    tagsWriteFiles: spec("tooltip.tagsWriteFiles"),
-    gigRefresh: spec("tooltip.gigRefresh"),
-    scanQuick: spec("tooltip.scanQuick"),
-    scanFull: spec("tooltip.scanFull"),
-    bitrateRefresh: spec("tooltip.bitrateRefresh"),
-    bitrateSave: spec("tooltip.bitrateSave"),
-    bitrateConfirm: spec("tooltip.bitrateConfirm"),
-    gigBack: spec("tooltip.gigBack"),
-    gigNext: spec("tooltip.gigNext"),
-    gigExit: spec("tooltip.gigExit"),
-    gigRevert: spec("tooltip.gigRevert"),
-    gigGroup: spec("tooltip.gigGroup"),
-    gigShowAll: spec("tooltip.gigShowAll"),
-    sortTitle: spec("tooltip.sortTitle"),
-    sortArtist: spec("tooltip.sortArtist"),
-    sortBpm: spec("tooltip.sortBpm"),
-    sortKey: spec("tooltip.sortKey"),
-    sortLength: spec("tooltip.sortLength"),
-    sortDeck: spec("tooltip.sortDeck"),
-    sortPlayed: spec("tooltip.sortPlayed"),
-    sortStart: spec("tooltip.sortStart"),
-    sortOrder: spec("tooltip.sortOrder"),
-    sortCrateName: spec("tooltip.sortCrateName"),
-    sortAdded: spec("tooltip.sortAdded")
-  };
-  function playTip(action, name) {
-    return name ? spec("tooltip.transportNamed", { action, name }) : spec("tooltip.transport", { action });
-  }
-  function sortTip(key, label) {
-    let message = {
-      name: "tooltip.sortTitle",
-      artist: "tooltip.sortArtist",
-      bpm: "tooltip.sortBpm",
-      key: "tooltip.sortKey",
-      energy: "tooltip.sortEnergy",
-      genre: "tooltip.sortGenre",
-      time_added: "tooltip.sortDateAdded",
-      last_played: "tooltip.sortLastPlayed",
-      play_count: "tooltip.sortPlays",
-      length_ms: "tooltip.sortLength",
-      deck: "tooltip.sortDeck",
-      played: "tooltip.sortPlayed",
-      start: "tooltip.sortStart"
-    }[key];
-    return message ? spec(message) : spec("tooltip.sortBy", { label });
-  }
-  function navTip(id) {
-    return {
-      library: tips.navLibrary,
-      files: tips.viewFiles,
-      health: tips.navHealth,
-      backups: tips.viewSnapshots,
-      gig: tips.navGig
-    }[id];
-  }
-  function viewTip(view) {
-    return {
-      crates: tips.viewCrates,
-      history: tips.viewHistory,
-      stats: tips.viewStats,
-      compare: tips.viewCompare,
-      missing: tips.viewMissing,
-      duplicates: tips.viewDuplicates,
-      stems: tips.viewStems,
-      files: tips.viewFiles,
-      snapshots: tips.viewSnapshots,
-      gig: tips.viewGig,
-      portable: tips.viewPortable,
-      drift: tips.viewDrift,
-      health: tips.viewHealth,
-      scan: tips.viewScan,
-      bitrate: tips.viewBitrate,
-      tags: tips.viewTags,
-      lost: tips.viewLost
-    }[view];
-  }
-  function crateSortTip(key) {
-    if (key === "order") return tips.sortOrder;
-    if (key === "name") return tips.sortCrateName;
-    if (key === "added") return tips.sortAdded;
-  }
-  function staticTip(id) {
-    return {
-      space: tips.space,
-      "crate-search": tips.crateSearch,
-      "merge-duplicates": tips.mergeDuplicates,
-      "open-relink": tips.relink,
-      "relink-root": tips.relinkRoot,
-      "relink-find": tips.relinkFind,
-      "relink-accept-high": tips.relinkAcceptHigh,
-      "relink-confirm": tips.relinkConfirm,
-      "relink-cancel": tips.relinkCancel,
-      "crate-new": tips.crateNew,
-      "crate-actions-more": tips.crateMore,
-      "crate-browser-more": tips.crateBrowserMore,
-      "crate-split": tips.crateSplit,
-      "crate-save-view": tips.crateSaveView,
-      "crate-rename": tips.crateRename,
-      "crate-color": tips.crateColor,
-      "crate-delete": tips.crateDelete,
-      "crate-preset": tips.cratePreset,
-      "crate-tree": tips.crateTree,
-      "crate-tree-kind": tips.crateTreeKind,
-      "crate-tree-low": tips.crateTreeLow,
-      "crate-tree-high": tips.crateTreeHigh,
-      "crate-tree-width": tips.crateTreeWidth,
-      "crate-tree-step": tips.crateTreeStep,
-      "crate-tree-min-tracks": tips.crateTreeMinTracks,
-      "crate-tree-limit": tips.crateTreeLimit,
-      "crate-tree-scope": tips.crateTreeScope,
-      "crate-tree-name": tips.crateTreeName,
-      "crate-tree-cancel": tips.crateTreeCancel,
-      "crate-tree-create": tips.crateTreeCreate,
-      "crate-folder-sync": tips.crateFolderSync,
-      "crate-rename-from-tags": tips.crateRenameFromTags,
-      "crate-refresh": tips.crateRefresh,
-      "folder-sync-path": tips.folderSyncPath,
-      "folder-sync-subcrates": tips.folderSyncSubcrates,
-      "folder-sync-full": tips.folderSyncFull,
-      "folder-sync-cancel": tips.folderSyncCancel,
-      "folder-sync-run": tips.folderSyncRun,
-      "preset-kind": tips.presetKind,
-      "preset-key": tips.presetKey,
-      "preset-bpm": tips.presetBpm,
-      "preset-range": tips.presetRange,
-      "preset-months": tips.presetMonths,
-      "preset-scope": tips.presetScope,
-      "preset-name": tips.presetName,
-      "preset-cancel": tips.presetCancel,
-      "preset-create": tips.presetCreate,
-      "drawer-toggle": tips.drawerToggle,
-      "skip-to-content": tips.skipToContent,
-      "open-help": tips.help,
-      "shortcuts-title": tips.shortcuts,
-      "shortcuts-filter": tips.shortcutsFilter,
-      "shortcuts-reset-all": tips.shortcutsResetAll,
-      "open-settings": tips.settings,
-      search: tips.search,
-      "sheet-scope-all": tips.allTracks,
-      "search-field": tips.searchField,
-      "export-m3u": tips.exportM3u,
-      "export-rekordbox": tips.exportRekordbox,
-      "rekordbox-memory": tips.memoryCues,
-      "rekordbox-hot-loops": tips.hotLoops,
-      "rekordbox-key": tips.rekordboxKey,
-      "import-m3u": tips.importM3u,
-      "import-file": tips.importFile,
-      reload: tips.reload,
-      "files-up": tips.filesUp,
-      "files-search": tips.filesSearch,
-      "files-refresh": tips.filesRefresh,
-      "files-elsewhere": tips.filesElsewhere,
-      "files-rename": tips.filesRename,
-      "files-rename-from-tags": tips.filesRenameFromTags,
-      "files-move": tips.filesMove,
-      "files-move-folder": tips.filesMoveFolder,
-      "files-replace": tips.filesReplace,
-      "files-delete": tips.filesDelete,
-      "files-move-here": tips.filesMoveHere,
-      "files-pick-cancel": tips.filesPickCancel,
-      "operations-refresh": tips.operationsRefresh,
-      "operations-list": tips.operationsList,
-      "snapshots-refresh": tips.snapshotsRefresh,
-      "gig-refresh": tips.gigRefresh,
-      "drift-refresh": tips.driftRefresh,
-      "health-refresh": tips.healthRefresh,
-      "album-art-cancel": tips.healthArtCancel,
-      "album-art-embed": tips.healthArtEmbed,
-      "stats-refresh": tips.statsRefresh,
-      "stats-csv": tips.statsCsv,
-      "stats-period": tips.statsPeriod,
-      "stats-from": tips.statsFrom,
-      "stats-to": tips.statsTo,
-      "stats-idle-days": tips.statsIdleDays,
-      "compare-a": tips.compareA,
-      "compare-b": tips.compareB,
-      "compare-subcrates": tips.compareSubcrates,
-      "compare-refresh": tips.compareShow,
-      "scan-quick": tips.scanQuick,
-      "scan-full": tips.scanFull,
-      "bitrate-refresh": tips.bitrateRefresh,
-      "bitrate-save": tips.bitrateSave,
-      "tags-genre": tips.tagsGenre,
-      "tags-artist": tips.tagsArtist,
-      "tags-titles": tips.tagsTitles,
-      "tags-refresh": tips.tagsRefresh,
-      "lost-refresh": tips.lostRefresh,
-      "lost-apply": tips.lostApply,
-      "snapshots-take": tips.snapshotsTake,
-      "music-mirror-dest": tips.musicMirrorDest,
-      "music-mirror-preview": tips.musicMirrorPreview,
-      "music-mirror-copy": tips.musicMirrorCopy,
-      "music-mirror-restore": tips.musicMirrorRestore,
-      "music-mirror-crate": tips.musicMirrorCrate,
-      "music-mirror-relink": tips.musicMirrorRelink,
-      "snapshots-drives": tips.backupDrives,
-      "snapshots-undo-button": tips.snapshotsUndo,
-      "consent-decline": tips.consentDecline,
-      "consent-accept": tips.consentAccept,
-      "telemetry-toggle": tips.telemetry,
-      "copy-version": tips.copyVersion,
-      "rerun-wizard": tips.rerunWizard,
-      "open-logs": tips.openLogs,
-      "copy-logs": tips.copyLogs,
-      "about-github": tips.helpGithub,
-      "help-bug": tips.helpBug,
-      "help-feature": tips.helpFeature,
-      "help-github": tips.helpGithub,
-      "help-releases": tips.helpReleases,
-      "help-close": tips.helpClose,
-      "help-happened": tips.helpHappened,
-      "help-expected": tips.helpExpected,
-      "help-names": tips.helpNames,
-      "help-copy-log": tips.helpCopyLog,
-      "help-open-github": tips.helpOpen,
-      "help-report-close": tips.helpClose,
-      "help-log-fallback": tips.helpReport,
-      "settings-close": tips.settingsClose,
-      "log-fallback": tips.logFallback,
-      "language-select": tips.language,
-      "colorway-select": tips.colorway,
-      "icon-follows-theme": tips.iconFollowsTheme,
-      "gig-lock": tips.gigLock,
-      "min-copies": tips.minCopies,
-      "untrusted-volumes": tips.untrustedVolumes,
-      "library-generation": tips.libraryGeneration,
-      "merge-trash": tips.mergeTrash,
-      "merge-cancel": tips.mergeCancel,
-      "merge-confirm": tips.mergeConfirm,
-      "crates-replace-search": tips.cratesReplaceSearch,
-      "crates-replace-keep": tips.cratesReplaceKeep,
-      "crates-replace-retire": tips.cratesReplaceRetire,
-      "crates-replace-cancel": tips.cratesReplaceCancel,
-      "crates-replace-confirm": tips.cratesReplaceConfirm,
-      "crate-prompt-input": tips.cratePromptName,
-      "crate-prompt-cancel": tips.cratePromptCancel,
-      "crate-prompt-confirm": tips.cratePromptConfirm,
-      "confirm-cancel": tips.confirmCancel,
-      "confirm-confirm": tips.confirmAction,
-      "rekordbox-cancel": tips.rekordboxCancel,
-      "rekordbox-download": tips.rekordboxDownload,
-      "files-name": tips.filesName,
-      "files-replacement": tips.filesReplacement,
-      "files-cancel": tips.filesCancel,
-      "files-review": tips.filesReview,
-      "files-confirm": tips.filesConfirm,
-      "portable-close": tips.portableClose,
-      "portable-drive": tips.portableDrive,
-      "portable-check": tips.portableRun,
-      "quick-open-query": tips.quickOpen,
-      "quick-open-retry": tips.quickOpenRetry,
-      "quick-open-close": tips.quickOpenClose,
-      "snapshot-cancel": tips.snapshotCancel,
-      "snapshot-confirm": tips.snapshotConfirm,
-      "wizard-folder-up": tips.wizardFolderUp,
-      "wizard-folder-use": tips.wizardFolderUse,
-      "wizard-folder-close": tips.wizardFolderClose,
-      "wizard-no": tips.wizardNo,
-      "wizard-yes": tips.wizardYes,
-      "wizard-updates-no": tips.wizardUpdatesNo,
-      "wizard-updates-yes": tips.wizardUpdatesYes,
-      "update-toggle": tips.updateToggle,
-      "update-prereleases": tips.updatePrereleases,
-      "update-download": tips.updateDownload,
-      "update-skip": tips.updateSkip,
-      "update-dismiss": tips.updateDismiss,
-      "wizard-back": tips.wizardBack,
-      "wizard-cancel": tips.wizardCancel,
-      "wizard-secondary": tips.wizardSecondary,
-      "wizard-primary": spec("tooltip.wizard.getStarted"),
-      list: tips.trackList,
-      "list-b": tips.trackList,
-      "files-list": tips.filesList,
-      "snapshots-list": tips.snapshotsList,
-      "track-splitter": tips.splitter
-    }[id];
-  }
-  function expandCrate(name) {
-    return spec("tooltip.expandCrate", { name });
-  }
-  function collapseCrate(name) {
-    return spec("tooltip.collapseCrate", { name });
-  }
-  function openCrate(name) {
-    return spec("tooltip.openCrate", { name });
-  }
-  function sessionTip(name) {
-    return spec("tooltip.session", { name });
-  }
-  function playRow(name) {
-    return spec("tooltip.playRow", { name });
-  }
-  function cueTip(label) {
-    return spec("tooltip.cue", { label });
-  }
-  function editField(label) {
-    return spec("tooltip.editField", { label });
-  }
-  function revealTip(manager2) {
-    return spec("tooltip.reveal", { name: manager2 });
-  }
-  function openCopy(name) {
-    return spec("tooltip.openCopy", { name });
-  }
-  function openReplaceCopy(name) {
-    return spec("tooltip.openReplaceCopy", { name });
-  }
-  function openRelated(name) {
-    return spec("tooltip.openRelated", { name });
-  }
-  function removeRelatedTip(name) {
-    return spec("tooltip.removeRelated", { name });
-  }
-  function chooseRelated(name) {
-    return spec("tooltip.chooseRelated", { name });
-  }
-  function saveSuggestion(name) {
-    return spec("tooltip.saveSuggestion", { name });
-  }
-  function membershipTip(name) {
-    return spec("tooltip.membership", { name });
-  }
-  function openCrumb(name) {
-    return spec("tooltip.openCrumb", { name });
-  }
-  function openFile(name) {
-    return spec("tooltip.openFile", { name });
-  }
-  function portableCheck(name) {
-    return spec("tooltip.portableCheck", { name });
-  }
-  function missingDrive(name) {
-    return spec("tooltip.missingDrive", { name });
-  }
-  function fileShortcut(name) {
-    return spec("tooltip.fileShortcut", { name });
-  }
-  function selectFile(name, path = "") {
-    return path && path !== name ? spec("tooltip.selectFilePath", { name, path }) : spec("tooltip.selectFile", { name });
-  }
-  function keepCopy(name) {
-    return spec("tooltip.keepCopy", { name });
-  }
-  function quickOpenHit(kind2, title2, detail2) {
-    return detail2 ? spec("tooltip.quickOpenHitDetail", { kind: kind2, title: title2, detail: detail2 }) : spec("tooltip.quickOpenHit", { kind: kind2, title: title2 });
-  }
-
-  // src/lib/ui/tooltip.ts
-  var TOOLTIP_ID = "app-tooltip", TOOLTIP_HOVER_MS = 400, INTERACTIVE_SELECTOR = [
-    "button",
-    "input:not([type='hidden'])",
-    "select",
-    "textarea",
-    "a[href]",
-    "summary",
-    "[role='slider']",
-    "[role='button']",
-    "[role='tab']",
-    "[role='menuitem']",
-    "[role='menuitemcheckbox']",
-    "[role='menuitemradio']",
-    "[role='switch']",
-    "[role='option']",
-    "[role='separator']",
-    "[role='checkbox']",
-    "[role='radio']",
-    "[tabindex]:not([tabindex='-1'])"
-  ].join(","), installed = !1, current2 = null, timer = 0, priorDescribedBy = "", tipParams = /* @__PURE__ */ new WeakMap();
-  function writeTooltip(element) {
-    let key = element.dataset.tooltipKey ?? "";
-    if (!hasKey(key)) throw new Error(`Unknown tooltip key ${key}.`);
-    let value = t(key, tipParams.get(element)).trim();
-    if (!value) throw new Error("A control tooltip cannot be empty.");
-    element.dataset.tooltip = value;
-  }
-  function syncOpenTooltip() {
-    if (!current2) return;
-    let tip = document.getElementById(TOOLTIP_ID);
-    tip instanceof HTMLElement && (tip.textContent = current2.dataset.tooltip ?? "");
-  }
-  function setTooltip(element, spec2) {
-    element.dataset.tooltipKey = spec2.key, spec2.params ? tipParams.set(element, spec2.params) : tipParams.delete(element), writeTooltip(element), element.removeAttribute("title"), current2 === element && syncOpenTooltip();
-  }
-  function tooltipRef(spec2) {
-    return (element) => {
-      element && setTooltip(element, spec2);
-    };
-  }
-  function buttonEl(spec2) {
-    let element = document.createElement("button");
-    return element.type = "button", setTooltip(element, spec2), element;
-  }
-  function inputEl(spec2) {
-    let element = document.createElement("input");
-    return setTooltip(element, spec2), element;
-  }
-  function selectEl(spec2) {
-    let element = document.createElement("select");
-    return setTooltip(element, spec2), element;
-  }
-  function textareaEl(spec2) {
-    let element = document.createElement("textarea");
-    return setTooltip(element, spec2), element;
-  }
-  function applyStaticTooltips(root = document) {
-    root.querySelectorAll("[id]").forEach((node2) => {
-      let text2 = staticTip(node2.id);
-      text2 && setTooltip(node2, text2);
-    }), root.querySelectorAll("[data-nav]").forEach((node2) => {
-      let text2 = navTip(node2.dataset.nav ?? "");
-      text2 && setTooltip(node2, text2);
-    }), root.querySelectorAll("[data-view]").forEach((node2) => {
-      let text2 = viewTip(node2.dataset.view ?? "");
-      text2 && setTooltip(node2, text2);
-    }), root.querySelectorAll("[data-sort]").forEach((node2) => {
-      let label = node2.textContent?.trim() || node2.dataset.sort || "";
-      setTooltip(node2, sortTip(node2.dataset.sort ?? "", label));
-    }), root.querySelectorAll("[data-crate-sort]").forEach((node2) => {
-      let text2 = crateSortTip(node2.dataset.crateSort ?? "");
-      text2 && setTooltip(node2, text2);
-    });
-  }
-  function refreshTooltips(root = document) {
-    if (root.querySelectorAll("[data-tooltip-key]").forEach((node2) => writeTooltip(node2)), current2 && !current2.isConnected) {
-      hide();
-      return;
-    }
-    syncOpenTooltip();
-  }
-  function installTooltips() {
-    installed || (installed = !0, document.addEventListener("pointerover", onPointerOver), document.addEventListener("pointerout", onPointerOut), document.addEventListener("focusin", onFocusIn), document.addEventListener("focusout", onFocusOut), document.addEventListener("keydown", onKeyDown), document.addEventListener("scroll", onScroll, !0));
-  }
-  function onPointerOver(event) {
-    if (event.pointerType && event.pointerType !== "mouse") return;
-    let target = tooltipTarget(event.target);
-    target && schedule(target, hoverDelay());
-  }
-  function onPointerOut(event) {
-    if (event.pointerType && event.pointerType !== "mouse") return;
-    let target = tooltipTarget(event.target);
-    !target || tooltipTarget(event.relatedTarget) === target || current2 === target && hide();
-  }
-  function onFocusIn(event) {
-    let target = tooltipTarget(event.target);
-    target && schedule(target, 0);
-  }
-  function onFocusOut(event) {
-    if (tooltipTarget(event.relatedTarget)) return;
-    let target = tooltipTarget(event.target);
-    target && current2 === target && hide();
-  }
-  function onKeyDown(event) {
-    event.key !== "Escape" || !current2 || hide();
-  }
-  function onScroll() {
-    current2 && hide();
-  }
-  function schedule(target, delay) {
-    if (window.clearTimeout(timer), timer = 0, delay <= 0) {
-      show(target);
-      return;
-    }
-    timer = window.setTimeout(() => show(target), delay);
-  }
-  function show(target) {
-    let text2 = target.dataset.tooltip?.trim() ?? "";
-    if (!text2) return;
-    current2 && current2 !== target && restoreDescribedBy(current2), current2 = target;
-    let tip = ensureTip();
-    tip.textContent = text2, openTip(tip), place(target, tip), addDescribedBy(target);
-  }
-  function hide() {
-    window.clearTimeout(timer), timer = 0, current2 && restoreDescribedBy(current2), current2 = null;
-    let tip = document.getElementById(TOOLTIP_ID);
-    tip instanceof HTMLElement && closeTip(tip);
-  }
-  function hoverDelay() {
-    return typeof matchMedia != "function" ? TOOLTIP_HOVER_MS : matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : TOOLTIP_HOVER_MS;
-  }
-  function tooltipTarget(node2) {
-    if (!(node2 instanceof Element)) return null;
-    let direct = node2.closest("[data-tooltip]");
-    if (direct?.dataset.tooltip?.trim()) return direct;
-    let label = node2 instanceof HTMLLabelElement ? node2 : node2.closest("label");
-    if (!(label instanceof HTMLLabelElement)) return null;
-    if (label.control instanceof HTMLElement && label.control.dataset.tooltip?.trim()) return label.control;
-    let nested = label.querySelector("[data-tooltip]");
-    return nested?.dataset.tooltip?.trim() ? nested : null;
-  }
-  function ensureTip() {
-    let existing = document.getElementById(TOOLTIP_ID);
-    if (existing instanceof HTMLElement) return existing;
-    let tip = document.createElement("div");
-    return tip.id = TOOLTIP_ID, tip.className = "app-tooltip", tip.setAttribute("role", "tooltip"), tip.hidden = !0, tip.setAttribute("popover", "manual"), document.body.append(tip), tip;
-  }
-  function openTip(tip) {
-    if (tip.hidden = !1, typeof tip.showPopover == "function")
-      try {
-        tip.matches(":popover-open") || tip.showPopover();
-      } catch {
-      }
-  }
-  function closeTip(tip) {
-    if (typeof tip.hidePopover == "function")
-      try {
-        tip.matches(":popover-open") && tip.hidePopover();
-      } catch {
-      }
-    tip.hidden = !0;
-  }
-  function place(target, tip) {
-    let rect = target.getBoundingClientRect(), gap2 = 8, margin2 = 8;
-    tip.style.position = "fixed", tip.style.margin = "0", tip.style.left = "0px", tip.style.top = "0px";
-    let tipRect = tip.getBoundingClientRect(), top2 = rect.bottom + gap2, left2 = rect.left;
-    top2 + tipRect.height > window.innerHeight - margin2 && (top2 = Math.max(margin2, rect.top - gap2 - tipRect.height)), left2 + tipRect.width > window.innerWidth - margin2 && (left2 = window.innerWidth - margin2 - tipRect.width), tip.style.left = `${Math.round(Math.max(margin2, left2))}px`, tip.style.top = `${Math.round(Math.max(margin2, top2))}px`;
-  }
-  function addDescribedBy(target) {
-    if (target.dataset.tooltipLive === "1") return;
-    target.dataset.tooltipLive = "1", priorDescribedBy = target.getAttribute("aria-describedby") ?? "";
-    let ids = priorDescribedBy.split(/\s+/).filter((id) => id.length > 0 && id !== TOOLTIP_ID);
-    ids.push(TOOLTIP_ID), target.setAttribute("aria-describedby", ids.join(" "));
-  }
-  function restoreDescribedBy(target) {
-    target.dataset.tooltipLive === "1" && (delete target.dataset.tooltipLive, priorDescribedBy ? target.setAttribute("aria-describedby", priorDescribedBy) : target.removeAttribute("aria-describedby"), priorDescribedBy = "");
   }
 
   // src/components/ShortcutTable.tsx
@@ -73248,17 +73515,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function previewPreset() {
     let token4 = ++previewToken2, preset = readPresetForm();
     if (syncNamePlaceholder(preset), el("preset-create").disabled = !preset || creating, !preset) {
-      el("preset-preview").textContent = "";
+      el("preset-preview").textContent = "", syncPresetIntro(!1);
       return;
     }
     el("preset-preview").textContent = t("presets.counting");
     try {
       let reply = await postJSON("/api/smart-preset", { action: "preview", space: state.space, preset });
       if (token4 !== previewToken2) return;
-      el("preset-preview").textContent = t("presets.matches", { count: Number(reply.count) || 0 });
+      el("preset-preview").textContent = t("presets.matches", { count: Number(reply.count) || 0 }), syncPresetIntro(!!reply.native);
     } catch (error2) {
       if (token4 !== previewToken2) return;
-      el("preset-preview").textContent = failureOf(error2).message, el("preset-create").disabled = !0;
+      el("preset-preview").textContent = failureOf(error2).message, el("preset-create").disabled = !0, syncPresetIntro(!1);
     }
   }
   function schedulePreview2() {
@@ -73276,7 +73543,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let bpm = Number(track?.bpm);
     Number.isFinite(bpm) && bpm > 0 && (el("preset-bpm").value = String(Math.round(bpm * 10) / 10));
     let scope = scopeCrate();
-    el("preset-scope-label").hidden = !scope, el("preset-scope").checked = !!scope, el("preset-scope-text").textContent = scope ? t("presets.scope", { name: scope.name }) : "", el("preset-name").value = "", el("preset-status").textContent = "", syncPresetFields(), el("preset-dialog").open || el("preset-dialog").showModal(), el("preset-kind").focus(), await previewPreset();
+    el("preset-scope-label").hidden = !scope, el("preset-scope").checked = !!scope, el("preset-scope-text").textContent = scope ? t("presets.scope", { name: scope.name }) : "", el("preset-name").value = "", el("preset-status").textContent = "", resetRuleForm(), syncPresetFields(), el("preset-dialog").open || el("preset-dialog").showModal(), el("preset-kind").focus(), await previewPreset();
   }
   async function createPreset() {
     mountSharedDialogs();
@@ -73344,7 +73611,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     });
     for (let id of ["preset-key", "preset-bpm", "preset-range", "preset-months"])
       el(id).addEventListener("input", schedulePreview2);
-    el("preset-scope").addEventListener("change", () => {
+    el("preset-conjunction").addEventListener("change", () => {
+      previewPreset();
+    }), el("preset-rule-list").addEventListener("input", schedulePreview2), el("preset-rule-list").addEventListener("change", () => {
+      previewPreset();
+    }), el("preset-add-rule").addEventListener("click", () => {
+      addRule(), previewPreset();
+    }), el("preset-add-group").addEventListener("click", () => {
+      addGroup(), previewPreset();
+    }), el("preset-scope").addEventListener("change", () => {
       previewPreset();
     }), el("preset-cancel").addEventListener("click", () => el("preset-dialog").close()), el("preset-create").addEventListener("click", () => {
       createPreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));

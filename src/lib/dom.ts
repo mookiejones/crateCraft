@@ -72,10 +72,15 @@ export interface ElementIds {
   "folder-sync-run": HTMLButtonElement;
   "folder-sync-status": HTMLParagraphElement;
   "preset-kind": HTMLSelectElement;
+  "preset-intro": HTMLParagraphElement;
   "preset-key": HTMLInputElement;
   "preset-bpm": HTMLInputElement;
   "preset-range": HTMLInputElement;
   "preset-months": HTMLInputElement;
+  "preset-conjunction": HTMLSelectElement;
+  "preset-rule-list": HTMLDivElement;
+  "preset-add-rule": HTMLButtonElement;
+  "preset-add-group": HTMLButtonElement;
   "preset-scope": HTMLInputElement;
   "preset-scope-label": HTMLLabelElement;
   "preset-scope-text": HTMLSpanElement;

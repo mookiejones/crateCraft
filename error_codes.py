@@ -147,6 +147,7 @@ ERROR_CODES: dict[str, str] = {
     smart_presets.BAD_KEY: "preset_bad_key",
     smart_presets.BAD_BPM: "preset_bad_bpm",
     smart_presets.BAD_MONTHS: "preset_bad_months",
+    smart_presets.BAD_RULES: "preset_bad_rules",
     smart_presets.NOT_A_PRESET_CRATE: "preset_not_a_preset_crate",
     smart_presets.PRESET_CRATE_GONE: "preset_crate_gone",
     "Smart crate rules need to be JSON.": "smart_rules_json",

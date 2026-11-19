@@ -1,4 +1,4 @@
-"""Preset crates the app evaluates and saves as normal crates (part 1 of #26)."""
+"""Preset crates: live smart crates when the flat model fits, else ``⟳`` (#26)."""
 
 from __future__ import annotations
 
@@ -60,13 +60,31 @@ def _seed(temp: TempLibrary) -> dict[str, int]:
             """,
             [(3, 1, int(NOW - 30 * DAY)), (6, 0, int(NOW - 5 * DAY))],
         )
-    bar = cast(int, library.crate_action({"action": "create", "name": "Bar set"})["id"])
-    late = cast(int, library.crate_action({"action": "create", "name": "Late", "parent": bar})["id"])
-    other = cast(int, library.crate_action({"action": "create", "name": "Other"})["id"])
-    library.crate_action({"action": "add", "id": bar, "asset": 3})
-    library.crate_action({"action": "add", "id": late, "asset": 4})
-    library.crate_action({"action": "add", "id": other, "asset": 1})
+    with mock.patch("snapshots.serato_dj_running", return_value=False):
+        bar = cast(int, library.crate_action({"action": "create", "name": "Bar set"})["id"])
+        late = cast(int, library.crate_action({"action": "create", "name": "Late", "parent": bar})["id"])
+        other = cast(int, library.crate_action({"action": "create", "name": "Other"})["id"])
+        library.crate_action({"action": "add", "id": bar, "asset": 3})
+        library.crate_action({"action": "add", "id": late, "asset": 4})
+        library.crate_action({"action": "add", "id": other, "asset": 1})
     return {"bar": bar, "late": late, "other": other}
+
+
+_UNPLAYED = {"kind": "unplayed"}
+_MIXED = {
+    "kind": "rules",
+    "conjunction": "AND",
+    "rules": [
+        {"attribute": "bpm", "operation": "GREATER_THAN_OR_EQUAL_TO", "value": 120},
+        {
+            "conjunction": "OR",
+            "rules": [
+                {"attribute": "key", "operation": "IS", "value": "1A"},
+                {"attribute": "key", "operation": "IS", "value": "2A"},
+            ],
+        },
+    ],
+}
 
 
 def _members(crate_id: int) -> list[int]:
@@ -80,6 +98,32 @@ def _members(crate_id: int) -> list[int]:
     """
     with closing(library.read_conn()) as conn:
         return smart_presets._members(conn, crate_id)
+
+
+def _crate_meta(crate_id: int) -> tuple[int, str, object]:
+    """Read type, filename, and stored rules for one crate.
+
+    Args:
+        crate_id: Container id.
+
+    Returns:
+        ``(type, filename, rules_json_or_none)``.
+    """
+    with closing(library.read_conn()) as conn:
+        typ = conn.execute("SELECT type FROM container WHERE id = ?", (crate_id,)).fetchone()
+        filename = conn.execute(
+            "SELECT filename FROM dj_container_metadata WHERE container_id = ?",
+            (crate_id,),
+        ).fetchone()
+        rules = conn.execute(
+            "SELECT rules FROM smart_crate_rules WHERE container_id = ?",
+            (crate_id,),
+        ).fetchone()
+    return (
+        int(typ[0]) if typ else 0,
+        str(filename[0]) if filename else "",
+        json.loads(str(rules[0])) if rules else None,
+    )
 
 
 def _match(preset: dict[str, object], now: float = NOW) -> list[int]:
@@ -105,10 +149,11 @@ def _clean_store() -> Iterator[None]:
     """
     path = app_config.config_dir() / smart_presets.STORE_NAME
     path.unlink(missing_ok=True)
-    try:
-        yield
-    finally:
-        path.unlink(missing_ok=True)
+    with mock.patch("snapshots.serato_dj_running", return_value=False):
+        try:
+            yield
+        finally:
+            path.unlink(missing_ok=True)
 
 
 class HarmonicKeyTests(unittest.TestCase):
@@ -149,6 +194,20 @@ class NormalizeTests(unittest.TestCase):
             {"kind": "bpm", "bpm": 124.0, "range": 3.0},
         )
         self.assertEqual(smart_presets.normalize({"kind": "unplayed"}), {"kind": "unplayed", "months": 12})
+        self.assertEqual(
+            smart_presets.normalize(
+                {
+                    "kind": "rules",
+                    "conjunction": "AND",
+                    "rules": [{"attribute": "genre", "operation": "CONTAINS", "value": " Break "}],
+                }
+            ),
+            {
+                "kind": "rules",
+                "conjunction": "AND",
+                "rules": [{"attribute": "genre", "operation": "CONTAINS", "value": "Break"}],
+            },
+        )
         bad = [
             None,
             {"kind": "nope"},
@@ -163,6 +222,9 @@ class NormalizeTests(unittest.TestCase):
             {"kind": "unplayed", "months": 1.5},
             {"kind": "harmonic", "key": "8A", "crate": "3"},
             {"kind": "harmonic", "key": "8A", "crate": True},
+            {"kind": "rules", "conjunction": "AND", "rules": []},
+            {"kind": "rules", "conjunction": "XOR", "rules": [{"attribute": "genre", "operation": "CONTAINS", "value": "x"}]},
+            {"kind": "rules", "rules": [{"attribute": "genre", "operation": "CONTAINS", "value": ""}]},
         ]
         for preset in bad:
             with self.subTest(preset=preset), self.assertRaises(LibraryError):
@@ -183,6 +245,23 @@ class NormalizeTests(unittest.TestCase):
             )
         ]
         self.assertEqual(names, ["Mixes with 8A ⟳", "BPM 124.5 ±2 ⟳", "Not played in 6 months ⟳"])
+        self.assertEqual(
+            smart_presets.default_name(smart_presets.normalize({"kind": "bpm", "bpm": 124.5, "range": 2}), native=True),
+            "BPM 124.5 ±2",
+        )
+        self.assertEqual(
+            smart_presets.default_name(
+                smart_presets.normalize(
+                    {
+                        "kind": "rules",
+                        "conjunction": "AND",
+                        "rules": [{"attribute": "genre", "operation": "CONTAINS", "value": "Break"}],
+                    }
+                ),
+                native=True,
+            ),
+            "Custom rules",
+        )
 
 
 class MatchTests(unittest.TestCase):
@@ -276,7 +355,8 @@ class CreateAndRefreshTests(unittest.TestCase):
                 after = conn.execute("SELECT COUNT(*) FROM container").fetchone()[0]
             stored = smart_presets.list_remembered()
         self.assertEqual(result["count"], 4)
-        self.assertEqual(result["name"], "BPM 120 ±3 ⟳")
+        self.assertEqual(result["name"], "BPM 120 ±3")
+        self.assertTrue(result["native"])
         self.assertEqual(before, after)
         self.assertEqual(stored, {})
 
@@ -296,6 +376,7 @@ class CreateAndRefreshTests(unittest.TestCase):
             record = smart_presets.remembered(crate_id)
             raw = json.loads((app_config.config_dir() / smart_presets.STORE_NAME).read_text("utf-8"))
         self.assertEqual(result["name"], "Mixes with 1A ⟳")
+        self.assertFalse(result["native"])
         self.assertEqual(result["added"], 2)
         self.assertEqual(members, [3, 4])
         assert record is not None
@@ -312,10 +393,11 @@ class CreateAndRefreshTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             _seed(temp)
-            first = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120}, None, "Warmup")
-            second = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120}, None, "Cool ⟳")
+            first = smart_presets.create("Serato Library", {"kind": "unplayed"}, None, "Warmup")
+            second = smart_presets.create("Serato Library", {"kind": "unplayed"}, None, "Cool ⟳")
         self.assertEqual(first["name"], "Warmup ⟳")
         self.assertEqual(second["name"], "Cool ⟳")
+        self.assertFalse(first["native"])
 
     def test_refresh_adds_new_matches_and_drops_old_ones(self) -> None:
         """After 6 is retagged 2A and added to Bar set, and 4 leaves Late, refresh follows.
@@ -354,7 +436,7 @@ class CreateAndRefreshTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             _seed(temp)
-            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 128, "range": 0})
+            made = smart_presets.create("Serato Library", {"kind": "unplayed"})
             crate_id = cast(int, made["id"])
             library.crate_action({"action": "delete", "id": crate_id})
             self.assertEqual(smart_presets.prune(), [crate_id])
@@ -378,7 +460,7 @@ class CreateAndRefreshTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             _seed(temp)
-            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 128, "range": 0})
+            made = smart_presets.create("Serato Library", {"kind": "unplayed"})
             crate_id = cast(int, made["id"])
             library.crate_action({"action": "delete", "id": crate_id})
             mine = cast(int, library.crate_action({"action": "create", "name": "Mine"})["id"])
@@ -403,11 +485,11 @@ class CreateAndRefreshTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             _seed(temp)
-            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            made = smart_presets.create("Serato Library", {"kind": "unplayed"})
             crate_id = cast(int, made["id"])
             library.crate_action({"action": "rename", "id": crate_id, "name": "Warmup ⟳"})
             result = smart_presets.refresh(crate_id)
-        self.assertEqual(result["count"], 4)
+        self.assertEqual(result["count"], 6)
 
     def test_prune_keeps_live_preset_crates(self) -> None:
         """Prune forgets nothing while every preset crate is still there.
@@ -417,7 +499,7 @@ class CreateAndRefreshTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             crates = _seed(temp)
-            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            made = smart_presets.create("Serato Library", _UNPLAYED)
             library.crate_action({"action": "delete", "id": crates["other"]})
             self.assertEqual(smart_presets.prune(), [])
             self.assertIsNotNone(smart_presets.remembered(cast(int, made["id"])))
@@ -430,7 +512,7 @@ class CreateAndRefreshTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             _seed(temp)
-            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            made = smart_presets.create("Serato Library", _UNPLAYED)
             crate_id = cast(int, made["id"])
             with open_database(temp.db) as conn:
                 conn.execute("UPDATE container SET time_added = time_added + 1 WHERE id = ?", (crate_id,))
@@ -445,7 +527,7 @@ class CreateAndRefreshTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             _seed(temp)
-            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            made = smart_presets.create("Serato Library", _UNPLAYED)
             crate_id = cast(int, made["id"])
             with open_database(temp.db) as conn:
                 conn.execute("UPDATE container SET type = 2 WHERE id = ?", (crate_id,))
@@ -497,7 +579,7 @@ class CreateAndRefreshTests(unittest.TestCase):
         with _clean_store():
             with TempLibrary() as temp:
                 _seed(temp)
-                smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+                smart_presets.create("Serato Library", _UNPLAYED)
                 self.assertEqual(len(smart_presets.list_remembered()), 1)
             with TempLibrary():
                 self.assertEqual(smart_presets.list_remembered(), {})
@@ -514,7 +596,7 @@ class CreateAndRefreshTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("{not json", encoding="utf-8")
             self.assertEqual(smart_presets.list_remembered(), {})
-            made = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            made = smart_presets.create("Serato Library", _UNPLAYED)
             self.assertIsNotNone(smart_presets.remembered(cast(int, made["id"])))
 
 
@@ -538,7 +620,7 @@ class RefreshAllTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             _seed(temp)
-            smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            smart_presets.create("Serato Library", _UNPLAYED)
             before = len(safe_write.read_log())
             self._locked(temp)
             with mock.patch("library._process_is_serato", return_value=True):
@@ -555,23 +637,24 @@ class RefreshAllTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             crates = _seed(temp)
-            fast = cast(int, smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 128, "range": 0})["id"])
             keyed = cast(int, smart_presets.create(
                 "Serato Library", {"kind": "harmonic", "key": "1A", "crate": crates["bar"]}
             )["id"])
-            steady = cast(int, smart_presets.create("Serato Library", {"kind": "harmonic", "key": "8A"})["id"])
-            with open_database(temp.db) as conn:
-                conn.execute("UPDATE asset SET bpm = 128 WHERE id = 3")
+            extra = cast(int, smart_presets.create(
+                "Serato Library", {"kind": "harmonic", "key": "1A", "crate": crates["other"]}
+            )["id"])
+            steady = cast(int, smart_presets.create("Serato Library", _UNPLAYED)["id"])
             library.crate_action({"action": "remove", "id": crates["late"], "asset": 4})
+            library.crate_action({"action": "add", "id": crates["other"], "asset": 3})
             before = len(safe_write.read_log())
             result = smart_presets.refresh_all()
             after = len(safe_write.read_log())
-            members = {crate: _members(crate) for crate in (fast, keyed, steady)}
+            members = {crate: _members(crate) for crate in (keyed, extra, steady)}
         self.assertEqual(result["checked"], 3)
-        self.assertEqual(sorted(cast(list, result["changed"])), sorted([fast, keyed]))
+        self.assertEqual(sorted(cast(list, result["changed"])), sorted([keyed, extra]))
         self.assertEqual((result["added"], result["removed"]), (1, 1))
         self.assertEqual(after - before, 1)
-        self.assertEqual(members, {fast: [6, 3], keyed: [3], steady: [7]})
+        self.assertEqual(members, {keyed: [3], extra: [1, 3], steady: [6, 4, 1, 2, 7, 5]})
 
     def test_stale_crate_while_serato_runs_is_refused_and_unchanged(self) -> None:
         """A needed write is refused while Serato runs and nothing moves.
@@ -580,16 +663,18 @@ class RefreshAllTests(unittest.TestCase):
             None.
         """
         with _clean_store(), TempLibrary() as temp:
-            _seed(temp)
-            crate_id = cast(int, smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 128, "range": 0})["id"])
+            crates = _seed(temp)
+            crate_id = cast(int, smart_presets.create(
+                "Serato Library", {"kind": "harmonic", "key": "1A", "crate": crates["bar"]}
+            )["id"])
             with open_database(temp.db) as conn:
-                conn.execute("UPDATE asset SET bpm = 128 WHERE id = 3")
+                conn.execute("UPDATE asset SET key = '8A' WHERE id = 4")
             self._locked(temp)
             with mock.patch("library._process_is_serato", return_value=True):
                 with self.assertRaises(SeratoOpen):
                     smart_presets.refresh_all()
             members = _members(crate_id)
-        self.assertEqual(members, [6])
+        self.assertEqual(members, [3, 4])
 
     def test_for_crates_lists_only_live_preset_crates_of_the_space(self) -> None:
         """Renamed crates stay listed. Replaced, smart, and other-space crates do not.
@@ -599,7 +684,7 @@ class RefreshAllTests(unittest.TestCase):
         """
         with _clean_store(), TempLibrary() as temp:
             _seed(temp)
-            kept = cast(int, smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})["id"])
+            kept = cast(int, smart_presets.create("Serato Library", _UNPLAYED)["id"])
             library.crate_action({"action": "rename", "id": kept, "name": "Warmup ⟳"})
             listed = smart_presets.for_crates("Serato Library", [
                 {"id": kept, "added": cast(dict, smart_presets.remembered(kept))["time_added"], "smart": False},
@@ -613,8 +698,137 @@ class RefreshAllTests(unittest.TestCase):
                 {"id": kept, "added": cast(dict, smart_presets.remembered(kept))["time_added"], "smart": False},
             ])
         self.assertEqual(list(listed), [str(kept)])
-        self.assertEqual(listed[str(kept)]["preset"], {"kind": "bpm", "bpm": 120.0, "range": 3.0})
+        self.assertEqual(listed[str(kept)]["preset"], {"kind": "unplayed", "months": 12})
         self.assertEqual((replaced, smart, other), ({}, {}, {}))
+
+
+class NativeCreateTests(unittest.TestCase):
+    """Unscoped harmonic and BPM write type-2 ``.scrate`` crates (#26)."""
+
+    def test_unscoped_bpm_is_a_live_smart_crate(self) -> None:
+        """BPM 120 ±3 is type 2, ``.scrate``, empty members, not remembered.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            result = smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})
+            crate_id = cast(int, result["id"])
+            typ, filename, rules = _crate_meta(crate_id)
+            members = _members(crate_id)
+            record = smart_presets.remembered(crate_id)
+        self.assertTrue(result["native"])
+        self.assertEqual(result["name"], "BPM 120 ±3")
+        self.assertEqual(result["added"], 4)
+        self.assertEqual(typ, 2)
+        self.assertTrue(filename.endswith(".scrate"))
+        self.assertIsInstance(rules, dict)
+        self.assertEqual(members, [])
+        self.assertIsNone(record)
+
+    def test_unscoped_harmonic_is_a_live_smart_crate(self) -> None:
+        """Harmonic 1A writes type 2 and is not in the refresh store.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            result = smart_presets.create("Serato Library", {"kind": "harmonic", "key": "1A"})
+            crate_id = cast(int, result["id"])
+            typ, filename, _ = _crate_meta(crate_id)
+        self.assertTrue(result["native"])
+        self.assertEqual(result["name"], "Mixes with 1A")
+        self.assertEqual(typ, 2)
+        self.assertTrue(filename.endswith(".scrate"))
+        self.assertIsNone(smart_presets.remembered(crate_id))
+
+    def test_mixed_and_or_stays_a_refreshable_copy(self) -> None:
+        """A mixed nested tree is type 1, named with ⟳, and remembered.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            result = smart_presets.create("Serato Library", _MIXED)
+            crate_id = cast(int, result["id"])
+            typ, filename, rules = _crate_meta(crate_id)
+            members = _members(crate_id)
+            record = smart_presets.remembered(crate_id)
+        self.assertFalse(result["native"])
+        self.assertEqual(result["name"], "Custom rules ⟳")
+        self.assertEqual(typ, 1)
+        self.assertTrue(filename.endswith(".crate"))
+        self.assertIsNone(rules)
+        self.assertEqual(members, [3, 1, 2])
+        assert record is not None
+        self.assertEqual(record["preset"]["kind"], "rules")
+
+    def test_rename_leaves_a_native_crate_as_scrate(self) -> None:
+        """Sweep 55: renaming a live smart crate does not turn it into ``.crate``.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            crate_id = cast(int, smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})["id"])
+            library.crate_action({"action": "rename", "id": crate_id, "name": "Live"})
+            typ, filename, _ = _crate_meta(crate_id)
+            members = _members(crate_id)
+        self.assertEqual(typ, 2)
+        self.assertTrue(filename.endswith(".scrate"))
+        self.assertEqual(members, [])
+
+    def test_refresh_of_a_native_crate_is_404(self) -> None:
+        """A type-2 crate is not in the store, so Refresh answers gone.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            _seed(temp)
+            crate_id = cast(int, smart_presets.create("Serato Library", {"kind": "bpm", "bpm": 120})["id"])
+            with self.assertRaises(LibraryError) as caught:
+                smart_presets.refresh(crate_id)
+            typ, filename, _ = _crate_meta(crate_id)
+        self.assertEqual(caught.exception.message, smart_presets.NOT_A_PRESET_CRATE)
+        self.assertEqual(caught.exception.status, 404)
+        self.assertEqual(typ, 2)
+        self.assertTrue(filename.endswith(".scrate"))
+
+    def test_crate_scoped_bpm_stays_a_refreshable_copy(self) -> None:
+        """Crate scope cannot be a native smart crate.
+
+        Returns:
+            None.
+        """
+        with _clean_store(), TempLibrary() as temp:
+            crates = _seed(temp)
+            result = smart_presets.create(
+                "Serato Library", {"kind": "bpm", "bpm": 120, "crate": crates["bar"]}
+            )
+            crate_id = cast(int, result["id"])
+            typ, filename, _ = _crate_meta(crate_id)
+            stored = smart_presets.remembered(crate_id)
+        self.assertFalse(result["native"])
+        self.assertTrue(str(result["name"]).endswith("⟳"))
+        self.assertEqual(typ, 1)
+        self.assertTrue(filename.endswith(".crate"))
+        self.assertIsNotNone(stored)
+
+    def test_crate_tree_default_name_still_has_the_refresh_mark(self) -> None:
+        """Crate trees keep calling ``default_name`` without ``native``.
+
+        Returns:
+            None.
+        """
+        self.assertEqual(
+            smart_presets.default_name(smart_presets.normalize({"kind": "key", "key": "8A"})),
+            "8A ⟳",
+        )
 
 
 class PresetApiTests(unittest.TestCase):
@@ -625,7 +839,7 @@ class PresetApiTests(unittest.TestCase):
     request = test_server.ApiTests.request
 
     def test_preview_create_refresh_and_errors(self) -> None:
-        """Preview counts, create writes, refresh answers, and bad input gets a code.
+        """Native BPM fills GET tracks. Unplayed still remembers and refreshes.
 
         Returns:
             None.
@@ -637,20 +851,37 @@ class PresetApiTests(unittest.TestCase):
             )
             self.assertEqual(status, 200)
             self.assertEqual(cast(dict, preview)["count"], 4)
+            self.assertTrue(cast(dict, preview)["native"])
+            self.assertEqual(cast(dict, preview)["name"], "BPM 120 ±3")
             status, made = self.request(
                 "/api/smart-preset", {"action": "create", "preset": {"kind": "bpm", "bpm": 120}}
             )
             self.assertEqual(status, 200)
+            self.assertTrue(cast(dict, made)["native"])
+            native_id = cast(dict, made)["id"]
+            status, library_body = self.request("/api/library")
+            crates = {crate["name"]: crate for crate in cast(dict, library_body)["crates"]}
+            native = crates["BPM 120 ±3"]
+            self.assertTrue(native["smart"])
+            self.assertEqual(native["tracks"], [3, 4, 1, 2])
+            self.assertEqual(list(cast(dict, library_body)["presets"]), [])
+            status, refresh_native = self.request("/api/smart-preset", {"action": "refresh", "id": native_id})
+            self.assertEqual(status, 404)
+            status, made = self.request(
+                "/api/smart-preset", {"action": "create", "preset": {"kind": "unplayed"}}
+            )
+            self.assertEqual(status, 200)
             crate_id = cast(dict, made)["id"]
+            self.assertFalse(cast(dict, made)["native"])
             status, library_body = self.request("/api/library")
             names = [crate["name"] for crate in cast(dict, library_body)["crates"]]
-            self.assertIn("BPM 120 ±3 ⟳", names)
+            self.assertIn("Not played in 12 months ⟳", names)
             self.assertEqual(list(cast(dict, library_body)["presets"]), [str(crate_id)])
             status, all_result = self.request("/api/smart-preset", {"action": "refresh_all"})
             self.assertEqual((status, cast(dict, all_result)["checked"]), (200, 1))
             status, refreshed = self.request("/api/smart-preset", {"action": "refresh", "id": crate_id})
             self.assertEqual(status, 200)
-            self.assertEqual(cast(dict, refreshed)["count"], 4)
+            self.assertEqual(cast(dict, refreshed)["count"], 6)
             status, listed = self.request("/api/smart-preset", {"action": "list"})
             self.assertEqual(list(cast(dict, listed)["crates"]), [str(crate_id)])
             status, _ = self.request("/api/crate", {"action": "delete", "id": crate_id})
@@ -662,6 +893,11 @@ class PresetApiTests(unittest.TestCase):
             )
             self.assertEqual(status, 400)
             self.assertEqual(cast(dict, bad)["code"], "preset_bad_key")
+            status, bad = self.request(
+                "/api/smart-preset", {"action": "preview", "preset": {"kind": "rules", "rules": []}}
+            )
+            self.assertEqual(status, 400)
+            self.assertEqual(cast(dict, bad)["code"], "preset_bad_rules")
             status, bad = self.request("/api/smart-preset", {"action": "refresh", "id": 1})
             self.assertEqual(status, 404)
             self.assertEqual(cast(dict, bad)["code"], "preset_not_a_preset_crate")

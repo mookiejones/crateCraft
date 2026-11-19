@@ -609,6 +609,7 @@
         <option value="harmonic" data-i18n="presets.kind.harmonic">Mixes with a key</option>
         <option value="bpm" data-i18n="presets.kind.bpm">BPM range</option>
         <option value="unplayed" data-i18n="presets.kind.unplayed">Not played lately</option>
+        <option value="rules" data-i18n="presets.kind.rules">Custom rules</option>
       </select>
     </label>
     <label class="preset-field" data-preset-kind="harmonic">
@@ -628,6 +629,20 @@
       <span data-i18n="presets.months">Months</span>
       <input id="preset-months" type="number" min="1" max="240" step="1" value="12" inputmode="numeric">
     </label>
+    <div data-preset-kind="rules" hidden>
+      <label class="preset-field">
+        <span data-i18n="presets.conjunction">Match</span>
+        <select id="preset-conjunction">
+          <option value="AND" data-i18n="presets.conjunction.and">All of these</option>
+          <option value="OR" data-i18n="presets.conjunction.or">Any of these</option>
+        </select>
+      </label>
+      <div id="preset-rule-list"></div>
+      <div class="preset-rule-actions">
+        <button id="preset-add-rule" type="button" data-i18n="presets.addRule">Add rule</button>
+        <button id="preset-add-group" type="button" data-i18n="presets.addGroup">Add group</button>
+      </div>
+    </div>
     <label class="check" id="preset-scope-label" hidden>
       <input id="preset-scope" type="checkbox">
       <span id="preset-scope-text"></span>

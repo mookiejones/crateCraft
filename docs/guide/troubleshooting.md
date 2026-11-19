@@ -124,7 +124,7 @@ The bar counts **lines did not match a library track.** Those lines were not pat
 
 ## I cannot make a smart crate
 
-**New** creates a normal crate. Make the smart crate in Serato DJ Pro. Then select it here and use **Save rules**. The steps are in [Crates](crates.md#smart-crates).
+**New** creates a normal crate. **Preset** writes a live smart crate when the rules fit what Serato stores. Mixed AND/OR, play history, and a crate limit stay a copy crate whose name ends in ⟳. You can still make a smart crate in Serato DJ Pro, then select it here and use **Save rules**. The steps are in [Crates](crates.md#preset) and [Crates](crates.md#smart-crates).
 
 **Smart crate rules need to be JSON.** means the text in the box is not valid JSON. Nothing was saved. Fix the text, or reload the crate and start from the rules Serato stored.
 
