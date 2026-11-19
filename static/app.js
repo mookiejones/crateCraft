@@ -12997,6 +12997,7 @@ Error generating stack: ` + x.message + `
     "error.artwork_format": "This file format cannot take artwork yet.",
     "error.artwork_lookup": "Cover lookup failed.",
     "error.artwork_needs_confirm": "Confirm the cover before it is saved.",
+    "error.cues_needs_confirm": "Confirm before duplicate cues are removed.",
     "error.artwork_needs_release": "Choose a cover before it is saved.",
     "error.artwork_no_cover": "No cover was found for this track.",
     "error.artwork_no_search": "This track has no title or artist to search.",
@@ -13330,6 +13331,19 @@ Error generating stack: ` + x.message + `
     "health.emptyGenre": "Empty genre",
     "health.fileRow": "{file}",
     "health.findArt": "Find art",
+    "health.suspiciousCues": "Suspicious cues",
+    "health.reviewCues": "Review duplicate cues",
+    "health.applyCues": "Remove duplicate cues",
+    "health.cuesNote": "More than 64 cues, or 8 at one time. Review drops only the extras that share a start time. MP3 tags only.",
+    "health.cuesClear": "No duplicate cues to remove.",
+    "health.cuesDropped": {
+      one: "{count} duplicate cue to remove.",
+      other: "{count} duplicate cues to remove."
+    },
+    "health.cuesRemoved": {
+      one: "{count} duplicate cue removed.",
+      other: "{count} duplicate cues removed."
+    },
     "health.heading": "Library health",
     "health.intro": "Counts from the library and from audio files on disk. Each row opens the place that can fix it.",
     "health.missing": "Missing files",
@@ -14332,6 +14346,7 @@ Error generating stack: ` + x.message + `
     "tooltip.healthArtEmbed": "Write the selected cover into the audio file. Cue points stay. Quit Serato first.",
     "tooltip.healthArtPick": "Choose this Cover Art Archive image to embed.",
     "tooltip.healthFindArt": "Look up a cover on Cover Art Archive and preview it before embedding.",
+    "tooltip.suspiciousCues": "Review cues that share a start time, then remove the extras. Cues at different times stay. Quit Serato first.",
     "tooltip.healthOpenBitrate": "Open the bitrate check for this crate.",
     "tooltip.healthOpenDuplicates": "Open the Duplicates view.",
     "tooltip.healthOpenFiles": "Open the Files view.",
@@ -14972,6 +14987,7 @@ Error generating stack: ` + x.message + `
     "error.artwork_format": "Este formato de archivo no puede llevar carátula todavía.",
     "error.artwork_lookup": "No se pudo buscar la carátula.",
     "error.artwork_needs_confirm": "Confirma la carátula antes de guardarla.",
+    "error.cues_needs_confirm": "Confirma antes de quitar los cues duplicados.",
     "error.artwork_needs_release": "Elige una carátula antes de guardarla.",
     "error.artwork_no_cover": "No se encontró carátula para esta pista.",
     "error.artwork_no_search": "Esta pista no tiene título ni artista para buscar.",
@@ -15305,6 +15321,19 @@ Error generating stack: ` + x.message + `
     "health.emptyGenre": "Género vacío",
     "health.fileRow": "{file}",
     "health.findArt": "Buscar carátula",
+    "health.suspiciousCues": "Cues sospechosos",
+    "health.reviewCues": "Revisar cues duplicados",
+    "health.applyCues": "Quitar cues duplicados",
+    "health.cuesNote": "Más de 64 cues, u 8 en el mismo instante. Revisar solo quita los extras que comparten ese instante. Solo etiquetas MP3.",
+    "health.cuesClear": "No hay cues duplicados que quitar.",
+    "health.cuesDropped": {
+      one: "{count} cue duplicado que quitar.",
+      other: "{count} cues duplicados que quitar."
+    },
+    "health.cuesRemoved": {
+      one: "{count} cue duplicado quitado.",
+      other: "{count} cues duplicados quitados."
+    },
     "health.heading": "Salud de la biblioteca",
     "health.intro": "Cifras de la biblioteca y de los archivos de audio en el disco. Cada fila abre el sitio que puede corregirlo.",
     "health.missing": "Archivos no encontrados",
@@ -16307,6 +16336,7 @@ Error generating stack: ` + x.message + `
     "tooltip.healthArtEmbed": "Escribe la carátula elegida en el archivo de audio. Los cues se quedan. Cierra Serato primero.",
     "tooltip.healthArtPick": "Elige esta imagen de Cover Art Archive para incrustarla.",
     "tooltip.healthFindArt": "Busca una carátula en Cover Art Archive y previsualízala antes de incrustarla.",
+    "tooltip.suspiciousCues": "Revisa los cues que comparten un instante y quita los extras. Los cues en otros instantes se quedan. Cierra Serato antes.",
     "tooltip.healthOpenBitrate": "Abre la comprobación de tasa de bits de esta caja.",
     "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
     "tooltip.healthOpenFiles": "Abre la vista Archivos.",
@@ -17609,6 +17639,7 @@ Error generating stack: ` + x.message + `
     healthOpenBitrate: spec("tooltip.healthOpenBitrate"),
     healthTrack: spec("tooltip.healthTrack"),
     healthFindArt: spec("tooltip.healthFindArt"),
+    suspiciousCues: spec("tooltip.suspiciousCues"),
     healthArtCancel: spec("tooltip.healthArtCancel"),
     healthArtEmbed: spec("tooltip.healthArtEmbed"),
     healthArtPick: spec("tooltip.healthArtPick"),
@@ -65068,6 +65099,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
   }), "ExpandMore");
 
+  // src/lib/health/suspicious-cues.ts
+  function requestBody(action, confirm) {
+    return {
+      action,
+      space: state.space,
+      crate: state.activeCrate,
+      ...confirm ? { confirm: !0 } : {}
+    };
+  }
+  function previewSuspiciousCues() {
+    return postJSON("/api/suspicious-cues", requestBody("preview", !1));
+  }
+  function applySuspiciousCues() {
+    return postJSON("/api/suspicious-cues", requestBody("apply", !0));
+  }
+
   // src/pages/HealthPanel.tsx
   var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX = {
     disableGutters: !0,
@@ -65161,6 +65208,84 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 }
               ) : null
             ] }, track.id)) }),
+            count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
+          ] })
+        ]
+      }
+    );
+  }
+  function SuspiciousCues({
+    section,
+    onReload
+  }) {
+    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react40.useState)(""), [busy5, setBusy] = (0, import_react40.useState)(!1), [canApply, setCanApply] = (0, import_react40.useState)(!1);
+    async function review() {
+      setBusy(!0), setCanApply(!1);
+      try {
+        let plan = await previewSuspiciousCues();
+        setCanApply(plan.dropped > 0), setNote(plan.dropped > 0 ? t("health.cuesDropped", { count: plan.dropped }) : t("health.cuesClear"));
+      } catch (error2) {
+        setNote(error2 instanceof Error ? error2.message : t("health.unreadable"));
+      } finally {
+        setBusy(!1);
+      }
+    }
+    async function removeDuplicates() {
+      setBusy(!0);
+      try {
+        let plan = await applySuspiciousCues();
+        setCanApply(!1), setNote(plan.written ? t("health.cuesRemoved", { count: plan.dropped }) : t("health.cuesClear")), await onReload();
+      } catch (error2) {
+        setNote(error2 instanceof Error ? error2.message : t("health.unreadable"));
+      } finally {
+        setBusy(!1);
+      }
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
+      Accordion_default,
+      {
+        className: "health-accordion",
+        expanded: accordion.expanded,
+        onChange: accordion.onChange,
+        ...ACCORDION_SX,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label: t("health.suspiciousCues"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX2,
+                ref: tooltipRef5(tips.suspiciousCues),
+                "data-health-action": "cues-preview",
+                disabled: busy5,
+                onClick: () => {
+                  review();
+                },
+                children: t("health.reviewCues")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX2,
+                ref: tooltipRef5(tips.suspiciousCues),
+                "data-health-action": "cues-apply",
+                disabled: busy5 || !canApply,
+                onClick: () => {
+                  removeDuplicates();
+                },
+                children: t("health.applyCues")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.cuesNote") }),
+            note ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: note }) : null,
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("li", { children: trackLine(track) }, track.id)) }),
             count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
           ] })
         ]
@@ -65273,7 +65398,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HealthPanel() {
     let health = useHealth(), payload = health.healthReport, listed = 0;
-    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.suspicious_cues.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
       /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "browser-bar", children: [
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
@@ -65299,17 +65424,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
       /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
-        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
-          Section,
-          {
-            label: t(spec2.label),
-            section: payload[spec2.key],
-            ...spec2.action ? { action: spec2.action } : {},
-            ...spec2.key === "no_artwork" ? { findArt: !0 } : {},
-            onNavigate: health.navigate
-          },
-          spec2.key
-        )),
+        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_react40.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+            Section,
+            {
+              label: t(spec2.label),
+              section: payload[spec2.key],
+              ...spec2.action ? { action: spec2.action } : {},
+              ...spec2.key === "no_artwork" ? { findArt: !0 } : {},
+              onNavigate: health.navigate
+            }
+          ),
+          spec2.key === "no_artwork" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(SuspiciousCues, { section: payload.suspicious_cues, onReload: health.loadHealth }) : null
+        ] }, spec2.key)),
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Bitrate, { onNavigate: health.navigate }),

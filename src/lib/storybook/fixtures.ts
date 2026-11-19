@@ -265,6 +265,7 @@ export const healthReport: LibraryHealthReport = {
   no_key: emptyHealthSection,
   no_beatgrid: emptyHealthSection,
   no_artwork: emptyHealthSection,
+  suspicious_cues: emptyHealthSection,
   empty_genre: emptyHealthSection,
   no_crate: emptyHealthSection,
   unused: { count: 0, files: [] },

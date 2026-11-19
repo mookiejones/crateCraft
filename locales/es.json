@@ -285,6 +285,7 @@
   "error.artwork_format": "Este formato de archivo no puede llevar carátula todavía.",
   "error.artwork_lookup": "No se pudo buscar la carátula.",
   "error.artwork_needs_confirm": "Confirma la carátula antes de guardarla.",
+  "error.cues_needs_confirm": "Confirma antes de quitar los cues duplicados.",
   "error.artwork_needs_release": "Elige una carátula antes de guardarla.",
   "error.artwork_no_cover": "No se encontró carátula para esta pista.",
   "error.artwork_no_search": "Esta pista no tiene título ni artista para buscar.",
@@ -618,6 +619,19 @@
   "health.emptyGenre": "Género vacío",
   "health.fileRow": "{file}",
   "health.findArt": "Buscar carátula",
+  "health.suspiciousCues": "Cues sospechosos",
+  "health.reviewCues": "Revisar cues duplicados",
+  "health.applyCues": "Quitar cues duplicados",
+  "health.cuesNote": "Más de 64 cues, u 8 en el mismo instante. Revisar solo quita los extras que comparten ese instante. Solo etiquetas MP3.",
+  "health.cuesClear": "No hay cues duplicados que quitar.",
+  "health.cuesDropped": {
+    "one": "{count} cue duplicado que quitar.",
+    "other": "{count} cues duplicados que quitar."
+  },
+  "health.cuesRemoved": {
+    "one": "{count} cue duplicado quitado.",
+    "other": "{count} cues duplicados quitados."
+  },
   "health.heading": "Salud de la biblioteca",
   "health.intro": "Cifras de la biblioteca y de los archivos de audio en el disco. Cada fila abre el sitio que puede corregirlo.",
   "health.missing": "Archivos no encontrados",
@@ -1620,6 +1634,7 @@
   "tooltip.healthArtEmbed": "Escribe la carátula elegida en el archivo de audio. Los cues se quedan. Cierra Serato primero.",
   "tooltip.healthArtPick": "Elige esta imagen de Cover Art Archive para incrustarla.",
   "tooltip.healthFindArt": "Busca una carátula en Cover Art Archive y previsualízala antes de incrustarla.",
+  "tooltip.suspiciousCues": "Revisa los cues que comparten un instante y quita los extras. Los cues en otros instantes se quedan. Cierra Serato antes.",
   "tooltip.healthOpenBitrate": "Abre la comprobación de tasa de bits de esta caja.",
   "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
   "tooltip.healthOpenFiles": "Abre la vista Archivos.",
