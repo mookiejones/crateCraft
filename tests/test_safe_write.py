@@ -558,16 +558,17 @@ class SafeWriteTests(unittest.TestCase):
             self.assertEqual(_snapshot(temp.db, crate, _wal(temp.db)), before)
             self.assertFalse(_journal(temp.db).exists())
 
-    def test_recovery_ignores_a_shm_index_rewritten_by_a_read(self) -> None:
+    def test_recovery_after_a_status_read_in_wal_mode(self) -> None:
         """Roll back in WAL mode after the app's own status read.
 
         Serato's library runs in WAL mode. On the next launch the app reads
-        ``status()`` before the snapshot store recovers, and that read
-        rewrites ``master.sqlite-shm``. That index holds no library data, so
-        it must not make recovery think another program changed the library.
+        ``status()`` before the snapshot store recovers. That read copies
+        the database, so ``master.sqlite-shm`` stays put. Recovery must
+        still roll the unfinished write back.
 
         Returns:
-            None. The test fails if the rollback is skipped.
+            None. The test fails if the rollback is skipped or the read
+            rewrites the live ``-shm`` file.
         """
         with TempLibrary() as temp:
             with closing(sqlite3.connect(temp.db)) as conn:
@@ -591,7 +592,7 @@ class SafeWriteTests(unittest.TestCase):
             shm_after_crash = shm.read_bytes()
             with mock.patch("snapshots.serato_dj_running", return_value=False):
                 library.status()
-            self.assertNotEqual(shm.read_bytes(), shm_after_crash)
+            self.assertEqual(shm.read_bytes(), shm_after_crash)
             self.assertEqual(_names_with_wal(temp.db)[1], "Renamed")
             self.assertTrue(safe_write.recover_interrupted_write())
             self.assertEqual(_names_with_wal(temp.db)[1], name_before)

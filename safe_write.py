@@ -375,8 +375,9 @@ def _file_state(path: Path) -> str | None:
 def _compared(path: Path) -> bool:
     """Return whether recovery compares this path.
 
-    ``-shm`` is SQLite's shared-memory index. A plain read rewrites it and
-    SQLite rebuilds it, so it says nothing about the library's contents.
+    ``-shm`` is SQLite's shared-memory index. Serato or a live WAL
+    connection can rewrite it, so it says nothing about the library's
+    contents.
 
     Args:
         path: Preimage destination or absent path.

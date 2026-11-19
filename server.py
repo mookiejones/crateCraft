@@ -738,7 +738,8 @@ def connect() -> sqlite3.Connection:
     """Open the master database for a read-only query.
 
     Returns:
-        A connection with row access and query_only enabled.
+        A connection with row access and query_only enabled on a copy.
+        Close it to remove the temporary copy.
 
     Raises:
         FileNotFoundError: If the master database file does not exist.
@@ -746,11 +747,7 @@ def connect() -> sqlite3.Connection:
     path = db_path()
     if not path.exists():
         raise FileNotFoundError(f"Serato library not found at {path}")
-    uri = f"file:{path}?mode=ro"
-    conn = sqlite3.connect(uri, uri=True)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA query_only=ON")
-    return conn
+    return library.read_conn(path)
 
 
 def db_stamp() -> tuple[int, ...]:
