@@ -320,18 +320,22 @@ def read_conn(path: Path | None = None) -> sqlite3.Connection:
         path: Database path. None selects MASTER.
 
     Returns:
-        A connection with row access and query_only enabled.
+        A connection with row access and query_only enabled. Close it
+        to remove the temporary copy.
 
     Raises:
         LibraryError: If the database file does not exist.
+        OSError: If the copy cannot be made.
+        sqlite3.Error: If the copy cannot be opened.
+
+    ``master.sqlite`` and a real ``-wal`` are copied first. The live
+    folder is not opened, so the read cannot recreate sidecars or
+    change mtime.
     """
     database = Path(path or MASTER)
     if not database.exists():
         raise LibraryError(f"Serato library not found at {database}", 404)
-    # mode=ro rejects writes at the SQLite layer. query_only is a second guard.
-    conn = sqlite3.connect(f"file:{database}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA query_only=ON")
+    conn, _tmp = _open_copied_readonly(database)
     return conn
 
 
@@ -409,22 +413,95 @@ def copied_read_conn(path: Path) -> Iterator[sqlite3.Connection]:
     source = Path(path)
     if source.is_symlink() or not source.is_file():
         raise LibraryError("That folder is not the Serato library on this computer.")
+    conn, _tmp = _open_copied_readonly(source)
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
+class _CopiedReadConnection(sqlite3.Connection):
+    """Read-only connection whose close removes the temporary copy."""
+
+    _copied_tmp: tempfile.TemporaryDirectory[str] | None = None
+
+    def close(self) -> None:
+        """Close the copy, then delete its temporary directory.
+
+        Returns:
+            None.
+        """
+        try:
+            super().close()
+        finally:
+            tmp = self._copied_tmp
+            self._copied_tmp = None
+            if tmp is not None:
+                try:
+                    tmp.cleanup()
+                except Exception:
+                    # A refused listing is OSError. Windows tempfile turns
+                    # that same miss into TypeError when the path is empty.
+                    pass
+
+
+def _open_copied_readonly(
+    source: Path,
+) -> tuple[_CopiedReadConnection, tempfile.TemporaryDirectory[str]]:
+    """Copy a library file and open the copy read-only.
+
+    Args:
+        source: ``master.sqlite`` to copy. A real ``-wal`` beside it is
+            copied too. A ``-wal`` shortcut is skipped.
+
+    Returns:
+        The connection and the temporary directory that holds the copy.
+        Closing the connection removes the directory.
+
+    Raises:
+        OSError: If the copy cannot be made.
+        sqlite3.Error: If the copy cannot be opened.
+
+    The original folder is not opened as a database, so a checkpointed
+    WAL file cannot grow new ``-wal`` or ``-shm`` sidecars there.
+    """
     wal = Path(str(source) + "-wal")
     copy_wal = wal.is_file() and not wal.is_symlink()
-    with tempfile.TemporaryDirectory(prefix="serato-library-check-") as raw:
-        root = Path(raw)
+    tmp = tempfile.TemporaryDirectory(
+        prefix="serato-library-check-",
+        ignore_cleanup_errors=True,
+    )
+    conn: _CopiedReadConnection | None = None
+    try:
+        root = Path(tmp.name)
         copied = root / "master.sqlite"
         shutil.copyfile(source, copied)
         if copy_wal:
             shutil.copyfile(wal, root / "master.sqlite-wal")
         query = "mode=ro" if copy_wal else "mode=ro&immutable=1"
-        conn = sqlite3.connect(_read_only_uri(copied, query), uri=True)
+        conn = cast(
+            _CopiedReadConnection,
+            sqlite3.connect(
+                _read_only_uri(copied, query),
+                uri=True,
+                factory=_CopiedReadConnection,
+            ),
+        )
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA query_only=ON")
+        conn._copied_tmp = tmp
+        return conn, tmp
+    except BaseException:
+        if conn is not None:
+            try:
+                conn.close()
+            except sqlite3.Error:
+                pass
         try:
-            conn.row_factory = sqlite3.Row
-            conn.execute("PRAGMA query_only=ON")
-            yield conn
-        finally:
-            conn.close()
+            tmp.cleanup()
+        except Exception:
+            pass
+        raise
 
 
 def _read_only_uri(path: Path, query: str) -> str:
@@ -644,7 +721,8 @@ def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, ob
         path: Database path. None selects MASTER.
         from_copy: When true, read the lock table from a temporary copy
             so the library folder gains no ``-wal``, ``-shm``, or journal
-            file. Setup uses this. The sidebar reads the live file.
+            file. Setup uses this. The default path copies too, through
+            ``read_conn``.
 
     Returns:
         A status dict. A locked database is reported as open. Any other
