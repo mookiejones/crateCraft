@@ -124,6 +124,8 @@ export function AppShell() {
     adopt(actionsSlot.current, "open-settings");
     adopt(playerSlot.current, "player-bar");
     adopt(lockSlot.current, "status");
+    adopt(lockSlot.current, "folder-access");
+    adopt(lockSlot.current, "folder-access-allow");
     adopt(navSlot.current, "views");
     adopt(bodySlot.current, "app-body");
     paintNav(state.mode);
