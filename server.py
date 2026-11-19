@@ -49,6 +49,7 @@ import music_roots
 import rekordbox
 import related
 import relink
+import version_family
 import setup_flow
 import smart_presets
 import smart_rules
@@ -2270,6 +2271,7 @@ class Handler(BaseHTTPRequestHandler):
                     history = parsed.path == "/api/history-stats"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
+                    versioning = parsed.path == "/api/version-family"
                     preview = (
                         (merging and payload.get("preview") is True)
                         or (replacing and payload.get("preview") is True)
@@ -2289,6 +2291,13 @@ class Handler(BaseHTTPRequestHandler):
                         or (bitrate_crate and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
+                        or (
+                            versioning
+                            and (
+                                payload.get("action") == "preview"
+                                or payload.get("confirm") is not True
+                            )
+                        )
                         or (
                             mirroring
                             and (
@@ -2375,6 +2384,17 @@ class Handler(BaseHTTPRequestHandler):
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = bitrate_check.action(request)
                         if request.get("action") == "create" and result.get("written"):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif versioning:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = version_family.action(request)
+                        if (
+                            request.get("action") == "apply"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                            and result.get("crates")
+                        ):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif cueing:
                         request = dict(payload)

@@ -32,6 +32,8 @@ Suggestions use the same key, a neighbor on the Camelot wheel, a tempo within 6 
 
 **Update Serato crate** writes a normal crate named `Related - ` plus the track title. Quit Serato first. While Serato is open the button stays off and the note says **Quit Serato before writing the crate.**
 
+**Find versions** looks for an acapella, an instrumental, and an original of the same song by the same artist. A remix with a different title stays out. Nothing is written yet. **Prelisten** plays that version in the player. Quit Serato, then click **Save version crate**. That stores two-way links. The row says **Version**. It also makes a Serato crate named `Versions of` plus the song title. Click it again when that crate and those links are already there. Nothing changes. The snapshot taken before the write is the undo. Tags in the audio file stay as they are. Tick **Version of this track** before **Save link** to store the same note on a link you pick yourself.
+
 The live view while a deck is playing is a different app, [serato-listener](https://github.com/mookiejones/serato-listener). It reads `related.sqlite` and does not change it.
 
 | System | File |

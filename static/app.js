@@ -13126,6 +13126,7 @@ Error generating stack: ` + x.message + `
     "error.tree_unknown": "That crate tree is not available.",
     "error.undo_needs_confirm": "Confirm undo before it is saved.",
     "error.upload_too_large": "That upload is too large.",
+    "error.version_needs_confirm": "Confirm the version crate before it is saved.",
     "error.write_preimage_mismatch": "The pre-write snapshot does not match its hash.",
     "error.write_rollback_failed": "The write did not match, and putting the library back failed.",
     "error.write_undo_failed": "The write failed, and putting the library back failed.",
@@ -13801,23 +13802,27 @@ Error generating stack: ` + x.message + `
     "related.crateUpdated": "Crate “{name}” updated.",
     "related.find": "Find a track to link",
     "related.findPlaceholder": "Title or artist",
+    "related.findVersions": "Find versions",
     "related.heading": "Mixes well with",
     "related.linkRating": "Link rating",
     "related.loadFailed": "Mixes well with could not be loaded.",
     "related.loading": "Loading mixes well with",
     "related.noPath": "This track has no file path, so it cannot be linked.",
     "related.noSuggestions": "No suggestions from key, tempo, energy, or shared crates.",
+    "related.noVersions": "No other versions of this track.",
     "related.noneSaved": "No saved links yet. Search for a track, or save a suggestion.",
     "related.notInLibrary": "Not in this library",
     "related.note": "Note",
     "related.notePlaceholder": "blend out of",
     "related.oneWay": "One-way",
+    "related.prelisten": "Prelisten",
     "related.quitSerato": "Quit Serato before writing the crate.",
     "related.ratingOutOf": "{rating}/5",
     "related.removeLink": "Remove link to {name}",
     "related.removed": "Link removed.",
     "related.saveLink": "Save link",
     "related.saveLinkTo": "Save link to {name}",
+    "related.saveVersions": "Save version crate",
     "related.saved": "Link saved.",
     "related.savedCount": "{count} saved",
     "related.suggested": "Suggested from key, tempo within 6%, energy, and shared crates. Save stores a two-way link.",
@@ -13826,6 +13831,11 @@ Error generating stack: ` + x.message + `
     "related.twoWayLink": "Two-way link",
     "related.typeHint": "Type a title or artist.",
     "related.updateCrate": "Update Serato crate",
+    "related.version": "Version",
+    "related.versionCrate": "Versions of {title}",
+    "related.versionLink": "Version of this track",
+    "related.versionNote": "Saves two-way links with the note version, and a Serato crate. Quit Serato first.",
+    "related.versionsSaved": "Version links saved.",
     "relink.acceptHigh": "Accept all high",
     "relink.choose": "Choose tracks to relink.",
     "relink.confidence": "Confidence",
@@ -14338,6 +14348,7 @@ Error generating stack: ` + x.message + `
     "tooltip.filesSearch": "Search file names. Ctrl/Cmd+F or /. Esc clears the search.",
     "tooltip.filesUp": "Go up to the parent folder.",
     "tooltip.findRelated": "Find a track to link by title or artist.",
+    "tooltip.findVersions": "Look for acapella, instrumental, and original versions. Nothing is written.",
     "tooltip.gigBack": "Go back one step.",
     "tooltip.gigExit": "Leave the gig check and show crates.",
     "tooltip.gigGroup": "Show or hide this list.",
@@ -14486,6 +14497,7 @@ Error generating stack: ` + x.message + `
     "tooltip.reviewRestore": "Review what restoring this snapshot would change.",
     "tooltip.runSetup": "Run setup to find music folders.",
     "tooltip.saveLink": "Save this link.",
+    "tooltip.saveVersions": "Save version links and a Versions of crate. Quit Serato first. Nothing changes when the family is already saved.",
     "tooltip.saveRules": "Save these smart crate rules.",
     "tooltip.saveSuggestion": "Save a two-way link to {name}. Serato is not changed until you update the crate.",
     "tooltip.saveTrack": "Save these track details.",
@@ -14566,6 +14578,8 @@ Error generating stack: ` + x.message + `
     "tooltip.untrustedVolumes": "Volume names that do not count as copies, comma-separated. An unplugged drive is never counted.",
     "tooltip.updateToggle": "Ask GitHub once a day whether a newer version is out.",
     "tooltip.useInCrates": "Put another track in every crate this one is in, at the same position.",
+    "tooltip.versionLink": "Save this link as a version of the same recording.",
+    "tooltip.versionPlay": "Prelisten this version in the player.",
     "tooltip.viewBitrate": "Flag files whose stated bitrate is much higher than the spectrum, or lossless files made from a lossy encode. Needs a crate. Saving a crate writes the library.",
     "tooltip.viewCompare": "See tracks in both crates, only in A, or only in B. Save any set as a crate.",
     "tooltip.viewCrates": "Show crates. Ctrl/Cmd+2.",
@@ -15132,6 +15146,7 @@ Error generating stack: ` + x.message + `
     "error.tree_unknown": "Ese árbol de cajas no está disponible.",
     "error.undo_needs_confirm": "Confirma la acción de deshacer antes de guardarla.",
     "error.upload_too_large": "Ese archivo es demasiado grande.",
+    "error.version_needs_confirm": "Confirma la caja de versiones antes de guardarla.",
     "error.write_preimage_mismatch": "La copia previa al cambio no coincide con su hash.",
     "error.write_rollback_failed": "El cambio no coincidía, y no se pudo devolver la biblioteca.",
     "error.write_undo_failed": "El cambio falló, y no se pudo devolver la biblioteca.",
@@ -15807,23 +15822,27 @@ Error generating stack: ` + x.message + `
     "related.crateUpdated": "Caja «{name}» actualizada.",
     "related.find": "Buscar una pista para enlazar",
     "related.findPlaceholder": "Título o artista",
+    "related.findVersions": "Buscar versiones",
     "related.heading": "Mezcla bien con",
     "related.linkRating": "Valoración del enlace",
     "related.loadFailed": "No se pudo cargar Mezcla bien con.",
     "related.loading": "Cargando Mezcla bien con",
     "related.noPath": "Esta pista no tiene ruta de archivo, así que no se puede enlazar.",
     "related.noSuggestions": "No hay sugerencias por tono, tempo, energía o cajas en común.",
+    "related.noVersions": "No hay otras versiones de esta pista.",
     "related.noneSaved": "Todavía no hay enlaces guardados. Busca una pista o guarda una sugerencia.",
     "related.notInLibrary": "No está en esta biblioteca",
     "related.note": "Nota",
     "related.notePlaceholder": "mezclar al salir de",
     "related.oneWay": "En un sentido",
+    "related.prelisten": "Preescuchar",
     "related.quitSerato": "Cierra Serato antes de escribir la caja.",
     "related.ratingOutOf": "{rating}/5",
     "related.removeLink": "Quitar el enlace con {name}",
     "related.removed": "Enlace quitado.",
     "related.saveLink": "Guardar enlace",
     "related.saveLinkTo": "Guardar enlace con {name}",
+    "related.saveVersions": "Guardar caja de versiones",
     "related.saved": "Enlace guardado.",
     "related.savedCount": "{count} guardados",
     "related.suggested": "Sugeridas por tono, tempo con un margen del 6 %, energía y cajas en común. Guardar crea un enlace en ambos sentidos.",
@@ -15832,6 +15851,11 @@ Error generating stack: ` + x.message + `
     "related.twoWayLink": "Enlace en ambos sentidos",
     "related.typeHint": "Escribe un título o un artista.",
     "related.updateCrate": "Actualizar caja de Serato",
+    "related.version": "Versión",
+    "related.versionCrate": "Versiones de {title}",
+    "related.versionLink": "Versión de esta pista",
+    "related.versionNote": "Guarda enlaces en ambos sentidos con la nota version y una caja de Serato. Cierra Serato primero.",
+    "related.versionsSaved": "Enlaces de versión guardados.",
     "relink.acceptHigh": "Aceptar todas las altas",
     "relink.choose": "Elige pistas para volver a enlazar.",
     "relink.confidence": "Confianza",
@@ -16344,6 +16368,7 @@ Error generating stack: ` + x.message + `
     "tooltip.filesSearch": "Busca nombres de archivo. Ctrl/Cmd+F o /. Esc borra la búsqueda.",
     "tooltip.filesUp": "Sube a la carpeta superior.",
     "tooltip.findRelated": "Busca una pista para enlazar por título o artista.",
+    "tooltip.findVersions": "Busca versiones acapella, instrumental y original. No se escribe nada.",
     "tooltip.gigBack": "Vuelve un paso atrás.",
     "tooltip.gigExit": "Sale de la comprobación y muestra las cajas.",
     "tooltip.gigGroup": "Muestra u oculta esta lista.",
@@ -16492,6 +16517,7 @@ Error generating stack: ` + x.message + `
     "tooltip.reviewRestore": "Revisa qué cambiaría al restaurar esta instantánea.",
     "tooltip.runSetup": "Ejecuta la configuración para encontrar las carpetas de música.",
     "tooltip.saveLink": "Guarda este enlace.",
+    "tooltip.saveVersions": "Guarda los enlaces de versión y una caja Versiones de. Cierra Serato primero. No cambia nada si la familia ya está guardada.",
     "tooltip.saveRules": "Guarda las reglas de esta caja inteligente.",
     "tooltip.saveSuggestion": "Guarda un enlace en ambos sentidos a {name}. Serato no cambia hasta que actualices la caja.",
     "tooltip.saveTrack": "Guarda estos datos de la pista.",
@@ -16572,6 +16598,8 @@ Error generating stack: ` + x.message + `
     "tooltip.untrustedVolumes": "Nombres de volumen que no cuentan como copias, separados por comas. Una unidad desconectada nunca cuenta.",
     "tooltip.updateToggle": "Preguntar a GitHub una vez al día si hay una versión más nueva.",
     "tooltip.useInCrates": "Pon otra pista en cada caja donde está esta, en la misma posición.",
+    "tooltip.versionLink": "Guarda este enlace como una versión de la misma grabación.",
+    "tooltip.versionPlay": "Preescucha esta versión en el reproductor.",
     "tooltip.viewBitrate": "Marca archivos cuya tasa de bits declarada es mucho más alta que la del espectro, o archivos sin pérdida hechos a partir de un códec con pérdida. Necesita una caja. Guardar una caja escribe en la biblioteca.",
     "tooltip.viewCompare": "Ve las pistas en ambas crates, solo en A o solo en B. Guarda cualquier conjunto como crate.",
     "tooltip.viewCrates": "Muestra las cajas. Ctrl/Cmd+2.",
@@ -17620,6 +17648,10 @@ Error generating stack: ` + x.message + `
     libraryGeneration: spec("tooltip.libraryGeneration"),
     folderAccessAllow: spec("tooltip.folderAccessAllow"),
     linkMutual: spec("tooltip.linkMutual"),
+    versionLink: spec("tooltip.versionLink"),
+    versionPlay: spec("tooltip.versionPlay"),
+    findVersions: spec("tooltip.findVersions"),
+    saveVersions: spec("tooltip.saveVersions"),
     saveLink: spec("tooltip.saveLink"),
     showSearchCopies: spec("tooltip.showSearchCopies"),
     hideSearchCopies: spec("tooltip.hideSearchCopies"),
@@ -70779,7 +70811,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return item.artist ? `${title2} · ${item.artist}` : title2;
   }
   function RelatedTracks({ track, writable }) {
-    let list = useTrackList(), path = relatedPath(track), [busy5, setBusy] = (0, import_react67.useState)(!!path), [loadError, setLoadError] = (0, import_react67.useState)(""), [payload, setPayload] = (0, import_react67.useState)(null), [query, setQuery] = (0, import_react67.useState)(""), [chosen, setChosen] = (0, import_react67.useState)(null), [note, setNote] = (0, import_react67.useState)(""), [rating, setRating] = (0, import_react67.useState)(""), [mutual, setMutual] = (0, import_react67.useState)(!0), [saving2, setSaving] = (0, import_react67.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react67.useState)(!1);
+    let list = useTrackList(), path = relatedPath(track), [busy5, setBusy] = (0, import_react67.useState)(!!path), [loadError, setLoadError] = (0, import_react67.useState)(""), [payload, setPayload] = (0, import_react67.useState)(null), [query, setQuery] = (0, import_react67.useState)(""), [chosen, setChosen] = (0, import_react67.useState)(null), [note, setNote] = (0, import_react67.useState)(""), [rating, setRating] = (0, import_react67.useState)(""), [mutual, setMutual] = (0, import_react67.useState)(!0), [versionOf, setVersionOf] = (0, import_react67.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react67.useState)(null), [versionBusy, setVersionBusy] = (0, import_react67.useState)(!1), [saving2, setSaving] = (0, import_react67.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react67.useState)(!1);
     (0, import_react67.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
@@ -70801,7 +70833,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       })(), () => {
         cancelled = !0;
       };
-    }, [path, list.space, list.activeCrate, crateOnly, track.id]);
+    }, [path, list.space, list.activeCrate, crateOnly, track.id]), (0, import_react67.useEffect)(() => {
+      setVersionGroups(null), setVersionOf(!1);
+    }, [track.id]);
     let hits2 = (0, import_react67.useMemo)(() => {
       let parsed = parseQuery(query);
       return !parsed.terms.length && !parsed.filters.length ? null : list.tracks.filter((item) => item.id !== track.id && matchesQuery(item, parsed)).slice(0, 8);
@@ -70830,6 +70864,34 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         } catch (error2) {
           list.setNotice(failureOf(error2).message, "error");
         }
+    }
+    async function onFindVersions() {
+      setVersionBusy(!0);
+      try {
+        let result = await postJSON("/api/version-family", {
+          action: "preview",
+          space: list.space
+        }), groups = Array.isArray(result.groups) ? result.groups : [];
+        setVersionGroups(groups.filter((group) => group.track_ids.includes(track.id)));
+      } catch (error2) {
+        list.setNotice(failureOf(error2).message, "error"), setVersionGroups([]);
+      } finally {
+        setVersionBusy(!1);
+      }
+    }
+    async function onSaveVersions() {
+      setVersionBusy(!0);
+      try {
+        (await postJSON("/api/version-family", {
+          action: "apply",
+          confirm: !0,
+          space: list.space
+        })).written ? (list.setNotice(t("related.versionsSaved")), await bridge.reloadLibrary(), list.selectTrack(track.id), path && await reload()) : list.setNotice(t("related.noVersions"));
+      } catch (error2) {
+        failureOf(error2).status === 409 ? bridge.lockDown(error2) : list.setNotice(failureOf(error2).message, "error");
+      } finally {
+        setVersionBusy(!1);
+      }
     }
     async function onCrate() {
       setSaving(!0);
@@ -70862,8 +70924,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             ) : /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("span", { children: label }),
             /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
-            link.note ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-note", children: link.note }) : null
+            link.note === "version" ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-note", "data-version-label": "", children: t("related.version") }) : link.note ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-note", children: link.note }) : null
           ] }),
+          link.note === "version" && other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+            "button",
+            {
+              type: "button",
+              className: "text-button",
+              "data-version-play": "",
+              ref: tooltipRef(tips.versionPlay),
+              onClick: () => play(other.asset_id),
+              children: t("related.prelisten")
+            }
+          ) : null,
           /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
             "button",
             {
@@ -70903,7 +70976,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               className: "text-button",
               ref: tooltipRef(chooseRelated(name)),
               onClick: () => {
-                setChosen(hit), setNote(""), setRating(""), setMutual(!0);
+                setChosen(hit), setNote(""), setRating(""), setMutual(!0), setVersionOf(!1);
               },
               children: name
             }
@@ -70920,7 +70993,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 type: "text",
                 maxLength: 500,
                 placeholder: t("related.notePlaceholder"),
-                value: note,
+                value: versionOf ? "version" : note,
+                disabled: versionOf,
                 onChange: (event) => setNote(event.currentTarget.value)
               }
             )
@@ -70952,6 +71026,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ),
             t("related.twoWayLink")
           ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+              "input",
+              {
+                "data-version-link": "",
+                ref: tooltipRef(tips.versionLink),
+                type: "checkbox",
+                checked: versionOf,
+                onChange: (event) => setVersionOf(event.currentTarget.checked)
+              }
+            ),
+            t("related.versionLink")
+          ] }),
           /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
             "button",
             {
@@ -70964,7 +71051,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   asset: track.id,
                   target: chosen.id,
                   mutual,
-                  note,
+                  note: versionOf ? "version" : note,
                   rating: rating === "" ? null : Number(rating),
                   space: list.space
                 });
@@ -71016,6 +71103,53 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }, `${item.asset_id ?? index}`)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "text-button",
+            "data-find-versions": "",
+            ref: tooltipRef(tips.findVersions),
+            disabled: versionBusy,
+            onClick: () => {
+              onFindVersions();
+            },
+            children: t("related.findVersions")
+          }
+        ),
+        versionGroups && versionGroups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "detail-kicker", children: t("related.noVersions") }) : null,
+        versionGroups && versionGroups.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("ul", { className: "related-list", children: versionGroups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-meta", children: t("related.versionCrate", { title: group.title }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("ul", { children: group.tracks.filter((item) => item.id !== track.id).map((item) => /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("li", { className: "related-row", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("span", { children: item.artist ? `${item.title} · ${item.artist}` : item.title }),
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+              "button",
+              {
+                type: "button",
+                className: "text-button",
+                "data-version-play": "",
+                ref: tooltipRef(tips.versionPlay),
+                onClick: () => play(item.id),
+                children: t("related.prelisten")
+              }
+            )
+          ] }, item.id)) })
+        ] }, group.crate_name)) }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
+          "button",
+          {
+            type: "button",
+            className: "text-button",
+            "data-save-versions": "",
+            ref: tooltipRef(tips.saveVersions),
+            disabled: !writable || versionBusy,
+            onClick: () => {
+              onSaveVersions();
+            },
+            children: t("related.saveVersions")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "detail-kicker", children: t("related.versionNote") }),
         /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
           "button",
           {

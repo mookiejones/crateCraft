@@ -90,4 +90,29 @@ describe("RelatedTracks", () => {
       expect(fetchMock.mock.calls.some((call) => String(call[0]).includes("crate=2"))).toBe(true);
     });
   });
+
+  it("shows Version on a version link", async () => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        saved: [{
+          id: 7,
+          mutual: true,
+          note: "version",
+          track: {
+            asset_id: 9,
+            title: "Midnight (Acapella)",
+            artist: "Nova",
+            in_library: true,
+          },
+        }],
+        suggested: [],
+      }),
+    });
+    paint();
+    await vi.waitFor(() => {
+      expect(host.querySelector("[data-version-label]")?.textContent).toBe("Version");
+    });
+    expect(host.querySelector("[data-version-play]")?.textContent).toBe("Prelisten");
+  });
 });

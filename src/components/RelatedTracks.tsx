@@ -7,10 +7,11 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { failureOf, postJSON, readJSONOr } from "../lib/api";
-import type { RelatedPayload, RelatedTrack, Track } from "../lib/api-types";
+import type { RelatedPayload, RelatedTrack, Track, VersionFamilyGroup, VersionFamilyPlan } from "../lib/api-types";
 import { bridge } from "../lib/bridge";
 import { useTrackList } from "../containers/TrackListContext";
 import { t } from "../lib/i18n";
+import { play } from "../lib/player/player";
 import { matchesQuery, parseQuery } from "../lib/ui/search-filters";
 import { tooltipRef } from "../lib/ui/tooltip";
 import { openConfirm } from "../lib/ui/shared-dialog";
@@ -58,6 +59,9 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
   const [note, setNote] = useState("");
   const [rating, setRating] = useState("");
   const [mutual, setMutual] = useState(true);
+  const [versionOf, setVersionOf] = useState(false);
+  const [versionGroups, setVersionGroups] = useState<VersionFamilyGroup[] | null>(null);
+  const [versionBusy, setVersionBusy] = useState(false);
   const [saving, setSaving] = useState(false);
   const [crateOnly, setCrateOnly] = useState(false);
 
@@ -90,6 +94,11 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
       cancelled = true;
     };
   }, [path, list.space, list.activeCrate, crateOnly, track.id]);
+
+  useEffect(() => {
+    setVersionGroups(null);
+    setVersionOf(false);
+  }, [track.id]);
 
   const hits = useMemo(() => {
     const parsed = parseQuery(query);
@@ -134,6 +143,47 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
       await reload();
     } catch (error) {
       list.setNotice(failureOf(error).message, "error");
+    }
+  }
+
+  async function onFindVersions(): Promise<void> {
+    setVersionBusy(true);
+    try {
+      const result = await postJSON<VersionFamilyPlan>("/api/version-family", {
+        action: "preview",
+        space: list.space,
+      });
+      const groups = Array.isArray(result.groups) ? result.groups : [];
+      setVersionGroups(groups.filter((group) => group.track_ids.includes(track.id)));
+    } catch (error) {
+      list.setNotice(failureOf(error).message, "error");
+      setVersionGroups([]);
+    } finally {
+      setVersionBusy(false);
+    }
+  }
+
+  async function onSaveVersions(): Promise<void> {
+    setVersionBusy(true);
+    try {
+      const result = await postJSON<VersionFamilyPlan>("/api/version-family", {
+        action: "apply",
+        confirm: true,
+        space: list.space,
+      });
+      if (result.written) {
+        list.setNotice(t("related.versionsSaved"));
+        await bridge.reloadLibrary();
+        list.selectTrack(track.id);
+        if (path) await reload();
+      } else {
+        list.setNotice(t("related.noVersions"));
+      }
+    } catch (error) {
+      if (failureOf(error).status === 409) bridge.lockDown(error);
+      else list.setNotice(failureOf(error).message, "error");
+    } finally {
+      setVersionBusy(false);
     }
   }
 
@@ -205,8 +255,23 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
                     <span>{label}</span>
                   )}
                   <p className="related-meta">{bits.join(" · ")}</p>
-                  {link.note ? <p className="related-note">{link.note}</p> : null}
+                  {link.note === "version" ? (
+                    <p className="related-note" data-version-label="">{t("related.version")}</p>
+                  ) : link.note ? (
+                    <p className="related-note">{link.note}</p>
+                  ) : null}
                 </div>
+                {link.note === "version" && other.asset_id != null && other.in_library ? (
+                  <button
+                    type="button"
+                    className="text-button"
+                    data-version-play=""
+                    ref={tooltipRef(tips.versionPlay)}
+                    onClick={() => play(other.asset_id as number)}
+                  >
+                    {t("related.prelisten")}
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   className="text-button"
@@ -253,6 +318,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
                         setNote("");
                         setRating("");
                         setMutual(true);
+                        setVersionOf(false);
                       }}
                     >
                       {name}
@@ -272,7 +338,8 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
                   type="text"
                   maxLength={500}
                   placeholder={t("related.notePlaceholder")}
-                  value={note}
+                  value={versionOf ? "version" : note}
+                  disabled={versionOf}
                   onChange={(event) => setNote(event.currentTarget.value)}
                 />
               </label>
@@ -298,6 +365,16 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
                 />
                 {t("related.twoWayLink")}
               </label>
+              <label className="check">
+                <input
+                  data-version-link=""
+                  ref={tooltipRef(tips.versionLink)}
+                  type="checkbox"
+                  checked={versionOf}
+                  onChange={(event) => setVersionOf(event.currentTarget.checked)}
+                />
+                {t("related.versionLink")}
+              </label>
               <button
                 type="button"
                 className="text-button"
@@ -307,7 +384,7 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
                   asset: track.id,
                   target: chosen.id,
                   mutual,
-                  note,
+                  note: versionOf ? "version" : note,
                   rating: rating === "" ? null : Number(rating),
                   space: list.space,
                 })}
@@ -364,6 +441,55 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
               ))}
             </ul>
           )}
+          <button
+            type="button"
+            className="text-button"
+            data-find-versions=""
+            ref={tooltipRef(tips.findVersions)}
+            disabled={versionBusy}
+            onClick={() => void onFindVersions()}
+          >
+            {t("related.findVersions")}
+          </button>
+          {versionGroups && versionGroups.length === 0 ? (
+            <p className="detail-kicker">{t("related.noVersions")}</p>
+          ) : null}
+          {versionGroups && versionGroups.length > 0 ? (
+            <ul className="related-list">
+              {versionGroups.map((group) => (
+                <li key={group.crate_name}>
+                  <p className="related-meta">{t("related.versionCrate", { title: group.title })}</p>
+                  <ul>
+                    {group.tracks.filter((item) => item.id !== track.id).map((item) => (
+                      <li key={item.id} className="related-row">
+                        <span>{item.artist ? `${item.title} · ${item.artist}` : item.title}</span>
+                        <button
+                          type="button"
+                          className="text-button"
+                          data-version-play=""
+                          ref={tooltipRef(tips.versionPlay)}
+                          onClick={() => play(item.id)}
+                        >
+                          {t("related.prelisten")}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          <button
+            type="button"
+            className="text-button"
+            data-save-versions=""
+            ref={tooltipRef(tips.saveVersions)}
+            disabled={!writable || versionBusy}
+            onClick={() => void onSaveVersions()}
+          >
+            {t("related.saveVersions")}
+          </button>
+          <p className="detail-kicker">{t("related.versionNote")}</p>
           <button
             type="button"
             className="text-button"
