@@ -265,10 +265,12 @@ export const healthReport: LibraryHealthReport = {
   no_key: emptyHealthSection,
   no_beatgrid: emptyHealthSection,
   no_artwork: emptyHealthSection,
+  suspicious_cues: emptyHealthSection,
   empty_genre: emptyHealthSection,
   no_crate: emptyHealthSection,
   unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
+  quality: { count: 0, dismissed: 0, tracks: [] },
 };
 
 export const scanReport: FileScanReport = {

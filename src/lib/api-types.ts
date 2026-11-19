@@ -1008,6 +1008,22 @@ export interface LibraryHealthTrack {
   file: string;
 }
 
+export interface TrackQuality {
+  format: string | null;
+  bitrate_kbps: number | null;
+  peak_db: number | null;
+}
+
+export interface LibraryHealthQualityTrack extends LibraryHealthTrack {
+  quality: TrackQuality;
+}
+
+export interface LibraryHealthQualitySection {
+  count: number;
+  dismissed: number;
+  tracks: LibraryHealthQualityTrack[];
+}
+
 export interface LibraryHealthSection {
   count: number;
   tracks: LibraryHealthTrack[];
@@ -1028,6 +1044,33 @@ export interface LibraryHealthDuplicateGroup {
   artist: string;
   seconds: number;
   ids: number[];
+}
+
+export interface SuspiciousCueDrop {
+  index: number;
+  start_ms: number;
+  name: string;
+}
+
+export interface SuspiciousCueTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  cues: SuspiciousCueDrop[];
+}
+
+export interface SuspiciousCuePlan {
+  preview: boolean;
+  written: boolean;
+  space: string;
+  crate: number | null;
+  count: number;
+  dropped: number;
+  tracks: SuspiciousCueTrack[];
+  error?: string;
+  code?: string;
+  touched?: string[];
 }
 
 export interface AlbumArtCandidate {
@@ -1069,10 +1112,12 @@ export interface LibraryHealthReport {
   no_key: LibraryHealthSection;
   no_beatgrid: LibraryHealthSection;
   no_artwork: LibraryHealthSection;
+  suspicious_cues: LibraryHealthSection;
   empty_genre: LibraryHealthSection;
   no_crate: LibraryHealthSection;
   unused: LibraryHealthFiles;
   duplicates: { count: number; groups: LibraryHealthDuplicateGroup[] };
+  quality: LibraryHealthQualitySection;
   error?: string;
   code?: string;
 }

@@ -24,10 +24,12 @@ const report: LibraryHealthReport = {
   no_key: { count: 0, tracks: [] },
   no_beatgrid: { count: 0, tracks: [] },
   no_artwork: { count: 0, tracks: [] },
+  suspicious_cues: { count: 0, tracks: [] },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
   unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
+  quality: { count: 0, dismissed: 0, tracks: [] },
 };
 
 const value: HealthContextValue = {

@@ -74,6 +74,11 @@ describe("SettingsPanel context", () => {
       "tooltip.untrustedVolumes",
     );
     expect(host.querySelector("#about-title")?.textContent).toBe(t("settings.about"));
+    expect(host.querySelector("#library-stays")?.textContent).toBe(t("settings.libraryStays"));
+    expect(host.querySelector("#library-stays")?.getAttribute("data-tooltip-key")).toBe(
+      "tooltip.libraryStays",
+    );
+    expect(host.querySelector("#library-stays")?.getAttribute("tabindex")).toBe("0");
     const sheet = host.querySelector("#shortcuts-body")?.textContent ?? "";
     for (const shortcut of SHORTCUTS) {
       expect(sheet).toContain(shortcut.label);
@@ -112,6 +117,8 @@ describe("SettingsPanel context", () => {
     expect(document.documentElement.lang).toBe("es");
     expect(el("language-select").value).toBe("es");
     expect(el("settings-title").textContent).toBe("Ajustes");
+    expect(el("library-stays").textContent).toBe(t("settings.libraryStays"));
+    expect(el("library-stays").getAttribute("data-tooltip-key")).toBe("tooltip.libraryStays");
     expect(el("shortcuts-title").textContent).toBe("Atajos de teclado");
   });
 

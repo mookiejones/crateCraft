@@ -66,6 +66,10 @@ On Windows, the file is `%LOCALAPPDATA%\Serato\Library\master.sqlite`.
 
 If that file is missing, the app stays open. Setup says **No Serato library was found on this computer.** Install Serato DJ Pro and open it once so it can create the library. Quit Serato DJ. Then choose **Check again**. If the library is already in another folder, choose **Choose a folder** and then **Use this folder**. That choice is remembered on this computer. It does not create a library file.
 
+## Go back one version
+
+Install the previous disk image or the previous Windows installer from the [releases page](https://github.com/mookiejones/crateCraft/releases). Quit Serato DJ Pro. Open **Backups** and restore the snapshot named `before update to vX`. That snapshot is saved only while Serato DJ Pro is closed. The newer copy stays where it is until that older app is open. Opening crateCraft does not delete the other copy.
+
 ## If the window does not open
 
 Another copy may already be running. Its window should come forward. If it does not, close the crateCraft window and try again. If you started `server.py` from a terminal, the message is **http://127.0.0.1:8765 is already in use. Quit the other Serato library server (server.py or the desktop app) and try again.**

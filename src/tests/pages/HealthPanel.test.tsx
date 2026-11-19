@@ -25,10 +25,27 @@ const report: LibraryHealthReport = {
   no_key: { count: 0, tracks: [] },
   no_beatgrid: { count: 0, tracks: [] },
   no_artwork: { count: 0, tracks: [] },
+  suspicious_cues: {
+    count: 1,
+    tracks: [{ id: 14, name: "Stacked", artist: "E", file: "stacked.mp3" }],
+  },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
   unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
+  quality: {
+    count: 1,
+    dismissed: 1,
+    tracks: [
+      {
+        id: 14,
+        name: "Quiet",
+        artist: "Q",
+        file: "quiet.wav",
+        quality: { format: "wav", bitrate_kbps: 128, peak_db: -12 },
+      },
+    ],
+  },
 };
 
 function fakeHealth(overrides: Partial<HealthContextValue> = {}): HealthContextValue {
@@ -95,6 +112,9 @@ describe("HealthPanel context", () => {
       );
     });
     expect(host.textContent).toContain("12 tracks checked.");
+    expect(host.textContent).toContain("wav · 128 kbps · peak -12 dB");
+    expect(host.textContent).toContain("Not a problem");
+    expect(host.textContent).toContain("Show dismissed");
     expect(host.textContent).toContain("Missing files (1)");
     expect(host.textContent).toContain("A — Gone");
     expect(host.querySelector("#health-scope")?.textContent).toBe("Friday");
@@ -182,6 +202,29 @@ describe("HealthPanel context", () => {
     expect(relink?.className).toContain("MuiButton");
     expect((host.querySelector("#relink-actions") as HTMLElement).hidden).toBe(false);
     expect((host.querySelector("#duplicate-actions") as HTMLElement).hidden).toBe(true);
+    root.unmount();
+  });
+
+  it("renders suspicious cues and the review button", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    flushSync(() => {
+      root.render(
+        createElement(HealthProvider, {
+          value: fakeHealth({ healthReport: report }),
+          children: createElement(HealthPanel),
+        }),
+      );
+    });
+    expect(host.textContent).toContain("Suspicious cues (1)");
+    expect(host.textContent).toContain("E — Stacked");
+    const review = host.querySelector<HTMLButtonElement>("[data-health-action='cues-preview']");
+    expect(review?.textContent).toBe("Review duplicate cues");
+    expect(review?.dataset.tooltipKey).toBe("tooltip.suspiciousCues");
+    const apply = host.querySelector<HTMLButtonElement>("[data-health-action='cues-apply']");
+    expect(apply?.textContent).toBe("Remove duplicate cues");
+    expect(apply?.disabled).toBe(true);
     root.unmount();
   });
 });

@@ -1,6 +1,6 @@
 # Library health report
 
-**Library health** is a read-only one-page count of problems in the library database and in audio files on disk. It does not change the library, the crates, or the audio files. You can run it while Serato DJ Pro is open.
+**Library health** is a one-page count of problems in the library database and in audio files on disk. The counts are read-only, so you can run the report while Serato DJ Pro is open. **Remove duplicate cues** is a separate confirmed write. It needs Serato quit. It does not change crates or the library database.
 
 The report is **Health** in the drawer, then **Overview**. It is not the same as [Ready](gig-check.md), which scores drives, streaming tracks, empty crates, and snapshots.
 
@@ -34,10 +34,12 @@ python3 library_health.py
 | **No key** | Key is blank. | The track in Crates |
 | **No beatgrid** | The audio file has no Serato BeatGrid frame. An unreadable grid still counts as present. Missing or unplugged files are skipped. | The track in Crates |
 | **No artwork** | The audio file has no ID3 picture, FLAC picture block, or MP4 cover. Missing or unplugged files are skipped. | The track in Crates |
+| **Suspicious cues** | The audio file has more than 64 cue points, or 8 or more cue points at one time. Missing or unplugged files are skipped. A track can be listed even when every cue is at a different time. | **Review duplicate cues**, then **Remove duplicate cues** |
 | **Empty genre** | Genre is blank. | The track in Crates |
 | **Not in a crate** | The track is in the space and not in any crate. Hidden when a crate is selected. | The track in Crates |
 | **Unused files** | Audio files in the same music folders as library tracks that are not in the library. Hidden when a crate is selected. | [Organize files](files.md) |
 | **Duplicate groups** | Same title, artist, and length in whole seconds. A crate that holds one copy still lists the group. | [Duplicates](duplicates.md) |
+| **Quality** | Format, bitrate, and peak read from the file for tracks in this scope. A missing or unreadable file stays blank. **Not a problem** hides that line until the file size, the time, the bitrate, or the peak changes. **Show dismissed** brings those lines back. Neither one changes the audio, the cues, or the library. | This report |
 | **Suspect quality** | Fake 320s and lossless files that look lossy-sourced. The count lives on that view because it decodes audio. | [Suspect quality](bitrate-check.md) |
 
 Each section is an accordion. Open it to see a sample of up to 100 rows. The count is the full number. This page is a report, not a track list.

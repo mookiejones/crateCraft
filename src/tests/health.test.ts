@@ -29,6 +29,7 @@ const report: LibraryHealthReport = {
     count: 1,
     tracks: [{ id: 13, name: "NoArt", artist: "D", file: "noart.mp3" }],
   },
+  suspicious_cues: { count: 0, tracks: [] },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
   unused: {
@@ -39,6 +40,7 @@ const report: LibraryHealthReport = {
     count: 1,
     groups: [{ name: "Same", artist: "Artist", seconds: 180, ids: [1, 2] }],
   },
+  quality: { count: 0, dismissed: 0, tracks: [] },
 };
 
 const clear: LibraryHealthReport = {
@@ -50,10 +52,12 @@ const clear: LibraryHealthReport = {
   no_key: { count: 0, tracks: [] },
   no_beatgrid: { count: 0, tracks: [] },
   no_artwork: { count: 0, tracks: [] },
+  suspicious_cues: { count: 0, tracks: [] },
   empty_genre: { count: 0, tracks: [] },
   no_crate: { count: 0, tracks: [] },
   unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
+  quality: { count: 0, dismissed: 0, tracks: [] },
 };
 
 function reply(body: unknown, status = 200): Response {
