@@ -43,6 +43,7 @@ import lost_tags
 import library
 import library_health
 import music_mirror
+import quality_line
 import music_roots
 import rekordbox
 import related
@@ -2171,6 +2172,14 @@ class Handler(BaseHTTPRequestHandler):
             return
         if parsed.path == "/api/settings":
             self._post_settings(payload)
+            return
+        if parsed.path == "/api/library-health":
+            try:
+                self.send_json(quality_line.action(payload))
+            except library.LibraryError as exc:
+                self.send_json({"error": exc.message}, status=exc.status)
+            except OSError:
+                self.send_json({"error": "That quality dismiss could not be saved."}, status=500)
             return
         if parsed.path == "/api/setup":
             self._post_setup(payload)

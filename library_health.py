@@ -9,7 +9,9 @@ rows are capped. Nothing is written, so the report is safe while Serato
 DJ is open.
 
 ``python3 library_health.py`` prints the JSON. ``GET /api/library-health``
-returns the same object.
+returns the same object. ``quality`` is the per-track line from
+``quality_line.section`` (format, measured bitrate, peak). The report
+itself still writes nothing.
 """
 
 from __future__ import annotations
@@ -28,6 +30,7 @@ import files
 import gig_check
 import library
 import music_roots
+import quality_line
 import tags
 
 ROW_CAP = 100
@@ -215,12 +218,17 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
     Returns:
         ``space``, ``crate``, ``checked``, and sections ``missing``,
         ``no_bpm``, ``no_key``, ``no_beatgrid``, ``no_artwork``,
-        ``empty_genre``, ``no_crate``, ``unused``, and ``duplicates``.
-        Each track section is ``{ count, tracks }`` with at most
-        ``ROW_CAP`` sample rows. ``unused`` is ``{ count, files }``.
-        ``duplicates`` is ``{ count, groups }``. ``no_crate`` and
-        ``unused`` are empty when a crate is selected. Artwork and
-        beatgrid skip files that are missing or not on disk.
+        ``empty_genre``, ``no_crate``, ``unused``, ``duplicates``, and
+        ``quality``. Each track section is ``{ count, tracks }`` with at
+        most ``ROW_CAP`` sample rows. ``unused`` is ``{ count, files }``.
+        ``duplicates`` is ``{ count, groups }``. ``quality`` is
+        ``{ count, dismissed, tracks }``. A quality track adds
+        ``quality`` (``format``, ``bitrate_kbps``, ``peak_db``). A missing
+        file is left out of that section. An unreadable file stays, with
+        those three fields null. ``no_crate`` and ``unused`` are empty
+        when a crate is selected. Artwork and beatgrid skip files that
+        are missing or not on disk. The quality sample uses the same crate
+        scope and measures at most ``ROW_CAP`` present files.
 
     Raises:
         library.LibraryError: Unknown space, a crate not in the space (404),
@@ -260,6 +268,7 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         empty_genre: list[dict[str, object]] = []
         no_crate: list[dict[str, object]] = []
         present: list[str] = []
+        quality_inputs: list[dict[str, object]] = []
         for row in rows:
             item = _track(row)
             if int(row["is_missing"] or 0):
@@ -273,6 +282,7 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
             if crate_id is None and int(row["id"]) not in in_crate:
                 no_crate.append(item)
             path = _present_path(row["portable_id"])
+            quality_inputs.append({**item, "path": path})
             if path is None:
                 continue
             present.append(path)
@@ -285,6 +295,7 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         unused = _unused_files(present, crate_id)
     finally:
         conn.close()
+    quality = quality_line.section(quality_inputs, ROW_CAP)
     return {
         "space": space,
         "crate": crate_id,
@@ -298,6 +309,7 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         "no_crate": _section(no_crate),
         "unused": _file_section(unused),
         "duplicates": {"count": len(groups), "groups": groups[:ROW_CAP]},
+        "quality": quality,
     }
 
 

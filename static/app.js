@@ -13342,6 +13342,12 @@ Error generating stack: ` + x.message + `
     "health.noBpm": "No BPM",
     "health.noCrate": "Not in a crate",
     "health.noKey": "No key",
+    "health.notAProblem": "Not a problem",
+    "health.quality": "Quality",
+    "health.qualityBitrate": "{bitrate} kbps",
+    "health.qualityNote": "Format, bitrate, and peak are read from the file. A missing or unreadable file stays blank. Not a problem only hides that line.",
+    "health.qualityPeak": "peak {peak} dB",
+    "health.showDismissed": "Show dismissed",
     "health.openBitrate": "Open Suspect quality",
     "health.openDuplicates": "Open Duplicates",
     "health.openFiles": "Open Files",
@@ -14339,6 +14345,8 @@ Error generating stack: ` + x.message + `
     "tooltip.healthRefresh": "Run the library health report again. Read-only.",
     "tooltip.healthSection": "Open or close this section.",
     "tooltip.healthTrack": "Open this track in Crates.",
+    "tooltip.notAProblem": "Hide this quality line until the file size, time, bitrate, or peak changes. Does not change the audio or cues.",
+    "tooltip.showDismissed": "Show quality lines you marked Not a problem. Does not change the audio.",
     "tooltip.help": "Open Help. Report a bug or request a feature on GitHub. The app does not post it.",
     "tooltip.helpBug": "Describe a bug. GitHub opens so you can review it.",
     "tooltip.helpClose": "Close Help. Esc.",
@@ -15317,6 +15325,12 @@ Error generating stack: ` + x.message + `
     "health.noBpm": "Sin BPM",
     "health.noCrate": "En ninguna caja",
     "health.noKey": "Sin tonalidad",
+    "health.notAProblem": "No es un problema",
+    "health.quality": "Calidad",
+    "health.qualityBitrate": "{bitrate} kbps",
+    "health.qualityNote": "El formato, el bitrate y el pico se leen del archivo. Un archivo que falta o no se puede leer queda en blanco. No es un problema solo oculta esa línea.",
+    "health.qualityPeak": "pico {peak} dB",
+    "health.showDismissed": "Mostrar ocultos",
     "health.openBitrate": "Abrir Calidad dudosa",
     "health.openDuplicates": "Abrir Duplicados",
     "health.openFiles": "Abrir Archivos",
@@ -16314,6 +16328,8 @@ Error generating stack: ` + x.message + `
     "tooltip.healthRefresh": "Vuelve a generar el informe de salud de la biblioteca. Solo lectura.",
     "tooltip.healthSection": "Abrir o cerrar esta sección.",
     "tooltip.healthTrack": "Abre esta pista en Cajas.",
+    "tooltip.notAProblem": "Oculta esta línea de calidad hasta que cambien el tamaño, la hora, el bitrate o el pico. No cambia el audio ni los cues.",
+    "tooltip.showDismissed": "Muestra las líneas de calidad que marcaste como No es un problema. No cambia el audio.",
     "tooltip.help": "Abre Ayuda. Informa de un error o pide una función en GitHub. La app no lo publica.",
     "tooltip.helpBug": "Describe un error. GitHub se abre para que lo revises.",
     "tooltip.helpClose": "Cierra Ayuda. Esc.",
@@ -17608,6 +17624,8 @@ Error generating stack: ` + x.message + `
     healthOpenFiles: spec("tooltip.healthOpenFiles"),
     healthOpenBitrate: spec("tooltip.healthOpenBitrate"),
     healthTrack: spec("tooltip.healthTrack"),
+    notAProblem: spec("tooltip.notAProblem"),
+    showDismissed: spec("tooltip.showDismissed"),
     healthFindArt: spec("tooltip.healthFindArt"),
     healthArtCancel: spec("tooltip.healthArtCancel"),
     healthArtEmbed: spec("tooltip.healthArtEmbed"),
@@ -65068,6 +65086,33 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
   }), "ExpandMore");
 
+  // src/lib/health/quality.ts
+  async function dismissQuality(id) {
+    try {
+      await postJSON("/api/library-health", {
+        action: "dismiss",
+        id,
+        space: state.space
+      }), await loadHealth();
+    } catch (error2) {
+      showHealthFailure(error2);
+    }
+  }
+  async function clearQualityDismissals() {
+    try {
+      await postJSON("/api/library-health", { action: "clear-all", space: state.space }), await loadHealth();
+    } catch (error2) {
+      showHealthFailure(error2);
+    }
+  }
+
+  // src/lib/health/quality-view.ts
+  function qualityLine(quality) {
+    if (!quality) return "";
+    let parts = [];
+    return quality.format && parts.push(quality.format), typeof quality.bitrate_kbps == "number" && parts.push(t("health.qualityBitrate", { bitrate: quality.bitrate_kbps })), typeof quality.peak_db == "number" && parts.push(t("health.qualityPeak", { peak: quality.peak_db })), parts.join(" · ");
+  }
+
   // src/pages/HealthPanel.tsx
   var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX = {
     disableGutters: !0,
@@ -65162,6 +65207,78 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               ) : null
             ] }, track.id)) }),
             count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
+          ] })
+        ]
+      }
+    );
+  }
+  function Quality({
+    section,
+    onNavigate
+  }) {
+    let count = section?.count ?? 0, dismissed2 = section?.dismissed ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0 || dismissed2 > 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
+      Accordion_default,
+      {
+        className: "health-accordion",
+        expanded: accordion.expanded,
+        onChange: accordion.onChange,
+        ...ACCORDION_SX,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label: t("health.quality"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: tracks.map((track) => {
+              let line2 = qualityLine(track.quality);
+              return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("li", { className: "health-art-row", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+                  Button_default,
+                  {
+                    type: "button",
+                    size: "small",
+                    variant: "text",
+                    sx: BUTTON_SX2,
+                    ref: tooltipRef5(tips.healthTrack),
+                    "data-health-action": "track",
+                    "data-health-id": String(track.id),
+                    onClick: () => onNavigate("track", track.id),
+                    children: trackLine(track)
+                  }
+                ),
+                line2 ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("span", { className: "gig-note", children: line2 }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+                  Button_default,
+                  {
+                    type: "button",
+                    size: "small",
+                    variant: "outlined",
+                    sx: BUTTON_SX2,
+                    ref: tooltipRef5(tips.notAProblem),
+                    "data-health-action": "not-a-problem",
+                    "data-health-id": String(track.id),
+                    onClick: () => {
+                      dismissQuality(track.id);
+                    },
+                    children: t("health.notAProblem")
+                  }
+                )
+              ] }, track.id);
+            }) }),
+            dismissed2 > 0 ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX2,
+                ref: tooltipRef5(tips.showDismissed),
+                "data-health-action": "show-dismissed",
+                onClick: () => {
+                  clearQualityDismissals();
+                },
+                children: t("health.showDismissed")
+              }
+            ) : null,
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.qualityNote") })
           ] })
         ]
       }
@@ -65273,7 +65390,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HealthPanel() {
     let health = useHealth(), payload = health.healthReport, listed = 0;
-    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count, listed += payload.quality.count, listed += payload.quality.dismissed), /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
       /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "browser-bar", children: [
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
@@ -65312,6 +65429,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         )),
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Quality, { section: payload.quality, onNavigate: health.navigate }),
         /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Bitrate, { onNavigate: health.navigate }),
         listed ? null : /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.clear") })
       ] }) : null })

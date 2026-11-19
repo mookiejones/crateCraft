@@ -39,6 +39,7 @@ const report: LibraryHealthReport = {
     count: 1,
     groups: [{ name: "Same", artist: "Artist", seconds: 180, ids: [1, 2] }],
   },
+  quality: { count: 0, dismissed: 0, tracks: [] },
 };
 
 const clear: LibraryHealthReport = {
@@ -54,6 +55,7 @@ const clear: LibraryHealthReport = {
   no_crate: { count: 0, tracks: [] },
   unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
+  quality: { count: 0, dismissed: 0, tracks: [] },
 };
 
 function reply(body: unknown, status = 200): Response {

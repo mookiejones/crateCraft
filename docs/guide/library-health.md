@@ -38,6 +38,7 @@ python3 library_health.py
 | **Not in a crate** | The track is in the space and not in any crate. Hidden when a crate is selected. | The track in Crates |
 | **Unused files** | Audio files in the same music folders as library tracks that are not in the library. Hidden when a crate is selected. | [Organize files](files.md) |
 | **Duplicate groups** | Same title, artist, and length in whole seconds. A crate that holds one copy still lists the group. | [Duplicates](duplicates.md) |
+| **Quality** | Format, bitrate, and peak read from the file for tracks in this scope. A missing or unreadable file stays blank. **Not a problem** hides that line until the file size, the time, the bitrate, or the peak changes. **Show dismissed** brings those lines back. Neither one changes the audio, the cues, or the library. | This report |
 | **Suspect quality** | Fake 320s and lossless files that look lossy-sourced. The count lives on that view because it decodes audio. | [Suspect quality](bitrate-check.md) |
 
 Each section is an accordion. Open it to see a sample of up to 100 rows. The count is the full number. This page is a report, not a track list.

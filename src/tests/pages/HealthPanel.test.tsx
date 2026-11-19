@@ -29,6 +29,19 @@ const report: LibraryHealthReport = {
   no_crate: { count: 0, tracks: [] },
   unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
+  quality: {
+    count: 1,
+    dismissed: 1,
+    tracks: [
+      {
+        id: 14,
+        name: "Quiet",
+        artist: "Q",
+        file: "quiet.wav",
+        quality: { format: "wav", bitrate_kbps: 128, peak_db: -12 },
+      },
+    ],
+  },
 };
 
 function fakeHealth(overrides: Partial<HealthContextValue> = {}): HealthContextValue {
@@ -95,6 +108,9 @@ describe("HealthPanel context", () => {
       );
     });
     expect(host.textContent).toContain("12 tracks checked.");
+    expect(host.textContent).toContain("wav · 128 kbps · peak -12 dB");
+    expect(host.textContent).toContain("Not a problem");
+    expect(host.textContent).toContain("Show dismissed");
     expect(host.textContent).toContain("Missing files (1)");
     expect(host.textContent).toContain("A — Gone");
     expect(host.querySelector("#health-scope")?.textContent).toBe("Friday");

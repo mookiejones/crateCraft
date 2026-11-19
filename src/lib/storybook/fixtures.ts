@@ -269,6 +269,7 @@ export const healthReport: LibraryHealthReport = {
   no_crate: emptyHealthSection,
   unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
+  quality: { count: 0, dismissed: 0, tracks: [] },
 };
 
 export const scanReport: FileScanReport = {
