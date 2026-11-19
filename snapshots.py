@@ -95,6 +95,7 @@ TRIGGERS = frozenset({
     "before-restore",
     "external-change",
     "version-change",
+    "app-upgrade",
 })
 AUDIO_SUFFIXES = {".mp3", ".flac", ".m4a", ".aiff", ".aif"}
 # Serato 5 Lucid and Flexible beatgrids have no confirmed on-disk format.
@@ -112,6 +113,12 @@ SERATO_RUNNING_MESSAGE = (
     "Quit Serato DJ Pro before restoring. Serato DJ is still running, "
     "so nothing was restored."
 )
+APP_UPGRADE_WRITE_BLOCK = (
+    "A snapshot before this crateCraft update could not be saved. "
+    "Library writes stay off until that snapshot succeeds."
+)
+
+_library_write_block: str | None = None
 
 _stores: dict[str, SnapshotStore] = {}
 _watch: FolderWatch | None = None
@@ -607,6 +614,47 @@ def write_block_message(install: SeratoInstall | None = None) -> str | None:
     """
     notice = write_block_notice(install)
     return None if notice is None else notice.text
+
+
+def block_library_writes(message: str) -> None:
+    """Refuse later library writes in this process.
+
+    This is not the Serato Protect Library gate. :func:`write_block_notice`
+    is unchanged. The block lasts until this process exits, or until
+    :func:`clear_library_write_block`.
+
+    Args:
+        message: Sentence ``library.begin_write`` raises. A blank message
+            is refused.
+
+    Raises:
+        ValueError: If ``message`` is empty.
+    """
+    global _library_write_block
+    text = message.strip()
+    if not text:
+        raise ValueError("A write block needs a message.")
+    _library_write_block = text
+
+
+def library_write_block() -> str | None:
+    """Return the process-level write refusal, if one is set.
+
+    Returns:
+        The sentence from :func:`block_library_writes`, or None. This is
+        not :func:`write_block_message`.
+    """
+    return _library_write_block
+
+
+def clear_library_write_block() -> None:
+    """Drop the process-level write refusal.
+
+    Returns:
+        None. A later ``begin_write`` is not refused by this gate.
+    """
+    global _library_write_block
+    _library_write_block = None
 
 
 def detection_command(platform: str) -> list[str]:
@@ -1638,6 +1686,58 @@ class SnapshotStore:
             "This snapshot is the library as it is now."
         )
         return self.take("version-change", reason)
+
+    def check_app_upgrade(self, version: str) -> SnapshotInfo | None:
+        """Snapshot before a new crateCraft version writes the library.
+
+        ``cratecraft_version`` is separate from ``observed_version`` and
+        ``observed_build``, which :meth:`check_version` uses for Serato.
+        The first version seen is recorded and no snapshot is taken. A
+        later different version snapshots first, and only when Serato DJ
+        is not running. The new version is recorded only when that
+        snapshot succeeds. A missing ``master.sqlite`` records the version
+        and does not create the database.
+
+        Args:
+            version: crateCraft version now running, such as
+                ``app_config.APP_VERSION``.
+
+        Returns:
+            The new snapshot, or None when this version was already
+            recorded or the library file is absent.
+
+        Raises:
+            SnapshotError: If Serato DJ is running, or the snapshot cannot
+                be saved. The previous version stays recorded, and library
+                writes in this process are refused. Quit Serato and open
+                crateCraft again to retry.
+        """
+        state = self._load_state()
+        seen = state.get("cratecraft_version")
+        if not isinstance(seen, str):
+            state["cratecraft_version"] = version
+            self._save_state(state)
+            return None
+        if seen == version:
+            return None
+        if not self.master.is_file():
+            state["cratecraft_version"] = version
+            self._save_state(state)
+            return None
+        try:
+            if self.serato_running():
+                raise SnapshotError(
+                    "Quit Serato DJ Pro before this crateCraft update snapshot. "
+                    "Serato DJ is still running, so the snapshot was not saved."
+                )
+            info = self.take("app-upgrade", f"before update to {version}")
+        except Exception:
+            block_library_writes(APP_UPGRADE_WRITE_BLOCK)
+            raise
+        state = self._load_state()
+        state["cratecraft_version"] = version
+        self._save_state(state)
+        return info
 
     def poll(self) -> dict[str, object] | None:
         """Snapshot after an outside change to the Serato files.
