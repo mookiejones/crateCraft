@@ -50,4 +50,8 @@ The page is served on `127.0.0.1`.
 
 Windows Controlled folder access can stop a save into the Music folder. The bar under the title says so and shows **Allow**. Allow opens Windows Security so you can allow crateCraft. crateCraft does not turn that setting off. A tag write that Windows blocks is not reported as saved.
 
+## Go back one version
+
+Install the previous `crateCraft-windows-setup.exe` from GitHub Releases. Quit Serato DJ Pro. On [Backups and restore](Backups-and-Restore), restore the snapshot named `before update to vX`. The newer copy stays in place until that older app is open. Opening crateCraft does not delete the other copy.
+
 Next: [Quick Start](Quick-Start).

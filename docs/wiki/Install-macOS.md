@@ -72,4 +72,8 @@ A current release may be unsigned, so macOS may ask again after an update. Turn 
 
 A window titled **crateCraft** opens. The page is served on `127.0.0.1`. Close the window to quit. A second open focuses that window.
 
+## Go back one version
+
+Install the previous disk image from GitHub Releases. Quit Serato DJ Pro. On [Backups and restore](Backups-and-Restore), restore the snapshot named `before update to vX`. The newer copy stays in place until that older app is open. Opening crateCraft does not delete the other copy.
+
 Next: [Quick Start](Quick-Start).

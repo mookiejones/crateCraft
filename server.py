@@ -3343,6 +3343,23 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
 
+def _check_app_upgrade() -> None:
+    """Record this crateCraft version, and snapshot a library before an update.
+
+    A missing ``master.sqlite`` only records the version. A failed snapshot
+    is logged. Writes in this process stay off. The server still starts.
+
+    Returns:
+        None.
+    """
+    try:
+        snapshots.current_store().check_app_upgrade(app_config.APP_VERSION)
+    except Exception:
+        app_log.logger.exception(
+            "A snapshot before this crateCraft update could not be saved."
+        )
+
+
 def serve(port: int | None = None, *, require_library: bool = True) -> ThreadingHTTPServer:
     """Bind the library server on 127.0.0.1.
 
@@ -3352,10 +3369,13 @@ def serve(port: int | None = None, *, require_library: bool = True) -> Threading
         require_library: When true, a library chosen on an earlier launch
             is used when that file is still a Serato library, then
             telemetry and the snapshot watch start after the bind if the
-            master database exists. A missing database still serves the
-            page, so the first-run wizard can explain what to do. The
-            release smoke check passes false so a runner without Serato
-            does not start telemetry or open a remembered library either.
+            master database exists. Before that watch, and before an
+            interrupted file change is finished, a new crateCraft version
+            snapshots the library. A missing database records the version
+            and still serves the page, so the first-run wizard can explain
+            what to do. The release smoke check passes false so a runner
+            without Serato does not start telemetry, record a version, or
+            open a remembered library either.
 
     Returns:
         A server that is listening and not yet serving. ``shutdown_token``
@@ -3371,12 +3391,14 @@ def serve(port: int | None = None, *, require_library: bool = True) -> Threading
     app_log.configure()
     if require_library and library_present:
         app_log.logger.info("Library file: %s", db_path())
+        _check_app_upgrade()
         try:
             files.recover_interrupted()
         except Exception:
             app_log.logger.exception("An interrupted file change could not be finished.")
     elif require_library:
         app_log.logger.info("No Serato library file yet. The setup wizard will explain the next step.")
+        _check_app_upgrade()
     bind_port = PORT if port is None else port
     try:
         httpd = ThreadingHTTPServer((HOST, bind_port), Handler)

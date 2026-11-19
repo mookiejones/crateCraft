@@ -2006,7 +2006,9 @@ def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
     once and this function does not take a second one while the session is open.
     Restore passes ``snapshot=False`` because it already saved a snapshot and
     is holding the restore journal. A nested snapshot would open the store
-    again and roll that journal back.
+    again and roll that journal back. A failed snapshot before a crateCraft
+    update refuses the write after the Serato-open check and before the
+    Serato version gate. That refusal is not Protect Library.
 
     Args:
         snapshot: When true, save a snapshot before the transaction opens.
@@ -2021,7 +2023,8 @@ def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
         SeratoOpen: If Serato holds the lock, the database is locked, or
             opening the write transaction raises any ``OperationalError``.
             The message then carries the SQLite text.
-        LibraryError: If the version gate refuses the library.
+        LibraryError: If a snapshot before a crateCraft update failed, or
+            the Serato version gate refuses the library.
     """
     info = status()
     if info["open"]:
@@ -2029,6 +2032,9 @@ def begin_write(*, snapshot: bool = True) -> sqlite3.Connection:
     import snapshots
     import safe_write
 
+    upgrade_block = snapshots.library_write_block()
+    if upgrade_block:
+        raise LibraryError(upgrade_block, 409)
     blocked = snapshots.write_block_message()
     if blocked:
         raise LibraryError(blocked, 409)
