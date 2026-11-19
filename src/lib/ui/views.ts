@@ -1763,6 +1763,7 @@ export function repaintViews(): void {
   // The static markup pass resets the status line, so put the server's back.
   if (state.serato) el("status").textContent = statusLine(state.serato);
   paintGeneration(state.serato);
+  paintFolderAccess(state.serato);
   renderList();
   if (state.mode === "history") {
     renderSessions();
@@ -1891,6 +1892,47 @@ export function paintGeneration(info: SeratoStatus | null | undefined): void {
   });
 }
 
+const FOLDER_ACCESS_WARN = new Set(["on", "audit", "unknown"]);
+
+const FOLDER_ACCESS_COPY: Record<string, MessageKey> = {
+  on: "folderAccess.on",
+  audit: "folderAccess.audit",
+  unknown: "folderAccess.unknown",
+};
+
+/**
+ * Paint the Controlled folder access note.
+ *
+ * On, audit, and unknown show a sentence and Allow. Off, unsupported,
+ * and a missing field hide both. Allow opens Windows Security. The
+ * tooltip is not the button label. The check does not change writable.
+ *
+ * @param info Status payload. Null before the server answers.
+ * @returns {void}
+ */
+export function paintFolderAccess(info: SeratoStatus | null | undefined): void {
+  const note = document.getElementById("folder-access");
+  const button = document.getElementById("folder-access-allow");
+  if (!(note instanceof HTMLElement) || !(button instanceof HTMLButtonElement)) return;
+  const stateName = info?.controlled_folder_access ?? "";
+  const show = FOLDER_ACCESS_WARN.has(stateName);
+  note.hidden = !show;
+  button.hidden = !show;
+  if (!show) return;
+  const key = FOLDER_ACCESS_COPY[stateName];
+  if (!key) return;
+  note.textContent = t(key);
+  button.textContent = t("folderAccess.allow");
+  setTooltip(button, tips.folderAccessAllow);
+  if (button.dataset.bound === "1") return;
+  button.dataset.bound = "1";
+  button.addEventListener("click", () => {
+    void postJSON("/api/folder-access", { action: "open" }).catch((error: unknown) => {
+      setNotice(failureOf(error).message, "error");
+    });
+  });
+}
+
 export function applyStatus(info: SeratoStatus | null | undefined) {
   state.serato = info;
   state.writable = Boolean(info?.writable);
@@ -1898,6 +1940,7 @@ export function applyStatus(info: SeratoStatus | null | undefined) {
   status.textContent = statusLine(info);
   status.hidden = info?.writable !== false;
   paintGeneration(info);
+  paintFolderAccess(info);
   renderShell();
 }
 
