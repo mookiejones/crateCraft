@@ -837,6 +837,7 @@ _CONTROL_EDGE = (
     (".preset-field select", "--color-card", "border-bottom"),
     (".preset-rule-row select", "--color-card", "border-bottom"),
     (".preset-rule-row input", "--color-card", "border-bottom"),
+    (".preset-rule-conjunction", "--color-card", "border-bottom"),
     (".preset-rule-group", "--color-card", "border-left"),
     ("#quick-open-query", "--color-card", "border"),
     (".shortcut-table kbd", "--color-card", "border"),
