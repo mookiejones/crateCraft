@@ -320,6 +320,7 @@
   "error.file_already_used": "Another library track already uses that file.",
   "error.file_not_on_disk": "That file is not on disk.",
   "error.focus_failed": "The window could not be focused.",
+  "error.folder_access_not_opened": "The Windows Security page could not be opened.",
   "error.folder_not_library": "That folder is not the Serato library on this computer.",
   "error.folder_outside_roots": "That folder is outside the music folders.",
   "error.folder_unreadable": "That folder could not be read.",
@@ -510,6 +511,10 @@
   "folderSync.sync": "Sync crate",
   "folderSync.title": "Sync crate with a folder",
   "folderSync.unchanged": "{name} already matches that folder.",
+  "folderAccess.allow": "Allow",
+  "folderAccess.audit": "Windows is watching Music folder writes. A blocked write will not be reported as saved.",
+  "folderAccess.on": "Windows Controlled folder access can block writes into Music. Allow crateCraft, then try the write again.",
+  "folderAccess.unknown": "crateCraft could not tell whether Windows Controlled folder access is on. A tag write is checked after it lands.",
   "format.bytes": {
     "one": "{count} byte",
     "other": "{count} bytes"
@@ -1557,6 +1562,7 @@
   "tooltip.crateTreeScope": "Look only at tracks in the selected crate and the crates inside it.",
   "tooltip.crateTreeStep": "How far the next band starts. Smaller than the width overlaps bands.",
   "tooltip.crateTreeWidth": "How wide each BPM band is.",
+  "tooltip.folderAccessAllow": "Opens Windows Security so you can allow crateCraft. Does not change the setting.",
   "tooltip.folderSyncCancel": "Close without changing the crate.",
   "tooltip.folderSyncFull": "Also remove tracks whose files are not in this folder.",
   "tooltip.folderSyncPath": "Folder on this computer whose files should match this crate.",
