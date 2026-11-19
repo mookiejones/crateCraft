@@ -244,6 +244,7 @@ export const tips = {
   minCopies: spec("tooltip.minCopies"),
   untrustedVolumes: spec("tooltip.untrustedVolumes"),
   libraryCopies: spec("tooltip.libraryCopies"),
+  libraryStays: spec("tooltip.libraryStays"),
   pruneSnapshot: spec("tooltip.pruneSnapshot"),
   gigLockApply: spec("tooltip.gigLockApply"),
   gigLockDrop: spec("tooltip.gigLockDrop"),

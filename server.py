@@ -1769,6 +1769,35 @@ def request_hosts_allowed(host: str | None, origin: str | None) -> bool:
     return named.lower() in _LOCAL_HOSTS
 
 
+def static_content_security_policy() -> str:
+    """Return the Content-Security-Policy for a file from ``static/``.
+
+    ``connect-src 'self'`` is the desktop equivalent of ``connect-src
+    'none'`` for off-machine network. The page may call this computer.
+    ``connect-src 'none'`` would block same-origin ``/api`` fetches.
+    ``connect-src`` does not name another machine.
+
+    ``default-src 'self'`` keeps scripts on this computer. ``style-src``
+    also allows MUI's injected style tags and the Google font stylesheet
+    already linked from ``index.html``. ``font-src`` allows those font
+    files. ``img-src`` allows a cover thumbnail that is a ``data:`` URL.
+    ``object-src 'none'`` and ``base-uri 'none'`` block plugins and a
+    replaced document base.
+
+    Returns:
+        The header value.
+    """
+    return (
+        "default-src 'self'; "
+        "connect-src 'self'; "
+        "object-src 'none'; "
+        "base-uri 'none'; "
+        "img-src 'self' data:; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com"
+    )
+
+
 class Handler(BaseHTTPRequestHandler):
     """Serve the JSON API and the files in static/."""
 
@@ -3316,7 +3345,9 @@ class Handler(BaseHTTPRequestHandler):
         The request is joined to ``static/`` and passed through
         ``os.path.realpath``. The result must sit inside that directory.
         A path that climbs out, including one that only shares a prefix
-        with the directory name, returns 404.
+        with the directory name, returns 404. A file that is served
+        includes ``Content-Security-Policy`` from
+        :func:`static_content_security_policy`.
         """
         rel = "index.html" if url_path in {"", "/"} else url_path.lstrip("/")
         root = os.path.realpath(STATIC)
@@ -3337,6 +3368,7 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header("Content-Type", kind)
                 self.send_header("Content-Length", str(len(body)))
                 self.send_header("Cache-Control", "no-store")
+                self.send_header("Content-Security-Policy", static_content_security_policy())
                 self.end_headers()
                 self.wfile.write(body)
                 return

@@ -32,6 +32,8 @@ The choice, the skipped version, and the last answer are stored in `updates.json
 
 Track titles, artists, crate names, file paths, playlist text, and the rows in `master.sqlite` are not usage properties. The page does not load a PostHog or Sentry script. Reports leave from the Python process only.
 
+Settings → About shows **Your library never leaves your machine**. The tip says update checks and crash reports are separate, opt-in, and do not upload the library. The page's `Content-Security-Policy` uses `connect-src 'self'`, so the browser may call this computer and may not call another machine. That does not upload `master.sqlite`. A cover lookup still sends a title and artist only when you ask.
+
 A missing `SENTRY_DSN` keeps crash reports off even after you opt in. A missing `POSTHOG_KEY` keeps usage counts off. `POSTHOG_HOST` defaults to `https://us.i.posthog.com` when a project key is set and no host is configured.
 
 ## Where the choice is stored

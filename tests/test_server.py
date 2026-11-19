@@ -34,6 +34,24 @@ import library
 from library import LibraryError
 
 
+def _csp_directive(policy: str, name: str) -> str:
+    """Return one CSP directive, including its name.
+
+    Args:
+        policy: Header value.
+        name: Directive name, such as ``connect-src``.
+
+    Returns:
+        The matching directive with its name, or an empty string.
+    """
+    prefix = name + " "
+    for part in policy.split(";"):
+        item = part.strip()
+        if item == name or item.startswith(prefix):
+            return item
+    return ""
+
+
 class FormatTests(unittest.TestCase):
     """Check display formatting without opening a database.
 
@@ -328,6 +346,39 @@ class ApiTests(unittest.TestCase):
         connection.close()
         self.assertEqual(response.status, 200)
         self.assertIn(b"--walnut", body)
+
+    def test_static_page_sends_a_local_content_security_policy(self) -> None:
+        """Send a CSP on index.html that does not allow an off-machine connect.
+
+        ``connect-src 'self'`` is the desktop equivalent of ``connect-src
+        'none'`` for another machine. Same-origin ``/api`` fetches stay
+        allowed. ``default-src``, ``object-src``, and ``base-uri`` are set.
+        A stylesheet from ``static/`` gets the same header.
+
+        Returns:
+            None. The test fails if the header is missing or ``connect-src``
+            names another host.
+        """
+        policy = server.static_content_security_policy()
+        self.assertIn("default-src 'self'", policy)
+        self.assertIn("object-src 'none'", policy)
+        self.assertIn("base-uri 'none'", policy)
+        connect = _csp_directive(policy, "connect-src")
+        self.assertEqual(connect, "connect-src 'self'")
+        self.assertNotIn("http", connect)
+        self.assertNotIn("*", connect)
+        host, port = self.httpd.server_address
+        for path in ("/", "/app.css"):
+            connection = http.client.HTTPConnection(host, port, timeout=5)
+            connection.putrequest("GET", path)
+            connection.endheaders()
+            response = connection.getresponse()
+            header = response.getheader("Content-Security-Policy")
+            response.read()
+            connection.close()
+            self.assertEqual(response.status, 200)
+            self.assertEqual(header, policy)
+            self.assertEqual(_csp_directive(header or "", "connect-src"), "connect-src 'self'")
 
     def test_tokens_css_is_a_stylesheet(self) -> None:
         """Serve /tokens.css as text/css from static/.
