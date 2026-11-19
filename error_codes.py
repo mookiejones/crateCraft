@@ -84,6 +84,7 @@ ERROR_CODES: dict[str, str] = {
     "The shortcuts could not be saved.": "shortcuts_not_saved",
     "The theme could not be saved.": "theme_not_saved",
     "The logs folder could not be opened.": "logs_not_opened",
+    "The Windows Security page could not be opened.": "folder_access_not_opened",
     "Confirm undo before it is saved.": "undo_needs_confirm",
     "There is no outside change to undo.": "nothing_to_undo",
     "That folder could not be read.": "folder_unreadable",

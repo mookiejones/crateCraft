@@ -34,6 +34,7 @@ import drive_check
 import file_scan
 import error_codes
 import files
+import folder_access
 import gig_check
 import help_report
 import history_stats
@@ -2179,6 +2180,9 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/api/logs/open":
             self._post_open_logs()
             return
+        if parsed.path == "/api/folder-access":
+            self._post_folder_access(payload)
+            return
         if parsed.path == "/api/update":
             self._post_update(payload)
             return
@@ -2923,6 +2927,34 @@ class Handler(BaseHTTPRequestHandler):
             )
             return
         self.send_json({"ok": True})
+
+    def _post_folder_access(self, payload: dict[str, object]) -> None:
+        """Open Windows Security so crateCraft can be allowed.
+
+        The body cannot choose a path. The only action is ``open``. This
+        does not change the Windows setting and does not write the library.
+
+        Args:
+            payload: JSON object. ``action`` must be ``open``.
+        """
+        if payload.get("action") != "open":
+            self.send_json({"error": "That request is not valid."}, status=400)
+            return
+        try:
+            opened = folder_access.open_allow_page()
+        except OSError:
+            self.send_json(
+                {"error": "The Windows Security page could not be opened."},
+                status=500,
+            )
+            return
+        if opened:
+            self.send_json({"opened": True})
+            return
+        self.send_json({
+            "opened": False,
+            "controlled_folder_access": folder_access.controlled_folder_access(),
+        })
 
     def _get_snapshots(self, query: dict[str, list[str]]) -> None:
         """Return the snapshot list, or one restore plan.
