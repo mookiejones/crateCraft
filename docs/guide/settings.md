@@ -45,7 +45,7 @@ The strip has **Download**, which opens that version's page on GitHub in your br
 7. Pick a **Language**: **Same as the system** follows your computer's language, or choose **English** or **Español**. The whole page changes at once, without reloading the library. If the choice cannot be saved, the line under the picker says so, and the page keeps that language until you close the app.
 8. Pick **Verified copies before delete** (2 unless you change it, 1 to 9). That is how many complete copies must remain before **Prune** or a duplicate-group delete. Unplugged or untrusted drives, and a snapshot whose hash check failed, do not count. **Untrusted volume names** is a comma-separated list of drive names that never count. A unique file delete on Organize files is not gated that way.
 9. Choose **Run setup again** to see the first-run steps another time. **Cancel** on that run leaves the library as it is and does not forget that you already finished setup.
-10. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable**. The sidebar does not repeat the version. The page does not show an error code.
+10. Read **About**. The line is the version of this copy, such as **v1.4.2**. A development copy can also show a short commit. Under that line, a badge says **Your library never leaves your machine**. Hover it, or tab to it and focus it. The tip says update checks and crash reports are separate, opt-in, and do not upload the library. A cover lookup sends a title and artist only when you ask. Click **Copy version** to put that line on the clipboard. The next line says **Copied**. When the version cannot be read, About says **Version unavailable**. The sidebar does not repeat the version. The page does not show an error code.
 11. Click **Close**.
 
 | Line under the tick | Meaning |
@@ -53,6 +53,19 @@ The strip has **Download**, which opens that version's page on GitHub in your br
 | **This copy has no telemetry keys, so nothing is sent either way.** | The choice is saved, and this copy has nothing to send. A release build can have keys. A copy you run from source often does not. |
 | **Anonymous counts and crash reports can be sent.** | Sharing is on, and a key is present. |
 | **Nothing is sent.** | Sharing is off. |
+
+## How to verify the page stays on this computer
+
+The badge is the sentence you can see. The page also sends a rule that blocks the browser from calling another machine.
+
+1. Open crateCraft. From source, run `python3 server.py` and open `http://127.0.0.1:8765` in a browser. The desktop window uses the same page.
+2. Open the browser's developer tools. Reload the page.
+3. Select the document request, `/` or `index.html`.
+4. In the response headers, find `Content-Security-Policy`.
+5. `connect-src` is `'self'` only. That is the desktop stand-in for `connect-src 'none'`: the page may call this computer's crateCraft server, and it may not call another machine. `'none'` would also block the library page on this computer, so the header does not use `'none'`.
+6. `default-src` is `'self'`, `object-src` is `'none'`, and `base-uri` is `'none'`.
+
+The same header is on the other files under the page, such as the stylesheet. It does not stop an update check or a crash report you already turned on. Those leave from the app, not from the page, and they do not upload the library. [PRIVACY.md](https://github.com/mookiejones/crateCraft/blob/main/PRIVACY.md) lists what those reports contain.
 
 ## What can leave the computer
 

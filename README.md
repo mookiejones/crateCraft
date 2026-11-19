@@ -8,7 +8,7 @@
 
 ![Five Quick Start moves, looping.](docs/wiki/images/quickstart-five-moves.gif)
 
-crateCraft is a library manager for Serato DJ: a local window for the Serato DJ Pro library on macOS and Windows. It was called Serato Library Manager before the rename. Source on `main` is app version **1.1.0**. The page stays on this computer.
+crateCraft is a library manager for Serato DJ: a local window for the Serato DJ Pro library on macOS and Windows. It was called Serato Library Manager before the rename. Source on `main` is app version **1.1.0**. The page stays on this computer. Settings, then About, says your library never leaves this machine.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" type="image/svg+xml" srcset="docs/images/hero-dark.svg">
@@ -136,7 +136,7 @@ CI runs that discovery with `python` in [`.github/workflows/ci.yml`](.github/wor
 
 | | |
 | --- | --- |
-| App | `app_config.APP_VERSION` is the string `GET /api/version` returns. Settings → About and Help show that string. A release build stamps the tag into `_version.py`. Latest GitHub Release: v0.1.1. |
+| App | `app_config.APP_VERSION` is the string `GET /api/version` returns. Settings → About and Help show that string. About also shows **Your library never leaves your machine**. A release build stamps the tag into `_version.py`. Latest GitHub Release: v0.1.1. |
 | Python | 3.12 and 3.14 on Ubuntu CI. 3.12 on Windows CI. Frozen builds embed 3.12. |
 | OS | macOS and Windows for the app. Linux runs the test suite and is not a published build. |
 | Serato | Serato DJ Pro. The newest `_Serato_/Logs` session log can name Serato 4 or Serato 5. A missing log folder uses the installed app version. Writes and restores run when the version is a dotted number below 5, and on probed Serato 5.0.0 when Protect Library is off. Serato 5.1.0 stays read-only until its library schema is probed. Serato 5 can be snapshotted and read. Protect Library on or unread keeps writes off. Lucid beatgrid storage is not parsed. An unknown installed version blocks writes even when a session log names Serato 4. |
