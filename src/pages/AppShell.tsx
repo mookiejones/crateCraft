@@ -5,7 +5,9 @@
  * heading and `#library-generation` into the AppBar after the menu
  * toggle, `#player-bar` into the Toolbar flex slot between the chip and
  * Help, `#open-help` and `#open-settings` to the AppBar end (`ml: auto`
- * so they stay right while the player is hidden), `#status`
+ * so they stay right while the player is hidden). A loaded track on a
+ * wide window stretches the player slot; ☰, heading, chip, and Help
+ * stay top-aligned. `#status`
  * into a persistent lock bar under the AppBar, then a MUI Alert for the
  * last action notice, `#views` into the Drawer, and `#app-body` into
  * Main. The player slot stays hidden while `trackId` is null. `paintNav`
@@ -30,6 +32,7 @@ import {
   DRAWER_MINI_CUTOFF,
   DRAWER_MINI_WIDTH,
   DRAWER_WIDTH,
+  playerDeckIsCompact,
   saveDrawerOpen,
   subscribeDrawerOpen,
 } from "../lib/ui/layout";
@@ -66,6 +69,7 @@ export function AppShell() {
   const [innerWidth, setInnerWidth] = useState(() => window.innerWidth);
   const [hasTrack, setHasTrack] = useState(() => getPlayerState().trackId !== null);
   const open = drawerExpanded(savedOpen, innerWidth);
+  const deckOpen = hasTrack && !playerDeckIsCompact(innerWidth);
   const postedOpen = useRef(false);
   const [, setLocaleTick] = useState(0);
   const headingSlot = useRef<HTMLDivElement>(null);
@@ -133,7 +137,17 @@ export function AppShell() {
       }}
     >
       <AppBar position="static" color="default" elevation={0}>
-        <Toolbar sx={{ gap: 2, minHeight: 64, py: 1 }}>
+        <Toolbar
+          sx={(theme) => ({
+            gap: 2,
+            minHeight: deckOpen ? "auto" : 64,
+            py: 1,
+            alignItems: deckOpen ? "flex-start" : "center",
+            [theme.breakpoints.up("sm")]: {
+              minHeight: deckOpen ? "auto" : 64,
+            },
+          })}
+        >
           <IconButton
             id="drawer-toggle"
             type="button"
@@ -144,6 +158,7 @@ export function AppShell() {
             aria-label={open ? t("shell.drawerHide") : t("shell.drawerShow")}
             onClick={toggleDrawer}
             ref={tooltipRef(tips.drawerToggle)}
+            sx={deckOpen ? { alignSelf: "flex-start" } : undefined}
           >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
@@ -151,6 +166,7 @@ export function AppShell() {
             ref={headingSlot}
             className="app-bar-heading"
             sx={{
+              alignSelf: deckOpen ? "flex-start" : undefined,
               "& h1": {
                 margin: 0,
                 fontFamily: "var(--display)",
@@ -161,7 +177,11 @@ export function AppShell() {
               },
             }}
           />
-          <Box ref={generationSlot} className="app-bar-generation" />
+          <Box
+            ref={generationSlot}
+            className="app-bar-generation"
+            sx={deckOpen ? { alignSelf: "flex-start" } : undefined}
+          />
           <Box
             ref={playerSlot}
             className="app-bar-player"
@@ -170,13 +190,20 @@ export function AppShell() {
               flex: 1,
               minWidth: 0,
               display: hasTrack ? "flex" : "none",
-              alignItems: "center",
+              alignItems: deckOpen ? "stretch" : "center",
+              alignSelf: deckOpen ? "stretch" : undefined,
             }}
           />
           <Box
             ref={actionsSlot}
             className="app-bar-actions"
-            sx={{ display: "flex", gap: 1, flexShrink: 0, ml: "auto" }}
+            sx={{
+              display: "flex",
+              gap: 1,
+              flexShrink: 0,
+              ml: "auto",
+              alignSelf: deckOpen ? "flex-start" : undefined,
+            }}
           />
         </Toolbar>
       </AppBar>

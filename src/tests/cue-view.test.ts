@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Marker } from "../lib/api-types";
 import {
+  ACTIVE_PAD_EPSILON_SECONDS,
   CUE_SLOT_COUNT,
+  activePadIndex,
   appendCueSlots,
   cueDiffRows,
   cueSlotVar,
@@ -63,6 +65,48 @@ describe("cueSlots", () => {
     expect(extraCues([first, second, outside, missing])).toEqual([second, outside, missing]);
     expect(cueSlots(undefined).every((slot) => slot === null)).toBe(true);
     expect(extraCues(undefined)).toEqual([]);
+  });
+});
+
+describe("activePadIndex", () => {
+  const slots: Array<{ seconds: number } | null> = [
+    { seconds: 1.5 },
+    null,
+    null,
+    { seconds: 8 },
+    null,
+    null,
+    null,
+    null,
+  ];
+
+  it("lights the pad nearest the playhead and prefers lastClicked only inside epsilon", () => {
+    expect(ACTIVE_PAD_EPSILON_SECONDS).toBe(0.25);
+    expect(activePadIndex(1.5, slots, null)).toBe(0);
+    expect(activePadIndex(1.5, slots, 3)).toBe(0);
+    expect(activePadIndex(8.1, slots, 3)).toBe(3);
+  });
+
+  it("returns null for empty slots or a time far from every cue, and ignores lastClicked on an empty pad", () => {
+    const empty = [null, null, null, null, null, null, null, null];
+    expect(activePadIndex(1.5, empty, null)).toBeNull();
+    expect(activePadIndex(4, slots, null)).toBeNull();
+    expect(activePadIndex(1.5, slots, 1)).toBe(0);
+    expect(activePadIndex(1.5, slots, null, 0.25)).toBe(0);
+  });
+
+  it("picks the lower index when two pads are equally close", () => {
+    const tied: Array<{ seconds: number } | null> = [
+      { seconds: 1 },
+      { seconds: 1.4 },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ];
+    expect(activePadIndex(1.2, tied, null)).toBe(0);
   });
 });
 

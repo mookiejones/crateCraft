@@ -30,6 +30,19 @@ export const DRAWER_MINI_WIDTH = 56;
  * `drawer_open`.
  */
 export const DRAWER_MINI_CUTOFF = 980;
+
+/**
+ * True when the AppBar player stays the compact 32px strip.
+ *
+ * Mini drawer and compact deck share this cutoff so crates keep height.
+ *
+ * @param innerWidth `window.innerWidth` in CSS pixels.
+ * @returns True at 980px and below.
+ */
+export function playerDeckIsCompact(innerWidth: number): boolean {
+  return innerWidth <= DRAWER_MINI_CUTOFF;
+}
+
 /** Matches the detail column's min-width in app.css. */
 export const DETAIL_MIN_WIDTH = 300;
 /** The 9px list/detail separator column. */

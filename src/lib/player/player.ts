@@ -26,6 +26,7 @@
  * - `getPlayerState(): PlayerSnapshot`
  * - `getPlayerCues(): readonly CueMarker[]`
  * - `setVolume(volume: number): void`
+ * - `setPlayerWaveformCompact(compact: boolean): void`
  * - `subscribe(listener: (state: PlayerSnapshot) => void): () => void`
  *
  * `playerControls` is what `app.ts` passes to `registerPlayerControls` right
@@ -41,7 +42,7 @@ import { mountIsland, type IslandRoot } from "../../app/mount";
 import { PlayerBar } from "../../components/PlayerBar";
 import { playerStrings } from "./player-strings";
 import { state } from "../state";
-import { beatgridFromMarkers, loopsFromMarkers } from "./waveform";
+import { beatgridFromMarkers, loopsFromMarkers, type WaveMarkers } from "./waveform";
 import { mountWaveform, type WaveformController } from "./waveform-view";
 
 export interface PlayerSnapshot {
@@ -89,7 +90,7 @@ export interface CueMarker {
   seconds: number;
   color: string;
   label: string;
-  /** Zero-based Serato pad index, or -1 when the cue has no pad. */
+  /** Stored 0–7 pad, or -1 when the index is missing or out of range. */
   index: number;
 }
 
@@ -127,6 +128,8 @@ let cueToken = 0;
 let cues: CueMarker[] = [];
 let barRoot: IslandRoot | null = null;
 let waveform: WaveformController | null = null;
+let waveHost: HTMLElement | null = null;
+let waveMarks: WaveMarkers = { cues: [], loops: [], beatgrid: [] };
 
 /**
  * Format a playback position as m:ss, or h:mm:ss past an hour.
@@ -174,7 +177,7 @@ export function markersFromCues(rows: readonly Marker[] | undefined): CueMarker[
       seconds: start / 1000,
       color,
       label: named || `${playerStrings.cue} ${fallback}`,
-      index: Number.isInteger(index) ? index : -1,
+      index: Number.isInteger(index) && index >= 0 && index < 8 ? index : -1,
     });
   }
   return found;
@@ -524,6 +527,7 @@ export function mountPlayer(host?: HTMLElement | null): void {
   barRoot = null;
   waveform?.destroy();
   waveform = null;
+  waveHost = null;
   resetPlayback();
   emit();
   const root = host === undefined ? document.getElementById("player-bar") : host;
@@ -534,14 +538,34 @@ export function mountPlayer(host?: HTMLElement | null): void {
   const element = ensureMedia();
   root.replaceChildren();
   if (element instanceof Node) root.append(element);
-  const waveHost = document.createElement("div");
-  waveform = mountWaveform(waveHost, undefined, true);
   const controls = document.createElement("div");
   root.append(controls);
   barRoot = mountIsland(controls, createElement(PlayerBar));
+  const compact = controls.querySelector(".player-deck-compact") !== null;
+  waveHost = document.createElement("div");
+  waveform = mountWaveform(waveHost, undefined, compact);
   const slot = controls.querySelector(".player-wave-slot");
   if (slot instanceof HTMLElement) slot.append(waveHost);
   else controls.append(waveHost);
+}
+
+/**
+ * Remount the AppBar wave as the compact strip or the 160px deck.
+ *
+ * Destroys only the waveform island. Playback time and the audio
+ * element stay. A matching compact flag is a no-op.
+ *
+ * @param compact True for the 32px overview strip.
+ */
+export function setPlayerWaveformCompact(compact: boolean): void {
+  if (!waveHost) return;
+  if (waveform?.isCompact() === compact) return;
+  const host = waveHost;
+  waveform?.destroy();
+  waveform = mountWaveform(host, undefined, compact);
+  if (trackId === null) return;
+  waveform.setTrack(trackId);
+  waveform.setMarkers(trackId, waveMarks);
 }
 
 /**
@@ -568,6 +592,7 @@ function resetPlayback(): void {
   duration = 0;
   error = "";
   cues = [];
+  waveMarks = { cues: [], loops: [], beatgrid: [] };
 }
 
 function ensureMedia(): PlayableMedia {
@@ -663,18 +688,21 @@ function moveBy(delta: 1 | -1): boolean {
 function loadCues(id: number): void {
   const token = ++cueToken;
   cues = [];
-  waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
+  waveMarks = { cues: [], loops: [], beatgrid: [] };
+  waveform?.setMarkers(id, waveMarks);
   void readCues(id).then(
     (found) => {
       if (token !== cueToken || trackId !== id) return;
       cues = found.cues;
+      waveMarks = found;
       waveform?.setMarkers(id, found);
       emit();
     },
     () => {
       if (token !== cueToken || trackId !== id) return;
       cues = [];
-      waveform?.setMarkers(id, { cues: [], loops: [], beatgrid: [] });
+      waveMarks = { cues: [], loops: [], beatgrid: [] };
+      waveform?.setMarkers(id, waveMarks);
       emit();
     },
   );

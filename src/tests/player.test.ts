@@ -26,6 +26,7 @@ import {
   previous,
   seek,
   seekBy,
+  setPlayerWaveformCompact,
   setVolume,
   subscribe,
   togglePlayPause,
@@ -62,6 +63,7 @@ function track(id: number, name: string, artist = "DJ"): Track {
 
 beforeEach(() => {
   installPage();
+  Object.defineProperty(window, "innerWidth", { configurable: true, value: 980 });
   fake = new FakeAudio();
   attachMedia(fake);
   mountPlayer();
@@ -94,6 +96,31 @@ describe("player chrome", () => {
     expect(document.querySelector(".player-seek .MuiSlider-root")).toBeNull();
     expect(document.querySelector("[aria-label='Zoom in']")).toBeNull();
     expect(document.querySelector("[aria-label='Zoom out']")).toBeNull();
+  });
+
+  it("remounts the AppBar wave when compact changes and keeps currentTime", () => {
+    state.byId.set(4, track(4, "Night"));
+    fake.duration = 20;
+    play(4);
+    seek(7);
+    expect(getPlayerState().currentTime).toBe(7);
+    expect(fake.currentTime).toBe(7);
+    const wave = document.querySelector(".player-wave");
+    expect(wave?.classList.contains("player-wave-compact")).toBe(true);
+    expect(document.querySelector("[aria-label='Zoom in']")).toBeNull();
+    setPlayerWaveformCompact(false);
+    expect(document.querySelector(".player-wave")?.classList.contains("player-wave-compact")).toBe(
+      false,
+    );
+    expect(document.querySelector("[aria-label='Zoom in']")).not.toBeNull();
+    expect(document.querySelector("[aria-label='Zoom out']")).not.toBeNull();
+    expect(getPlayerState().currentTime).toBe(7);
+    expect(fake.currentTime).toBe(7);
+    expect(getPlayerState().trackId).toBe(4);
+    expect(fake.src).toContain("id=4");
+    setPlayerWaveformCompact(false);
+    expect(getPlayerState().currentTime).toBe(7);
+    expect(fake.currentTime).toBe(7);
   });
 });
 
@@ -350,6 +377,20 @@ describe("cue markers", () => {
     ])).toEqual([
       { seconds: 1.5, color: "#CC0000", label: "Drop", index: 0 },
       { seconds: 8, color: "var(--cue-slot-4)", label: "Cue 4", index: 3 },
+    ]);
+  });
+
+  it("keeps pad index 0 and 3 and stores -1 when the pad is missing or out of range", () => {
+    expect(markersFromCues([
+      { start_ms: 1500, color: "#CC0000", name: "Drop", index: 0 },
+      { start_ms: 8000, color: "red", index: 3 },
+      { start_ms: 2000, color: "#CC0000", name: "Loose" },
+      { start_ms: 3000, color: "#CC0000", name: "Pad 9", index: 8 },
+    ])).toEqual([
+      { seconds: 1.5, color: "#CC0000", label: "Drop", index: 0 },
+      { seconds: 8, color: "var(--cue-slot-4)", label: "Cue 4", index: 3 },
+      { seconds: 2, color: "#CC0000", label: "Loose", index: -1 },
+      { seconds: 3, color: "#CC0000", label: "Pad 9", index: -1 },
     ]);
   });
 

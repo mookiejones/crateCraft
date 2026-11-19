@@ -927,6 +927,7 @@ class ContrastTests(unittest.TestCase):
 
         for theme in _THEMES:
             with self.subTest(theme=theme):
+                self.theme = theme
                 self.colors = _theme_colors(theme)
                 self._assert_painted_pairs()
 
@@ -977,12 +978,16 @@ class ContrastTests(unittest.TestCase):
             ".detail-play",
             ".operations-alert",
             ".app-bar-lock",
+            ".player-cue-pad-lit",
         } | {selector for selector, _, _ in _CONTROL_EDGE}
         self.assertEqual(bordered - checked_borders, set(), "borders missing from the contrast list")
         self.assertEqual(checked_borders - bordered, set(), "contrast list names a border that is not painted")
 
     def _assert_painted_pairs(self) -> None:
-        """Measure text, focus, and control edges for ``self.colors``.
+        """Measure text, focus, control edges, and the lit cue pad.
+
+        The lit pad's outer ring is ``--color-text`` on the MUI AppBar.
+        ``self.theme`` names that colorway.
 
         Returns:
             None. The test fails if a painted pair misses its bar.
@@ -1057,6 +1062,16 @@ class ContrastTests(unittest.TestCase):
         lock_border = _paint(self._rule(".app-bar-lock")["border-bottom"], self.colors)
         lock_ratio = contrast(lock_border, self._surface("--color-warn-bg"))
         self.assertGreaterEqual(lock_ratio, 3, f".app-bar-lock border is {lock_ratio:.2f}:1")
+        # The outer ring is the second shadow. It sits on the MUI AppBar
+        # (grey 900 in dark mode, grey 100 in light mode), not on the page
+        # background. The first shadow is a 1px gap in the page background
+        # so the ring stays off the pad fill.
+        lit_shadow = self._rule(".player-cue-pad-lit")["box-shadow"]
+        lit_vars = re.findall(r"var\(\s*(--[A-Za-z0-9-]+)", lit_shadow)
+        self.assertEqual(lit_vars, ["--color-bg", "--color-text"])
+        app_bar = "#212121" if self.theme in {"serato-like", "dark-club"} else "#f5f5f5"
+        lit_ratio = contrast(self.colors["--color-text"], app_bar)
+        self.assertGreaterEqual(lit_ratio, 3, f".player-cue-pad-lit ring on the AppBar is {lit_ratio:.2f}:1")
         active_mark = _paint(self._rule(".quick-open-option.is-active")["border-left"], self.colors)
         for background_name in ("--color-card", "--color-selection"):
             ratio = contrast(active_mark, self._surface(background_name))

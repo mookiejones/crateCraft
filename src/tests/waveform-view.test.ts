@@ -4,12 +4,20 @@
  * Fetch is stubbed. The audio element is not used. No shortcut is added.
  */
 
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { playerStrings } from "../lib/player/player-strings";
 import { SHORTCUTS } from "../lib/ui/shortcuts";
 import { state } from "../lib/state";
 import { mountWaveform, type WaveformHooks } from "../lib/player/waveform-view";
 import { ZOOM_MAX_PPS, type ParsedWaveform } from "../lib/player/waveform";
+
+const appCss = readFileSync(
+  join(dirname(fileURLToPath(import.meta.url)), "../../static/app.css"),
+  "utf8",
+);
 
 function hooks(seek: (seconds: number) => void = () => {}, seekBy: (delta: number) => void = () => {}): WaveformHooks {
   return {
@@ -57,6 +65,20 @@ afterEach(() => {
 });
 
 describe("waveform controls", () => {
+  it("shows zoom and a 160px detail when compact is false", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const view = mountWaveform(host, hooks(), false);
+    view.showComputed(parsedWave());
+    expect(view.isCompact()).toBe(false);
+    expect(host.classList.contains("player-wave-compact")).toBe(false);
+    expect(host.querySelector("[aria-label='Zoom in']")).not.toBeNull();
+    expect(host.querySelector("[aria-label='Zoom out']")).not.toBeNull();
+    expect(host.querySelector<HTMLElement>(".waveform-detail-wrap")?.hidden).toBe(false);
+    expect(appCss).toMatch(/\.waveform-detail\s*\{[^}]*height:\s*160px/);
+    expect(appCss).toMatch(/\.waveform-detail-wrap\s*\{[^}]*height:\s*160px/);
+  });
+
   it("zooms from the buttons and from Ctrl or Command with the wheel, not from keys", () => {
     const host = document.createElement("div");
     document.body.append(host);
@@ -151,6 +173,7 @@ describe("waveform controls", () => {
     document.body.append(host);
     const view = mountWaveform(host, hooks((seconds) => seen.push(seconds)), true);
     view.showComputed(parsedWave());
+    expect(view.isCompact()).toBe(true);
     expect(host.classList.contains("player-wave-compact")).toBe(true);
     expect(host.querySelector("[aria-label='Zoom in']")).toBeNull();
     expect(host.querySelector<HTMLElement>(".waveform-detail-wrap")?.hidden).toBe(true);
