@@ -983,6 +983,22 @@ export interface LibraryHealthTrack {
   file: string;
 }
 
+export interface TrackQuality {
+  format: string | null;
+  bitrate_kbps: number | null;
+  peak_db: number | null;
+}
+
+export interface LibraryHealthQualityTrack extends LibraryHealthTrack {
+  quality: TrackQuality;
+}
+
+export interface LibraryHealthQualitySection {
+  count: number;
+  dismissed: number;
+  tracks: LibraryHealthQualityTrack[];
+}
+
 export interface LibraryHealthSection {
   count: number;
   tracks: LibraryHealthTrack[];
@@ -1076,6 +1092,7 @@ export interface LibraryHealthReport {
   no_crate: LibraryHealthSection;
   unused: LibraryHealthFiles;
   duplicates: { count: number; groups: LibraryHealthDuplicateGroup[] };
+  quality: LibraryHealthQualitySection;
   error?: string;
   code?: string;
 }

@@ -29,6 +29,7 @@ const report: LibraryHealthReport = {
   no_crate: { count: 0, tracks: [] },
   unused: { count: 0, files: [] },
   duplicates: { count: 0, groups: [] },
+  quality: { count: 0, dismissed: 0, tracks: [] },
 };
 
 const value: HealthContextValue = {

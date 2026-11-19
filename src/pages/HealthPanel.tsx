@@ -12,11 +12,14 @@ import Button from "@mui/material/Button";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import type {
   LibraryHealthDuplicateGroup,
+  LibraryHealthQualityTrack,
   LibraryHealthReport,
   LibraryHealthSection,
   LibraryHealthTrack,
 } from "../lib/api-types";
 import { openAlbumArt } from "../lib/health/album-art";
+import { clearQualityDismissals, dismissQuality } from "../lib/health/quality";
+import { qualityLine } from "../lib/health/quality-view";
 import { applySuspiciousCues, previewSuspiciousCues } from "../lib/health/suspicious-cues";
 import { useHealth, type HealthAction } from "../containers/HealthContext";
 import { t, type MessageKey } from "../lib/i18n";
@@ -142,6 +145,85 @@ function Section({
   );
 }
 
+function Quality({
+  section,
+  onNavigate,
+}: {
+  section: LibraryHealthReport["quality"] | undefined;
+  onNavigate: (action: HealthAction, id?: number) => void;
+}) {
+  const count = section?.count ?? 0;
+  const dismissed = section?.dismissed ?? 0;
+  const tracks = section?.tracks ?? [];
+  const accordion = useSectionOpen(count > 0 || dismissed > 0);
+  return (
+    <Accordion
+      className="health-accordion"
+      expanded={accordion.expanded}
+      onChange={accordion.onChange}
+      {...ACCORDION_SX}
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} ref={tooltipRef(tips.healthSection)}>
+        {t("gig.groupCount", { label: t("health.quality"), count })}
+      </AccordionSummary>
+      <AccordionDetails>
+        <ul>
+          {tracks.map((track: LibraryHealthQualityTrack) => {
+            const line = qualityLine(track.quality);
+            return (
+              <li key={track.id} className="health-art-row">
+                <Button
+                  type="button"
+                  size="small"
+                  variant="text"
+                  sx={BUTTON_SX}
+                  ref={tooltipRef(tips.healthTrack)}
+                  data-health-action="track"
+                  data-health-id={String(track.id)}
+                  onClick={() => onNavigate("track", track.id)}
+                >
+                  {trackLine(track)}
+                </Button>
+                {line ? <span className="gig-note">{line}</span> : null}
+                <Button
+                  type="button"
+                  size="small"
+                  variant="outlined"
+                  sx={BUTTON_SX}
+                  ref={tooltipRef(tips.notAProblem)}
+                  data-health-action="not-a-problem"
+                  data-health-id={String(track.id)}
+                  onClick={() => {
+                    void dismissQuality(track.id);
+                  }}
+                >
+                  {t("health.notAProblem")}
+                </Button>
+              </li>
+            );
+          })}
+        </ul>
+        {dismissed > 0 ? (
+          <Button
+            type="button"
+            size="small"
+            variant="outlined"
+            sx={BUTTON_SX}
+            ref={tooltipRef(tips.showDismissed)}
+            data-health-action="show-dismissed"
+            onClick={() => {
+              void clearQualityDismissals();
+            }}
+          >
+            {t("health.showDismissed")}
+          </Button>
+        ) : null}
+        <p className="gig-note">{t("health.qualityNote")}</p>
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
 function SuspiciousCues({
   section,
   onReload,
@@ -183,7 +265,6 @@ function SuspiciousCues({
       setBusy(false);
     }
   }
-
   return (
     <Accordion
       className="health-accordion"
@@ -375,6 +456,8 @@ export function HealthPanel() {
     listed += payload.no_crate.count;
     listed += payload.unused.count;
     listed += payload.duplicates.count;
+    listed += payload.quality.count;
+    listed += payload.quality.dismissed;
   }
 
   return (
@@ -420,6 +503,7 @@ export function HealthPanel() {
             ))}
             <Unused section={payload.unused} onNavigate={health.navigate} />
             <Duplicates section={payload.duplicates} onNavigate={health.navigate} />
+            <Quality section={payload.quality} onNavigate={health.navigate} />
             <Bitrate onNavigate={health.navigate} />
             {listed ? null : <p className="gig-note">{t("health.clear")}</p>}
           </>

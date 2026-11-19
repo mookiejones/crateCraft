@@ -305,6 +305,8 @@ export const tips = {
   healthOpenFiles: spec("tooltip.healthOpenFiles"),
   healthOpenBitrate: spec("tooltip.healthOpenBitrate"),
   healthTrack: spec("tooltip.healthTrack"),
+  notAProblem: spec("tooltip.notAProblem"),
+  showDismissed: spec("tooltip.showDismissed"),
   healthFindArt: spec("tooltip.healthFindArt"),
   suspiciousCues: spec("tooltip.suspiciousCues"),
   healthArtCancel: spec("tooltip.healthArtCancel"),
