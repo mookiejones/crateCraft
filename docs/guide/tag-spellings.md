@@ -14,7 +14,7 @@ This view covers the whole space. The crate list is hidden. To rewrite one field
 4. Click a group in the list. The **Suggested spelling** column is the spelling most tracks already use. **Tracks** and **Spellings** are counts.
 5. Select the spelling you want. **Review** and **Apply** stay above the list.
 6. Click **Review**. The status line names how many rows would change, and the selected group lists each stored spelling and the spelling it would become.
-7. Click **Apply**. Apply stays off until Review matches the selected spelling, the library is writable, and at least one row would change.
+7. Click **Apply**. Apply stays off until Review matches the selected spelling, the library is writable, and at least one row would change. While it runs, Apply shows a spinner and a line such as **Fixing spellings: 120 / 450**. **Cancel** stops the write before it is saved; after it is saved, Cancel does nothing. A toast names success, a partial skip, a failure, or a cancel, with **Undo** (restores the backup taken before this write) and **View details**. The AppBar tray lists the running write and recent writes on every page.
 
 When a later track still uses another spelling of a saved mapping, a banner lists those rows and **Apply saved mappings** writes them. Opening the view does not write.
 

@@ -8,7 +8,11 @@
 
 import { createElement } from "react";
 import { failureOf, postJSON, readJSON } from "../api";
-import type { DriveBackup, DriveCopy, OperationList, RestorePlan, SnapshotList } from "../api-types";
+import type { DriveBackup, DriveCopy, Job, OperationList, RestorePlan, SnapshotList } from "../api-types";
+import { isQueuedWrite } from "../crates/queue-notice";
+import { startJob } from "../jobs/job-store";
+import { toastText } from "../jobs/job-view";
+import { setNotice } from "../ui/notice-store";
 import { mountIsland, type IslandRoot } from "../../app/mount";
 import { RestoreDialog } from "../../pages/RestoreDialog";
 import { SnapshotsPanel } from "../../pages/SnapshotsPanel";
@@ -394,17 +398,46 @@ export async function confirmSnapshotRestore() {
   paint();
   try {
     const undoing = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId;
-    const body = undoing
-      ? { action: "undo", confirm: true }
-      : { action: "restore", id: state.snapshotPlanId, confirm: true };
-    const result = await postJSON<RestorePlan>("/api/snapshots", body);
-    const skipped = result.crates_skipped || [];
+    if (undoing) {
+      const result = await postJSON<RestorePlan>("/api/snapshots", { action: "undo", confirm: true });
+      const skipped = result.crates_skipped || [];
+      closePlan();
+      state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
+      await loadSnapshots();
+      await reloadLibrary();
+      if (skipped.length) {
+        const names = skipped.map((item) => item.name || item.path || t("plan.item")).join(", ");
+        statusOverride = t("snapshots.skippedCrates", { count: skipped.length, names });
+        paint();
+      }
+      return;
+    }
+    const result = await startJob({
+      kind: "snapshot_restore",
+      id: state.snapshotPlanId,
+      confirm: true,
+    });
+    if (isQueuedWrite(result)) {
+      statusOverride = t("gigLock.queued");
+      setNotice(t("gigLock.queued"));
+      closePlan();
+      return;
+    }
+    const job = result as Job;
+    if (job.state === "failed" || job.state === "cancelled") {
+      planStatus = toastText(job);
+      confirming = false;
+      await loadOperations();
+      paint();
+      return;
+    }
+    const skipped = job.errors;
     closePlan();
     state.snapshotMessage = skipped.length ? "" : "snapshots.restored";
     await loadSnapshots();
     await reloadLibrary();
     if (skipped.length) {
-      const names = skipped.map((item) => item.name || item.path || t("plan.item")).join(", ");
+      const names = skipped.join(", ");
       statusOverride = t("snapshots.skippedCrates", { count: skipped.length, names });
       paint();
     }

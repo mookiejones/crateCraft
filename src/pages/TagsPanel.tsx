@@ -9,9 +9,12 @@
 import { useMemo, useState } from "react";
 import type { GridColDef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import type { TagClusterGroup, TagClusterPlan } from "../lib/api-types";
 import { HealthDataGrid, type HealthGridRow } from "../components/HealthDataGrid";
+import { JobProgress } from "../components/JobProgress";
 import { useHealth } from "../containers/HealthContext";
+import { useJobs } from "../containers/JobContext";
 import { t } from "../lib/i18n";
 import {
   mappingPreviewSummary,
@@ -125,6 +128,8 @@ function ClusterActions({
   onApply: () => void;
   onSelect: (value: string) => void;
 }) {
+  const jobs = useJobs();
+  const running = jobs.running?.kind === "tag_spelling" ? jobs.running : null;
   const showPlan = plan && plan.value === chosen;
   return (
     <div className="tags-cluster-chrome">
@@ -170,11 +175,18 @@ function ClusterActions({
           data-tags-action="apply"
           data-key={group.key}
           disabled={!canApply || Boolean(plan && plan.value === chosen && !plan.changes.length)}
+          startIcon={busy ? <CircularProgress size={16} color="inherit" /> : undefined}
           onClick={onApply}
         >
           {t("tags.apply")}
         </Button>
       </div>
+      <JobProgress
+        job={running}
+        onCancel={running ? () => {
+          void jobs.cancelJob(running.id);
+        } : undefined}
+      />
     </div>
   );
 }

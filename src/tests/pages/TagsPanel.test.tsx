@@ -8,6 +8,7 @@ import { createRoot } from "react-dom/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { TagClusterGroup, TagClusterPlan, TagClusters } from "../../lib/api-types";
 import { HealthProvider, type HealthContextValue } from "../../containers/HealthContext";
+import { JobProvider, idleJobValue } from "../../containers/JobContext";
 import { setLocale } from "../../lib/i18n";
 import { installPage } from "../test-page";
 import { TagsPanel } from "../../pages/TagsPanel";
@@ -102,9 +103,12 @@ function mountTags(value: HealthContextValue): { host: HTMLDivElement; root: Ret
   const root = createRoot(host);
   flushSync(() => {
     root.render(
-      createElement(HealthProvider, {
-        value,
-        children: createElement(TagsPanel),
+      createElement(JobProvider, {
+        value: idleJobValue(),
+        children: createElement(HealthProvider, {
+          value,
+          children: createElement(TagsPanel),
+        }),
       }),
     );
   });

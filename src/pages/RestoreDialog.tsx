@@ -7,6 +7,7 @@
  */
 
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -16,6 +17,8 @@ import { failureOf } from "../lib/api";
 import type { ChangedCrate, FrameDiff, Marker, PlanName } from "../lib/api-types";
 import { cueDiffRows, cueSummary, slotColor, type CueDiff } from "../lib/ui/cue-view";
 import { codedText, messageParams, t } from "../lib/i18n";
+import { JobProgress } from "../components/JobProgress";
+import { useJobs } from "../containers/JobContext";
 import { useSnapshots } from "../containers/SnapshotsContext";
 import { crateContentsText, fileName, planLineText } from "../lib/snapshots/restore-view";
 import { tooltipRef } from "../components/tooltip-ref";
@@ -102,6 +105,8 @@ function FrameDiffs({ label, rows }: { label: string; rows: FrameDiff[] | undefi
  */
 export function RestoreDialog() {
   const snapshots = useSnapshots();
+  const jobs = useJobs();
+  const restoreJob = jobs.running?.kind === "snapshot_restore" ? jobs.running : null;
   const plan = snapshots.plan;
   const blocked = plan?.restore_blocked
     ? codedText(
@@ -171,6 +176,12 @@ export function RestoreDialog() {
         <p id="snapshot-status" className="dialog-status" role="status" aria-live="polite">
           {snapshots.planStatus}
         </p>
+        <JobProgress
+          job={restoreJob}
+          onCancel={restoreJob ? () => {
+            void jobs.cancelJob(restoreJob.id);
+          } : undefined}
+        />
       </DialogContent>
       <DialogActions className="dialog-actions">
         <Button
@@ -187,6 +198,7 @@ export function RestoreDialog() {
           variant="contained"
           ref={tooltipRef(tips.snapshotConfirm)}
           disabled={confirmDisabled}
+          startIcon={snapshots.confirming ? <CircularProgress size={16} color="inherit" /> : undefined}
           onClick={() => {
             snapshots.confirmSnapshotRestore().catch((error) => snapshots.setSnapshotDialogStatus(failureOf(error).message));
           }}

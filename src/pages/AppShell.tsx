@@ -4,10 +4,10 @@
  * Existing page nodes keep their ids. This shell portals the crateCraft
  * heading and `#library-generation` into the AppBar after the menu
  * toggle, `#player-bar` into the Toolbar flex slot between the chip and
- * Help, `#open-help` and `#open-settings` to the AppBar end (`ml: auto`
- * so they stay right while the player is hidden). A loaded track on a
- * wide window stretches the player slot; ☰, heading, chip, and Help
- * stay top-aligned. `#status`
+ * the activity tray, `#open-help` and `#open-settings` to the AppBar end
+ * after the tray (`ml: auto` so they stay right while the player is
+ * hidden). A loaded track on a wide window stretches the player slot;
+ * ☰, heading, chip, tray, and Help stay top-aligned. `#status`
  * into a persistent lock bar under the AppBar, then a MUI Alert for the
  * last action notice, `#views` into the Drawer, and `#app-body` into
  * Main. The player slot stays hidden while `trackId` is null. `paintNav`
@@ -24,6 +24,8 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import MenuIcon from "@mui/icons-material/Menu";
+import { ActivityTray } from "../components/ActivityTray";
+import { JobToast } from "../components/JobToast";
 import { NoticeBanner } from "../components/NoticeBanner";
 import { onLocaleChange, t } from "../lib/i18n";
 import { getPlayerState, subscribe } from "../lib/player/player";
@@ -204,11 +206,14 @@ export function AppShell() {
               ml: "auto",
               alignSelf: deckOpen ? "flex-start" : undefined,
             }}
-          />
+          >
+            <ActivityTray />
+          </Box>
         </Toolbar>
       </AppBar>
       <Box ref={lockSlot} className="app-bar-lock" sx={{ flexShrink: 0 }} />
       <NoticeBanner />
+      <JobToast />
       <Box sx={{ display: "flex", flex: 1, minHeight: 0, minWidth: 0 }}>
         <Drawer
           id="app-drawer"

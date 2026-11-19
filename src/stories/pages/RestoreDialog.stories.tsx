@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { JobProvider, idleJobValue } from "../../containers/JobContext";
 import { SnapshotsProvider } from "../../containers/SnapshotsContext";
 import {
   snapshotsArgTypes,
@@ -10,11 +11,13 @@ import { RestoreDialog } from "../../pages/RestoreDialog";
 
 function Host(args: SnapshotsStoryArgs) {
   return (
-    <SnapshotsProvider value={snapshotsValueFromArgs(args)}>
-      <dialog id="snapshot-dialog" open>
-        <RestoreDialog />
-      </dialog>
-    </SnapshotsProvider>
+    <JobProvider value={idleJobValue()}>
+      <SnapshotsProvider value={snapshotsValueFromArgs(args)}>
+        <dialog id="snapshot-dialog" open>
+          <RestoreDialog />
+        </dialog>
+      </SnapshotsProvider>
+    </JobProvider>
   );
 }
 

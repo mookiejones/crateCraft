@@ -23,6 +23,8 @@ import type {
   SettingsPayload,
   VersionPayload,
   WriteQueueListing,
+  Job,
+  JobList,
 } from "./api-types";
 import { serverMessage, t } from "./i18n";
 
@@ -37,7 +39,9 @@ export type ServerReply =
   & ErrorBody
   & LogsPayload
   & RekordboxReport
-  & WriteQueueListing;
+  & WriteQueueListing
+  & Job
+  & JobList;
 
 export interface ApiFailure extends Error {
   status?: number;
