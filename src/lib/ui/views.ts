@@ -76,7 +76,7 @@ import { HistorySessions } from "../../pages/HistorySessions";
 import { PlayButton } from "../../components/PlayButton";
 import { TrackDetailPane } from "../../components/TrackDetail";
 import { bindCrateActions, emitCrates } from "../crates/crate-store";
-import { openConfirm, openCratePrompt } from "./shared-dialog";
+import { getCratePrompt, openConfirm, openCratePrompt } from "./shared-dialog";
 import { mountSharedDialogs } from "./shared-dialog-mount";
 import { historyActions, notifyHistory } from "../../containers/HistoryContext";
 import { play } from "../player/player";
@@ -2173,11 +2173,20 @@ export async function createCrate() {
     title: t("crates.newPrompt"),
     value: "",
     confirmLabel: t("crates.new"),
+    showOverwrite: true,
+    overwrite: false,
   });
   if (!name || !name.trim()) return;
+  const overwrite = getCratePrompt().overwrite === true;
   const parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
   try {
-    const result = await postJSON("/api/crate", { action: "create", name: name.trim(), parent, space: state.space });
+    const result = await postJSON("/api/crate", {
+      action: "create",
+      name: name.trim(),
+      parent,
+      space: state.space,
+      overwrite,
+    });
     if (isQueuedWrite(result)) {
       setNotice(t("gigLock.queued"));
       return;

@@ -55,6 +55,7 @@
     isSharedDialogOpen: () => isSharedDialogOpen,
     openConfirm: () => openConfirm,
     openCratePrompt: () => openCratePrompt,
+    setCratePromptOverwrite: () => setCratePromptOverwrite,
     setCratePromptValue: () => setCratePromptValue,
     setSharedDialogOpen: () => setSharedDialogOpen,
     sharedDialogMaxWidth: () => sharedDialogMaxWidth,
@@ -125,6 +126,9 @@
   }
   function setCratePromptValue(value) {
     cratePrompt = { ...cratePrompt, value }, emit();
+  }
+  function setCratePromptOverwrite(overwrite) {
+    cratePrompt = { ...cratePrompt, overwrite }, emit();
   }
   function settleCratePrompt(value) {
     let resolve = cratePromptResolve;
@@ -12851,6 +12855,8 @@ Error generating stack: ` + x.message + `
     "crates.moreList": "More list actions",
     "crates.new": "New",
     "crates.newPrompt": "New crate name",
+    "crates.notConnected": "Not connected",
+    "crates.overwriteSameName": "Overwrite a crate with the same name",
     "crates.paneA": "Left crate",
     "crates.paneB": "Right crate",
     "crates.rename": "Rename",
@@ -14665,6 +14671,8 @@ Error generating stack: ` + x.message + `
     "tooltip.cratePromptCancel": "Close without changing the crate.",
     "tooltip.cratePromptConfirm": "Save this crate name. Serato DJ Pro must be quit.",
     "tooltip.cratePromptName": "Type the crate name, or a color name.",
+    "tooltip.crateNotConnected": "This crate's drive is not connected. The tracks are not missing.",
+    "tooltip.overwriteSameName": "When this is off, a crate file that already has this name on a drive is left as it is.",
     "tooltip.relocatePath": "Type the path to the audio file.",
     "tooltip.relocateCancel": "Close without changing the file location.",
     "tooltip.relocateConfirm": "Save this file location. Serato DJ Pro must be quit.",
@@ -14822,6 +14830,8 @@ Error generating stack: ` + x.message + `
     "crates.moreList": "Más acciones de lista",
     "crates.new": "Nueva",
     "crates.newPrompt": "Nombre de la nueva caja",
+    "crates.notConnected": "No conectada",
+    "crates.overwriteSameName": "Sobrescribir una caja con el mismo nombre",
     "crates.paneA": "Caja izquierda",
     "crates.paneB": "Caja derecha",
     "crates.rename": "Renombrar",
@@ -16636,6 +16646,8 @@ Error generating stack: ` + x.message + `
     "tooltip.cratePromptCancel": "Cerrar sin cambiar la caja.",
     "tooltip.cratePromptConfirm": "Guardar este nombre de caja. Hay que salir de Serato DJ Pro.",
     "tooltip.cratePromptName": "Escribe el nombre de la caja, o un color.",
+    "tooltip.crateNotConnected": "La unidad de esta caja no está conectada. Las pistas no faltan.",
+    "tooltip.overwriteSameName": "Si está apagado, un archivo de caja que ya tiene este nombre en una unidad se queda como está.",
     "tooltip.relocatePath": "Escribe la ruta del archivo de audio.",
     "tooltip.relocateCancel": "Cerrar sin cambiar la ubicación del archivo.",
     "tooltip.relocateConfirm": "Guardar esta ubicación. Hay que salir de Serato DJ Pro.",
@@ -17279,7 +17291,9 @@ Error generating stack: ` + x.message + `
         parent: null,
         color: null,
         count: matched ? matched.size : state.tracks.length,
-        holds: !1
+        holds: !1,
+        offline: !1,
+        driveName: ""
       }, panes)
     ];
     for (let crate of crates) {
@@ -17297,7 +17311,9 @@ Error generating stack: ` + x.message + `
         parent: crate.parent ?? null,
         color: crate.color ?? null,
         count: shown,
-        holds: holder === crate.id
+        holds: holder === crate.id,
+        offline: crate.drive_status === "not_connected",
+        driveName: crate.drive_name || ""
       }, panes));
     }
     return rows;
@@ -17332,6 +17348,8 @@ Error generating stack: ` + x.message + `
     crateSplit: spec("tooltip.crateSplit"),
     crateSaveView: spec("tooltip.crateSaveView"),
     cratePromptName: spec("tooltip.cratePromptName"),
+    crateNotConnected: spec("tooltip.crateNotConnected"),
+    overwriteSameName: spec("tooltip.overwriteSameName"),
     cratePromptCancel: spec("tooltip.cratePromptCancel"),
     cratePromptConfirm: spec("tooltip.cratePromptConfirm"),
     relocatePath: spec("tooltip.relocatePath"),
@@ -64140,6 +64158,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         }
       ),
+      prompt.showOverwrite ? /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
+        FormControlLabel_default,
+        {
+          control: /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
+            Checkbox_default,
+            {
+              id: "overwrite-same-name",
+              slotProps: { input: { ref: tooltipRef5(tips.overwriteSameName) } },
+              checked: prompt.overwrite === !0,
+              onChange: (event) => setCratePromptOverwrite(event.target.checked)
+            }
+          ),
+          label: t("crates.overwriteSameName")
+        }
+      ) : null,
       /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(DialogActions_default, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
           Button_default,
@@ -70266,7 +70299,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     select,
     toggle
   }) {
-    let hex = colorHex(row.color), tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
+    let hex = colorHex(row.color), tip = row.id === "all" ? tips.allTracks : row.offline ? tips.crateNotConnected : openCrate(row.name);
     return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)(
       "div",
       {
@@ -70279,7 +70312,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             {
               type: "button",
               ref: tooltipRef10(tip),
-              className: "crate",
+              className: row.offline ? "crate offline" : "crate",
               "data-id": String(row.id),
               "data-parent": row.parent != null ? String(row.parent) : void 0,
               "data-pane": row.pane ?? void 0,
@@ -70294,6 +70327,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   hex ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
                   row.name
                 ] }),
+                row.offline ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "offline-label", children: t("crates.notConnected") }) : null,
                 row.smart ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
                 /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "meta", children: formatNumber(row.count) })
               ]
@@ -71830,12 +71864,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let name = await openCratePrompt({
       title: t("crates.newPrompt"),
       value: "",
-      confirmLabel: t("crates.new")
+      confirmLabel: t("crates.new"),
+      showOverwrite: !0,
+      overwrite: !1
     });
     if (!name || !name.trim()) return;
-    let parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
+    let overwrite = getCratePrompt().overwrite === !0, parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
     try {
-      let result = await postJSON("/api/crate", { action: "create", name: name.trim(), parent, space: state.space });
+      let result = await postJSON("/api/crate", {
+        action: "create",
+        name: name.trim(),
+        parent,
+        space: state.space,
+        overwrite
+      });
       if (isQueuedWrite(result)) {
         setNotice2(t("gigLock.queued"));
         return;

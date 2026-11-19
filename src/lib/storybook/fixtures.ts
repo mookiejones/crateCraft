@@ -73,6 +73,8 @@ export const crateRows: CrateRailRow[] = [
     expanded: true,
     selected: true,
     pane: "a",
+    offline: false,
+    driveName: "",
   },
   {
     id: 2,
@@ -87,6 +89,8 @@ export const crateRows: CrateRailRow[] = [
     expanded: true,
     selected: false,
     pane: null,
+    offline: false,
+    driveName: "",
   },
   {
     id: 3,
@@ -101,6 +105,8 @@ export const crateRows: CrateRailRow[] = [
     expanded: false,
     selected: false,
     pane: null,
+    offline: true,
+    driveName: "GIG",
   },
 ];
 

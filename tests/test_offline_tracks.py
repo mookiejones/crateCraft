@@ -74,6 +74,52 @@ class LibraryListTests(unittest.TestCase):
         self.assertEqual(present["missing"], 0)
         self.assertNotIn("offline", present)
 
+    def test_crate_of_only_offline_tracks_is_not_connected(self) -> None:
+        """A crate whose tracks are all on an unplugged drive stays in the tree.
+
+        Returns:
+            None. The test fails if the crate is missing or marked as a missing file.
+        """
+        unplugged, drive = _unplugged_path()
+        with TempLibrary() as temp, tempfile.TemporaryDirectory() as raw:
+            here = Path(raw) / "here.mp3"
+            here.write_bytes(b"audio")
+            _seed(
+                temp.db,
+                [
+                    (1, "USB cut", unplugged, 1),
+                    (3, "Here", str(here), 0),
+                ],
+            )
+            with closing(sqlite3.connect(temp.db)) as conn:
+                conn.execute(
+                    """
+                    INSERT INTO container
+                        (id, parent_id, name, type, list_order, space_id, time_added, expanded, portable_id)
+                    VALUES (5, 1, 'Friday', 1, 0, 1, 1, 0, ''),
+                           (6, 1, 'Mixed', 1, 1, 1, 1, 0, '')
+                    """
+                )
+                conn.execute(
+                    "INSERT INTO location_container (id, container_id, location_id) VALUES (1, 5, 1), (2, 6, 1)"
+                )
+                conn.execute(
+                    """
+                    INSERT INTO container_asset
+                        (id, asset_id, location_container_id, space_asset_id, list_order)
+                    VALUES (1, 1, 1, 1, 0), (2, 1, 2, 1, 0), (3, 3, 2, 2, 1)
+                    """
+                )
+                conn.commit()
+            server.invalidate()
+            payload = server.load_library(library.LIBRARY_SPACE)
+        by_name = {crate["name"]: crate for crate in payload["crates"]}
+        friday = by_name["Friday"]
+        mixed = by_name["Mixed"]
+        self.assertEqual(friday["drive_status"], "not_connected")
+        self.assertEqual(friday["drive_name"], drive)
+        self.assertNotIn("drive_status", mixed)
+
     def test_present_file_is_not_offline_when_serato_did_not_mark_it(self) -> None:
         """An unplugged path that Serato did not mark missing stays unmarked."""
         unplugged, _drive = _unplugged_path()

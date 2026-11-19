@@ -551,6 +551,10 @@ html[data-colorway="light"] .rail select { color-scheme: light; }
   border-color: currentColor transparent transparent;
 }
 
+.crate.offline {
+  opacity: 0.55;
+}
+
 .crate {
   display: flex;
   align-items: baseline;

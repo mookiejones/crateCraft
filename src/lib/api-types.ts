@@ -170,6 +170,8 @@ export interface Crate {
   holds?: boolean;
   added?: number;
   order?: number;
+  drive_status?: string;
+  drive_name?: string;
 }
 
 export interface SmartRule {

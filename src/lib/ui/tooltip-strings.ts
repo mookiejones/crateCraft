@@ -43,6 +43,8 @@ export const tips = {
   crateSplit: spec("tooltip.crateSplit"),
   crateSaveView: spec("tooltip.crateSaveView"),
   cratePromptName: spec("tooltip.cratePromptName"),
+  crateNotConnected: spec("tooltip.crateNotConnected"),
+  overwriteSameName: spec("tooltip.overwriteSameName"),
   cratePromptCancel: spec("tooltip.cratePromptCancel"),
   cratePromptConfirm: spec("tooltip.cratePromptConfirm"),
   relocatePath: spec("tooltip.relocatePath"),
