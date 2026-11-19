@@ -51,7 +51,7 @@ import sys
 import tempfile
 import time
 import unicodedata
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from contextlib import closing
 from pathlib import Path
 from typing import NotRequired, TypedDict
@@ -871,7 +871,14 @@ def preview(
     return _attach_files(_plan(database, space, field, value), database, files)
 
 
-def apply(space: str, field: str, value: object, files: bool = False) -> Plan:
+def apply(
+    space: str,
+    field: str,
+    value: object,
+    files: bool = False,
+    *,
+    on_progress: Callable[[int, int, str], None] | None = None,
+) -> Plan:
     """Rewrite one group's spellings through ``safe_write``.
 
     Args:
@@ -879,6 +886,8 @@ def apply(space: str, field: str, value: object, files: bool = False) -> Plan:
         field: ``genre`` or ``artist``.
         value: One stored spelling from that field's group.
         files: True also writes ID3/MP4 text on those tracks.
+        on_progress: Called after each row with done, total, and the
+            previous spelling. A raise aborts and rolls the write back.
 
     Returns:
         Plan JSON. ``written`` is false when every matching row already holds
@@ -914,7 +923,8 @@ def apply(space: str, field: str, value: object, files: bool = False) -> Plan:
         write.set_target(spelling)
         now = int(time.time())
         ids = tuple(change["id"] for change in live)
-        for change in live:
+        total = len(live)
+        for index, change in enumerate(live):
             library._assign(  # pyright: ignore[reportPrivateUsage]
                 conn,
                 "asset",
@@ -922,6 +932,8 @@ def apply(space: str, field: str, value: object, files: bool = False) -> Plan:
                 "id = ?",
                 change["id"],
             )
+            if on_progress is not None:
+                on_progress(index + 1, total, change["from"])
 
         def check(
             copied: sqlite3.Connection,

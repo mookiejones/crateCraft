@@ -3088,14 +3088,14 @@ Error generating stack: ` + x.message + `
         return value;
       }
       var AbortControllerLocal = typeof AbortController < "u" ? AbortController : function() {
-        var listeners15 = [], signal = this.signal = {
+        var listeners16 = [], signal = this.signal = {
           aborted: !1,
           addEventListener: function(type, listener) {
-            listeners15.push(listener);
+            listeners16.push(listener);
           }
         };
         this.abort = function() {
-          signal.aborted = !0, listeners15.forEach(function(listener) {
+          signal.aborted = !0, listeners16.forEach(function(listener) {
             return listener();
           });
         };
@@ -3150,28 +3150,28 @@ Error generating stack: ` + x.message + `
       function pingEngtangledActionScope() {
         if (--currentEntangledPendingCount === 0 && (entangledTransitionTypes = null, currentEntangledListeners !== null)) {
           currentEntangledActionThenable !== null && (currentEntangledActionThenable.status = "fulfilled");
-          var listeners15 = currentEntangledListeners;
+          var listeners16 = currentEntangledListeners;
           currentEntangledListeners = null, currentEntangledLane = 0, currentEntangledActionThenable = null;
-          for (var i = 0; i < listeners15.length; i++) (0, listeners15[i])();
+          for (var i = 0; i < listeners16.length; i++) (0, listeners16[i])();
         }
       }
       function chainThenableValue(thenable, result) {
-        var listeners15 = [], thenableWithOverride = {
+        var listeners16 = [], thenableWithOverride = {
           status: "pending",
           value: null,
           reason: null,
           then: function(resolve) {
-            listeners15.push(resolve);
+            listeners16.push(resolve);
           }
         };
         return thenable.then(
           function() {
             thenableWithOverride.status = "fulfilled", thenableWithOverride.value = result;
-            for (var i = 0; i < listeners15.length; i++) (0, listeners15[i])(result);
+            for (var i = 0; i < listeners16.length; i++) (0, listeners16[i])(result);
           },
           function(error2) {
-            for (thenableWithOverride.status = "rejected", thenableWithOverride.reason = error2, error2 = 0; error2 < listeners15.length; error2++)
-              (0, listeners15[error2])(void 0);
+            for (thenableWithOverride.status = "rejected", thenableWithOverride.reason = error2, error2 = 0; error2 < listeners16.length; error2++)
+              (0, listeners16[error2])(void 0);
           }
         ), thenableWithOverride;
       }
@@ -9566,13 +9566,13 @@ Error generating stack: ` + x.message + `
         };
       }
       function accumulateTwoPhaseListeners(targetFiber, reactName) {
-        for (var captureName = reactName + "Capture", listeners15 = []; targetFiber !== null; ) {
+        for (var captureName = reactName + "Capture", listeners16 = []; targetFiber !== null; ) {
           var _instance2 = targetFiber, stateNode = _instance2.stateNode;
-          if (_instance2 = _instance2.tag, _instance2 !== 5 && _instance2 !== 26 && _instance2 !== 27 || stateNode === null || (_instance2 = getListener(targetFiber, captureName), _instance2 != null && listeners15.unshift(
+          if (_instance2 = _instance2.tag, _instance2 !== 5 && _instance2 !== 26 && _instance2 !== 27 || stateNode === null || (_instance2 = getListener(targetFiber, captureName), _instance2 != null && listeners16.unshift(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          ), _instance2 = getListener(targetFiber, reactName), _instance2 != null && listeners15.push(
+          ), _instance2 = getListener(targetFiber, reactName), _instance2 != null && listeners16.push(
             createDispatchListener(targetFiber, _instance2, stateNode)
-          )), targetFiber.tag === 3) return listeners15;
+          )), targetFiber.tag === 3) return listeners16;
           targetFiber = targetFiber.return;
         }
         return [];
@@ -9585,16 +9585,16 @@ Error generating stack: ` + x.message + `
         return inst || null;
       }
       function accumulateEnterLeaveListenersForEvent(dispatchQueue, event, target, common2, inCapturePhase) {
-        for (var registrationName = event._reactName, listeners15 = []; target !== null && target !== common2; ) {
+        for (var registrationName = event._reactName, listeners16 = []; target !== null && target !== common2; ) {
           var _instance3 = target, alternate = _instance3.alternate, stateNode = _instance3.stateNode;
           if (_instance3 = _instance3.tag, alternate !== null && alternate === common2) break;
-          _instance3 !== 5 && _instance3 !== 26 && _instance3 !== 27 || stateNode === null || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), stateNode != null && listeners15.unshift(
+          _instance3 !== 5 && _instance3 !== 26 && _instance3 !== 27 || stateNode === null || (alternate = stateNode, inCapturePhase ? (stateNode = getListener(target, registrationName), stateNode != null && listeners16.unshift(
             createDispatchListener(target, stateNode, alternate)
-          )) : inCapturePhase || (stateNode = getListener(target, registrationName), stateNode != null && listeners15.push(
+          )) : inCapturePhase || (stateNode = getListener(target, registrationName), stateNode != null && listeners16.push(
             createDispatchListener(target, stateNode, alternate)
           ))), target = target.return;
         }
-        listeners15.length !== 0 && dispatchQueue.push({ event, listeners: listeners15 });
+        listeners16.length !== 0 && dispatchQueue.push({ event, listeners: listeners16 });
       }
       var NORMALIZE_NEWLINES_REGEX = /\r\n?/g, NORMALIZE_NULL_AND_REPLACEMENT_REGEX = /\u0000|\uFFFD/g;
       function normalizeMarkupForTextOrAttribute(markup) {
@@ -10626,8 +10626,8 @@ Error generating stack: ` + x.message + `
         var signal = null, cleanup = null;
         if (!(optionsOrUseCapture != null && typeof optionsOrUseCapture != "boolean" && (signal = optionsOrUseCapture.signal || null, signal !== null && signal.aborted))) {
           this._eventListeners === null && (this._eventListeners = []);
-          var listeners15 = this._eventListeners;
-          if (indexOfEventListener(listeners15, type, listener, optionsOrUseCapture) === -1) {
+          var listeners16 = this._eventListeners;
+          if (indexOfEventListener(listeners16, type, listener, optionsOrUseCapture) === -1) {
             var fragmentInstance = this, attachedListener = listener;
             optionsOrUseCapture != null && typeof optionsOrUseCapture != "boolean" && optionsOrUseCapture.once === !0 && (attachedListener = function(event) {
               fragmentInstance.removeEventListener(
@@ -10640,7 +10640,7 @@ Error generating stack: ` + x.message + `
               type,
               listener,
               optionsOrUseCapture
-            ), signal.addEventListener("abort", cleanup, { once: !0 }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup)), signal = getAttachOptions(optionsOrUseCapture), listeners15.push({
+            ), signal.addEventListener("abort", cleanup, { once: !0 }), cleanup = signal.removeEventListener.bind(signal, "abort", cleanup)), signal = getAttachOptions(optionsOrUseCapture), listeners16.push({
               type,
               listener,
               optionsOrUseCapture,
@@ -10655,7 +10655,7 @@ Error generating stack: ` + x.message + `
               signal
             );
           }
-          this._eventListeners = listeners15;
+          this._eventListeners = listeners16;
         }
       };
       function addEventListenerToChild(child, type, listener, optionsOrUseCapture) {
@@ -10666,14 +10666,14 @@ Error generating stack: ` + x.message + `
         ), !1;
       }
       FragmentInstance.prototype.removeEventListener = function(type, listener, optionsOrUseCapture) {
-        var listeners15 = this._eventListeners;
-        if (listeners15 !== null && (listener = indexOfEventListener(
-          listeners15,
+        var listeners16 = this._eventListeners;
+        if (listeners16 !== null && (listener = indexOfEventListener(
+          listeners16,
           type,
           listener,
           optionsOrUseCapture
         ), listener !== -1)) {
-          var _listeners$index = listeners15[listener];
+          var _listeners$index = listeners16[listener];
           optionsOrUseCapture = _listeners$index.attachedListener;
           var cleanup = _listeners$index.cleanup;
           _listeners$index = getAttachOptions(_listeners$index.optionsOrUseCapture), traverseVisibleInstancesAndTextInstances(
@@ -10683,7 +10683,7 @@ Error generating stack: ` + x.message + `
             type,
             optionsOrUseCapture,
             _listeners$index
-          ), listeners15.splice(listener, 1), cleanup !== null && cleanup();
+          ), listeners16.splice(listener, 1), cleanup !== null && cleanup();
         }
       };
       function removeEventListenerFromChild(child, type, listener, optionsOrUseCapture) {
@@ -12601,9 +12601,9 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState77 = React321.useState, useEffect92 = React321.useEffect, useLayoutEffect22 = React321.useLayoutEffect, useDebugValue3 = React321.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState78 = React321.useState, useEffect92 = React321.useEffect, useLayoutEffect22 = React321.useLayoutEffect, useDebugValue3 = React321.useDebugValue;
       function useSyncExternalStore$2(subscribe3, getSnapshot) {
-        var value = getSnapshot(), _useState = useState77({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
+        var value = getSnapshot(), _useState = useState78({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
         return useLayoutEffect22(
           function() {
             inst.value = value, inst.getSnapshot = getSnapshot, checkIfSnapshotChanged(inst) && forceUpdate({ inst });
@@ -13032,6 +13032,9 @@ Error generating stack: ` + x.message + `
     "error.gig_lock_not_saved": "The Gig Lock choice could not be saved.",
     "error.internal": "Something went wrong. The details are in the local log.",
     "error.invalid_request": "That request is not valid.",
+    "error.job_cannot_undo": "That write cannot be undone.",
+    "error.job_restore_confirm": "Confirm the restore before it is saved.",
+    "error.job_unknown": "That job is not in the list.",
     "error.language_not_saved": "The language could not be saved.",
     "error.layout_not_saved": "The layout could not be saved.",
     "error.legacy_read_only": "This library was made by an older Serato DJ. This app can show it but cannot change it yet.",
@@ -13389,6 +13392,20 @@ Error generating stack: ` + x.message + `
       one: "{count} line did not match a library track.",
       other: "{count} lines did not match a library track."
     },
+    "jobs.success": "{label} finished.",
+    "jobs.partial": "{label} finished, but some files were skipped.",
+    "jobs.failed": "{label} could not finish.",
+    "jobs.cancelled": "{label} was cancelled.",
+    "jobs.undo": "Undo",
+    "jobs.details": "View details",
+    "jobs.cancel": "Cancel",
+    "jobs.progress": "{label}: {done} / {total}",
+    "jobs.progressUnknown": "{label}…",
+    "jobs.tray": "Write jobs",
+    "jobs.running": "Running",
+    "jobs.recent": "Recent",
+    "jobs.idle": "No write is running.",
+    "jobs.closeDetails": "Close",
     "layout.resize": "Resize the track list",
     "layout.resizeHint": "Drag to resize. Double-click to reset.",
     "layout.widthNotSaved": "Couldn't save the pane width. It goes back to the last saved width next time.",
@@ -14325,6 +14342,10 @@ Error generating stack: ` + x.message + `
     "tooltip.iconFollowsTheme": "Match the Dock icon on Mac, or the window and taskbar icon on Windows, to the theme. On by default. The Finder icon and the Windows program icon stay the same.",
     "tooltip.importFile": "Choose a playlist file to import.",
     "tooltip.importM3u": "Add tracks from a playlist file into a new crate.",
+    "tooltip.jobsCancel": "Cancel this write. After it is saved this does nothing.",
+    "tooltip.jobsDetails": "See what failed or was skipped.",
+    "tooltip.jobsTray": "Open running and recent writes.",
+    "tooltip.jobsUndo": "Restore the backup taken before this write.",
     "tooltip.keepCopy": "Keep this copy: {name}. The others leave the library.",
     "tooltip.language": "Choose the language for this window. Same as the system follows this computer.",
     "tooltip.libraryCopies": "Verified copies of this library: this computer and complete snapshots.",
@@ -14974,6 +14995,9 @@ Error generating stack: ` + x.message + `
     "error.gig_lock_not_saved": "No se pudo guardar la opción de Bloqueo de concierto.",
     "error.internal": "Algo salió mal. Los detalles están en el registro local.",
     "error.invalid_request": "Esa solicitud no es válida.",
+    "error.job_cannot_undo": "Esa escritura no se puede deshacer.",
+    "error.job_restore_confirm": "Confirma la restauración antes de guardarla.",
+    "error.job_unknown": "Ese trabajo no está en la lista.",
     "error.language_not_saved": "No se pudo guardar el idioma.",
     "error.layout_not_saved": "No se pudo guardar la disposición.",
     "error.legacy_read_only": "Esta biblioteca la creó una versión anterior de Serato DJ. Esta app puede mostrarla, pero todavía no puede modificarla.",
@@ -15331,6 +15355,20 @@ Error generating stack: ` + x.message + `
       one: "{count} línea no coincidió con ninguna pista de la biblioteca.",
       other: "{count} líneas no coincidieron con ninguna pista de la biblioteca."
     },
+    "jobs.success": "{label} terminó.",
+    "jobs.partial": "{label} terminó, pero se omitieron algunos archivos.",
+    "jobs.failed": "{label} no pudo terminar.",
+    "jobs.cancelled": "Se canceló {label}.",
+    "jobs.undo": "Deshacer",
+    "jobs.details": "Ver detalles",
+    "jobs.cancel": "Cancelar",
+    "jobs.progress": "{label}: {done} / {total}",
+    "jobs.progressUnknown": "{label}…",
+    "jobs.tray": "Escrituras",
+    "jobs.running": "En curso",
+    "jobs.recent": "Recientes",
+    "jobs.idle": "No hay ninguna escritura en curso.",
+    "jobs.closeDetails": "Cerrar",
     "layout.resize": "Cambiar el tamaño de la lista de pistas",
     "layout.resizeHint": "Arrastra para cambiar el tamaño. Doble clic para restablecerlo.",
     "layout.widthNotSaved": "No se pudo guardar el ancho del panel. La próxima vez vuelve al último ancho guardado.",
@@ -16267,6 +16305,10 @@ Error generating stack: ` + x.message + `
     "tooltip.iconFollowsTheme": "Haz que el icono del Dock en Mac, o el de la ventana y la barra de tareas en Windows, coincida con el tema. Activado de forma predeterminada. El icono del Finder y el icono del programa en Windows no cambian.",
     "tooltip.importFile": "Elige un archivo de lista de reproducción para importar.",
     "tooltip.importM3u": "Añade pistas de un archivo de lista a una caja nueva.",
+    "tooltip.jobsCancel": "Cancelar esta escritura. Después de guardar no hace nada.",
+    "tooltip.jobsDetails": "Ver qué falló o se omitió.",
+    "tooltip.jobsTray": "Ver escrituras en curso y recientes.",
+    "tooltip.jobsUndo": "Restaurar la copia de seguridad tomada antes de esta escritura.",
     "tooltip.keepCopy": "Conserva esta copia: {name}. Las demás salen de la biblioteca.",
     "tooltip.language": "Elige el idioma de esta ventana. Igual que el sistema sigue el idioma de este ordenador.",
     "tooltip.libraryCopies": "Copias verificadas de esta biblioteca: este equipo e instantáneas completas.",
@@ -17361,6 +17403,10 @@ Error generating stack: ` + x.message + `
     hotLoops: spec("tooltip.hotLoops"),
     rekordboxKey: spec("tooltip.rekordboxKey"),
     importM3u: spec("tooltip.importM3u"),
+    jobsCancel: spec("tooltip.jobsCancel"),
+    jobsDetails: spec("tooltip.jobsDetails"),
+    jobsTray: spec("tooltip.jobsTray"),
+    jobsUndo: spec("tooltip.jobsUndo"),
     importFile: spec("tooltip.importFile"),
     reload: spec("tooltip.reload"),
     filesUp: spec("tooltip.filesUp"),
@@ -17999,12 +18045,12 @@ Error generating stack: ` + x.message + `
   function onScroll() {
     current && hide();
   }
-  function schedule(target, delay) {
-    if (window.clearTimeout(timer), timer = 0, delay <= 0) {
+  function schedule(target, delay2) {
+    if (window.clearTimeout(timer), timer = 0, delay2 <= 0) {
       show(target);
       return;
     }
-    timer = window.setTimeout(() => show(target), delay);
+    timer = window.setTimeout(() => show(target), delay2);
   }
   function show(target) {
     let text2 = target.dataset.tooltip?.trim() ?? "";
@@ -18547,13 +18593,13 @@ Error generating stack: ` + x.message + `
   }
 
   // src/lib/gig/gig.ts
-  var import_react56 = __toESM(require_react(), 1);
+  var import_react57 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom5 = __toESM(require_react_dom(), 1), import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react54 = __toESM(require_react(), 1), import_react_dom4 = __toESM(require_react_dom(), 1);
+  var import_react55 = __toESM(require_react(), 1), import_react_dom4 = __toESM(require_react_dom(), 1);
 
   // src/app/mui-theme-root.tsx
   var import_react10 = __toESM(require_react(), 1), import_react_dom = __toESM(require_react_dom(), 1);
@@ -19520,9 +19566,9 @@ Error generating stack: ` + x.message + `
       createElementArgArray[i] = args[i];
     return React3.createElement.apply(null, createElementArgArray);
   };
-  (function(_jsx233) {
+  (function(_jsx234) {
     var JSX;
-    JSX || (JSX = _jsx233.JSX || (_jsx233.JSX = {}));
+    JSX || (JSX = _jsx234.JSX || (_jsx234.JSX = {}));
   })(jsx || (jsx = {}));
   var Global = /* @__PURE__ */ withEmotionCache(function(props, cache) {
     var styles5 = props.styles, serialized = serializeStyles([styles5], void 0, React3.useContext(ThemeContext)), sheetRef = React3.useRef();
@@ -23106,10 +23152,10 @@ try {
       let {
         duration: durationOption = mergedDuration.standard,
         easing: easingOption = mergedEasing.easeInOut,
-        delay = 0,
+        delay: delay2 = 0,
         ...other
       } = options;
-      return (Array.isArray(props) ? props : [props]).map((animatedProp) => `${animatedProp} ${typeof durationOption == "string" ? durationOption : formatMs(durationOption)} ${easingOption} ${typeof delay == "string" ? delay : formatMs(delay)}`).join(",");
+      return (Array.isArray(props) ? props : [props]).map((animatedProp) => `${animatedProp} ${typeof durationOption == "string" ? durationOption : formatMs(durationOption)} ${easingOption} ${typeof delay2 == "string" ? delay2 : formatMs(delay2)}`).join(",");
     }, create = transitions.create ?? createTransitionValue;
     return {
       getAutoHeightDuration,
@@ -25118,10 +25164,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     /**
      * Executes `fn` after `delay`, clearing any previously scheduled call.
      */
-    start(delay, fn2) {
+    start(delay2, fn2) {
       this.clear(), this.currentId = setTimeout(() => {
         this.currentId = null, fn2();
-      }, delay);
+      }, delay2);
     }
     clear = () => {
       this.currentId !== null && (clearTimeout(this.currentId), this.currentId = null);
@@ -28233,7 +28279,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       reducedMotion.shouldReduceMotion || reflow(node2);
       let {
         duration: transitionDuration,
-        delay,
+        delay: delay2,
         easing: transitionTimingFunction
       } = getTransitionProps({
         style: style4,
@@ -28245,7 +28291,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       timeout === "auto" && !reducedMotion.shouldReduceMotion ? (duration3 = theme.transitions.getAutoHeightDuration(node2.clientHeight), autoTimeout.current = duration3) : (duration3 = transitionDuration, autoTimeout.current = null);
       let transitionTiming = reducedMotion.getTransitionTiming({
         duration: duration3,
-        delay
+        delay: delay2
       });
       node2.style.transition = [theme.transitions.create("opacity", {
         duration: transitionTiming.duration,
@@ -28258,7 +28304,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }), handleEntered = normalizedTransitionCallback(nodeRef, onEntered), handleExiting = normalizedTransitionCallback(nodeRef, onExiting), handleExit = normalizedTransitionCallback(nodeRef, (node2) => {
       let {
         duration: transitionDuration,
-        delay,
+        delay: delay2,
         easing: transitionTimingFunction
       } = getTransitionProps({
         style: style4,
@@ -28270,7 +28316,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       timeout === "auto" && !reducedMotion.shouldReduceMotion ? (duration3 = theme.transitions.getAutoHeightDuration(node2.clientHeight), autoTimeout.current = duration3) : (duration3 = transitionDuration, autoTimeout.current = null);
       let transitionTiming = reducedMotion.getTransitionTiming({
         duration: duration3,
-        delay
+        delay: delay2
       });
       node2.style.transition = [theme.transitions.create("opacity", {
         duration: transitionTiming.duration,
@@ -33502,23 +33548,38 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return value;
   }
 
+  // src/containers/JobContext.tsx
+  var import_react15 = __toESM(require_react(), 1), import_jsx_runtime70 = __toESM(require_jsx_runtime(), 1), JobContext = (0, import_react15.createContext)(null);
+  function JobProvider({
+    value,
+    children
+  }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime70.jsx)(JobContext, { value, children });
+  }
+  function useJobs() {
+    let value = (0, import_react15.useContext)(JobContext);
+    if (value === null)
+      throw new Error("useJobs must be used within JobProvider");
+    return value;
+  }
+
   // src/containers/NoticeContext.tsx
-  var import_react15 = __toESM(require_react(), 1), import_jsx_runtime70 = __toESM(require_jsx_runtime(), 1), NoticeContext = (0, import_react15.createContext)(null);
+  var import_react16 = __toESM(require_react(), 1), import_jsx_runtime71 = __toESM(require_jsx_runtime(), 1), NoticeContext = (0, import_react16.createContext)(null);
   function NoticeProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime70.jsx)(NoticeContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime71.jsx)(NoticeContext, { value, children });
   }
   function useNotice() {
-    let value = (0, import_react15.useContext)(NoticeContext);
+    let value = (0, import_react16.useContext)(NoticeContext);
     if (value === null)
       throw new Error("useNotice must be used within NoticeProvider");
     return value;
   }
 
   // src/containers/HistoryContext.tsx
-  var import_react16 = __toESM(require_react(), 1), import_jsx_runtime71 = __toESM(require_jsx_runtime(), 1), historyActions = {
+  var import_react17 = __toESM(require_react(), 1), import_jsx_runtime72 = __toESM(require_jsx_runtime(), 1), historyActions = {
     loadHistory: async () => {
     },
     openSession: async (_id) => {
@@ -33536,52 +33597,52 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function notifyHistory() {
     for (let listener of listeners5) listener();
   }
-  var HistoryContext = (0, import_react16.createContext)(null);
+  var HistoryContext = (0, import_react17.createContext)(null);
   function HistoryProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime71.jsx)(HistoryContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime72.jsx)(HistoryContext, { value, children });
   }
   function useHistory() {
-    let value = (0, import_react16.useContext)(HistoryContext);
+    let value = (0, import_react17.useContext)(HistoryContext);
     if (value === null)
       throw new Error("useHistory must be used within HistoryProvider");
     return value;
   }
 
   // src/containers/StatsContext.tsx
-  var import_react17 = __toESM(require_react(), 1), import_jsx_runtime72 = __toESM(require_jsx_runtime(), 1), StatsContext = (0, import_react17.createContext)(null);
+  var import_react18 = __toESM(require_react(), 1), import_jsx_runtime73 = __toESM(require_jsx_runtime(), 1), StatsContext = (0, import_react18.createContext)(null);
   function StatsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime72.jsx)(StatsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime73.jsx)(StatsContext, { value, children });
   }
   function useStats() {
-    let value = (0, import_react17.useContext)(StatsContext);
+    let value = (0, import_react18.useContext)(StatsContext);
     if (value === null)
       throw new Error("useStats must be used within StatsProvider");
     return value;
   }
 
   // src/containers/PlayerContext.tsx
-  var import_react18 = __toESM(require_react(), 1), import_jsx_runtime73 = __toESM(require_jsx_runtime(), 1), PlayerContext = (0, import_react18.createContext)(null);
+  var import_react19 = __toESM(require_react(), 1), import_jsx_runtime74 = __toESM(require_jsx_runtime(), 1), PlayerContext = (0, import_react19.createContext)(null);
   function PlayerProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime73.jsx)(PlayerContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime74.jsx)(PlayerContext, { value, children });
   }
   function usePlayer() {
-    let value = (0, import_react18.useContext)(PlayerContext);
+    let value = (0, import_react19.useContext)(PlayerContext);
     if (value === null)
       throw new Error("usePlayer must be used within PlayerProvider");
     return value;
   }
 
   // src/containers/WaveformContext.tsx
-  var import_react19 = __toESM(require_react(), 1), import_react_dom2 = __toESM(require_react_dom(), 1);
+  var import_react20 = __toESM(require_react(), 1), import_react_dom2 = __toESM(require_react_dom(), 1);
 
   // src/lib/player/waveform.ts
   var WAVE_BG = { r: 35, g: 25, b: 16 }, OUTER_ALPHA = 0.6, PLAYED_SHADE = 0.45, BEAT_HEIGHT_RATIO = 0.12, DOWNBEAT_HEIGHT_RATIO = 0.18, BEAT_ALPHA = 0.28, DOWNBEAT_ALPHA = 0.35, DEFAULT_MARKER_COLOR = { r: 226, g: 59, b: 22 }, PLAYHEAD_COLOR = { r: 226, g: 59, b: 22 }, BEAT_MARK = { r: 255, g: 255, b: 255 }, HEADER_BYTES = 64, HEX_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, MAX_POINTS = 2e7, MAX_TICKS = 8192;
@@ -33659,8 +33720,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       if (!(spacing2 > 0)) continue;
       let first = Math.max(0, Math.ceil((startSeconds - marker.positionSeconds) / spacing2 - 1e-9)), lastExclusive = Math.ceil((endSeconds - marker.positionSeconds) / spacing2 - 1e-9);
       if (lastExclusive <= first) continue;
-      let emit8 = Math.min(lastExclusive, first + MAX_TICKS);
-      pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, emit8, startSeconds, endSeconds, first);
+      let emit9 = Math.min(lastExclusive, first + MAX_TICKS);
+      pushRange(ticks, marker.positionSeconds, spacing2, beatIndex, emit9, startSeconds, endSeconds, first);
     }
     return ticks;
   }
@@ -33930,13 +33991,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/WaveformContext.tsx
-  var import_jsx_runtime74 = __toESM(require_jsx_runtime(), 1), defaultUi = {
+  var import_jsx_runtime75 = __toESM(require_jsx_runtime(), 1), defaultUi = {
     pps: 80,
     phase: "idle",
     overviewSource: ""
-  }, WaveformContext = (0, import_react19.createContext)(null), WaveformClockContext = (0, import_react19.createContext)(null);
+  }, WaveformContext = (0, import_react20.createContext)(null), WaveformClockContext = (0, import_react20.createContext)(null);
   function WaveformProvider({ children }) {
-    let [ui, setUi] = (0, import_react19.useState)(defaultUi), value = (0, import_react19.useMemo)(() => {
+    let [ui, setUi] = (0, import_react20.useState)(defaultUi), value = (0, import_react20.useMemo)(() => {
       let blocked = ui.phase === "reading" || ui.phase === "unavailable";
       return {
         ...ui,
@@ -33949,33 +34010,135 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       };
     }, [ui]);
-    return /* @__PURE__ */ (0, import_jsx_runtime74.jsx)(WaveformContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(WaveformContext, { value, children });
   }
   function WaveformClockProvider({
     clock,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime74.jsx)(WaveformClockContext, { value: clock, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(WaveformClockContext, { value: clock, children });
   }
   function useWaveform() {
-    let value = (0, import_react19.useContext)(WaveformContext);
+    let value = (0, import_react20.useContext)(WaveformContext);
     if (value === null)
       throw new Error("useWaveform must be used within WaveformProvider");
     return value;
   }
   function useWaveformClockOverride() {
-    return (0, import_react19.useContext)(WaveformClockContext);
+    return (0, import_react20.useContext)(WaveformClockContext);
   }
 
-  // src/lib/files/files-store.ts
-  var listeners6 = /* @__PURE__ */ new Set();
-  function subscribeFiles(listener) {
+  // src/lib/jobs/job-view.ts
+  var TERMINAL = /* @__PURE__ */ new Set([
+    "success",
+    "partial",
+    "failed",
+    "cancelled"
+  ]);
+  function isTerminal(state2) {
+    return state2 !== void 0 && TERMINAL.has(state2);
+  }
+  function isActive(job) {
+    return job != null && !isTerminal(job.state);
+  }
+  function progressText(job) {
+    return job.total > 0 ? t("jobs.progress", { label: job.label, done: job.done, total: job.total }) : t("jobs.progressUnknown", { label: job.label });
+  }
+  function toastText(job) {
+    return job.state === "success" ? t("jobs.success", { label: job.label }) : job.state === "partial" ? t("jobs.partial", { label: job.label }) : job.state === "failed" ? t("jobs.failed", { label: job.label }) : job.state === "cancelled" ? t("jobs.cancelled", { label: job.label }) : job.label;
+  }
+  function toastSeverity(state2) {
+    return state2 === "success" ? "success" : state2 === "partial" ? "warning" : state2 === "failed" ? "error" : "info";
+  }
+  function isJob(value) {
+    if (!value || typeof value != "object") return !1;
+    let row = value;
+    return typeof row.id == "string" && typeof row.kind == "string" && typeof row.label == "string" && typeof row.state == "string" && typeof row.done == "number" && typeof row.total == "number" && Array.isArray(row.errors);
+  }
+
+  // src/lib/jobs/job-store.ts
+  var POLL_MS = 200, KEEP = 20, jobs = [], toast = null, details = null, listeners6 = /* @__PURE__ */ new Set(), polls = /* @__PURE__ */ new Map();
+  function emit3() {
+    for (let listener of listeners6) listener();
+  }
+  function upsert(job) {
+    let next3 = jobs.filter((row) => row.id !== job.id);
+    next3.unshift(job), jobs = next3.slice(0, KEEP);
+  }
+  function getJobs() {
+    return jobs;
+  }
+  function getRunning() {
+    return jobs.find((job) => !isTerminal(job.state)) ?? null;
+  }
+  function getToast() {
+    return toast;
+  }
+  function getDetails() {
+    return details;
+  }
+  function subscribeJobs(listener) {
     return listeners6.add(listener), () => {
       listeners6.delete(listener);
     };
   }
+  function dismissToast() {
+    toast !== null && (toast = null, emit3());
+  }
+  function openDetails(job) {
+    details = job, emit3();
+  }
+  function closeDetails() {
+    details !== null && (details = null, emit3());
+  }
+  async function startJob(payload) {
+    let reply = await postJSON("/api/jobs", payload);
+    if (isQueuedWrite(reply)) return reply;
+    if (!isJob(reply))
+      throw new Error(t("error.invalid_request"));
+    return upsert(reply), emit3(), isTerminal(reply.state) ? (toast = reply, emit3(), reply) : await waitForJob(reply.id);
+  }
+  async function cancelJob(jobId) {
+    let reply = await postJSON("/api/jobs", { action: "cancel", id: jobId });
+    isJob(reply) && (upsert(reply), emit3());
+  }
+  async function undoJob(jobId) {
+    return await postJSON("/api/jobs", { action: "undo", id: jobId });
+  }
+  async function waitForJob(jobId) {
+    for (; ; ) {
+      let job = await fetchJob(jobId);
+      if (upsert(job), isTerminal(job.state))
+        return toast = job, emit3(), job;
+      emit3(), await delay(POLL_MS);
+    }
+  }
+  async function fetchJob(jobId) {
+    let response = await fetch(`/api/jobs?id=${encodeURIComponent(jobId)}`), payload = await readJSON(response);
+    if (!response.ok || !isJob(payload)) {
+      let error2 = new Error(
+        serverMessage(payload, t("error.job_unknown"))
+      );
+      throw error2.status = response.status, error2.payload = payload, error2;
+    }
+    return payload;
+  }
+  function delay(ms) {
+    return new Promise((resolve) => {
+      let timer3 = setTimeout(resolve, ms);
+      polls.set(String(timer3), timer3);
+    });
+  }
+
+  // src/lib/files/files-store.ts
+  var listeners7 = /* @__PURE__ */ new Set();
+  function subscribeFiles(listener) {
+    return listeners7.add(listener), () => {
+      listeners7.delete(listener);
+    };
+  }
   function emitFiles() {
-    for (let listener of listeners6) listener();
+    for (let listener of listeners7) listener();
   }
 
   // src/lib/files/files.ts
@@ -34278,10 +34441,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/lib/gig/drift.ts
-  var import_react34 = __toESM(require_react(), 1);
+  var import_react35 = __toESM(require_react(), 1);
 
   // src/components/ReportGrid.tsx
-  var import_react33 = __toESM(require_react(), 1);
+  var import_react34 = __toESM(require_react(), 1);
 
   // node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
   function _objectWithoutPropertiesLoose(r2, e) {
@@ -34719,13 +34882,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       open || (setOpenState(!0), setInputPristine(!0), isTouchRef.current = !1, onOpen && onOpen(event));
     }, handleClose = (event, reason) => {
       open && (setOpenState(!1), touchScrolledRef.current = !1, highlightReasonRef.current = null, onClose && onClose(event, reason));
-    }, handleValue = (event, newValue, reason, details) => {
+    }, handleValue = (event, newValue, reason, details2) => {
       if (multiple) {
         if (value.length === newValue.length && value.every((val, i) => val === newValue[i]))
           return;
       } else if (value === newValue)
         return;
-      onChange && onChange(event, newValue, reason, details), setValueState(newValue);
+      onChange && onChange(event, newValue, reason, details2), setValueState(newValue);
     }, getRemovalDetails = (valueToRemove) => {
       let resolved = getOptionFromValue(valueToRemove);
       return resolved === null ? void 0 : {
@@ -36065,7 +36228,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var popperClasses = generateUtilityClasses("MuiPopper", ["root"]);
 
   // node_modules/@mui/material/Popper/BasePopper.mjs
-  var import_jsx_runtime75 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime76 = __toESM(require_jsx_runtime(), 1);
   function flipPlacement(placement, direction) {
     if (direction === "ltr")
       return placement;
@@ -36179,7 +36342,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ownerState: props,
       className: classes2.root
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(Root, {
+    return /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(Root, {
       ...rootProps,
       children: typeof children == "function" ? children(childProps) : children
     });
@@ -36220,10 +36383,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onEnter: handleEnter,
       onExited: handleExited
     } : void 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(Portal_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(Portal_default, {
       disablePortal,
       container: container2,
-      children: /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(PopperTooltip, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(PopperTooltip, {
         anchorEl,
         direction,
         disablePortal,
@@ -36252,7 +36415,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), BasePopper_default = Popper;
 
   // node_modules/@mui/material/Popper/Popper.mjs
-  var import_jsx_runtime76 = __toESM(require_jsx_runtime(), 1), PopperRoot = styled_default2(BasePopper_default, {
+  var import_jsx_runtime77 = __toESM(require_jsx_runtime(), 1), PopperRoot = styled_default2(BasePopper_default, {
     name: "MuiPopper",
     slot: "Root"
   })({}), Popper3 = /* @__PURE__ */ React95.forwardRef(function(inProps, ref) {
@@ -36287,7 +36450,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       transition: transition2,
       ...other
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(PopperRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime77.jsx)(PopperRoot, {
       as: component,
       direction: isRtl ? "rtl" : "ltr",
       slots,
@@ -36307,7 +36470,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var listSubheaderClasses = generateUtilityClasses("MuiListSubheader", ["root", "colorPrimary", "colorInherit", "gutters", "inset", "sticky"]);
 
   // node_modules/@mui/material/ListSubheader/ListSubheader.mjs
-  var import_jsx_runtime77 = __toESM(require_jsx_runtime(), 1), useUtilityClasses33 = (ownerState) => {
+  var import_jsx_runtime78 = __toESM(require_jsx_runtime(), 1), useUtilityClasses33 = (ownerState) => {
     let {
       classes: classes2,
       color: color2,
@@ -36397,7 +36560,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       disableSticky,
       inset
     }, classes2 = useUtilityClasses33(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime77.jsx)(ListSubheaderRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(ListSubheaderRoot, {
       as: component,
       className: clsx_default(classes2.root, className),
       ref,
@@ -36416,7 +36579,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var iconButtonClasses = generateUtilityClasses("MuiIconButton", ["root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge", "loading", "loadingIndicator", "loadingWrapper"]), iconButtonClasses_default = iconButtonClasses;
 
   // node_modules/@mui/material/IconButton/IconButton.mjs
-  var import_jsx_runtime78 = __toESM(require_jsx_runtime(), 1), useUtilityClasses34 = (ownerState) => {
+  var import_jsx_runtime79 = __toESM(require_jsx_runtime(), 1), useUtilityClasses34 = (ownerState) => {
     let {
       classes: classes2,
       disabled,
@@ -36573,7 +36736,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       loading = null,
       loadingIndicator: loadingIndicatorProp,
       ...other
-    } = props, loadingId = useId_default(idProp), loadingIndicator = loadingIndicatorProp ?? /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(CircularProgress_default, {
+    } = props, loadingId = useId_default(idProp), loadingIndicator = loadingIndicatorProp ?? /* @__PURE__ */ (0, import_jsx_runtime79.jsx)(CircularProgress_default, {
       "aria-labelledby": loadingId,
       color: "inherit",
       size: 16
@@ -36587,7 +36750,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       loadingIndicator,
       size
     }, classes2 = useUtilityClasses34(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime78.jsxs)(IconButtonRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime79.jsxs)(IconButtonRoot, {
       id: loading ? loadingId : idProp,
       className: clsx_default(classes2.root, className),
       centerRipple: !0,
@@ -36598,12 +36761,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ...other,
       ownerState,
       children: [typeof loading == "boolean" && // use plain HTML span to minimize the runtime overhead
-      /* @__PURE__ */ (0, import_jsx_runtime78.jsx)("span", {
+      /* @__PURE__ */ (0, import_jsx_runtime79.jsx)("span", {
         className: classes2.loadingWrapper,
         style: {
           display: "contents"
         },
-        children: /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(IconButtonLoadingIndicator, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime79.jsx)(IconButtonLoadingIndicator, {
           className: classes2.loadingIndicator,
           ownerState,
           children: loading && loadingIndicator
@@ -36616,7 +36779,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var React98 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/svg-icons/Cancel.mjs
-  var import_jsx_runtime79 = __toESM(require_jsx_runtime(), 1), Cancel_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime79.jsx)("path", {
+  var import_jsx_runtime80 = __toESM(require_jsx_runtime(), 1), Cancel_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime80.jsx)("path", {
     d: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"
   }), "Cancel");
 
@@ -36627,7 +36790,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var chipClasses = generateUtilityClasses("MuiChip", ["root", "sizeSmall", "sizeMedium", "colorDefault", "colorError", "colorInfo", "colorPrimary", "colorSecondary", "colorSuccess", "colorWarning", "disabled", "clickable", "deletable", "outlined", "filled", "avatar", "icon", "label", "deleteIcon", "focusVisible"]), chipClasses_default = chipClasses;
 
   // node_modules/@mui/material/Chip/Chip.mjs
-  var import_jsx_runtime80 = __toESM(require_jsx_runtime(), 1), useUtilityClasses35 = (ownerState) => {
+  var import_jsx_runtime81 = __toESM(require_jsx_runtime(), 1), useUtilityClasses35 = (ownerState) => {
     let {
       classes: classes2,
       disabled,
@@ -37011,7 +37174,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     onDelete && (deleteIcon = deleteIconProp && /* @__PURE__ */ React98.isValidElement(deleteIconProp) ? /* @__PURE__ */ React98.cloneElement(deleteIconProp, {
       className: clsx_default(deleteIconProp.props.className, classes2.deleteIcon),
       onClick: handleDeleteIconClick
-    }) : /* @__PURE__ */ (0, import_jsx_runtime80.jsx)(Cancel_default, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime81.jsx)(Cancel_default, {
       className: classes2.deleteIcon,
       onClick: handleDeleteIconClick
     }));
@@ -37060,10 +37223,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ownerState,
       className: classes2.label
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime80.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime81.jsxs)(RootSlot, {
       as: component,
       ...rootProps,
-      children: [avatar || icon, /* @__PURE__ */ (0, import_jsx_runtime80.jsx)(LabelSlot, {
+      children: [avatar || icon, /* @__PURE__ */ (0, import_jsx_runtime81.jsx)(LabelSlot, {
         ...labelProps,
         children: label
       }), deleteIcon]
@@ -37071,12 +37234,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), Chip_default = Chip;
 
   // node_modules/@mui/material/internal/svg-icons/Close.mjs
-  var import_jsx_runtime81 = __toESM(require_jsx_runtime(), 1), Close_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime81.jsx)("path", {
+  var import_jsx_runtime82 = __toESM(require_jsx_runtime(), 1), Close_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime82.jsx)("path", {
     d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
   }), "Close");
 
   // node_modules/@mui/material/Autocomplete/Autocomplete.mjs
-  var import_jsx_runtime82 = __toESM(require_jsx_runtime(), 1), _ClearIcon, _ArrowDropDownIcon, useUtilityClasses36 = (ownerState) => {
+  var import_jsx_runtime83 = __toESM(require_jsx_runtime(), 1), _ClearIcon, _ArrowDropDownIcon, useUtilityClasses36 = (ownerState) => {
     let {
       classes: classes2,
       disablePortal,
@@ -37453,7 +37616,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       autoSelect = !1,
       blurOnSelect = !1,
       className,
-      clearIcon = _ClearIcon || (_ClearIcon = /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(Close_default, {
+      clearIcon = _ClearIcon || (_ClearIcon = /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(Close_default, {
         fontSize: "small"
       })),
       clearOnBlur = !props.freeSolo,
@@ -37497,7 +37660,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       openOnFocus = !1,
       openText = "Open",
       options,
-      popupIcon = _ArrowDropDownIcon || (_ArrowDropDownIcon = /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(ArrowDropDown_default, {})),
+      popupIcon = _ArrowDropDownIcon || (_ArrowDropDownIcon = /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(ArrowDropDown_default, {})),
       readOnly = !1,
       renderGroup: renderGroupProp,
       renderInput,
@@ -37669,7 +37832,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       } = getCustomizedItemProps({
         index
       }), resolved = getOptionFromValue(valueItem);
-      return /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(ChipSlot, {
+      return /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(ChipSlot, {
         label: resolved === null ? "" : getOptionLabel(resolved.option),
         size,
         ...customItemProps,
@@ -37677,18 +37840,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }, key);
     })) : renderValue && value != null && (startAdornment = renderValue(value, getCustomizedItemProps, ownerState)), limitTags > -1 && Array.isArray(startAdornment)) {
       let more = startAdornment.length - limitTags;
-      !focused && more > 0 && (startAdornment = startAdornment.splice(0, limitTags), startAdornment.push(/* @__PURE__ */ (0, import_jsx_runtime82.jsx)("span", {
+      !focused && more > 0 && (startAdornment = startAdornment.splice(0, limitTags), startAdornment.push(/* @__PURE__ */ (0, import_jsx_runtime83.jsx)("span", {
         className: classes2.tag,
         children: getLimitTagsText(more)
       }, startAdornment.length)));
     }
-    let renderGroup = renderGroupProp || ((params) => /* @__PURE__ */ (0, import_jsx_runtime82.jsxs)("li", {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime82.jsx)(AutocompleteGroupLabel, {
+    let renderGroup = renderGroupProp || ((params) => /* @__PURE__ */ (0, import_jsx_runtime83.jsxs)("li", {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime83.jsx)(AutocompleteGroupLabel, {
         className: classes2.groupLabel,
         ownerState,
         component: "div",
         children: params.group
-      }), /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(AutocompleteGroupUl, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(AutocompleteGroupUl, {
         className: classes2.groupUl,
         ownerState,
         children: params.children
@@ -37698,7 +37861,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         key,
         ...otherProps
       } = props2;
-      return /* @__PURE__ */ (0, import_jsx_runtime82.jsx)("li", {
+      return /* @__PURE__ */ (0, import_jsx_runtime83.jsx)("li", {
         ...otherProps,
         children: getOptionLabel(option)
       }, key);
@@ -37716,8 +37879,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         inputValue
       }, ownerState);
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime82.jsxs)(React99.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime82.jsx)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime83.jsxs)(React99.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime83.jsx)(RootSlot, {
         ...rootProps,
         children: renderInput({
           id,
@@ -37734,13 +37897,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
                 event.target === event.currentTarget && handleInputMouseDown(event);
               },
               ...(hasClearIcon || hasPopupIcon) && {
-                endAdornment: /* @__PURE__ */ (0, import_jsx_runtime82.jsxs)(AutocompleteEndAdornment, {
+                endAdornment: /* @__PURE__ */ (0, import_jsx_runtime83.jsxs)(AutocompleteEndAdornment, {
                   className: classes2.endAdornment,
                   ownerState,
-                  children: [hasClearIcon ? /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(ClearIndicatorSlot, {
+                  children: [hasClearIcon ? /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(ClearIndicatorSlot, {
                     ...clearIndicatorProps,
                     children: clearIcon
-                  }) : null, hasPopupIcon ? /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(PopupIndicatorSlot, {
+                  }) : null, hasPopupIcon ? /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(PopupIndicatorSlot, {
                     ...popupIndicatorProps,
                     children: popupIcon
                   }) : null]
@@ -37755,19 +37918,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             }
           }
         })
-      }), anchorEl && hasPopupContent ? /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(AutocompletePopper, {
+      }), anchorEl && hasPopupContent ? /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(AutocompletePopper, {
         as: PopperSlot,
         ...popperProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime82.jsxs)(AutocompletePaper, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime83.jsxs)(AutocompletePaper, {
           as: PaperSlot,
           ...paperProps,
-          children: [/* @__PURE__ */ (0, import_jsx_runtime82.jsxs)(StatusSlot, {
+          children: [/* @__PURE__ */ (0, import_jsx_runtime83.jsxs)(StatusSlot, {
             ...statusProps,
-            children: [loading && rendered.options.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(AutocompleteLoading, {
+            children: [loading && rendered.options.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(AutocompleteLoading, {
               className: classes2.loading,
               ownerState,
               children: loadingText
-            }) : null, rendered.options.length === 0 && !freeSolo && !loading ? /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(AutocompleteNoOptions, {
+            }) : null, rendered.options.length === 0 && !freeSolo && !loading ? /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(AutocompleteNoOptions, {
               className: classes2.noOptions,
               ownerState,
               onMouseDown: (event) => {
@@ -37775,7 +37938,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
               },
               children: noOptionsText
             }) : null]
-          }), rendered.options.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime82.jsx)(ListboxSlot, {
+          }), rendered.options.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(ListboxSlot, {
             ...listboxProps,
             children: rendered.options.map((option, index) => rendered.isGrouped ? renderGroup({
               key: option.key,
@@ -37850,7 +38013,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   ]), badgeClasses_default = badgeClasses;
 
   // node_modules/@mui/material/Badge/Badge.mjs
-  var import_jsx_runtime83 = __toESM(require_jsx_runtime(), 1), RADIUS_STANDARD = 10, RADIUS_DOT = 4, useUtilityClasses37 = (ownerState) => {
+  var import_jsx_runtime84 = __toESM(require_jsx_runtime(), 1), RADIUS_STANDARD = 10, RADIUS_DOT = 4, useUtilityClasses37 = (ownerState) => {
     let {
       color: color2,
       anchorOrigin,
@@ -38038,9 +38201,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime83.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime84.jsxs)(RootSlot, {
       ...rootProps,
-      children: [children, /* @__PURE__ */ (0, import_jsx_runtime83.jsx)(BadgeSlot, {
+      children: [children, /* @__PURE__ */ (0, import_jsx_runtime84.jsx)(BadgeSlot, {
         ...badgeProps,
         children: displayValue
       })]
@@ -38051,22 +38214,22 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var React101 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/svg-icons/CheckBoxOutlineBlank.mjs
-  var import_jsx_runtime84 = __toESM(require_jsx_runtime(), 1), CheckBoxOutlineBlank_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime84.jsx)("path", {
+  var import_jsx_runtime85 = __toESM(require_jsx_runtime(), 1), CheckBoxOutlineBlank_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime85.jsx)("path", {
     d: "M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
   }), "CheckBoxOutlineBlank");
 
   // node_modules/@mui/material/internal/svg-icons/CheckBox.mjs
-  var import_jsx_runtime85 = __toESM(require_jsx_runtime(), 1), CheckBox_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime85.jsx)("path", {
+  var import_jsx_runtime86 = __toESM(require_jsx_runtime(), 1), CheckBox_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime86.jsx)("path", {
     d: "M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
   }), "CheckBox");
 
   // node_modules/@mui/material/internal/svg-icons/IndeterminateCheckBox.mjs
-  var import_jsx_runtime86 = __toESM(require_jsx_runtime(), 1), IndeterminateCheckBox_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime86.jsx)("path", {
+  var import_jsx_runtime87 = __toESM(require_jsx_runtime(), 1), IndeterminateCheckBox_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime87.jsx)("path", {
     d: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"
   }), "IndeterminateCheckBox");
 
   // node_modules/@mui/material/Checkbox/Checkbox.mjs
-  var import_jsx_runtime87 = __toESM(require_jsx_runtime(), 1), useUtilityClasses38 = (ownerState) => {
+  var import_jsx_runtime88 = __toESM(require_jsx_runtime(), 1), useUtilityClasses38 = (ownerState) => {
     let {
       classes: classes2,
       indeterminate,
@@ -38147,7 +38310,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       }
     }]
-  }))), defaultCheckedIcon = /* @__PURE__ */ (0, import_jsx_runtime87.jsx)(CheckBox_default, {}), defaultIcon = /* @__PURE__ */ (0, import_jsx_runtime87.jsx)(CheckBoxOutlineBlank_default, {}), defaultIndeterminateIcon = /* @__PURE__ */ (0, import_jsx_runtime87.jsx)(IndeterminateCheckBox_default, {}), Checkbox = /* @__PURE__ */ React101.forwardRef(function(inProps, ref) {
+  }))), defaultCheckedIcon = /* @__PURE__ */ (0, import_jsx_runtime88.jsx)(CheckBox_default, {}), defaultIcon = /* @__PURE__ */ (0, import_jsx_runtime88.jsx)(CheckBoxOutlineBlank_default, {}), defaultIndeterminateIcon = /* @__PURE__ */ (0, import_jsx_runtime88.jsx)(IndeterminateCheckBox_default, {}), Checkbox = /* @__PURE__ */ React101.forwardRef(function(inProps, ref) {
     let props = useDefaultProps2({
       props: inProps,
       name: "MuiCheckbox"
@@ -38210,7 +38373,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime87.jsx)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime88.jsx)(RootSlot, {
       ...rootSlotProps,
       classes: classes2
     });
@@ -38226,7 +38389,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var dividerClasses = generateUtilityClasses("MuiDivider", ["root", "absolute", "fullWidth", "inset", "middle", "flexItem", "vertical", "withChildren", "textAlignRight", "textAlignLeft", "wrapper", "wrapperVertical"]), dividerClasses_default = dividerClasses;
 
   // node_modules/@mui/material/Divider/Divider.mjs
-  var import_jsx_runtime88 = __toESM(require_jsx_runtime(), 1), useUtilityClasses39 = (ownerState) => {
+  var import_jsx_runtime89 = __toESM(require_jsx_runtime(), 1), useUtilityClasses39 = (ownerState) => {
     let {
       absolute,
       children,
@@ -38424,7 +38587,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       textAlign,
       variant
     }, classes2 = useUtilityClasses39(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime88.jsx)(DividerRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime89.jsx)(DividerRoot, {
       as: component,
       className: clsx_default(classes2.root, className),
       role,
@@ -38432,7 +38595,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ownerState,
       "aria-orientation": role === "separator" && (component !== "hr" || orientation === "vertical") ? orientation : void 0,
       ...other,
-      children: children ? /* @__PURE__ */ (0, import_jsx_runtime88.jsx)(DividerWrapper, {
+      children: children ? /* @__PURE__ */ (0, import_jsx_runtime89.jsx)(DividerWrapper, {
         className: classes2.wrapper,
         ownerState,
         children
@@ -38450,7 +38613,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var linearProgressClasses = generateUtilityClasses("MuiLinearProgress", ["root", "colorPrimary", "colorSecondary", "determinate", "indeterminate", "buffer", "query", "dashed", "bar", "bar1", "bar2"]);
 
   // node_modules/@mui/material/LinearProgress/LinearProgress.mjs
-  var import_jsx_runtime89 = __toESM(require_jsx_runtime(), 1), TRANSITION_DURATION = 4, EMPTY_STYLE2 = {};
+  var import_jsx_runtime90 = __toESM(require_jsx_runtime(), 1), TRANSITION_DURATION = 4, EMPTY_STYLE2 = {};
   var indeterminate1Keyframe = keyframes`
   0% {
     left: -35%;
@@ -38803,21 +38966,21 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       let range = max2 - min2, transform = (valueBuffer - min2) / range * 100 - 100;
       isRtl && (transform = -transform), inlineStyles.bar2.transform = range > 0 ? `translateX(${transform}%)` : "translateX(-100%)";
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime89.jsxs)(LinearProgressRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime90.jsxs)(LinearProgressRoot, {
       className: clsx_default(classes2.root, className),
       ownerState,
       role: "progressbar",
       ...rootProps,
       ref,
       ...other,
-      children: [variant === "buffer" ? /* @__PURE__ */ (0, import_jsx_runtime89.jsx)(LinearProgressDashed, {
+      children: [variant === "buffer" ? /* @__PURE__ */ (0, import_jsx_runtime90.jsx)(LinearProgressDashed, {
         className: classes2.dashed,
         ownerState
-      }) : null, /* @__PURE__ */ (0, import_jsx_runtime89.jsx)(LinearProgressBar1, {
+      }) : null, /* @__PURE__ */ (0, import_jsx_runtime90.jsx)(LinearProgressBar1, {
         className: classes2.bar1,
         ownerState,
         style: inlineStyles.bar1
-      }), variant === "determinate" ? null : /* @__PURE__ */ (0, import_jsx_runtime89.jsx)(LinearProgressBar2, {
+      }), variant === "determinate" ? null : /* @__PURE__ */ (0, import_jsx_runtime90.jsx)(LinearProgressBar2, {
         className: classes2.bar2,
         ownerState,
         style: inlineStyles.bar2
@@ -38835,7 +38998,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var listItemIconClasses = generateUtilityClasses("MuiListItemIcon", ["root", "alignItemsFlexStart"]), listItemIconClasses_default = listItemIconClasses;
 
   // node_modules/@mui/material/ListItemIcon/ListItemIcon.mjs
-  var import_jsx_runtime90 = __toESM(require_jsx_runtime(), 1), useUtilityClasses41 = (ownerState) => {
+  var import_jsx_runtime91 = __toESM(require_jsx_runtime(), 1), useUtilityClasses41 = (ownerState) => {
     let {
       alignItems,
       classes: classes2
@@ -38878,7 +39041,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ...props,
       alignItems: context.alignItems
     }, classes2 = useUtilityClasses41(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime90.jsx)(ListItemIconRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime91.jsx)(ListItemIconRoot, {
       className: clsx_default(classes2.root, className),
       ownerState,
       ref,
@@ -38896,7 +39059,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var listItemTextClasses = generateUtilityClasses("MuiListItemText", ["root", "multiline", "dense", "inset", "primary", "secondary"]), listItemTextClasses_default = listItemTextClasses;
 
   // node_modules/@mui/material/ListItemText/ListItemText.mjs
-  var import_jsx_runtime91 = __toESM(require_jsx_runtime(), 1), useUtilityClasses42 = (ownerState) => {
+  var import_jsx_runtime92 = __toESM(require_jsx_runtime(), 1), useUtilityClasses42 = (ownerState) => {
     let {
       classes: classes2,
       inset,
@@ -38996,17 +39159,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       externalForwardedProps,
       ownerState
     });
-    return primary != null && primary.type !== Typography_default && !disableTypography && (primary = /* @__PURE__ */ (0, import_jsx_runtime91.jsx)(PrimarySlot, {
+    return primary != null && primary.type !== Typography_default && !disableTypography && (primary = /* @__PURE__ */ (0, import_jsx_runtime92.jsx)(PrimarySlot, {
       variant: dense ? "body2" : "body1",
       component: primarySlotProps?.variant ? void 0 : "span",
       ...primarySlotProps,
       children: primary
-    })), secondary != null && secondary.type !== Typography_default && !disableTypography && (secondary = /* @__PURE__ */ (0, import_jsx_runtime91.jsx)(SecondarySlot, {
+    })), secondary != null && secondary.type !== Typography_default && !disableTypography && (secondary = /* @__PURE__ */ (0, import_jsx_runtime92.jsx)(SecondarySlot, {
       variant: "body2",
       color: "textSecondary",
       ...secondarySlotProps,
       children: secondary
-    })), /* @__PURE__ */ (0, import_jsx_runtime91.jsxs)(RootSlot, {
+    })), /* @__PURE__ */ (0, import_jsx_runtime92.jsxs)(RootSlot, {
       ...rootSlotProps,
       children: [primary, secondary]
     });
@@ -39014,7 +39177,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // node_modules/@mui/material/MenuItem/MenuItem.mjs
   var React106 = __toESM(require_react(), 1);
-  var import_jsx_runtime92 = __toESM(require_jsx_runtime(), 1), overridesResolver = (props, styles5) => {
+  var import_jsx_runtime93 = __toESM(require_jsx_runtime(), 1), overridesResolver = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -39181,9 +39344,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       focusableWhenDisabled: itemsFocusableWhenDisabled,
       selected: props.selected
     }), handleRef = useForkRef_default(menuItemRef, rovingItemProps.ref), tabIndex;
-    return tabIndexProp !== void 0 ? tabIndex = tabIndexProp : menuListContext.variant === "selectedMenu" ? tabIndex = rovingItemProps.tabIndex : (!props.disabled || itemsFocusableWhenDisabled) && (tabIndex = -1), /* @__PURE__ */ (0, import_jsx_runtime92.jsx)(ListContext_default.Provider, {
+    return tabIndexProp !== void 0 ? tabIndex = tabIndexProp : menuListContext.variant === "selectedMenu" ? tabIndex = rovingItemProps.tabIndex : (!props.disabled || itemsFocusableWhenDisabled) && (tabIndex = -1), /* @__PURE__ */ (0, import_jsx_runtime93.jsx)(ListContext_default.Provider, {
       value: childContext,
-      children: /* @__PURE__ */ (0, import_jsx_runtime92.jsx)(MenuItemRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime93.jsx)(MenuItemRoot, {
         ref: handleRef,
         role,
         "aria-checked": ariaChecked,
@@ -39203,7 +39366,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // node_modules/@mui/material/InputAdornment/InputAdornment.mjs
   var React107 = __toESM(require_react(), 1);
-  var import_jsx_runtime93 = __toESM(require_jsx_runtime(), 1), _span4, overridesResolver2 = (props, styles5) => {
+  var import_jsx_runtime94 = __toESM(require_jsx_runtime(), 1), _span4, overridesResolver2 = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -39286,21 +39449,21 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       position: position2,
       variant
     }, classes2 = useUtilityClasses44(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime93.jsx)(FormControlContext_default.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime94.jsx)(FormControlContext_default.Provider, {
       value: null,
-      children: /* @__PURE__ */ (0, import_jsx_runtime93.jsx)(InputAdornmentRoot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime94.jsx)(InputAdornmentRoot, {
         as: component,
         ownerState,
         className: clsx_default(classes2.root, className),
         ref,
         ...other,
-        children: typeof children == "string" && !disableTypography ? /* @__PURE__ */ (0, import_jsx_runtime93.jsx)(Typography_default, {
+        children: typeof children == "string" && !disableTypography ? /* @__PURE__ */ (0, import_jsx_runtime94.jsx)(Typography_default, {
           color: "textSecondary",
           children
-        }) : /* @__PURE__ */ (0, import_jsx_runtime93.jsxs)(React107.Fragment, {
+        }) : /* @__PURE__ */ (0, import_jsx_runtime94.jsxs)(React107.Fragment, {
           children: [position2 === "start" ? (
             /* notranslate needed while Google Translate will not fix zero-width space issue */
-            _span4 || (_span4 = /* @__PURE__ */ (0, import_jsx_runtime93.jsx)("span", {
+            _span4 || (_span4 = /* @__PURE__ */ (0, import_jsx_runtime94.jsx)("span", {
               className: "notranslate",
               "aria-hidden": !0,
               children: "​"
@@ -39321,7 +39484,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tooltipClasses = generateUtilityClasses("MuiTooltip", ["popper", "popperInteractive", "popperArrow", "popperClose", "tooltip", "tooltipArrow", "touch", "tooltipPlacementLeft", "tooltipPlacementRight", "tooltipPlacementTop", "tooltipPlacementBottom", "arrow"]), tooltipClasses_default = tooltipClasses;
 
   // node_modules/@mui/material/Tooltip/Tooltip.mjs
-  var import_jsx_runtime94 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime95 = __toESM(require_jsx_runtime(), 1);
   function round3(value) {
     return Math.round(value * 1e5) / 1e5;
   }
@@ -39532,7 +39695,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       slots = {},
       title: title2,
       ...other
-    } = props, children = /* @__PURE__ */ React108.isValidElement(childrenProp) ? childrenProp : /* @__PURE__ */ (0, import_jsx_runtime94.jsx)("span", {
+    } = props, children = /* @__PURE__ */ React108.isValidElement(childrenProp) ? childrenProp : /* @__PURE__ */ (0, import_jsx_runtime95.jsx)("span", {
       children: childrenProp
     }), theme = useTheme4(), [childNode, setChildNode] = React108.useState(), [arrowRef, setArrowRef] = React108.useState(null), ignoreNonTouchEvents = React108.useRef(!1), openedByDisabledTriggerRef = React108.useRef(!1), disableInteractive = disableInteractiveProp || followCursor, closeTimer = useTimeout(), enterTimer = useTimeout(), leaveTimer = useTimeout(), touchTimer = useTimeout(), [openState, setOpenState] = useControlled_default({
       controlled: openProp,
@@ -39688,8 +39851,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ownerState,
       ref: setArrowRef
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime94.jsxs)(React108.Fragment, {
-      children: [/* @__PURE__ */ React108.cloneElement(children, childrenProps), /* @__PURE__ */ (0, import_jsx_runtime94.jsx)(PopperSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime95.jsxs)(React108.Fragment, {
+      children: [/* @__PURE__ */ React108.cloneElement(children, childrenProps), /* @__PURE__ */ (0, import_jsx_runtime95.jsx)(PopperSlot, {
         as: Popper_default,
         placement,
         anchorEl: followCursor ? {
@@ -39711,13 +39874,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         popperOptions,
         children: ({
           TransitionProps: TransitionPropsInner
-        }) => /* @__PURE__ */ (0, import_jsx_runtime94.jsx)(TransitionSlot, {
+        }) => /* @__PURE__ */ (0, import_jsx_runtime95.jsx)(TransitionSlot, {
           timeout: theme.transitions.duration.shorter,
           ...TransitionPropsInner,
           ...transitionSlotProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime94.jsxs)(TooltipSlot, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime95.jsxs)(TooltipSlot, {
             ...tooltipSlotProps,
-            children: [title2, arrow2 ? /* @__PURE__ */ (0, import_jsx_runtime94.jsx)(ArrowSlot, {
+            children: [title2, arrow2 ? /* @__PURE__ */ (0, import_jsx_runtime95.jsx)(ArrowSlot, {
               ...arrowSlotProps
             }) : null]
           })
@@ -39739,7 +39902,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var toolbarClasses = generateUtilityClasses("MuiToolbar", ["root", "gutters", "regular", "dense"]);
 
   // node_modules/@mui/material/Toolbar/Toolbar.mjs
-  var import_jsx_runtime95 = __toESM(require_jsx_runtime(), 1), useUtilityClasses46 = (ownerState) => {
+  var import_jsx_runtime96 = __toESM(require_jsx_runtime(), 1), useUtilityClasses46 = (ownerState) => {
     let {
       classes: classes2,
       disableGutters,
@@ -39804,7 +39967,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       disableGutters,
       variant
     }, classes2 = useUtilityClasses46(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime95.jsx)(ToolbarRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime96.jsx)(ToolbarRoot, {
       as: component,
       className: clsx_default(classes2.root, className),
       ref,
@@ -39817,22 +39980,22 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var React110 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/svg-icons/KeyboardArrowLeft.mjs
-  var import_jsx_runtime96 = __toESM(require_jsx_runtime(), 1), KeyboardArrowLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime96.jsx)("path", {
+  var import_jsx_runtime97 = __toESM(require_jsx_runtime(), 1), KeyboardArrowLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime97.jsx)("path", {
     d: "M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"
   }), "KeyboardArrowLeft");
 
   // node_modules/@mui/material/internal/svg-icons/KeyboardArrowRight.mjs
-  var import_jsx_runtime97 = __toESM(require_jsx_runtime(), 1), KeyboardArrowRight_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime97.jsx)("path", {
+  var import_jsx_runtime98 = __toESM(require_jsx_runtime(), 1), KeyboardArrowRight_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime98.jsx)("path", {
     d: "M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"
   }), "KeyboardArrowRight");
 
   // node_modules/@mui/material/internal/svg-icons/LastPage.mjs
-  var import_jsx_runtime98 = __toESM(require_jsx_runtime(), 1), LastPage_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime98.jsx)("path", {
+  var import_jsx_runtime99 = __toESM(require_jsx_runtime(), 1), LastPage_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime99.jsx)("path", {
     d: "M5.59 7.41L10.18 12l-4.59 4.59L7 18l6-6-6-6zM16 6h2v12h-2z"
   }), "LastPage");
 
   // node_modules/@mui/material/internal/svg-icons/FirstPage.mjs
-  var import_jsx_runtime99 = __toESM(require_jsx_runtime(), 1), FirstPage_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime99.jsx)("path", {
+  var import_jsx_runtime100 = __toESM(require_jsx_runtime(), 1), FirstPage_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime100.jsx)("path", {
     d: "M18.41 16.59L13.82 12l4.59-4.59L17 6l-6 6 6 6zM6 6h2v12H6z"
   }), "FirstPage");
 
@@ -39843,7 +40006,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tablePaginationActionsClasses = generateUtilityClasses("MuiTablePaginationActions", ["root"]);
 
   // node_modules/@mui/material/TablePaginationActions/TablePaginationActions.mjs
-  var import_jsx_runtime100 = __toESM(require_jsx_runtime(), 1), actionSelector = "[data-mui-pagination-action]";
+  var import_jsx_runtime101 = __toESM(require_jsx_runtime(), 1), actionSelector = "[data-mui-pagination-action]";
   function isDisabled(button) {
     return button.matches(':disabled, [aria-disabled="true"]');
   }
@@ -39862,9 +40025,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     title: title2,
     ...other
   }, ref) {
-    return /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(Tooltip_default, {
+    return /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(Tooltip_default, {
       title: title2,
-      children: /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(IconButton_default, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(IconButton_default, {
         "aria-label": ariaLabel ?? title2,
         ...other,
         ref
@@ -39914,25 +40077,25 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, handleLastPageButtonClick = (event) => {
       onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
     }, FirstButton = slots.firstButton ?? TablePaginationActionsButton, LastButton = slots.lastButton ?? TablePaginationActionsButton, NextButton = slots.nextButton ?? TablePaginationActionsButton, PreviousButton = slots.previousButton ?? TablePaginationActionsButton, FirstButtonIcon = slots.firstButtonIcon ?? FirstPage_default, LastButtonIcon = slots.lastButtonIcon ?? LastPage_default, NextButtonIcon = slots.nextButtonIcon ?? KeyboardArrowRight_default, PreviousButtonIcon = slots.previousButtonIcon ?? KeyboardArrowLeft_default, FirstButtonSlot = isRtl ? LastButton : FirstButton, PreviousButtonSlot = isRtl ? NextButton : PreviousButton, NextButtonSlot = isRtl ? PreviousButton : NextButton, LastButtonSlot = isRtl ? FirstButton : LastButton, firstButtonSlotProps = isRtl ? slotProps.lastButton : slotProps.firstButton, previousButtonSlotProps = isRtl ? slotProps.nextButton : slotProps.previousButton, nextButtonSlotProps = isRtl ? slotProps.previousButton : slotProps.nextButton, lastButtonSlotProps = isRtl ? slotProps.firstButton : slotProps.lastButton;
-    return /* @__PURE__ */ (0, import_jsx_runtime100.jsxs)(TablePaginationActionsRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime101.jsxs)(TablePaginationActionsRoot, {
       ref: handleRef,
       className: clsx_default(classes2.root, className),
       ...other,
       onFocus: handleFocus,
       onBlur: handleBlur,
-      children: [showFirstButton && /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(FirstButtonSlot, {
+      children: [showFirstButton && /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(FirstButtonSlot, {
         onClick: handleFirstPageButtonClick,
         disabled: disabled || page === 0,
         "aria-label": getItemAriaLabel("first", page),
         title: getItemAriaLabel("first", page),
         "data-mui-pagination-action": "first",
         ...firstButtonSlotProps,
-        children: isRtl ? /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(LastButtonIcon, {
+        children: isRtl ? /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(LastButtonIcon, {
           ...slotProps.lastButtonIcon
-        }) : /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(FirstButtonIcon, {
+        }) : /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(FirstButtonIcon, {
           ...slotProps.firstButtonIcon
         })
-      }), /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(PreviousButtonSlot, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(PreviousButtonSlot, {
         onClick: handleBackButtonClick,
         disabled: disabled || page === 0,
         color: "inherit",
@@ -39940,12 +40103,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         title: getItemAriaLabel("previous", page),
         "data-mui-pagination-action": "previous",
         ...previousButtonSlotProps,
-        children: isRtl ? /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(NextButtonIcon, {
+        children: isRtl ? /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(NextButtonIcon, {
           ...slotProps.nextButtonIcon
-        }) : /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(PreviousButtonIcon, {
+        }) : /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(PreviousButtonIcon, {
           ...slotProps.previousButtonIcon
         })
-      }), /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(NextButtonSlot, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(NextButtonSlot, {
         onClick: handleNextButtonClick,
         disabled: disabled || (count !== -1 ? page >= Math.ceil(count / rowsPerPage) - 1 : !1),
         color: "inherit",
@@ -39953,21 +40116,21 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         title: getItemAriaLabel("next", page),
         "data-mui-pagination-action": "next",
         ...nextButtonSlotProps,
-        children: isRtl ? /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(PreviousButtonIcon, {
+        children: isRtl ? /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(PreviousButtonIcon, {
           ...slotProps.previousButtonIcon
-        }) : /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(NextButtonIcon, {
+        }) : /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(NextButtonIcon, {
           ...slotProps.nextButtonIcon
         })
-      }), showLastButton && /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(LastButtonSlot, {
+      }), showLastButton && /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(LastButtonSlot, {
         onClick: handleLastPageButtonClick,
         disabled: disabled || page >= Math.ceil(count / rowsPerPage) - 1,
         "aria-label": getItemAriaLabel("last", page),
         title: getItemAriaLabel("last", page),
         "data-mui-pagination-action": "last",
         ...lastButtonSlotProps,
-        children: isRtl ? /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(FirstButtonIcon, {
+        children: isRtl ? /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(FirstButtonIcon, {
           ...slotProps.firstButtonIcon
-        }) : /* @__PURE__ */ (0, import_jsx_runtime100.jsx)(LastButtonIcon, {
+        }) : /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(LastButtonIcon, {
           ...slotProps.lastButtonIcon
         })
       })]
@@ -39992,7 +40155,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }, buildFormatNumber_default = buildFormatNumber;
 
   // node_modules/@mui/material/TablePagination/TablePagination.mjs
-  var import_jsx_runtime101 = __toESM(require_jsx_runtime(), 1), import_react20 = __toESM(require_react(), 1), _TablePaginationInput, formatNumber2 = buildFormatNumber_default("en-US"), TablePaginationRoot = styled_default2(TableCell_default, {
+  var import_jsx_runtime102 = __toESM(require_jsx_runtime(), 1), import_react21 = __toESM(require_react(), 1), _TablePaginationInput, formatNumber2 = buildFormatNumber_default("en-US"), TablePaginationRoot = styled_default2(TableCell_default, {
     name: "MuiTablePagination",
     slot: "Root"
   })(memoTheme_default(({
@@ -40179,19 +40342,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime102.jsx)(RootSlot, {
       ...rootSlotProps,
-      children: /* @__PURE__ */ (0, import_jsx_runtime101.jsxs)(ToolbarSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime102.jsxs)(ToolbarSlot, {
         ...toolbarSlotProps,
-        children: [/* @__PURE__ */ (0, import_jsx_runtime101.jsx)(SpacerSlot, {
+        children: [/* @__PURE__ */ (0, import_jsx_runtime102.jsx)(SpacerSlot, {
           ...spacerSlotProps
-        }), rowsPerPageOptions.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(SelectLabelSlot, {
+        }), rowsPerPageOptions.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime102.jsx)(SelectLabelSlot, {
           ...selectLabelSlotProps,
           children: labelRowsPerPage
-        }), rowsPerPageOptions.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(SelectSlot, {
+        }), rowsPerPageOptions.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime102.jsx)(SelectSlot, {
           variant: "standard",
           ...!selectProps.variant && {
-            input: _TablePaginationInput || (_TablePaginationInput = /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(TablePaginationInputBase, {}))
+            input: _TablePaginationInput || (_TablePaginationInput = /* @__PURE__ */ (0, import_jsx_runtime102.jsx)(TablePaginationInputBase, {}))
           },
           value: rowsPerPage,
           onChange: onRowsPerPageChange,
@@ -40208,12 +40371,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           },
           disabled,
           ...selectSlotProps,
-          children: rowsPerPageOptions.map((rowsPerPageOption) => /* @__PURE__ */ (0, import_react20.createElement)(MenuItemSlot, {
+          children: rowsPerPageOptions.map((rowsPerPageOption) => /* @__PURE__ */ (0, import_react21.createElement)(MenuItemSlot, {
             ...menuItemSlotProps,
             key: rowsPerPageOption.label ? rowsPerPageOption.label : rowsPerPageOption,
             value: rowsPerPageOption.value ? rowsPerPageOption.value : rowsPerPageOption
           }, rowsPerPageOption.label ? rowsPerPageOption.label : rowsPerPageOption))
-        }), /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(DisplayedRows, {
+        }), /* @__PURE__ */ (0, import_jsx_runtime102.jsx)(DisplayedRows, {
           ...displayedRowsProps,
           children: labelDisplayedRows({
             from: count === 0 ? 0 : page * rowsPerPage + 1,
@@ -40221,7 +40384,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             count: count === -1 ? -1 : count,
             page
           })
-        }), /* @__PURE__ */ (0, import_jsx_runtime101.jsx)(ActionsComponent, {
+        }), /* @__PURE__ */ (0, import_jsx_runtime102.jsx)(ActionsComponent, {
           className: classes2.actions,
           count,
           onPageChange,
@@ -40307,7 +40470,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var skeletonClasses = generateUtilityClasses("MuiSkeleton", ["root", "text", "rectangular", "rounded", "circular", "pulse", "wave", "withChildren", "fitContent", "heightAuto"]);
 
   // node_modules/@mui/material/Skeleton/Skeleton.mjs
-  var import_jsx_runtime102 = __toESM(require_jsx_runtime(), 1), useUtilityClasses49 = (ownerState) => {
+  var import_jsx_runtime103 = __toESM(require_jsx_runtime(), 1), useUtilityClasses49 = (ownerState) => {
     let {
       classes: classes2,
       variant,
@@ -40500,7 +40663,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       variant,
       hasChildren: !!other.children
     }, classes2 = useUtilityClasses49(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime102.jsx)(SkeletonRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime103.jsx)(SkeletonRoot, {
       as: component,
       ref,
       className: clsx_default(classes2.root, className),
@@ -40549,7 +40712,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // node_modules/@mui/material/Tabs/ScrollbarSize.mjs
   var React114 = __toESM(require_react(), 1);
-  var import_jsx_runtime103 = __toESM(require_jsx_runtime(), 1), styles4 = {
+  var import_jsx_runtime104 = __toESM(require_jsx_runtime(), 1), styles4 = {
     width: 99,
     height: 99,
     position: "absolute",
@@ -40574,7 +40737,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       };
     }, [onChange]), React114.useEffect(() => {
       setMeasurements(), onChange(scrollbarHeight.current);
-    }, [onChange]), /* @__PURE__ */ (0, import_jsx_runtime103.jsx)("div", {
+    }, [onChange]), /* @__PURE__ */ (0, import_jsx_runtime104.jsx)("div", {
       style: styles4,
       ...other,
       ref: nodeRef
@@ -40591,7 +40754,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tabScrollButtonClasses = generateUtilityClasses("MuiTabScrollButton", ["root", "vertical", "horizontal", "disabled"]), tabScrollButtonClasses_default = tabScrollButtonClasses;
 
   // node_modules/@mui/material/TabScrollButton/TabScrollButton.mjs
-  var import_jsx_runtime104 = __toESM(require_jsx_runtime(), 1), useUtilityClasses50 = (ownerState) => {
+  var import_jsx_runtime105 = __toESM(require_jsx_runtime(), 1), useUtilityClasses50 = (ownerState) => {
     let {
       classes: classes2,
       orientation,
@@ -40661,7 +40824,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       },
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime104.jsx)(TabScrollButtonRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime105.jsx)(TabScrollButtonRoot, {
       component: "div",
       className: clsx_default(classes2.root, className),
       ref,
@@ -40675,9 +40838,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           "--TabScrollButton-svgRotate": `rotate(${isRtl ? -90 : 90}deg)`
         }
       },
-      children: direction === "left" ? /* @__PURE__ */ (0, import_jsx_runtime104.jsx)(StartButtonIcon, {
+      children: direction === "left" ? /* @__PURE__ */ (0, import_jsx_runtime105.jsx)(StartButtonIcon, {
         ...startButtonIconProps
-      }) : /* @__PURE__ */ (0, import_jsx_runtime104.jsx)(EndButtonIcon, {
+      }) : /* @__PURE__ */ (0, import_jsx_runtime105.jsx)(EndButtonIcon, {
         ...endButtonIconProps
       })
     });
@@ -40690,7 +40853,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tabsClasses = generateUtilityClasses("MuiTabs", ["root", "vertical", "list", "centered", "scroller", "fixed", "scrollableX", "scrollableY", "hideScrollbar", "scrollButtons", "scrollButtonsHideMobile", "indicator"]), tabsClasses_default = tabsClasses;
 
   // node_modules/@mui/material/Tabs/Tabs.mjs
-  var import_jsx_runtime105 = __toESM(require_jsx_runtime(), 1), useUtilityClasses51 = (ownerState) => {
+  var import_jsx_runtime106 = __toESM(require_jsx_runtime(), 1), useUtilityClasses51 = (ownerState) => {
     let {
       vertical,
       fixed,
@@ -41035,17 +41198,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       }
     }), getConditionalElements = () => {
       let conditionalElements2 = {};
-      conditionalElements2.scrollbarSizeListener = scrollable ? /* @__PURE__ */ (0, import_jsx_runtime105.jsx)(ScrollbarSlot, {
+      conditionalElements2.scrollbarSizeListener = scrollable ? /* @__PURE__ */ (0, import_jsx_runtime106.jsx)(ScrollbarSlot, {
         ...scrollbarSlotProps,
         onChange: handleScrollbarSizeChange
       }) : null;
       let showScrollButtons = scrollable && (scrollButtons === "auto" && (displayStartScroll || displayEndScroll) || scrollButtons === !0);
-      return conditionalElements2.scrollButtonStart = showScrollButtons ? /* @__PURE__ */ (0, import_jsx_runtime105.jsx)(ScrollButtonsSlot, {
+      return conditionalElements2.scrollButtonStart = showScrollButtons ? /* @__PURE__ */ (0, import_jsx_runtime106.jsx)(ScrollButtonsSlot, {
         direction: isRtl ? "right" : "left",
         onClick: handleStartScrollClick,
         disabled: !displayStartScroll,
         ...scrollButtonSlotProps
-      }) : null, conditionalElements2.scrollButtonEnd = showScrollButtons ? /* @__PURE__ */ (0, import_jsx_runtime105.jsx)(ScrollButtonsSlot, {
+      }) : null, conditionalElements2.scrollButtonEnd = showScrollButtons ? /* @__PURE__ */ (0, import_jsx_runtime106.jsx)(ScrollButtonsSlot, {
         direction: isRtl ? "left" : "right",
         onClick: handleEndScrollClick,
         disabled: !displayEndScroll,
@@ -41132,7 +41295,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       additionalProps: {
         style: indicatorStyle
       }
-    }), indicator = /* @__PURE__ */ (0, import_jsx_runtime105.jsx)(IndicatorSlot, {
+    }), indicator = /* @__PURE__ */ (0, import_jsx_runtime106.jsx)(IndicatorSlot, {
       ...indicatorSlotProps
     }), rovingContainer = useRovingTabIndexRoot({
       activeItemId: isFocusWithinList ? void 0 : selectedValue2,
@@ -41203,17 +41366,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       })
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime105.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime106.jsxs)(RootSlot, {
       ...rootSlotProps,
-      children: [conditionalElements.scrollButtonStart, conditionalElements.scrollbarSizeListener, /* @__PURE__ */ (0, import_jsx_runtime105.jsxs)(ScrollerSlot, {
+      children: [conditionalElements.scrollButtonStart, conditionalElements.scrollbarSizeListener, /* @__PURE__ */ (0, import_jsx_runtime106.jsxs)(ScrollerSlot, {
         ...scrollerSlotProps,
-        children: [/* @__PURE__ */ (0, import_jsx_runtime105.jsx)(ListSlot, {
+        children: [/* @__PURE__ */ (0, import_jsx_runtime106.jsx)(ListSlot, {
           "aria-label": ariaLabel,
           "aria-labelledby": ariaLabelledBy,
           "aria-orientation": orientation === "vertical" ? "vertical" : null,
           role: "tablist",
           ...listSlotProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime105.jsx)(RovingTabIndexContext.Provider, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime106.jsx)(RovingTabIndexContext.Provider, {
             value: rovingContainer,
             children
           })
@@ -41232,7 +41395,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var tabClasses = generateUtilityClasses("MuiTab", ["root", "labelIcon", "textColorInherit", "textColorPrimary", "textColorSecondary", "selected", "disabled", "fullWidth", "wrapped", "icon"]), tabClasses_default = tabClasses;
 
   // node_modules/@mui/material/Tab/Tab.mjs
-  var import_jsx_runtime106 = __toESM(require_jsx_runtime(), 1), useUtilityClasses52 = (ownerState) => {
+  var import_jsx_runtime107 = __toESM(require_jsx_runtime(), 1), useUtilityClasses52 = (ownerState) => {
     let {
       classes: classes2,
       textColor,
@@ -41451,7 +41614,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, handleFocus = (event) => {
       selectionFollowsFocus && !selected && onChange && onChange(event, value), onFocus && onFocus(event);
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime106.jsxs)(TabRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime107.jsxs)(TabRoot, {
       internalNativeButton: !0,
       focusRipple: !disableFocusRipple,
       className: clsx_default(classes2.root, className),
@@ -41464,9 +41627,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       tabIndex,
       ownerState,
       ...other,
-      children: [iconPosition === "top" || iconPosition === "start" ? /* @__PURE__ */ (0, import_jsx_runtime106.jsxs)(React117.Fragment, {
+      children: [iconPosition === "top" || iconPosition === "start" ? /* @__PURE__ */ (0, import_jsx_runtime107.jsxs)(React117.Fragment, {
         children: [icon, label]
-      }) : /* @__PURE__ */ (0, import_jsx_runtime106.jsxs)(React117.Fragment, {
+      }) : /* @__PURE__ */ (0, import_jsx_runtime107.jsxs)(React117.Fragment, {
         children: [label, icon]
       }), indicator]
     });
@@ -41508,7 +41671,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var RovingToggleButton_default = /* @__PURE__ */ React120.forwardRef(RovingToggleButton);
 
   // node_modules/@mui/material/ToggleButton/ToggleButton.mjs
-  var import_jsx_runtime107 = __toESM(require_jsx_runtime(), 1), useUtilityClasses53 = (ownerState) => {
+  var import_jsx_runtime108 = __toESM(require_jsx_runtime(), 1), useUtilityClasses53 = (ownerState) => {
     let {
       classes: classes2,
       fullWidth,
@@ -41640,7 +41803,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       size
     }, classes2 = useUtilityClasses53(ownerState), handleChange = (event) => {
       onClick && (onClick(event, value), event.defaultPrevented) || onChange && onChange(event, value);
-    }, positionClassName = toggleButtonGroupButtonContextPositionClassName || "", button = /* @__PURE__ */ (0, import_jsx_runtime107.jsx)(ToggleButtonRoot, {
+    }, positionClassName = toggleButtonGroupButtonContextPositionClassName || "", button = /* @__PURE__ */ (0, import_jsx_runtime108.jsx)(ToggleButtonRoot, {
       className: clsx_default(contextProps.className, classes2.root, className, positionClassName),
       internalNativeButton: !0,
       disabled,
@@ -41654,7 +41817,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ...other,
       children
     });
-    return isRovingTabIndex ? /* @__PURE__ */ (0, import_jsx_runtime107.jsx)(RovingToggleButton_default, {
+    return isRovingTabIndex ? /* @__PURE__ */ (0, import_jsx_runtime108.jsx)(RovingToggleButton_default, {
       disabled,
       selected,
       ref,
@@ -41685,74 +41848,74 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var createSvgIcon2 = createSvgIcon;
 
   // node_modules/@mui/x-data-grid/material/icons/index.mjs
-  var import_jsx_runtime108 = __toESM(require_jsx_runtime(), 1), GridArrowUpwardIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  var import_jsx_runtime109 = __toESM(require_jsx_runtime(), 1), GridArrowUpwardIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
-  }), "ArrowUpward"), GridArrowDownwardIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "ArrowUpward"), GridArrowDownwardIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
-  }), "ArrowDownward"), GridKeyboardArrowRight = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "ArrowDownward"), GridKeyboardArrowRight = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"
-  }), "KeyboardArrowRight"), GridExpandMoreIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "KeyboardArrowRight"), GridExpandMoreIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
-  }), "ExpandMore"), GridFilterListIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "ExpandMore"), GridFilterListIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
-  }), "FilterList"), GridFilterAltIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "FilterList"), GridFilterAltIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z"
-  }), "FilterAlt"), GridSearchIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "FilterAlt"), GridSearchIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
-  }), "Search"), GridMenuIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Search"), GridMenuIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-  }), "Menu"), GridCheckCircleIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Menu"), GridCheckCircleIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-  }), "CheckCircle"), GridUndoIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "CheckCircle"), GridUndoIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8"
-  }), "Undo"), GridRedoIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Undo"), GridRedoIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7z"
-  }), "Redo"), GridColumnIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Redo"), GridColumnIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M14.67 5v14H9.33V5zm1 14H21V5h-5.33zm-7.34 0V5H3v14z"
-  }), "ColumnIcon"), GridSeparatorIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("rect", {
+  }), "ColumnIcon"), GridSeparatorIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("rect", {
     width: "1",
     height: "24",
     x: "11.5",
     rx: "0.5"
-  }), "Separator"), GridViewHeadlineIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Separator"), GridViewHeadlineIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M4 15h16v-2H4v2zm0 4h16v-2H4v2zm0-8h16V9H4v2zm0-6v2h16V5H4z"
-  }), "ViewHeadline"), GridTableRowsIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "ViewHeadline"), GridTableRowsIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M21,8H3V4h18V8z M21,10H3v4h18V10z M21,16H3v4h18V16z"
-  }), "TableRows"), GridViewStreamIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "TableRows"), GridViewStreamIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M4 18h17v-6H4v6zM4 5v6h17V5H4z"
-  }), "ViewStream"), GridTripleDotsVerticalIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "ViewStream"), GridTripleDotsVerticalIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-  }), "TripleDotsVertical"), GridCloseIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "TripleDotsVertical"), GridCloseIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-  }), "Close"), GridAddIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Close"), GridAddIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-  }), "Add"), GridRemoveIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Add"), GridRemoveIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M19 13H5v-2h14v2z"
-  }), "Remove"), GridLoadIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Remove"), GridLoadIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"
-  }), "Load"), GridDragIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Load"), GridDragIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-  }), "Drag"), GridCheckIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Drag"), GridCheckIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
-  }), "Check"), GridMoreVertIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Check"), GridMoreVertIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-  }), "MoreVert"), GridVisibilityOffIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "MoreVert"), GridVisibilityOffIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"
-  }), "VisibilityOff"), GridViewColumnIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("g", {
-    children: /* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "VisibilityOff"), GridViewColumnIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("g", {
+    children: /* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
       d: "M14.67,5v14H9.33V5H14.67z M15.67,19H21V5h-5.33V19z M8.33,19V5H3v14H8.33z"
     })
-  }), "ViewColumn"), GridClearIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "ViewColumn"), GridClearIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2m5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12z"
-  }), "Clear"), GridDeleteIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Clear"), GridDeleteIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
-  }), "Delete"), GridDeleteForeverIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Delete"), GridDeleteForeverIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zm2.46-7.12l1.41-1.41L12 12.59l2.12-2.12 1.41 1.41L13.41 14l2.12 2.12-1.41 1.41L12 15.41l-2.12 2.12-1.41-1.41L10.59 14l-2.13-2.12zM15.5 4l-1-1h-5l-1 1H5v2h14V4z"
-  }), "Delete"), GridDownloadIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Delete"), GridDownloadIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z"
-  }), "Download"), GridLongTextCellExpandIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "Download"), GridLongTextCellExpandIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M21 11V3h-8l3.29 3.29-10 10L3 13v8h8l-3.29-3.29 10-10z"
-  }), "OpenInFull"), GridLongTextCellCollapseIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime108.jsx)("path", {
+  }), "OpenInFull"), GridLongTextCellCollapseIcon = createSvgIcon2(/* @__PURE__ */ (0, import_jsx_runtime109.jsx)("path", {
     d: "M5 15h2V8.41L18.59 20 20 18.59 8.41 7H15V5H5z"
   }), "NorthWest");
 
@@ -41786,14 +41949,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   };
 
   // node_modules/@mui/x-data-grid/components/GridColumnUnsortedIcon.mjs
-  var import_jsx_runtime109 = __toESM(require_jsx_runtime(), 1), _excluded = ["sortingOrder"];
+  var import_jsx_runtime110 = __toESM(require_jsx_runtime(), 1), _excluded = ["sortingOrder"];
   function GridColumnUnsortedIcon(props) {
     let {
       sortingOrder
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded), {
       slots
     } = useGridRootProps(), [nextSortDirection] = sortingOrder, Icon = nextSortDirection === "asc" ? slots.columnSortedAscendingIcon : slots.columnSortedDescendingIcon;
-    return Icon ? /* @__PURE__ */ (0, import_jsx_runtime109.jsx)(Icon, _extends({}, other)) : null;
+    return Icon ? /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Icon, _extends({}, other)) : null;
   }
 
   // node_modules/@mui/x-data-grid/hooks/utils/useGridApiContext.mjs
@@ -41811,7 +41974,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/x-data-grid/material/index.mjs
-  var import_jsx_runtime110 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime111 = __toESM(require_jsx_runtime(), 1);
 
   // node_modules/@mui/x-data-grid/material/variables.mjs
   var React131 = __toESM(require_react(), 1);
@@ -41954,9 +42117,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       duration: duration3 = vars.transitions.duration.base,
       easing: easing2 = vars.transitions.easing.easeInOut,
-      delay = 0
+      delay: delay2 = 0
     } = options ?? {};
-    return props.map((prop) => `${prop} ${duration3} ${easing2} ${delay}ms`).join(", ");
+    return props.map((prop) => `${prop} ${duration3} ${easing2} ${delay2}ms`).join(", ");
   }
   function wrap(input) {
     if (typeof input == "string")
@@ -43164,19 +43327,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       }
     };
-    return onClose && (menuProps.onClose = onClose), /* @__PURE__ */ (0, import_jsx_runtime110.jsxs)(FormControl_default, {
+    return onClose && (menuProps.onClose = onClose), /* @__PURE__ */ (0, import_jsx_runtime111.jsxs)(FormControl_default, {
       size: computedSize,
       fullWidth,
       style: style4,
       disabled,
       ref,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime110.jsx)(InputLabel_default, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime111.jsx)(InputLabel_default, {
         id: labelId,
         htmlFor: id,
         shrink: !0,
         variant: computedVariant,
         children: label
-      }), /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Select_default, _extends({
+      }), /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Select_default, _extends({
         id,
         labelId,
         label,
@@ -43231,7 +43394,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, [disabled]), apiRef = useGridApiContext(), rootProps = useGridRootProps(), {
       estimatedRowCount
     } = rootProps;
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(StyledPagination, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(StyledPagination, _extends({
       component: "div",
       onRowsPerPageChange: useEventCallback_default((event) => {
         onRowsPerPageChange?.(Number(event.target.value));
@@ -43248,7 +43411,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded3);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Badge_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Badge_default, _extends({}, other, material, {
       ref
     }));
   }), BaseCheckbox = forwardRef68(function(props, ref) {
@@ -43271,16 +43434,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         ref: combinedInputRef
       })
     }), [material?.slotProps, slotProps?.htmlInput, combinedInputRef]);
-    return label ? /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(FormControlLabel3, {
+    return label ? /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(FormControlLabel3, {
       className,
-      control: /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Checkbox3, _extends({}, other, material, {
+      control: /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Checkbox3, _extends({}, other, material, {
         slotProps: checkboxSlotProps,
         ref: handleRef,
         touchRippleRef: rippleRef
       })),
       label,
       fullWidth
-    }) : /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Checkbox3, _extends({}, other, material, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Checkbox3, _extends({}, other, material, {
       className: clsx_default(className, material?.className),
       slotProps: checkboxSlotProps,
       ref: handleRef,
@@ -43290,28 +43453,28 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded5);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(CircularProgress_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(CircularProgress_default, _extends({}, other, material, {
       ref
     }));
   }), BaseDivider = forwardRef68(function(props, ref) {
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded6);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Divider_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Divider_default, _extends({}, other, material, {
       ref
     }));
   }), BaseLinearProgress = forwardRef68(function(props, ref) {
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded7);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(LinearProgress_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(LinearProgress_default, _extends({}, other, material, {
       ref
     }));
   }), BaseButton = forwardRef68(function(props, ref) {
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded8);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Button_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Button_default, _extends({}, other, material, {
       ref
     }));
   }), StyledToggleButton = styled_default2(ToggleButton_default, {
@@ -43325,7 +43488,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       material
     } = props, rest = _objectWithoutPropertiesLoose(props, _excluded9);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(StyledToggleButton, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(StyledToggleButton, _extends({
       size: "small",
       color: "primary"
     }, rest, material, {
@@ -43335,28 +43498,28 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded0);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Chip_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Chip_default, _extends({}, other, material, {
       ref
     }));
   }), BaseIconButton = forwardRef68(function(props, ref) {
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded1);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(IconButton_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(IconButton_default, _extends({}, other, material, {
       ref
     }));
   }), BaseTooltip = forwardRef68(function(props, ref) {
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded10);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Tooltip_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Tooltip_default, _extends({}, other, material, {
       ref
     }));
   }), BaseSkeleton = forwardRef68(function(props, ref) {
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded11);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Skeleton_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Skeleton_default, _extends({}, other, material, {
       ref
     }));
   }), BaseSwitch = forwardRef68(function(props, ref) {
@@ -43365,13 +43528,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       label,
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded12);
-    return label ? /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(FormControlLabel3, {
+    return label ? /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(FormControlLabel3, {
       className,
-      control: /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Switch_default, _extends({}, other, material, {
+      control: /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Switch_default, _extends({}, other, material, {
         ref
       })),
       label
-    }) : /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Switch_default, _extends({}, other, material, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Switch_default, _extends({}, other, material, {
       className,
       ref
     }));
@@ -43379,7 +43542,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded13);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(MenuList_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(MenuList_default, _extends({}, other, material, {
       ref
     }));
   });
@@ -43391,11 +43554,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       children,
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded14);
-    return inert && (other.disableRipple = !0), /* @__PURE__ */ React132.createElement(MenuItem_default, _extends({}, other, material), [iconStart && /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(ListItemIcon_default, {
+    return inert && (other.disableRipple = !0), /* @__PURE__ */ React132.createElement(MenuItem_default, _extends({}, other, material), [iconStart && /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(ListItemIcon_default, {
       children: iconStart
-    }, "1"), /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(ListItemText3, {
+    }, "1"), /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(ListItemText3, {
       children
-    }, "2"), iconEnd && /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(ListItemIcon_default, {
+    }, "2"), iconEnd && /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(ListItemIcon_default, {
       children: iconEnd
     }, "3")]);
   }
@@ -43403,14 +43566,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded15);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Modal_default, _extends({}, other, material));
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Modal_default, _extends({}, other, material));
   }
   function BaseTextField(props) {
     let {
       slotProps,
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded16), textFieldDefaults = useTheme4().components?.MuiTextField?.defaultProps ?? {}, computedVariant = other.variant ?? textFieldDefaults.variant ?? "outlined", computedSize = other.size ?? textFieldDefaults.size;
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(TextField_default, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(TextField_default, _extends({
       variant: computedVariant,
       size: computedSize
     }, other, material, {
@@ -43438,7 +43601,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       slotProps,
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded17);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Autocomplete_default, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Autocomplete_default, _extends({
       id,
       multiple,
       freeSolo,
@@ -43453,7 +43616,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }), {
           key
         } = _getTagProps, tagProps = _objectWithoutPropertiesLoose(_getTagProps, _excluded18);
-        return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Chip_default, _extends({
+        return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Chip_default, _extends({
           variant: "outlined",
           size: "small",
           label: typeof option == "string" ? option : getOptionLabel?.(option)
@@ -43467,7 +43630,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         } = _ref, textFieldRest = _objectWithoutPropertiesLoose(_ref, _excluded20), _ref2 = rootProps.slotProps?.baseTextField ?? {}, {
           slotProps: baseTextFieldSlotProps
         } = _ref2, baseTextFieldRest = _objectWithoutPropertiesLoose(_ref2, _excluded21);
-        return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(TextField_default, _extends({}, inputRest, {
+        return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(TextField_default, _extends({}, inputRest, {
           label,
           placeholder
         }, textFieldRest, baseTextFieldRest, {
@@ -43483,7 +43646,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, other, material));
   }
   function BaseInput(props) {
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(InputBase_default, _extends({}, transformInputProps(props)));
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(InputBase_default, _extends({}, transformInputProps(props)));
   }
   function transformInputProps(props, wrapAdornments = !0) {
     if (!props)
@@ -43492,10 +43655,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       slotProps,
       material
     } = props, result = _objectWithoutPropertiesLoose(props, _excluded222);
-    wrapAdornments && (result.startAdornment && (result.startAdornment = /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(InputAdornment3, {
+    wrapAdornments && (result.startAdornment && (result.startAdornment = /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(InputAdornment3, {
       position: "start",
       children: result.startAdornment
-    })), result.endAdornment && (result.endAdornment = /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(InputAdornment3, {
+    })), result.endAdornment && (result.endAdornment = /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(InputAdornment3, {
       position: "end",
       children: result.endAdornment
     })));
@@ -43507,7 +43670,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded23);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(TextareaAutosize_default, _extends({}, other, material, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(TextareaAutosize_default, _extends({}, other, material, {
       ref
     }));
   }), transformOrigin = {
@@ -43557,17 +43720,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       let handleExited = (popperOnExited) => (node2) => {
         popperOnExited && popperOnExited(), onExited && onExited(node2);
       };
-      content = (p) => wrappers(props, /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Grow_default, _extends({}, p.TransitionProps, {
+      content = (p) => wrappers(props, /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Grow_default, _extends({}, p.TransitionProps, {
         style: {
           transformOrigin: transformOrigin[p.placement]
         },
         onExited: handleExited(p.TransitionProps?.onExited),
-        children: /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Paper_default, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Paper_default, {
           children
         })
       })));
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(Popper_default, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(Popper_default, _extends({
       id,
       className,
       open,
@@ -43585,7 +43748,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return focusTrapWrapper(props, clickAwayWrapper(props, content));
   }
   function clickAwayWrapper(props, content) {
-    return props.onClickAway === void 0 ? content : /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(ClickAwayListener, {
+    return props.onClickAway === void 0 ? content : /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(ClickAwayListener, {
       onClickAway: props.onClickAway,
       touchEvent: props.clickAwayTouchEvent,
       mouseEvent: props.clickAwayMouseEvent,
@@ -43593,11 +43756,11 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     });
   }
   function focusTrapWrapper(props, content) {
-    return props.focusTrap === void 0 ? content : /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(FocusTrap_default, {
+    return props.focusTrap === void 0 ? content : /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(FocusTrap_default, {
       open: !0,
       disableEnforceFocus: !0,
       disableAutoFocus: !0,
-      children: /* @__PURE__ */ (0, import_jsx_runtime110.jsx)("div", {
+      children: /* @__PURE__ */ (0, import_jsx_runtime111.jsx)("div", {
         tabIndex: -1,
         children: content
       })
@@ -43607,7 +43770,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let {
       native
     } = _ref3, props = _objectWithoutPropertiesLoose(_ref3, _excluded25);
-    return native ? /* @__PURE__ */ (0, import_jsx_runtime110.jsx)("option", _extends({}, props)) : /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(MenuItem_default, _extends({}, props));
+    return native ? /* @__PURE__ */ (0, import_jsx_runtime111.jsx)("option", _extends({}, props)) : /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(MenuItem_default, _extends({}, props));
   }
   var StyledTabs = styled_default2(Tabs_default, {
     name: "MuiDataGrid",
@@ -43636,7 +43799,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       children,
       active: active2
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded26);
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(StyledTabPanel, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(StyledTabPanel, _extends({
       role: "tabpanel",
       style: {
         display: active2 ? "flex" : "none"
@@ -43651,19 +43814,19 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       value,
       material
     } = _ref4, props = _objectWithoutPropertiesLoose(_ref4, _excluded27), id = useId(), labelId = `${id}-tab-${value}`, panelId = `${id}-tabpanel-${value}`;
-    return /* @__PURE__ */ (0, import_jsx_runtime110.jsxs)(React132.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime110.jsx)(StyledTabs, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime111.jsxs)(React132.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime111.jsx)(StyledTabs, _extends({}, props, {
         value,
         variant: "scrollable",
         scrollButtons: "auto"
       }, material, {
-        children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(StyledTab, {
+        children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(StyledTab, {
           value: item.value,
           label: item.label,
           id: labelId,
           "aria-controls": panelId
         }, item.value))
-      })), items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime110.jsx)(TabPanel, {
+      })), items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(TabPanel, {
         value: item.value,
         active: value === item.value,
         id: panelId,
@@ -47030,8 +47193,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     handlerRef.current = handler;
     let cleanupTokenRef = React143.useRef(null);
     if (!subscription.current && handlerRef.current) {
-      let enhancedHandler = (params, event, details) => {
-        event && !event.defaultMuiPrevented && handlerRef.current?.(params, event, details);
+      let enhancedHandler = (params, event, details2) => {
+        event && !event.defaultMuiPrevented && handlerRef.current?.(params, event, details2);
       };
       subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options), cleanupTokensCounter += 1, cleanupTokenRef.current = {
         cleanupToken: cleanupTokensCounter
@@ -47046,8 +47209,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     } else !handlerRef.current && subscription.current && (subscription.current(), subscription.current = null, cleanupTokenRef.current && (registryContainer.current.unregister(cleanupTokenRef.current), cleanupTokenRef.current = null));
     React143.useEffect(() => {
       if (!subscription.current && handlerRef.current) {
-        let enhancedHandler = (params, event, details) => {
-          event && !event.defaultMuiPrevented && handlerRef.current?.(params, event, details);
+        let enhancedHandler = (params, event, details2) => {
+          event && !event.defaultMuiPrevented && handlerRef.current?.(params, event, details2);
         };
         subscription.current = apiRef.current.subscribeEvent(eventName, enhancedHandler, options);
       }
@@ -47082,7 +47245,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/x-data-grid/components/cell/GridEditInputCell.mjs
-  var import_jsx_runtime111 = __toESM(require_jsx_runtime(), 1), _excluded28 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "hasFocus", "isValidating", "debounceMs", "isProcessingProps", "onValueChange", "slotProps"], useUtilityClasses54 = (ownerState) => {
+  var import_jsx_runtime112 = __toESM(require_jsx_runtime(), 1), _excluded28 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "hasFocus", "isValidating", "debounceMs", "isProcessingProps", "onValueChange", "slotProps"], useUtilityClasses54 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -47124,7 +47287,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       meta?.changeReason !== "debouncedSetEditCellValue" && setValueState(value);
     }, [meta, value]), useEnhancedEffect_default(() => {
       hasFocus && inputRef.current.focus();
-    }, [hasFocus]), /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(GridEditInputCellRoot, _extends({
+    }, [hasFocus]), /* @__PURE__ */ (0, import_jsx_runtime112.jsx)(GridEditInputCellRoot, _extends({
       as: rootProps.slots.baseInput,
       inputRef,
       className: classes2.root,
@@ -47133,7 +47296,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       type: colDef.type === "number" ? colDef.type : "text",
       value: valueState ?? "",
       onChange: handleChange,
-      endAdornment: isProcessingProps ? /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(rootProps.slots.loadIcon, {
+      endAdornment: isProcessingProps ? /* @__PURE__ */ (0, import_jsx_runtime112.jsx)(rootProps.slots.loadIcon, {
         fontSize: "small",
         color: "action"
       }) : void 0
@@ -47141,7 +47304,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ref
     }));
   });
-  var renderEditInputCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime111.jsx)(GridEditInputCell, _extends({}, params));
+  var renderEditInputCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime112.jsx)(GridEditInputCell, _extends({}, params));
 
   // node_modules/@mui/x-data-grid/hooks/features/sorting/gridSortingUtils.mjs
   var sanitizeSortModel = (model, disableMultipleColumnsSorting) => disableMultipleColumnsSorting && model.length > 1 ? [model[0]] : model, mergeStateWithSortModel = (sortModel, disableMultipleColumnsSorting) => (state2) => _extends({}, state2, {
@@ -47190,7 +47353,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputValue.mjs
   var React145 = __toESM(require_react(), 1);
-  var import_jsx_runtime112 = __toESM(require_jsx_runtime(), 1), _excluded29 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "tabIndex", "disabled", "disableDebounce", "isFilterActive", "slotProps", "clearButton", "headerFilterMenu"];
+  var import_jsx_runtime113 = __toESM(require_jsx_runtime(), 1), _excluded29 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "tabIndex", "disabled", "disableDebounce", "isFilterActive", "slotProps", "clearButton", "headerFilterMenu"];
   function GridFilterInputValue(props) {
     let {
       item,
@@ -47221,8 +47384,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, [filterTimeout, debounceMs, item, type, id, applyValue]);
     return React145.useEffect(() => {
       (item.fromInput !== id || item.value == null) && setFilterValueState(sanitizeFilterItemValue(item.value));
-    }, [id, item]), /* @__PURE__ */ (0, import_jsx_runtime112.jsxs)(React145.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime112.jsx)(rootProps.slots.baseTextField, _extends({
+    }, [id, item]), /* @__PURE__ */ (0, import_jsx_runtime113.jsxs)(React145.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime113.jsx)(rootProps.slots.baseTextField, _extends({
         id,
         label: apiRef.current.getLocaleText("filterPanelInputLabel"),
         placeholder: apiRef.current.getLocaleText("filterPanelInputPlaceholder"),
@@ -47232,7 +47395,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         disabled,
         slotProps: _extends({}, textFieldProps?.slotProps, {
           input: _extends({
-            endAdornment: applying && debounceMs > 0 ? /* @__PURE__ */ (0, import_jsx_runtime112.jsx)(rootProps.slots.loadIcon, {
+            endAdornment: applying && debounceMs > 0 ? /* @__PURE__ */ (0, import_jsx_runtime113.jsx)(rootProps.slots.loadIcon, {
               fontSize: "small",
               color: "action"
             }) : null
@@ -47291,7 +47454,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputMultipleValue.mjs
   var React146 = __toESM(require_react(), 1);
-  var import_jsx_runtime113 = __toESM(require_jsx_runtime(), 1), _excluded30 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "slotProps", "disableDebounce"];
+  var import_jsx_runtime114 = __toESM(require_jsx_runtime(), 1), _excluded30 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "slotProps", "disableDebounce"];
   function GridFilterInputMultipleValue(props) {
     let {
       item,
@@ -47312,7 +47475,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, [applyValue, item, type]), handleInputChange = React146.useCallback((event, value) => {
       setOptions(value === "" ? [] : [value]);
     }, [setOptions]), BaseAutocomplete2 = rootProps.slots.baseAutocomplete;
-    return /* @__PURE__ */ (0, import_jsx_runtime113.jsx)(BaseAutocomplete2, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime114.jsx)(BaseAutocomplete2, _extends({
       multiple: !0,
       freeSolo: !0,
       options,
@@ -47759,9 +47922,9 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   };
 
   // node_modules/@mui/x-data-grid/utils/css/context.mjs
-  var import_jsx_runtime114 = __toESM(require_jsx_runtime(), 1), CLASSNAME_PREFIX = "MuiDataGridVariables", CSSVariablesContext = /* @__PURE__ */ React149.createContext({
+  var import_jsx_runtime115 = __toESM(require_jsx_runtime(), 1), CLASSNAME_PREFIX = "MuiDataGridVariables", CSSVariablesContext = /* @__PURE__ */ React149.createContext({
     className: "unset",
-    tag: /* @__PURE__ */ (0, import_jsx_runtime114.jsx)("style", {
+    tag: /* @__PURE__ */ (0, import_jsx_runtime115.jsx)("style", {
       href: "/unset"
     })
   });
@@ -47773,7 +47936,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
   function GridCSSVariablesContext(props) {
     let config = useGridConfiguration(), rootProps = useGridRootProps(), description = config.hooks.useCSSVariables(), context = React149.useMemo(() => {
-      let className = `${CLASSNAME_PREFIX}-${description.id}`, cssString = `.${className}{${variablesToString(description.variables)}}`, tag = /* @__PURE__ */ (0, import_jsx_runtime114.jsx)("style", {
+      let className = `${CLASSNAME_PREFIX}-${description.id}`, cssString = `.${className}{${variablesToString(description.variables)}}`, tag = /* @__PURE__ */ (0, import_jsx_runtime115.jsx)("style", {
         href: `/${className}`,
         nonce: rootProps.nonce,
         children: cssString
@@ -47783,7 +47946,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         tag
       };
     }, [rootProps.nonce, description]);
-    return /* @__PURE__ */ (0, import_jsx_runtime114.jsx)(CSSVariablesContext.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime115.jsx)(CSSVariablesContext.Provider, {
       value: context,
       children: props.children
     });
@@ -47796,7 +47959,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/menu/GridMenu.mjs
-  var import_jsx_runtime115 = __toESM(require_jsx_runtime(), 1), _excluded31 = ["open", "target", "onClose", "children", "position", "className", "onExited"], useUtilityClasses55 = (ownerState) => {
+  var import_jsx_runtime116 = __toESM(require_jsx_runtime(), 1), _excluded31 = ["open", "target", "onClose", "children", "position", "className", "onExited"], useUtilityClasses55 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -47836,7 +47999,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, handleKeyDown = (event) => {
       isHideMenuKey(event.key) && onClose(event);
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime115.jsx)(GridMenuRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime116.jsx)(GridMenuRoot, _extends({
       as: rootProps.slots.basePopper,
       className: clsx_default(classes2.root, className, variablesClass),
       ownerState: rootProps,
@@ -48010,7 +48173,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/cell/GridActionsCellItem.mjs
   var React151 = __toESM(require_react(), 1);
-  var import_jsx_runtime116 = __toESM(require_jsx_runtime(), 1), _excluded32 = ["label", "icon", "showInMenu", "onClick", "component", "href"], _excluded210 = ["label", "icon", "showInMenu", "onClick", "closeMenuOnClick", "closeMenu", "component", "href"], GridActionsCellItem = forwardRef68((props, ref) => {
+  var import_jsx_runtime117 = __toESM(require_jsx_runtime(), 1), _excluded32 = ["label", "icon", "showInMenu", "onClick", "component", "href"], _excluded210 = ["label", "icon", "showInMenu", "onClick", "closeMenuOnClick", "closeMenu", "component", "href"], GridActionsCellItem = forwardRef68((props, ref) => {
     let rootProps = useGridRootProps();
     if (!props.showInMenu) {
       let {
@@ -48022,7 +48185,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       } = props, other2 = _objectWithoutPropertiesLoose(props, _excluded32), handleClick2 = (event) => {
         onClick2?.(event);
       };
-      return /* @__PURE__ */ (0, import_jsx_runtime116.jsx)(rootProps.slots.baseIconButton, _extends({
+      return /* @__PURE__ */ (0, import_jsx_runtime117.jsx)(rootProps.slots.baseIconButton, _extends({
         size: "small",
         "aria-label": label2,
         component: component2,
@@ -48047,7 +48210,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded210), handleClick = (event) => {
       onClick?.(event), closeMenuOnClick && closeMenu?.();
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime116.jsx)(rootProps.slots.baseMenuItem, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime117.jsx)(rootProps.slots.baseMenuItem, _extends({
       ref,
       component: component ?? (href ? "a" : void 0),
       href
@@ -48059,7 +48222,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
 
   // node_modules/@mui/x-data-grid/components/cell/GridActionsCell.mjs
-  var import_jsx_runtime117 = __toESM(require_jsx_runtime(), 1), _excluded33 = ["api", "colDef", "id", "hasFocus", "isEditable", "field", "value", "formattedValue", "row", "rowNode", "cellMode", "tabIndex", "position", "onMenuOpen", "onMenuClose", "children", "suppressChildrenValidation"], hasActions = (colDef) => typeof colDef.getActions == "function";
+  var import_jsx_runtime118 = __toESM(require_jsx_runtime(), 1), _excluded33 = ["api", "colDef", "id", "hasFocus", "isEditable", "field", "value", "formattedValue", "row", "rowNode", "cellMode", "tabIndex", "position", "onMenuOpen", "onMenuClose", "children", "suppressChildrenValidation"], hasActions = (colDef) => typeof colDef.getActions == "function";
   function GridActionsCell(props) {
     let {
       id,
@@ -48121,7 +48284,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       // The wrapper carries no role on purpose: the buttons are plain buttons inside the
       // `gridcell`. It only relays the key events bubbling from them.
       // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-      /* @__PURE__ */ (0, import_jsx_runtime117.jsxs)("div", _extends({
+      /* @__PURE__ */ (0, import_jsx_runtime118.jsxs)("div", _extends({
         ref: rootRef,
         tabIndex: -1,
         className: gridClasses.actionsCell,
@@ -48132,7 +48295,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           touchRippleRef: handleTouchRippleRef(index),
           onClick: handleButtonClick(index, button.props.onClick),
           tabIndex: focusedButtonIndex === index ? tabIndex : -1
-        })), menuButtons.length > 0 && buttonId && /* @__PURE__ */ (0, import_jsx_runtime117.jsx)(rootProps.slots.baseIconButton, _extends({
+        })), menuButtons.length > 0 && buttonId && /* @__PURE__ */ (0, import_jsx_runtime118.jsx)(rootProps.slots.baseIconButton, _extends({
           ref: buttonRef,
           id: buttonId,
           "aria-label": apiRef.current.getLocaleText("actionsCellMore"),
@@ -48144,15 +48307,15 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           touchRippleRef: handleTouchRippleRef(buttonId),
           tabIndex: focusedButtonIndex === iconButtons.length ? tabIndex : -1
         }, rootProps.slotProps?.baseIconButton, {
-          children: /* @__PURE__ */ (0, import_jsx_runtime117.jsx)(rootProps.slots.moreActionsIcon, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime118.jsx)(rootProps.slots.moreActionsIcon, {
             fontSize: "small"
           })
-        })), menuButtons.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime117.jsx)(GridMenu, {
+        })), menuButtons.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime118.jsx)(GridMenu, {
           open,
           target: buttonRef.current,
           position: position2,
           onClose: hideMenu,
-          children: /* @__PURE__ */ (0, import_jsx_runtime117.jsx)(rootProps.slots.baseMenuList, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime118.jsx)(rootProps.slots.baseMenuList, {
             id: menuId,
             className: gridClasses.menuList,
             "aria-labelledby": buttonId,
@@ -48174,13 +48337,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     if (!hasActions(colDef))
       throw new Error(formatErrorMessage_default2(60));
     let actions3 = colDef.getActions(apiRef.current.getRowParams(id));
-    return /* @__PURE__ */ (0, import_jsx_runtime117.jsx)(GridActionsCell, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime118.jsx)(GridActionsCell, _extends({
       suppressChildrenValidation: !0
     }, props, {
       children: actions3
     }));
   }
-  var renderActionsCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime117.jsx)(GridActionsCellWrapper, _extends({}, params));
+  var renderActionsCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime118.jsx)(GridActionsCellWrapper, _extends({}, params));
 
   // node_modules/@mui/x-data-grid/colDef/gridActionsColDef.mjs
   var GRID_ACTIONS_COLUMN_TYPE = "actions", GRID_ACTIONS_COL_DEF = _extends({}, GRID_STRING_COL_DEF, {
@@ -48211,7 +48374,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/cell/GridFooterCell.mjs
   var React153 = __toESM(require_react(), 1);
-  var import_jsx_runtime118 = __toESM(require_jsx_runtime(), 1), _excluded34 = ["formattedValue", "colDef", "cellMode", "row", "api", "id", "value", "rowNode", "field", "hasFocus", "tabIndex", "isEditable"], GridFooterCellRoot = styled_default2("div", {
+  var import_jsx_runtime119 = __toESM(require_jsx_runtime(), 1), _excluded34 = ["formattedValue", "colDef", "cellMode", "row", "api", "id", "value", "rowNode", "field", "hasFocus", "tabIndex", "isEditable"], GridFooterCellRoot = styled_default2("div", {
     name: "MuiDataGrid",
     slot: "FooterCell"
   })({
@@ -48231,7 +48394,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded34), ownerState = {
       classes: useGridRootProps().classes
     }, classes2 = useUtilityClasses56(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime118.jsx)(GridFooterCellRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime119.jsx)(GridFooterCellRoot, _extends({
       ownerState,
       className: classes2.root
     }, other, {
@@ -48241,7 +48404,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var GridFooterCell = /* @__PURE__ */ React153.memo(GridFooterCellRaw);
 
   // node_modules/@mui/x-data-grid/components/cell/GridBooleanCell.mjs
-  var import_jsx_runtime119 = __toESM(require_jsx_runtime(), 1), _excluded35 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "hasFocus", "tabIndex", "hideDescendantCount"], useUtilityClasses57 = (ownerState) => {
+  var import_jsx_runtime120 = __toESM(require_jsx_runtime(), 1), _excluded35 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "hasFocus", "tabIndex", "hideDescendantCount"], useUtilityClasses57 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -48259,7 +48422,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       // @ts-expect-error - Access tree data prop
       useGridSelector(apiRef, gridRowMaximumTreeDepthSelector) > 0 && rowNode.type === "group" && rootProps.treeData === !1
     ), Icon = React154.useMemo(() => value ? rootProps.slots.booleanCellTrueIcon : rootProps.slots.booleanCellFalseIcon, [rootProps.slots.booleanCellFalseIcon, rootProps.slots.booleanCellTrueIcon, value]);
-    return isServerSideRowGroupingRow && value === void 0 ? null : /* @__PURE__ */ (0, import_jsx_runtime119.jsx)(Icon, _extends({
+    return isServerSideRowGroupingRow && value === void 0 ? null : /* @__PURE__ */ (0, import_jsx_runtime120.jsx)(Icon, _extends({
       fontSize: "small",
       className: classes2.root,
       titleAccess: apiRef.current.getLocaleText(value ? "booleanCellTrueLabel" : "booleanCellFalseLabel"),
@@ -48270,14 +48433,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var renderBooleanCell = (params) => {
     if (params.field !== GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD && isAutogeneratedRowNode(params.rowNode)) {
       let aggregationMetaData = params.aggregation;
-      return aggregationMetaData ? aggregationMetaData.position === "footer" ? /* @__PURE__ */ (0, import_jsx_runtime119.jsx)(GridFooterCell, _extends({}, params)) : params.formattedValue : "";
+      return aggregationMetaData ? aggregationMetaData.position === "footer" ? /* @__PURE__ */ (0, import_jsx_runtime120.jsx)(GridFooterCell, _extends({}, params)) : params.formattedValue : "";
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime119.jsx)(GridBooleanCell, _extends({}, params));
+    return /* @__PURE__ */ (0, import_jsx_runtime120.jsx)(GridBooleanCell, _extends({}, params));
   };
 
   // node_modules/@mui/x-data-grid/components/cell/GridEditBooleanCell.mjs
   var React155 = __toESM(require_react(), 1);
-  var import_jsx_runtime120 = __toESM(require_jsx_runtime(), 1), _excluded36 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "className", "hasFocus", "isValidating", "isProcessingProps", "error", "onValueChange"], useUtilityClasses58 = (ownerState) => {
+  var import_jsx_runtime121 = __toESM(require_jsx_runtime(), 1), _excluded36 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "className", "hasFocus", "isValidating", "isProcessingProps", "error", "onValueChange"], useUtilityClasses58 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -48307,11 +48470,11 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       setValueState(value);
     }, [value]), useEnhancedEffect_default(() => {
       hasFocus && inputRef.current.focus();
-    }, [hasFocus]), /* @__PURE__ */ (0, import_jsx_runtime120.jsx)("label", _extends({
+    }, [hasFocus]), /* @__PURE__ */ (0, import_jsx_runtime121.jsx)("label", _extends({
       htmlFor: id,
       className: clsx_default(classes2.root, className)
     }, other, {
-      children: /* @__PURE__ */ (0, import_jsx_runtime120.jsx)(rootProps.slots.baseCheckbox, _extends({
+      children: /* @__PURE__ */ (0, import_jsx_runtime121.jsx)(rootProps.slots.baseCheckbox, _extends({
         id,
         inputRef,
         checked: !!valueState,
@@ -48320,11 +48483,11 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       }, rootProps.slotProps?.baseCheckbox))
     }));
   }
-  var renderEditBooleanCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime120.jsx)(GridEditBooleanCell, _extends({}, params));
+  var renderEditBooleanCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime121.jsx)(GridEditBooleanCell, _extends({}, params));
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputBoolean.mjs
   var React156 = __toESM(require_react(), 1);
-  var import_jsx_runtime121 = __toESM(require_jsx_runtime(), 1), _excluded37 = ["item", "applyValue", "apiRef", "focusElementRef", "isFilterActive", "headerFilterMenu", "clearButton", "tabIndex", "slotProps", "disableDebounce"];
+  var import_jsx_runtime122 = __toESM(require_jsx_runtime(), 1), _excluded37 = ["item", "applyValue", "apiRef", "focusElementRef", "isFilterActive", "headerFilterMenu", "clearButton", "tabIndex", "slotProps", "disableDebounce"];
   function GridFilterInputBoolean(props) {
     let {
       item,
@@ -48345,8 +48508,8 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       setFilterValueState(sanitizeFilterItemValue2(item.value));
     }, [item.value]);
     let label = slotProps?.root.label ?? apiRef.current.getLocaleText("filterPanelInputLabel"), rootSlotProps = slotProps?.root.slotProps;
-    return /* @__PURE__ */ (0, import_jsx_runtime121.jsxs)(React156.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime121.jsxs)(rootProps.slots.baseSelect, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime122.jsxs)(React156.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime122.jsxs)(rootProps.slots.baseSelect, _extends({
         fullWidth: !0,
         labelId,
         id: selectId,
@@ -48361,15 +48524,15 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           }, rootSlotProps?.htmlInput)
         }
       }, baseSelectProps, other, slotProps?.root, {
-        children: [/* @__PURE__ */ (0, import_jsx_runtime121.jsx)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+        children: [/* @__PURE__ */ (0, import_jsx_runtime122.jsx)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
           native: isSelectNative,
           value: "",
           children: apiRef.current.getLocaleText("filterValueAny")
-        })), /* @__PURE__ */ (0, import_jsx_runtime121.jsx)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+        })), /* @__PURE__ */ (0, import_jsx_runtime122.jsx)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
           native: isSelectNative,
           value: "true",
           children: apiRef.current.getLocaleText("filterValueTrue")
-        })), /* @__PURE__ */ (0, import_jsx_runtime121.jsx)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+        })), /* @__PURE__ */ (0, import_jsx_runtime122.jsx)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
           native: isSelectNative,
           value: "false",
           children: apiRef.current.getLocaleText("filterValueFalse")
@@ -48545,7 +48708,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   };
 
   // node_modules/@mui/x-data-grid/components/columnSelection/GridCellCheckboxRenderer.mjs
-  var import_jsx_runtime122 = __toESM(require_jsx_runtime(), 1), _excluded38 = ["field", "id", "formattedValue", "row", "rowNode", "colDef", "isEditable", "cellMode", "hasFocus", "tabIndex", "api"], useUtilityClasses59 = (ownerState) => {
+  var import_jsx_runtime123 = __toESM(require_jsx_runtime(), 1), _excluded38 = ["field", "id", "formattedValue", "row", "rowNode", "colDef", "isEditable", "cellMode", "hasFocus", "tabIndex", "api"], useUtilityClasses59 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -48594,7 +48757,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     if (rowNode.type === "footer" || rowNode.type === "pinnedRow")
       return null;
     let label = apiRef.current.getLocaleText(isChecked && !isIndeterminate ? "checkboxSelectionUnselectRow" : "checkboxSelectionSelectRow");
-    return /* @__PURE__ */ (0, import_jsx_runtime122.jsx)(rootProps.slots.rowCheckbox, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime123.jsx)(rootProps.slots.rowCheckbox, _extends({
       rowId: id,
       tabIndex: disabled ? -1 : tabIndex,
       checked: isChecked && !isIndeterminate,
@@ -48625,7 +48788,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var gridFocusStateSelector = createRootSelector((state2) => state2.focus), gridFocusCellSelector = createSelector2(gridFocusStateSelector, (focusState) => focusState.cell), gridFocusColumnHeaderSelector = createSelector2(gridFocusStateSelector, (focusState) => focusState.columnHeader), gridFocusColumnHeaderFilterSelector = createSelector2(gridFocusStateSelector, (focusState) => focusState.columnHeaderFilter), gridFocusColumnGroupHeaderSelector = createSelector2(gridFocusStateSelector, (focusState) => focusState.columnGroupHeader), gridTabIndexStateSelector = createRootSelector((state2) => state2.tabIndex), gridTabIndexCellSelector = createSelector2(gridTabIndexStateSelector, (state2) => state2.cell), gridTabIndexColumnHeaderSelector = createSelector2(gridTabIndexStateSelector, (state2) => state2.columnHeader), gridTabIndexColumnHeaderFilterSelector = createSelector2(gridTabIndexStateSelector, (state2) => state2.columnHeaderFilter), gridTabIndexColumnGroupHeaderSelector = createSelector2(gridTabIndexStateSelector, (state2) => state2.columnGroupHeader);
 
   // node_modules/@mui/x-data-grid/components/columnSelection/GridHeaderCheckbox.mjs
-  var import_jsx_runtime123 = __toESM(require_jsx_runtime(), 1), _excluded39 = ["field", "colDef"], useUtilityClasses60 = (ownerState) => {
+  var import_jsx_runtime124 = __toESM(require_jsx_runtime(), 1), _excluded39 = ["field", "colDef"], useUtilityClasses60 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -48685,7 +48848,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, []);
     React158.useEffect(() => apiRef.current.subscribeEvent("rowSelectionChange", handleSelectionChange), [apiRef, handleSelectionChange]);
     let label = apiRef.current.getLocaleText(isChecked && !isIndeterminate ? "checkboxSelectionUnselectAllRows" : "checkboxSelectionSelectAllRows");
-    return /* @__PURE__ */ (0, import_jsx_runtime123.jsx)(rootProps.slots.baseCheckbox, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime124.jsx)(rootProps.slots.baseCheckbox, _extends({
       indeterminate: isIndeterminate,
       checked: isChecked && !isIndeterminate,
       onChange: handleChange,
@@ -48705,7 +48868,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
 
   // node_modules/@mui/x-data-grid/colDef/gridCheckboxSelectionColDef.mjs
-  var import_jsx_runtime124 = __toESM(require_jsx_runtime(), 1), GRID_CHECKBOX_SELECTION_FIELD = "__check__", GRID_CHECKBOX_SELECTION_COL_DEF = _extends({}, GRID_BOOLEAN_COL_DEF, {
+  var import_jsx_runtime125 = __toESM(require_jsx_runtime(), 1), GRID_CHECKBOX_SELECTION_FIELD = "__check__", GRID_CHECKBOX_SELECTION_COL_DEF = _extends({}, GRID_BOOLEAN_COL_DEF, {
     type: "custom",
     field: GRID_CHECKBOX_SELECTION_FIELD,
     width: 50,
@@ -48726,13 +48889,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       return apiRef.current.isRowSelected(rowId);
     },
     rowSpanValueGetter: (_, row, column2, apiRef) => gridRowIdSelector(apiRef, row),
-    renderHeader: (params) => /* @__PURE__ */ (0, import_jsx_runtime124.jsx)(GridHeaderCheckbox, _extends({}, params)),
-    renderCell: (params) => /* @__PURE__ */ (0, import_jsx_runtime124.jsx)(GridCellCheckboxRenderer2, _extends({}, params))
+    renderHeader: (params) => /* @__PURE__ */ (0, import_jsx_runtime125.jsx)(GridHeaderCheckbox, _extends({}, params)),
+    renderCell: (params) => /* @__PURE__ */ (0, import_jsx_runtime125.jsx)(GridCellCheckboxRenderer2, _extends({}, params))
   });
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputDate.mjs
   var React159 = __toESM(require_react(), 1);
-  var import_jsx_runtime125 = __toESM(require_jsx_runtime(), 1), _excluded40 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "slotProps", "isFilterActive", "headerFilterMenu", "clearButton", "tabIndex", "disabled", "disableDebounce"];
+  var import_jsx_runtime126 = __toESM(require_jsx_runtime(), 1), _excluded40 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "slotProps", "isFilterActive", "headerFilterMenu", "clearButton", "tabIndex", "disabled", "disableDebounce"];
   function convertFilterItemValueToInputValue(itemValue, inputType) {
     if (itemValue == null)
       return "";
@@ -48770,8 +48933,8 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     return React159.useEffect(() => {
       let value = convertFilterItemValueToInputValue(item.value, type);
       setFilterValueState(value);
-    }, [item.value, type]), /* @__PURE__ */ (0, import_jsx_runtime125.jsxs)(React159.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime125.jsx)(rootProps.slots.baseTextField, _extends({
+    }, [item.value, type]), /* @__PURE__ */ (0, import_jsx_runtime126.jsxs)(React159.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime126.jsx)(rootProps.slots.baseTextField, _extends({
         fullWidth: !0,
         id,
         label: apiRef.current.getLocaleText("filterPanelInputLabel"),
@@ -48783,7 +48946,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         inputRef: focusElementRef,
         slotProps: _extends({}, rootSlotProps, {
           input: _extends({
-            endAdornment: applying && debounceMs > 0 ? /* @__PURE__ */ (0, import_jsx_runtime125.jsx)(rootProps.slots.loadIcon, {
+            endAdornment: applying && debounceMs > 0 ? /* @__PURE__ */ (0, import_jsx_runtime126.jsx)(rootProps.slots.loadIcon, {
               fontSize: "small",
               color: "action"
             }) : null
@@ -48867,7 +49030,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/cell/GridEditDateCell.mjs
   var React160 = __toESM(require_react(), 1);
-  var import_jsx_runtime126 = __toESM(require_jsx_runtime(), 1), _excluded41 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "hasFocus", "inputProps", "isValidating", "isProcessingProps", "onValueChange", "slotProps"], StyledInputBase = styled_default2(NotRendered, {
+  var import_jsx_runtime127 = __toESM(require_jsx_runtime(), 1), _excluded41 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "hasFocus", "inputProps", "isValidating", "isProcessingProps", "onValueChange", "slotProps"], StyledInputBase = styled_default2(NotRendered, {
     slot: "internal"
   })({
     fontSize: "inherit"
@@ -48922,7 +49085,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       setValueState((state2) => valueTransformed.parsed !== state2.parsed && valueTransformed.parsed?.getTime() !== state2.parsed?.getTime() ? valueTransformed : state2);
     }, [valueTransformed]), useEnhancedEffect_default(() => {
       hasFocus && inputRef.current.focus();
-    }, [hasFocus]), /* @__PURE__ */ (0, import_jsx_runtime126.jsx)(StyledInputBase, _extends({
+    }, [hasFocus]), /* @__PURE__ */ (0, import_jsx_runtime127.jsx)(StyledInputBase, _extends({
       as: rootProps.slots.baseInput,
       inputRef,
       fullWidth: !0,
@@ -48938,7 +49101,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       }
     }));
   }
-  var renderEditDateCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime126.jsx)(GridEditDateCell, _extends({}, params));
+  var renderEditDateCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime127.jsx)(GridEditDateCell, _extends({}, params));
 
   // node_modules/@mui/x-data-grid/colDef/gridDateColDef.mjs
   function throwIfNotDateObject({
@@ -49086,7 +49249,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/cell/GridEditSingleSelectCell.mjs
-  var import_react21 = __toESM(require_react(), 1), import_jsx_runtime127 = __toESM(require_jsx_runtime(), 1), _excluded42 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "className", "hasFocus", "isValidating", "isProcessingProps", "error", "onValueChange", "initialOpen", "slotProps"];
+  var import_react22 = __toESM(require_react(), 1), import_jsx_runtime128 = __toESM(require_jsx_runtime(), 1), _excluded42 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "className", "hasFocus", "isValidating", "isProcessingProps", "error", "onValueChange", "initialOpen", "slotProps"];
   function isKeyboardEvent2(event) {
     return "key" in event && !!event.key;
   }
@@ -49137,7 +49300,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, handleOpen = (event) => {
       isKeyboardEvent2(event) && event.key === "Enter" || setOpen(!0);
     };
-    return !valueOptions || !colDef ? null : /* @__PURE__ */ (0, import_jsx_runtime127.jsx)(rootProps.slots.baseSelect, _extends({
+    return !valueOptions || !colDef ? null : /* @__PURE__ */ (0, import_jsx_runtime128.jsx)(rootProps.slots.baseSelect, _extends({
       ref,
       value: valueProp,
       onChange: handleChange,
@@ -49155,7 +49318,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, slotProps?.root, rootProps.slotProps?.baseSelect, {
       children: valueOptions.map((valueOption) => {
         let value = getOptionValue(valueOption);
-        return /* @__PURE__ */ (0, import_react21.createElement)(rootProps.slots.baseSelectOption, _extends({}, rootProps.slotProps?.baseSelectOption || {}, {
+        return /* @__PURE__ */ (0, import_react22.createElement)(rootProps.slots.baseSelectOption, _extends({}, rootProps.slotProps?.baseSelectOption || {}, {
           native: isSelectNative,
           key: value,
           value
@@ -49163,11 +49326,11 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       })
     }));
   }
-  var renderEditSingleSelectCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime127.jsx)(GridEditSingleSelectCell, _extends({}, params));
+  var renderEditSingleSelectCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime128.jsx)(GridEditSingleSelectCell, _extends({}, params));
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputSingleSelect.mjs
   var React162 = __toESM(require_react(), 1);
-  var import_react22 = __toESM(require_react(), 1), import_jsx_runtime128 = __toESM(require_jsx_runtime(), 1), _excluded43 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "tabIndex", "isFilterActive", "clearButton", "headerFilterMenu", "slotProps", "disableDebounce"], renderSingleSelectOptions = ({
+  var import_react23 = __toESM(require_react(), 1), import_jsx_runtime129 = __toESM(require_jsx_runtime(), 1), _excluded43 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "tabIndex", "isFilterActive", "clearButton", "headerFilterMenu", "slotProps", "disableDebounce"], renderSingleSelectOptions = ({
     column: column2,
     OptionComponent,
     getOptionLabel,
@@ -49182,7 +49345,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     });
     return (declaresBlankOption ? valueOptions : ["", ...valueOptions]).map((option, index) => {
       let isBlankOption = !declaresBlankOption && index === 0, value = isBlankOption ? "" : getOptionValue(option), label = isBlankOption ? blankOptionLabel : getOptionLabel(option);
-      return label === "" && (label = " "), /* @__PURE__ */ (0, import_react22.createElement)(OptionComponent, _extends({}, baseSelectOptionProps, {
+      return label === "" && (label = " "), /* @__PURE__ */ (0, import_react23.createElement)(OptionComponent, _extends({}, baseSelectOptionProps, {
         native: isSelectNative,
         key: value,
         value
@@ -49209,8 +49372,8 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     if (!resolvedColumn || !isSingleSelectColDef(resolvedColumn))
       return null;
     let label = slotProps?.root.label ?? apiRef.current.getLocaleText("filterPanelInputLabel");
-    return /* @__PURE__ */ (0, import_jsx_runtime128.jsxs)(React162.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime128.jsx)(rootProps.slots.baseSelect, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime129.jsxs)(React162.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime129.jsx)(rootProps.slots.baseSelect, _extends({
         fullWidth: !0,
         id,
         label,
@@ -49242,7 +49405,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputMultipleSingleSelect.mjs
   var React163 = __toESM(require_react(), 1);
-  var import_jsx_runtime129 = __toESM(require_jsx_runtime(), 1), _excluded44 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "slotProps", "disableDebounce"];
+  var import_jsx_runtime130 = __toESM(require_jsx_runtime(), 1), _excluded44 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "slotProps", "disableDebounce"];
   function GridFilterInputMultipleSingleSelect(props) {
     let {
       item,
@@ -49262,7 +49425,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     if (!resolvedColumn || !isSingleSelectColDef(resolvedColumn))
       return null;
     let BaseAutocomplete2 = rootProps.slots.baseAutocomplete;
-    return /* @__PURE__ */ (0, import_jsx_runtime129.jsx)(BaseAutocomplete2, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime130.jsx)(BaseAutocomplete2, _extends({
       multiple: !0,
       options: resolvedValueOptions,
       isOptionEqualToValue,
@@ -49336,7 +49499,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/cell/GridLongTextCell.mjs
   var React164 = __toESM(require_react(), 1);
-  var import_jsx_runtime130 = __toESM(require_jsx_runtime(), 1), useUtilityClasses62 = (ownerState) => {
+  var import_jsx_runtime131 = __toESM(require_jsx_runtime(), 1), useUtilityClasses62 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -49451,14 +49614,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, handleCollapseClick = (event) => {
       event.stopPropagation(), setPopupOpen(!1), apiRef.current.getCellElement(id, colDef.field)?.focus();
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime130.jsxs)(GridLongTextCellRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime131.jsxs)(GridLongTextCellRoot, _extends({
       ref: cellRef
     }, slotProps?.root, {
       className: clsx_default(classes2.root, slotProps?.root?.className, hasFocus && "Mui-focused"),
-      children: [/* @__PURE__ */ (0, import_jsx_runtime130.jsx)(GridLongTextCellContent, _extends({}, slotProps?.content, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridLongTextCellContent, _extends({}, slotProps?.content, {
         className: clsx_default(classes2.content, slotProps?.content?.className),
         children: value
-      })), /* @__PURE__ */ (0, import_jsx_runtime130.jsx)(GridLongTextCellCornerButton, _extends({
+      })), /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridLongTextCellCornerButton, _extends({
         ref: cornerButtonRef,
         type: "button",
         "aria-label": `${value}, ${apiRef.current.getLocaleText("longTextCellExpandLabel")}`,
@@ -49471,10 +49634,10 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         className: clsx_default(classes2.expandButton, slotProps?.expandButton?.className),
         onClick: handleExpandClick,
         onKeyDown: handleExpandKeyDown,
-        children: /* @__PURE__ */ (0, import_jsx_runtime130.jsx)(rootProps.slots.longTextCellExpandIcon, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(rootProps.slots.longTextCellExpandIcon, {
           fontSize: "inherit"
         })
-      })), /* @__PURE__ */ (0, import_jsx_runtime130.jsx)(GridLongTextCellPopper, _extends({
+      })), /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridLongTextCellPopper, _extends({
         id: popupId,
         role: "dialog",
         "aria-label": colDef.headerName || colDef.field,
@@ -49497,7 +49660,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         }
       }, slotProps?.popper, {
         className: clsx_default(classes2.popup, slotProps?.popper?.className),
-        children: /* @__PURE__ */ (0, import_jsx_runtime130.jsxs)(GridLongTextCellPopperContent, _extends({
+        children: /* @__PURE__ */ (0, import_jsx_runtime131.jsxs)(GridLongTextCellPopperContent, _extends({
           tabIndex: -1,
           onKeyDown: (event) => {
             event.key === "Escape" && (event.stopPropagation(), setPopupOpen(!1), apiRef.current.getCellElement(id, colDef.field)?.focus());
@@ -49507,14 +49670,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           style: _extends({
             "--_width": `${colDef.computedWidth}px`
           }, slotProps?.popperContent?.style),
-          children: [renderContent ? renderContent(value) : value, /* @__PURE__ */ (0, import_jsx_runtime130.jsx)(GridLongTextCellCornerButton, _extends({
+          children: [renderContent ? renderContent(value) : value, /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridLongTextCellCornerButton, _extends({
             type: "button",
             "aria-label": apiRef.current.getLocaleText("longTextCellCollapseLabel"),
             "aria-keyshortcuts": "Escape"
           }, slotProps?.collapseButton, {
             className: clsx_default(classes2.collapseButton, slotProps?.collapseButton?.className),
             onClick: handleCollapseClick,
-            children: /* @__PURE__ */ (0, import_jsx_runtime130.jsx)(rootProps.slots.longTextCellCollapseIcon, {
+            children: /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(rootProps.slots.longTextCellCollapseIcon, {
               fontSize: "inherit"
             })
           }))]
@@ -49522,11 +49685,11 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       }))]
     }));
   }
-  var renderLongTextCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime130.jsx)(GridLongTextCell, _extends({}, params));
+  var renderLongTextCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridLongTextCell, _extends({}, params));
 
   // node_modules/@mui/x-data-grid/components/cell/GridEditLongTextCell.mjs
   var React165 = __toESM(require_react(), 1);
-  var import_jsx_runtime131 = __toESM(require_jsx_runtime(), 1), useUtilityClasses63 = (ownerState) => {
+  var import_jsx_runtime132 = __toESM(require_jsx_runtime(), 1), useUtilityClasses63 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -49611,17 +49774,17 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, rootProps = useGridRootProps(), apiRef = useGridApiContext(), classes2 = useUtilityClasses63(rootProps), rowHeight = useGridSelector(apiRef, gridRowHeightSelector), [valueState, setValueState] = React165.useState(value), [anchorEl, setAnchorEl] = React165.useState(null), meta = apiRef.current.unstable_getEditCellMeta(id, field2), popupId = `${id}-${field2}-longtext-edit-popup`, showPopup = hasFocus && !!anchorEl;
     return React165.useEffect(() => {
       meta?.changeReason !== "debouncedSetEditCellValue" && setValueState(value);
-    }, [meta, value]), /* @__PURE__ */ (0, import_jsx_runtime131.jsxs)(GridEditLongTextCellRoot, _extends({
+    }, [meta, value]), /* @__PURE__ */ (0, import_jsx_runtime132.jsxs)(GridEditLongTextCellRoot, _extends({
       tabIndex: cellMode === "edit" && rootProps.editMode === "row" ? 0 : void 0,
       ref: setAnchorEl,
       "aria-controls": showPopup ? popupId : void 0,
       "aria-expanded": showPopup
     }, slotProps?.root, {
       className: clsx_default(classes2.root, slotProps?.root?.className),
-      children: [/* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridEditLongTextCellValue, _extends({}, slotProps?.value, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridEditLongTextCellValue, _extends({}, slotProps?.value, {
         className: clsx_default(classes2.value, slotProps?.value?.className),
         children: valueState
-      })), /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridEditLongTextCellPopper, _extends({
+      })), /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridEditLongTextCellPopper, _extends({
         as: rootProps.slots.basePopper,
         ownerState: rootProps,
         id: popupId,
@@ -49642,12 +49805,12 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         }
       }, slotProps?.popper, {
         className: clsx_default(classes2.popup, slotProps?.popper?.className),
-        children: /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridEditLongTextCellPopperContent, _extends({}, slotProps?.popperContent, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridEditLongTextCellPopperContent, _extends({}, slotProps?.popperContent, {
           className: clsx_default(classes2.popperContent, slotProps?.popperContent?.className),
           style: {
             "--_width": `${colDef.computedWidth}px`
           },
-          children: /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridEditLongTextarea, _extends({}, props, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridEditLongTextarea, _extends({}, props, {
             valueState,
             setValueState
           }))
@@ -49692,7 +49855,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         ignoreModifications: !0
       });
     }, [apiRef, field2, id, rootProps.editMode]);
-    return /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridEditLongTextCellTextarea, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridEditLongTextCellTextarea, _extends({
       ref: textareaRef,
       as: rootProps.slots.baseTextarea,
       ownerState: rootProps,
@@ -49704,7 +49867,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       className: clsx_default(classes2.textarea, slotProps?.textarea?.className)
     }));
   }
-  var renderEditLongTextCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime131.jsx)(GridEditLongTextCell, _extends({}, params));
+  var renderEditLongTextCell = (params) => /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridEditLongTextCell, _extends({}, params));
 
   // node_modules/@mui/x-data-grid/colDef/gridLongTextColDef.mjs
   var GRID_LONG_TEXT_COL_DEF = _extends({}, GRID_STRING_COL_DEF, {
@@ -49909,7 +50072,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var gridColumnReorderDragColDefensiveSelector = createRootSelector((state2) => state2.columnReorder?.dragCol);
 
   // node_modules/@mui/x-data-grid/components/GridScrollArea.mjs
-  var import_jsx_runtime132 = __toESM(require_jsx_runtime(), 1), CLIFF = 1, SLOP = 1.5, useUtilityClasses64 = (ownerState) => {
+  var import_jsx_runtime133 = __toESM(require_jsx_runtime(), 1), CLIFF = 1, SLOP = 1.5, useUtilityClasses64 = (ownerState) => {
     let {
       scrollDirection,
       classes: classes2
@@ -49958,7 +50121,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   })), offsetSelector = createSelector2(gridDimensionsSelector, (dimensions, direction) => direction === "left" ? dimensions.leftPinnedWidth : direction === "right" ? dimensions.rightPinnedWidth + (dimensions.hasScrollX ? dimensions.scrollbarSize : 0) : 0), gridDragDirectionSelector = createSelector2(gridColumnReorderDragColDefensiveSelector, gridIsRowDragActiveSelector, (dragCol, isRowDragActive) => dragCol ? "horizontal" : isRowDragActive ? "vertical" : "none");
   function GridScrollAreaWrapper(props) {
     let apiRef = useGridApiContext(), dragDirection = useGridSelector(apiRef, gridDragDirectionSelector);
-    return dragDirection === "none" ? null : dragDirection === "horizontal" ? /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridHorizontalScrollAreaContent, _extends({}, props)) : /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridVerticalScrollAreaContent, _extends({}, props));
+    return dragDirection === "none" ? null : dragDirection === "horizontal" ? /* @__PURE__ */ (0, import_jsx_runtime133.jsx)(GridHorizontalScrollAreaContent, _extends({}, props)) : /* @__PURE__ */ (0, import_jsx_runtime133.jsx)(GridVerticalScrollAreaContent, _extends({}, props));
   }
   function GridHorizontalScrollAreaContent(props) {
     let {
@@ -49995,7 +50158,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         });
       });
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridScrollAreaContent, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime133.jsx)(GridScrollAreaContent, _extends({}, props, {
       ref: rootRef,
       getCanScrollMore,
       style: style4,
@@ -50033,7 +50196,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         });
       });
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridScrollAreaContent, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime133.jsx)(GridScrollAreaContent, _extends({}, props, {
       ref: rootRef,
       getCanScrollMore,
       style: style4,
@@ -50051,7 +50214,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }), classes2 = useUtilityClasses64(ownerState);
     return useGridEvent(apiRef, "scrollPositionChange", () => {
       setCanScrollMore(getCanScrollMore);
-    }), canScrollMore ? /* @__PURE__ */ (0, import_jsx_runtime132.jsx)(GridScrollAreaRawRoot, {
+    }), canScrollMore ? /* @__PURE__ */ (0, import_jsx_runtime133.jsx)(GridScrollAreaRawRoot, {
       ref,
       className: classes2.root,
       ownerState,
@@ -50135,10 +50298,10 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var gridColumnMenuSelector = createRootSelector((state2) => state2.columnMenu);
 
   // node_modules/@mui/x-data-grid/components/GridHeaders.mjs
-  var import_jsx_runtime133 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime134 = __toESM(require_jsx_runtime(), 1);
   function GridHeaders() {
     let apiRef = useGridPrivateApiContext(), rootProps = useGridRootProps(), visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector), filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector), sortColumnLookup = useGridSelector(apiRef, gridSortColumnLookupSelector), columnHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector), hasNoCellTabIndexState = useGridSelector(apiRef, () => gridTabIndexCellSelector(apiRef) === null), columnGroupHeaderTabIndexState = useGridSelector(apiRef, gridTabIndexColumnGroupHeaderSelector), columnHeaderFocus = useGridSelector(apiRef, gridFocusColumnHeaderSelector), columnGroupHeaderFocus = useGridSelector(apiRef, gridFocusColumnGroupHeaderSelector), headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector), columnMenuState = useGridSelector(apiRef, gridColumnMenuSelector), columnVisibility = useGridSelector(apiRef, gridColumnVisibilityModelSelector), columnGroupsHeaderStructure = useGridSelector(apiRef, gridColumnGroupsHeaderStructureSelector), hasOtherElementInTabSequence = !(columnGroupHeaderTabIndexState === null && columnHeaderTabIndexState === null && hasNoCellTabIndexState), columnsContainerRef = apiRef.current.columnHeadersContainerRef;
-    return /* @__PURE__ */ (0, import_jsx_runtime133.jsx)(rootProps.slots.columnHeaders, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime134.jsx)(rootProps.slots.columnHeaders, _extends({
       ref: columnsContainerRef,
       visibleColumns,
       filterColumnLookup,
@@ -50158,7 +50321,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/virtualization/GridMainContainer.mjs
   var React171 = __toESM(require_react(), 1);
-  var import_jsx_runtime134 = __toESM(require_jsx_runtime(), 1), GridPanelAnchor = styled_default2("div", {
+  var import_jsx_runtime135 = __toESM(require_jsx_runtime(), 1), GridPanelAnchor = styled_default2("div", {
     slot: "internal",
     shouldForwardProp: void 0
   })({
@@ -50187,13 +50350,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       ownerState
     } = props, rootProps = useGridRootProps(), ariaAttributes = useGridConfiguration().hooks.useGridAriaAttributes();
-    return /* @__PURE__ */ (0, import_jsx_runtime134.jsxs)(Element2, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime135.jsxs)(Element2, _extends({
       ownerState,
       className: props.className,
       tabIndex: -1
     }, ariaAttributes, rootProps.slotProps?.main, {
       ref,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime134.jsx)(GridPanelAnchor, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime135.jsx)(GridPanelAnchor, {
         role: "none",
         "data-id": "gridPanelAnchor"
       }), props.children]
@@ -50202,7 +50365,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/virtualization/GridTopContainer.mjs
   var React172 = __toESM(require_react(), 1);
-  var import_jsx_runtime135 = __toESM(require_jsx_runtime(), 1), useUtilityClasses65 = () => composeClasses({
+  var import_jsx_runtime136 = __toESM(require_jsx_runtime(), 1), useUtilityClasses65 = () => composeClasses({
     root: ["topContainer"]
   }, getDataGridUtilityClass, {}), Element3 = styled_default2("div", {
     slot: "internal",
@@ -50214,7 +50377,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
   function GridTopContainer(props) {
     let classes2 = useUtilityClasses65();
-    return /* @__PURE__ */ (0, import_jsx_runtime135.jsx)(Element3, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime136.jsx)(Element3, _extends({}, props, {
       className: clsx_default(classes2.root, gridClasses["container--top"]),
       role: "none"
     }));
@@ -50222,7 +50385,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/virtualization/GridVirtualScrollerContent.mjs
   var React173 = __toESM(require_react(), 1);
-  var import_jsx_runtime136 = __toESM(require_jsx_runtime(), 1), useUtilityClasses66 = (props, overflowedContent) => {
+  var import_jsx_runtime137 = __toESM(require_jsx_runtime(), 1), useUtilityClasses66 = (props, overflowedContent) => {
     let {
       classes: classes2
     } = props;
@@ -50247,7 +50410,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       classes: rootProps.classes,
       overflowedContent
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime136.jsx)(VirtualScrollerContentRoot, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime137.jsx)(VirtualScrollerContentRoot, _extends({}, props, {
       ownerState,
       className: clsx_default(classes2.root, props.className),
       ref
@@ -50256,7 +50419,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/virtualization/GridVirtualScrollerFiller.mjs
   var React174 = __toESM(require_react(), 1);
-  var import_jsx_runtime137 = __toESM(require_jsx_runtime(), 1), Filler = styled_default2("div", {
+  var import_jsx_runtime138 = __toESM(require_jsx_runtime(), 1), Filler = styled_default2("div", {
     slot: "internal",
     shouldForwardProp: void 0
   })({
@@ -50300,19 +50463,19 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       leftPinnedWidth,
       rightPinnedWidth
     } = useGridSelector(apiRef, gridDimensionsSelector), height2 = hasScrollX ? scrollbarSize : 0, needsLastRowBorder = viewportOuterSize.height - minimumSize.height > 0;
-    return height2 === 0 && !needsLastRowBorder ? null : /* @__PURE__ */ (0, import_jsx_runtime137.jsxs)(Filler, {
+    return height2 === 0 && !needsLastRowBorder ? null : /* @__PURE__ */ (0, import_jsx_runtime138.jsxs)(Filler, {
       className: gridClasses.filler,
       role: "none",
       style: {
         height: height2,
         "--rowBorderColor": rowsLength === 0 ? "transparent" : "var(--DataGrid-rowBorderColor)"
       },
-      children: [leftPinnedWidth > 0 && /* @__PURE__ */ (0, import_jsx_runtime137.jsx)(PinnedLeft, {
+      children: [leftPinnedWidth > 0 && /* @__PURE__ */ (0, import_jsx_runtime138.jsx)(PinnedLeft, {
         className: gridClasses["filler--pinnedLeft"],
         style: {
           width: leftPinnedWidth
         }
-      }), /* @__PURE__ */ (0, import_jsx_runtime137.jsx)(Main, {}), rightPinnedWidth > 0 && /* @__PURE__ */ (0, import_jsx_runtime137.jsx)(PinnedRight, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime138.jsx)(Main, {}), rightPinnedWidth > 0 && /* @__PURE__ */ (0, import_jsx_runtime138.jsx)(PinnedRight, {
         className: gridClasses["filler--pinnedRight"],
         style: {
           width: rightPinnedWidth + (hasScrollY ? scrollbarSize : 0)
@@ -50324,7 +50487,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/virtualization/GridVirtualScrollerRenderZone.mjs
   var React175 = __toESM(require_react(), 1);
-  var import_jsx_runtime138 = __toESM(require_jsx_runtime(), 1), useUtilityClasses67 = (ownerState) => {
+  var import_jsx_runtime139 = __toESM(require_jsx_runtime(), 1), useUtilityClasses67 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -50341,7 +50504,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     flexDirection: "column"
   }), GridVirtualScrollerRenderZone = forwardRef68(function(props, ref) {
     let rootProps = useGridRootProps(), classes2 = useUtilityClasses67(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime138.jsx)(VirtualScrollerRenderZoneRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime139.jsx)(VirtualScrollerRenderZoneRoot, _extends({
       ownerState: rootProps
     }, props, {
       className: clsx_default(classes2.root, props.className),
@@ -50509,7 +50672,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   };
 
   // node_modules/@mui/x-data-grid/components/virtualization/GridVirtualScrollbar.mjs
-  var import_jsx_runtime139 = __toESM(require_jsx_runtime(), 1), useUtilityClasses68 = (ownerState, position2) => {
+  var import_jsx_runtime140 = __toESM(require_jsx_runtime(), 1), useUtilityClasses68 = (ownerState, position2) => {
     let {
       classes: classes2
     } = ownerState, slots = {
@@ -50576,7 +50739,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let apiRef = useGridPrivateApiContext(), rootProps = useGridRootProps(), classes2 = useUtilityClasses68(rootProps, props.position), dimensions = useGridSelector(apiRef, gridDimensionsSelector), propertyDimension = props.position === "vertical" ? "height" : "width", scrollbarInnerSize = props.position === "horizontal" ? dimensions.minimumSize.width : dimensions.minimumSize.height - dimensions.headersTotalHeight, Container = props.position === "vertical" ? ScrollbarVertical : ScrollbarHorizontal, scrollbarInnerStyle = React177.useMemo(() => ({
       [propertyDimension]: `${scrollbarInnerSize}px`
     }), [propertyDimension, scrollbarInnerSize]);
-    return /* @__PURE__ */ (0, import_jsx_runtime139.jsx)(Container, {
+    return /* @__PURE__ */ (0, import_jsx_runtime140.jsx)(Container, {
       ref,
       className: classes2.root,
       tabIndex: -1,
@@ -50584,7 +50747,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       onFocus: (event) => {
         event.target.blur();
       },
-      children: /* @__PURE__ */ (0, import_jsx_runtime139.jsx)("div", {
+      children: /* @__PURE__ */ (0, import_jsx_runtime140.jsx)("div", {
         className: classes2.content,
         style: scrollbarInnerStyle
       })
@@ -50593,7 +50756,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/GridScrollShadows.mjs
   var React178 = __toESM(require_react(), 1);
-  var import_jsx_runtime140 = __toESM(require_jsx_runtime(), 1), useUtilityClasses69 = (ownerState) => {
+  var import_jsx_runtime141 = __toESM(require_jsx_runtime(), 1), useUtilityClasses69 = (ownerState) => {
     let {
       classes: classes2,
       position: position2
@@ -50660,7 +50823,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     };
     return useGridEvent(apiRef, "scrollPositionChange", handleScrolling), useGridEvent(apiRef, "columnResizeStop", handleColumnResizeStop), React178.useEffect(() => {
       updateScrollShadowVisibility((position2 === "horizontal" ? apiRef.current.virtualScrollerRef?.current?.scrollLeft : apiRef.current.virtualScrollerRef?.current?.scrollTop) ?? 0);
-    }, [updateScrollShadowVisibility, apiRef, position2]), /* @__PURE__ */ (0, import_jsx_runtime140.jsx)(ScrollShadow, {
+    }, [updateScrollShadowVisibility, apiRef, position2]), /* @__PURE__ */ (0, import_jsx_runtime141.jsx)(ScrollShadow, {
       className: classes2.root,
       ownerState,
       ref,
@@ -50673,7 +50836,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/base/GridOverlays.mjs
   var React179 = __toESM(require_react(), 1);
-  var import_jsx_runtime141 = __toESM(require_jsx_runtime(), 1), GridOverlayWrapperRoot = styled_default2("div", {
+  var import_jsx_runtime142 = __toESM(require_jsx_runtime(), 1), GridOverlayWrapperRoot = styled_default2("div", {
     name: "MuiDataGrid",
     slot: "OverlayWrapper",
     shouldForwardProp: (prop) => prop !== "overlayType" && prop !== "loadingOverlayVariant"
@@ -50717,10 +50880,10 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let classes2 = useUtilityClasses70(_extends({}, props, {
       classes: rootProps.classes
     }));
-    return /* @__PURE__ */ (0, import_jsx_runtime141.jsx)(GridOverlayWrapperRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime142.jsx)(GridOverlayWrapperRoot, _extends({
       className: classes2.root
     }, props, {
-      children: /* @__PURE__ */ (0, import_jsx_runtime141.jsx)(GridOverlayWrapperInner, _extends({
+      children: /* @__PURE__ */ (0, import_jsx_runtime142.jsx)(GridOverlayWrapperInner, _extends({
         className: classes2.inner,
         style: {
           height: height2,
@@ -50982,7 +51145,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   };
 
   // node_modules/@mui/x-data-grid/hooks/core/useGridVirtualizer.mjs
-  var import_jsx_runtime142 = __toESM(require_jsx_runtime(), 1), columnsTotalWidthSelector = createSelector2(gridVisibleColumnDefinitionsSelector, gridColumnPositionsSelector, (visibleColumns, positions) => {
+  var import_jsx_runtime143 = __toESM(require_jsx_runtime(), 1), columnsTotalWidthSelector = createSelector2(gridVisibleColumnDefinitionsSelector, gridColumnPositionsSelector, (visibleColumns, positions) => {
     let colCount = visibleColumns.length;
     return colCount === 0 ? 0 : roundToDecimalPlaces(positions[colCount - 1] + visibleColumns[colCount - 1].computedWidth, 1);
   }), addGridDimensionsCreator = () => lruMemoize((dimensions, headerHeight, groupHeaderHeight, headerFilterHeight, headersTotalHeight) => _extends({}, dimensions, {
@@ -51099,7 +51262,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         });
       }, [apiRef]),
       scrollReset,
-      renderRow: React184.useCallback((params) => /* @__PURE__ */ (0, import_jsx_runtime142.jsx)(RowSlot, _extends({
+      renderRow: React184.useCallback((params) => /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(RowSlot, _extends({
         row: params.model,
         rowId: params.id,
         index: params.rowIndex,
@@ -51141,7 +51304,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/virtualization/GridVirtualScroller.mjs
-  var import_jsx_runtime143 = __toESM(require_jsx_runtime(), 1), useUtilityClasses71 = (ownerState) => {
+  var import_jsx_runtime144 = __toESM(require_jsx_runtime(), 1), useUtilityClasses71 = (ownerState) => {
     let {
       classes: classes2,
       hasScrollX,
@@ -51227,72 +51390,72 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, classes2 = useUtilityClasses71(ownerState), virtualizer = useGridVirtualizer(), layoutMode = virtualizer.store.use(Virtualization.selectors.layoutMode), hasContentFiller = layoutMode === "uncontrolled" && loadingOverlayVariant !== "skeleton", containerProps = virtualizer.store.use(LayoutDataGrid.selectors.containerProps), scrollerProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollerProps), scrollerContentProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollerContentProps), viewportProps = virtualizer.store.use(LayoutDataGrid.selectors.viewportProps), contentProps = virtualizer.store.use(LayoutDataGrid.selectors.contentProps), positionerProps = virtualizer.store.use(LayoutDataGrid.selectors.positionerProps), scrollbarVerticalProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollbarVerticalProps), scrollbarHorizontalProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollbarHorizontalProps), scrollAreaProps = virtualizer.store.use(LayoutDataGrid.selectors.scrollAreaProps), containerVerticalProps = virtualizer.store.use(LayoutDataGrid.selectors.containerVerticalProps), rows = virtualizer.api.getters.getRows(void 0, gridRowTreeSelector(apiRef)), lastRowId = useGridSelector(apiRef, lastRowIdSelector), infiniteLoadingTrigger = lastRowId !== void 0 && loadingOverlayVariant !== "skeleton" ? apiRef.current.getInfiniteLoadingTriggerElement?.({
       lastRowId
     }) : null;
-    return /* @__PURE__ */ (0, import_jsx_runtime143.jsxs)(GridMainContainer, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime144.jsxs)(GridMainContainer, _extends({
       className: clsx_default(classes2.root, layoutMode === "controlled" && gridClasses["virtualizer--layoutControlled"])
     }, containerProps, {
       ownerState,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridScrollArea, _extends({
+      children: [/* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridScrollArea, _extends({
         scrollDirection: "left"
-      }, scrollAreaProps)), /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridScrollArea, _extends({
+      }, scrollAreaProps)), /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridScrollArea, _extends({
         scrollDirection: "right"
-      }, scrollAreaProps)), /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridScrollArea, _extends({
+      }, scrollAreaProps)), /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridScrollArea, _extends({
         scrollDirection: "up"
-      }, scrollAreaProps)), /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridScrollArea, _extends({
+      }, scrollAreaProps)), /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridScrollArea, _extends({
         scrollDirection: "down"
-      }, scrollAreaProps)), /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(Scroller, _extends({
+      }, scrollAreaProps)), /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(Scroller, _extends({
         className: classes2.scroller
       }, scrollerProps, {
         ownerState,
-        children: /* @__PURE__ */ (0, import_jsx_runtime143.jsxs)(GridVirtualScrollerContent, _extends({}, scrollerContentProps, {
-          children: [/* @__PURE__ */ (0, import_jsx_runtime143.jsxs)(Viewport, _extends({}, viewportProps, {
-            children: [/* @__PURE__ */ (0, import_jsx_runtime143.jsxs)(GridTopContainer, _extends({}, containerVerticalProps, {
-              children: [!rootProps.listView && /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(MemoizedGridHeaders, {}), /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(rootProps.slots.pinnedRows, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime144.jsxs)(GridVirtualScrollerContent, _extends({}, scrollerContentProps, {
+          children: [/* @__PURE__ */ (0, import_jsx_runtime144.jsxs)(Viewport, _extends({}, viewportProps, {
+            children: [/* @__PURE__ */ (0, import_jsx_runtime144.jsxs)(GridTopContainer, _extends({}, containerVerticalProps, {
+              children: [!rootProps.listView && /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(MemoizedGridHeaders, {}), /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(rootProps.slots.pinnedRows, {
                 position: "top"
               })]
-            })), overlayType && /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridOverlayWrapper, {
+            })), overlayType && /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridOverlayWrapper, {
               overlayType,
               loadingOverlayVariant,
-              children: /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(Overlay, _extends({}, rootProps.slotProps?.[overlayType]))
-            }), /* @__PURE__ */ (0, import_jsx_runtime143.jsxs)(GridVirtualScrollerRenderZone, _extends({
+              children: /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(Overlay, _extends({}, rootProps.slotProps?.[overlayType]))
+            }), /* @__PURE__ */ (0, import_jsx_runtime144.jsxs)(GridVirtualScrollerRenderZone, _extends({
               role: "rowgroup"
             }, positionerProps, {
-              children: [rows, /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(rootProps.slots.detailPanels, {})]
-            })), hasContentFiller && /* @__PURE__ */ (0, import_jsx_runtime143.jsx)("div", _extends({
+              children: [rows, /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(rootProps.slots.detailPanels, {})]
+            })), hasContentFiller && /* @__PURE__ */ (0, import_jsx_runtime144.jsx)("div", _extends({
               className: gridClasses.contentFiller
-            }, contentProps)), hasContentFiller && infiniteLoadingTrigger, hasBottomFiller && /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(Memoized, {
+            }, contentProps)), hasContentFiller && infiniteLoadingTrigger, hasBottomFiller && /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(Memoized, {
               rowsLength: rows.length
-            }), /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(rootProps.slots.bottomContainer, _extends({}, containerVerticalProps, {
-              children: /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(rootProps.slots.pinnedRows, {
+            }), /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(rootProps.slots.bottomContainer, _extends({}, containerVerticalProps, {
+              children: /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(rootProps.slots.pinnedRows, {
                 position: "bottom"
               })
             }))]
-          })), layoutMode === "controlled" && infiniteLoadingTrigger && /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(InfiniteLoadingTriggerPositioner, {
+          })), layoutMode === "controlled" && infiniteLoadingTrigger && /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(InfiniteLoadingTriggerPositioner, {
             children: infiniteLoadingTrigger
           })]
         }))
-      })), hasScrollX && /* @__PURE__ */ (0, import_jsx_runtime143.jsxs)(React185.Fragment, {
-        children: [rootProps.pinnedColumnsSectionSeparator?.endsWith("shadow") && /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridScrollShadows, {
+      })), hasScrollX && /* @__PURE__ */ (0, import_jsx_runtime144.jsxs)(React185.Fragment, {
+        children: [rootProps.pinnedColumnsSectionSeparator?.endsWith("shadow") && /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridScrollShadows, {
           position: "horizontal"
-        }), /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridVirtualScrollbar, _extends({
+        }), /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridVirtualScrollbar, _extends({
           position: "horizontal"
         }, scrollbarHorizontalProps))]
-      }), hasScrollY && /* @__PURE__ */ (0, import_jsx_runtime143.jsxs)(React185.Fragment, {
-        children: [rootProps.pinnedRowsSectionSeparator?.endsWith("shadow") && /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridScrollShadows, {
+      }), hasScrollY && /* @__PURE__ */ (0, import_jsx_runtime144.jsxs)(React185.Fragment, {
+        children: [rootProps.pinnedRowsSectionSeparator?.endsWith("shadow") && /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridScrollShadows, {
           position: "vertical"
-        }), /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(GridVirtualScrollbar, _extends({
+        }), /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(GridVirtualScrollbar, _extends({
           position: "vertical"
         }, scrollbarVerticalProps))]
-      }), hasScrollX && hasScrollY && /* @__PURE__ */ (0, import_jsx_runtime143.jsx)(ScrollbarCorner, {
+      }), hasScrollX && hasScrollY && /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(ScrollbarCorner, {
         "aria-hidden": "true"
       }), props.children]
     }));
   }
 
   // node_modules/@mui/x-data-grid/components/base/GridFooterPlaceholder.mjs
-  var import_jsx_runtime144 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime145 = __toESM(require_jsx_runtime(), 1);
   function GridFooterPlaceholder() {
     let rootProps = useGridRootProps();
-    return rootProps.hideFooter ? null : /* @__PURE__ */ (0, import_jsx_runtime144.jsx)(
+    return rootProps.hideFooter ? null : /* @__PURE__ */ (0, import_jsx_runtime145.jsx)(
       rootProps.slots.footer,
       _extends(
         {},
@@ -51384,7 +51547,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/cell/GridCell.mjs
-  var import_jsx_runtime145 = __toESM(require_jsx_runtime(), 1), _excluded45 = ["column", "row", "rowId", "rowNode", "align", "children", "colIndex", "width", "className", "style", "colSpan", "disableDragEvents", "isNotVisible", "pinnedOffset", "pinnedPosition", "showRightBorder", "showLeftBorder", "onClick", "onDoubleClick", "onMouseDown", "onMouseUp", "onMouseOver", "onKeyDown", "onKeyUp", "onDragEnter", "onDragOver"], _excluded211 = ["changeReason", "unstable_updateValueOnRender"], useUtilityClasses72 = (ownerState) => {
+  var import_jsx_runtime146 = __toESM(require_jsx_runtime(), 1), _excluded45 = ["column", "row", "rowId", "rowNode", "align", "children", "colIndex", "width", "className", "style", "colSpan", "disableDragEvents", "isNotVisible", "pinnedOffset", "pinnedPosition", "showRightBorder", "showLeftBorder", "onClick", "onDoubleClick", "onMouseDown", "onMouseUp", "onMouseOver", "onKeyDown", "onKeyUp", "onDragEnter", "onDragOver"], _excluded211 = ["changeReason", "unstable_updateValueOnRender"], useUtilityClasses72 = (ownerState) => {
     let {
       align,
       showLeftBorder,
@@ -51519,7 +51682,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         focusElement(elementToFocus, apiRef);
       }
     }, [hasFocus, cellMode, apiRef]), isCellRowSpanned)
-      return /* @__PURE__ */ (0, import_jsx_runtime145.jsx)("div", {
+      return /* @__PURE__ */ (0, import_jsx_runtime146.jsx)("div", {
         "data-colindex": colIndex,
         role: "none",
         style: _extends({
@@ -51542,7 +51705,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       onDragEnter: publish("cellDragEnter", onDragEnter),
       onDragOver: publish("cellDragOver", onDragOver)
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime145.jsx)("div", _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime146.jsx)("div", _extends({
       className: clsx_default(classes2.root, classNames, className),
       role: column2.rowHeader ? "rowheader" : "gridcell",
       "data-field": field2,
@@ -51569,7 +51732,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/cell/GridSkeletonCell.mjs
   var React187 = __toESM(require_react(), 1);
-  var import_jsx_runtime146 = __toESM(require_jsx_runtime(), 1), _excluded46 = ["field", "type", "align", "width", "height", "empty", "style", "className", "skeletonProps"], CIRCULAR_CONTENT_SIZE = "1.3em", CONTENT_HEIGHT = "1.2em", DEFAULT_CONTENT_WIDTH_RANGE = [40, 80], CONTENT_WIDTH_RANGE_BY_TYPE = {
+  var import_jsx_runtime147 = __toESM(require_jsx_runtime(), 1), _excluded46 = ["field", "type", "align", "width", "height", "empty", "style", "className", "skeletonProps"], CIRCULAR_CONTENT_SIZE = "1.3em", CONTENT_HEIGHT = "1.2em", DEFAULT_CONTENT_WIDTH_RANGE = [40, 80], CONTENT_WIDTH_RANGE_BY_TYPE = {
     number: [40, 60],
     string: [40, 80],
     date: [40, 60],
@@ -51614,7 +51777,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         height: CONTENT_HEIGHT
       };
     }, [type]), skeletonProps = skeletonPropsOverride && Object.keys(skeletonPropsOverride).length > 0 ? _extends({}, baseSkeletonProps, skeletonPropsOverride) : baseSkeletonProps;
-    return /* @__PURE__ */ (0, import_jsx_runtime146.jsx)("div", _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime147.jsx)("div", _extends({
       "data-field": field2,
       className: clsx_default(classes2.root, className),
       style: _extends({
@@ -51623,7 +51786,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         minWidth: width2
       }, style4)
     }, other, {
-      children: !empty && /* @__PURE__ */ (0, import_jsx_runtime146.jsx)(rootProps.slots.baseSkeleton, _extends({}, skeletonProps))
+      children: !empty && /* @__PURE__ */ (0, import_jsx_runtime147.jsx)(rootProps.slots.baseSkeleton, _extends({}, skeletonProps))
     }));
   }
   var Memoized2 = fastMemo(GridSkeletonCell);
@@ -51639,7 +51802,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var React189 = __toESM(require_react(), 1);
 
   // node_modules/@mui/x-data-grid/components/panel/GridPanelContext.mjs
-  var React188 = __toESM(require_react(), 1), import_jsx_runtime147 = __toESM(require_jsx_runtime(), 1), GridPanelContext = /* @__PURE__ */ React188.createContext(void 0);
+  var React188 = __toESM(require_react(), 1), import_jsx_runtime148 = __toESM(require_jsx_runtime(), 1), GridPanelContext = /* @__PURE__ */ React188.createContext(void 0);
   function useGridPanelContext() {
     let context = React188.useContext(GridPanelContext);
     if (context === void 0)
@@ -51679,14 +51842,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         }
       }
     }), [triggerElements, setColumnsPanelTrigger, setFilterPanelTrigger, setAiAssistantPanelTrigger]);
-    return /* @__PURE__ */ (0, import_jsx_runtime147.jsx)(GridPanelContext.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime148.jsx)(GridPanelContext.Provider, {
       value,
       children
     });
   }
 
   // node_modules/@mui/x-data-grid/components/panel/GridPreferencesPanel.mjs
-  var import_jsx_runtime148 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime149 = __toESM(require_jsx_runtime(), 1);
   function GridPreferencesPanel() {
     let apiRef = useGridApiContext(), columns = useGridSelector(apiRef, gridColumnDefinitionsSelector), rootProps = useGridRootProps(), preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector), {
       triggers
@@ -51708,7 +51871,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } : {
       "aria-label": fallbackLabel
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime148.jsx)(rootProps.slots.panel, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime149.jsx)(rootProps.slots.panel, _extends({
       id: preferencePanelState.panelId,
       open: columns.length > 0 && preferencePanelState.open
     }, labelProps, {
@@ -51720,16 +51883,16 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/GridHeader.mjs
-  var import_jsx_runtime149 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime150 = __toESM(require_jsx_runtime(), 1);
   function GridHeader() {
     let rootProps = useGridRootProps();
-    return /* @__PURE__ */ (0, import_jsx_runtime149.jsxs)(React189.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime149.jsx)(GridPreferencesPanel, {}), rootProps.showToolbar && /* @__PURE__ */ (0, import_jsx_runtime149.jsx)(rootProps.slots.toolbar, _extends({}, rootProps.slotProps?.toolbar))]
+    return /* @__PURE__ */ (0, import_jsx_runtime150.jsxs)(React189.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime150.jsx)(GridPreferencesPanel, {}), rootProps.showToolbar && /* @__PURE__ */ (0, import_jsx_runtime150.jsx)(rootProps.slots.toolbar, _extends({}, rootProps.slotProps?.toolbar))]
     });
   }
 
   // node_modules/@mui/x-data-grid/components/containers/GridRoot.mjs
-  var import_jsx_runtime150 = __toESM(require_jsx_runtime(), 1), _excluded47 = ["className", "children", "sidePanel"], useUtilityClasses74 = (ownerState, density) => {
+  var import_jsx_runtime151 = __toESM(require_jsx_runtime(), 1), _excluded47 = ["className", "children", "sidePanel"], useUtilityClasses74 = (ownerState, density) => {
     let {
       autoHeight,
       classes: classes2,
@@ -51746,24 +51909,24 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded47), apiRef = useGridPrivateApiContext(), density = useGridSelector(apiRef, gridDensitySelector), rootElementRef = apiRef.current.rootElementRef, rootMountCallback = React190.useCallback((node2) => {
       node2 !== null && apiRef.current.publishEvent("rootMount", node2);
     }, [apiRef]), handleRef = useForkRef(rootElementRef, ref, rootMountCallback), ownerState = rootProps, classes2 = useUtilityClasses74(ownerState, density), cssVariables = useCSSVariablesContext();
-    return useIsSSR() ? null : /* @__PURE__ */ (0, import_jsx_runtime150.jsxs)(GridRootStyles, _extends({
+    return useIsSSR() ? null : /* @__PURE__ */ (0, import_jsx_runtime151.jsxs)(GridRootStyles, _extends({
       className: clsx_default(classes2.root, className, cssVariables.className, sidePanel && gridClasses.withSidePanel),
       ownerState
     }, other, {
       ref: handleRef,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime150.jsxs)("div", {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime151.jsxs)("div", {
         className: gridClasses.mainContent,
         role: "none",
-        children: [/* @__PURE__ */ (0, import_jsx_runtime150.jsx)(GridHeader, {}), /* @__PURE__ */ (0, import_jsx_runtime150.jsx)(GridVirtualScroller, {
+        children: [/* @__PURE__ */ (0, import_jsx_runtime151.jsx)(GridHeader, {}), /* @__PURE__ */ (0, import_jsx_runtime151.jsx)(GridVirtualScroller, {
           children
-        }), /* @__PURE__ */ (0, import_jsx_runtime150.jsx)(GridFooterPlaceholder, {})]
+        }), /* @__PURE__ */ (0, import_jsx_runtime151.jsx)(GridFooterPlaceholder, {})]
       }), sidePanel, cssVariables.tag]
     }));
   }), MemoizedGridRoot = fastMemo(GridRoot);
 
   // node_modules/@mui/x-data-grid/components/containers/GridFooterContainer.mjs
   var React191 = __toESM(require_react(), 1);
-  var import_jsx_runtime151 = __toESM(require_jsx_runtime(), 1), _excluded48 = ["className"], useUtilityClasses75 = (ownerState) => {
+  var import_jsx_runtime152 = __toESM(require_jsx_runtime(), 1), _excluded48 = ["className"], useUtilityClasses75 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -51783,7 +51946,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded48), rootProps = useGridRootProps(), classes2 = useUtilityClasses75(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime151.jsx)(GridFooterContainerRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime152.jsx)(GridFooterContainerRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState: rootProps
     }, other, {
@@ -51793,7 +51956,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/containers/GridOverlay.mjs
   var React192 = __toESM(require_react(), 1);
-  var import_jsx_runtime152 = __toESM(require_jsx_runtime(), 1), _excluded49 = ["className"], useUtilityClasses76 = (ownerState) => {
+  var import_jsx_runtime153 = __toESM(require_jsx_runtime(), 1), _excluded49 = ["className"], useUtilityClasses76 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -51819,7 +51982,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded49), rootProps = useGridRootProps(), classes2 = useUtilityClasses76(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime152.jsx)(GridOverlayRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime153.jsx)(GridOverlayRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState: rootProps
     }, other, {
@@ -51840,7 +52003,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-internals/ToolbarContext/ToolbarContext.mjs
-  var React194 = __toESM(require_react(), 1), import_jsx_runtime153 = __toESM(require_jsx_runtime(), 1), ToolbarContext = /* @__PURE__ */ React194.createContext(void 0);
+  var React194 = __toESM(require_react(), 1), import_jsx_runtime154 = __toESM(require_jsx_runtime(), 1), ToolbarContext = /* @__PURE__ */ React194.createContext(void 0);
   function useToolbarContext() {
     let context = React194.useContext(ToolbarContext);
     if (context === void 0)
@@ -51923,7 +52086,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       onItemBlur,
       onItemDisabled
     }), [focusableItemId, registerItem, unregisterItem, onItemKeyDown, onItemFocus, onItemBlur, onItemDisabled]);
-    return /* @__PURE__ */ (0, import_jsx_runtime153.jsx)(ToolbarContext.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime154.jsx)(ToolbarContext.Provider, {
       value: contextValue,
       children
     });
@@ -51978,7 +52141,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/toolbarV8/Toolbar.mjs
-  var import_jsx_runtime154 = __toESM(require_jsx_runtime(), 1), _excluded50 = ["render", "className"], useUtilityClasses77 = (ownerState) => {
+  var import_jsx_runtime155 = __toESM(require_jsx_runtime(), 1), _excluded50 = ["render", "className"], useUtilityClasses77 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -52020,14 +52183,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, {
       ref
     }));
-    return /* @__PURE__ */ (0, import_jsx_runtime154.jsx)(ToolbarContextProvider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime155.jsx)(ToolbarContextProvider, {
       children: element
     });
   });
 
   // node_modules/@mui/x-data-grid/components/toolbarV8/ToolbarButton.mjs
   var React197 = __toESM(require_react(), 1);
-  var import_jsx_runtime155 = __toESM(require_jsx_runtime(), 1), _excluded51 = ["render", "onKeyDown", "onFocus", "onBlur", "disabled", "aria-disabled"], _excluded212 = ["tabIndex"], ToolbarButton = forwardRef68(function(props, ref) {
+  var import_jsx_runtime156 = __toESM(require_jsx_runtime(), 1), _excluded51 = ["render", "onKeyDown", "onFocus", "onBlur", "disabled", "aria-disabled"], _excluded212 = ["tabIndex"], ToolbarButton = forwardRef68(function(props, ref) {
     let {
       render
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded51), rootProps = useGridRootProps(), buttonRef = React197.useRef(null), handleRef = useForkRef(buttonRef, ref), _useRegisterToolbarBu = useRegisterToolbarButton(props, buttonRef), {
@@ -52037,7 +52200,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, toolbarButtonProps, {
       ref: handleRef
     }));
-    return /* @__PURE__ */ (0, import_jsx_runtime155.jsx)(React197.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime156.jsx)(React197.Fragment, {
       children: element
     });
   });
@@ -52070,7 +52233,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/ColumnHeaderMenuIcon.mjs
   var React198 = __toESM(require_react(), 1);
-  var import_jsx_runtime156 = __toESM(require_jsx_runtime(), 1), useUtilityClasses78 = (ownerState) => {
+  var import_jsx_runtime157 = __toESM(require_jsx_runtime(), 1), useUtilityClasses78 = (ownerState) => {
     let {
       classes: classes2,
       open
@@ -52091,13 +52254,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }), classes2 = useUtilityClasses78(ownerState), handleMenuIconClick = React198.useCallback((event) => {
       event.preventDefault(), event.stopPropagation(), apiRef.current.toggleColumnMenu(colDef.field);
     }, [apiRef, colDef.field]), columnName = colDef.headerName ?? colDef.field;
-    return /* @__PURE__ */ (0, import_jsx_runtime156.jsx)("div", {
+    return /* @__PURE__ */ (0, import_jsx_runtime157.jsx)("div", {
       className: classes2.root,
-      children: /* @__PURE__ */ (0, import_jsx_runtime156.jsx)(rootProps.slots.baseTooltip, _extends({
+      children: /* @__PURE__ */ (0, import_jsx_runtime157.jsx)(rootProps.slots.baseTooltip, _extends({
         title: apiRef.current.getLocaleText("columnMenuLabel"),
         enterDelay: 1e3
       }, rootProps.slotProps?.baseTooltip, {
-        children: /* @__PURE__ */ (0, import_jsx_runtime156.jsx)(rootProps.slots.baseIconButton, _extends({
+        children: /* @__PURE__ */ (0, import_jsx_runtime157.jsx)(rootProps.slots.baseIconButton, _extends({
           ref: iconButtonRef,
           tabIndex: -1,
           className: classes2.button,
@@ -52109,7 +52272,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           "aria-controls": open ? columnMenuId : void 0,
           id: columnMenuButtonId
         }, rootProps.slotProps?.baseIconButton, {
-          children: /* @__PURE__ */ (0, import_jsx_runtime156.jsx)(rootProps.slots.columnMenuIcon, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime157.jsx)(rootProps.slots.columnMenuIcon, {
             fontSize: "inherit"
           })
         }))
@@ -52119,7 +52282,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/menu/columnMenu/GridColumnHeaderMenu.mjs
   var React199 = __toESM(require_react(), 1);
-  var import_jsx_runtime157 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime158 = __toESM(require_jsx_runtime(), 1);
   function GridColumnHeaderMenu({
     columnMenuId,
     columnMenuButtonId,
@@ -52133,13 +52296,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let apiRef = useGridApiContext(), colDef = apiRef.current.getColumn(field2), hideMenu = useEventCallback_default((event) => {
       event && (event.stopPropagation(), target?.contains(event.target)) || apiRef.current.hideColumnMenu();
     });
-    return !target || !colDef ? null : /* @__PURE__ */ (0, import_jsx_runtime157.jsx)(GridMenu, {
+    return !target || !colDef ? null : /* @__PURE__ */ (0, import_jsx_runtime158.jsx)(GridMenu, {
       position: `bottom-${colDef.align === "right" ? "start" : "end"}`,
       open,
       target,
       onClose: hideMenu,
       onExited,
-      children: /* @__PURE__ */ (0, import_jsx_runtime157.jsx)(ContentComponent, _extends({
+      children: /* @__PURE__ */ (0, import_jsx_runtime158.jsx)(ContentComponent, _extends({
         colDef,
         hideMenu,
         open,
@@ -52154,7 +52317,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridColumnHeaderTitle.mjs
   var React200 = __toESM(require_react(), 1);
-  var import_jsx_runtime158 = __toESM(require_jsx_runtime(), 1), _excluded52 = ["className", "aria-label"], useUtilityClasses79 = (ownerState) => {
+  var import_jsx_runtime159 = __toESM(require_jsx_runtime(), 1), _excluded52 = ["className", "aria-label"], useUtilityClasses79 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -52174,7 +52337,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded52), rootProps = useGridRootProps(), classes2 = useUtilityClasses79(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime158.jsx)(GridColumnHeaderTitleRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime159.jsx)(GridColumnHeaderTitleRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState: rootProps
     }, other, {
@@ -52191,10 +52354,10 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         setTooltip2(isOver ? label : "");
       }
     }, [description, label]);
-    return /* @__PURE__ */ (0, import_jsx_runtime158.jsx)(rootProps.slots.baseTooltip, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime159.jsx)(rootProps.slots.baseTooltip, _extends({
       title: description || tooltip
     }, rootProps.slotProps?.baseTooltip, {
-      children: /* @__PURE__ */ (0, import_jsx_runtime158.jsx)(ColumnHeaderInnerTitle, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime159.jsx)(ColumnHeaderInnerTitle, {
         onMouseOver: handleMouseOver,
         ref: titleRef,
         children: label
@@ -52204,7 +52367,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridColumnHeaderSeparator.mjs
   var React201 = __toESM(require_react(), 1);
-  var import_jsx_runtime159 = __toESM(require_jsx_runtime(), 1), _excluded53 = ["resizable", "resizing", "height", "side"], GridColumnHeaderSeparatorSides = /* @__PURE__ */ (function(GridColumnHeaderSeparatorSides2) {
+  var import_jsx_runtime160 = __toESM(require_jsx_runtime(), 1), _excluded53 = ["resizable", "resizing", "height", "side"], GridColumnHeaderSeparatorSides = /* @__PURE__ */ (function(GridColumnHeaderSeparatorSides2) {
     return GridColumnHeaderSeparatorSides2.Left = "left", GridColumnHeaderSeparatorSides2.Right = "right", GridColumnHeaderSeparatorSides2;
   })(GridColumnHeaderSeparatorSides || {}), useUtilityClasses80 = (ownerState) => {
     let {
@@ -52230,14 +52393,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, []);
     return (
       // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-      /* @__PURE__ */ (0, import_jsx_runtime159.jsx)("div", _extends({
+      /* @__PURE__ */ (0, import_jsx_runtime160.jsx)("div", _extends({
         className: classes2.root,
         style: {
           minHeight: height2
         }
       }, other, {
         onClick: stopClick,
-        children: /* @__PURE__ */ (0, import_jsx_runtime159.jsx)(rootProps.slots.columnResizeIcon, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime160.jsx)(rootProps.slots.columnResizeIcon, {
           className: classes2.icon
         })
       }))
@@ -52246,7 +52409,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var GridColumnHeaderSeparator = /* @__PURE__ */ React201.memo(GridColumnHeaderSeparatorRaw);
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridGenericColumnHeaderItem.mjs
-  var import_jsx_runtime160 = __toESM(require_jsx_runtime(), 1), _excluded54 = ["classes", "columnMenuOpen", "colIndex", "height", "isResizing", "sortDirection", "hasFocus", "tabIndex", "separatorSide", "isDraggable", "headerComponent", "description", "elementId", "width", "columnMenuIconButton", "columnMenu", "columnTitleIconButtons", "adornment", "headerClassName", "label", "resizable", "draggableContainerProps", "columnHeaderSeparatorProps", "style"], GridGenericColumnHeaderItem = forwardRef68(function(props, ref) {
+  var import_jsx_runtime161 = __toESM(require_jsx_runtime(), 1), _excluded54 = ["classes", "columnMenuOpen", "colIndex", "height", "isResizing", "sortDirection", "hasFocus", "tabIndex", "separatorSide", "isDraggable", "headerComponent", "description", "elementId", "width", "columnMenuIconButton", "columnMenu", "columnTitleIconButtons", "adornment", "headerClassName", "label", "resizable", "draggableContainerProps", "columnHeaderSeparatorProps", "style"], GridGenericColumnHeaderItem = forwardRef68(function(props, ref) {
     let {
       classes: classes2,
       colIndex,
@@ -52270,7 +52433,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       columnHeaderSeparatorProps,
       style: style4
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded54), rootProps = useGridRootProps(), headerCellRef = React202.useRef(null), handleRef = useForkRef(headerCellRef, ref), ariaSort = "none";
-    return sortDirection != null && (ariaSort = sortDirection === "asc" ? "ascending" : "descending"), /* @__PURE__ */ (0, import_jsx_runtime160.jsxs)("div", _extends({
+    return sortDirection != null && (ariaSort = sortDirection === "asc" ? "ascending" : "descending"), /* @__PURE__ */ (0, import_jsx_runtime161.jsxs)("div", _extends({
       className: clsx_default(classes2.root, headerClassName),
       style: _extends({}, style4, {
         width: width2
@@ -52281,24 +52444,24 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       "aria-sort": ariaSort
     }, other, {
       ref: handleRef,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime160.jsxs)("div", _extends({
+      children: [/* @__PURE__ */ (0, import_jsx_runtime161.jsxs)("div", _extends({
         className: classes2.draggableContainer,
         draggable: isDraggable,
         role: "none"
       }, draggableContainerProps, {
-        children: [/* @__PURE__ */ (0, import_jsx_runtime160.jsxs)("div", {
+        children: [/* @__PURE__ */ (0, import_jsx_runtime161.jsxs)("div", {
           className: classes2.titleContainer,
           role: "none",
-          children: [/* @__PURE__ */ (0, import_jsx_runtime160.jsxs)("div", {
+          children: [/* @__PURE__ */ (0, import_jsx_runtime161.jsxs)("div", {
             className: classes2.titleContainerContent,
-            children: [adornment, headerComponent !== void 0 ? headerComponent : /* @__PURE__ */ (0, import_jsx_runtime160.jsx)(GridColumnHeaderTitle, {
+            children: [adornment, headerComponent !== void 0 ? headerComponent : /* @__PURE__ */ (0, import_jsx_runtime161.jsx)(GridColumnHeaderTitle, {
               label,
               description,
               columnWidth: width2
             })]
           }), columnTitleIconButtons]
         }), columnMenuIconButton]
-      })), /* @__PURE__ */ (0, import_jsx_runtime160.jsx)(GridColumnHeaderSeparator, _extends({
+      })), /* @__PURE__ */ (0, import_jsx_runtime161.jsx)(GridColumnHeaderSeparator, _extends({
         resizable: !rootProps.disableColumnResize && !!resizable,
         resizing: isResizing,
         height: height2,
@@ -52308,7 +52471,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridColumnHeaderItem.mjs
-  var import_jsx_runtime161 = __toESM(require_jsx_runtime(), 1), useUtilityClasses81 = (ownerState) => {
+  var import_jsx_runtime162 = __toESM(require_jsx_runtime(), 1), useUtilityClasses81 = (ownerState) => {
     let {
       disableColumnSorting
     } = useGridRootProps(), {
@@ -52410,13 +52573,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, [apiRef, columnMenuOpen, hasColumnMenuItems, hasKnownDefaultColumnMenu]);
     let handleExited = React203.useCallback(() => {
       setShowColumnMenuIcon(!1);
-    }, []), columnMenuIconButton = !rootProps.disableColumnMenu && !colDef.disableColumnMenu && hasColumnMenuItems && /* @__PURE__ */ (0, import_jsx_runtime161.jsx)(ColumnHeaderMenuIcon, {
+    }, []), columnMenuIconButton = !rootProps.disableColumnMenu && !colDef.disableColumnMenu && hasColumnMenuItems && /* @__PURE__ */ (0, import_jsx_runtime162.jsx)(ColumnHeaderMenuIcon, {
       colDef,
       columnMenuId,
       columnMenuButtonId,
       open: showColumnMenuIcon,
       iconButtonRef
-    }), columnMenu = /* @__PURE__ */ (0, import_jsx_runtime161.jsx)(GridColumnHeaderMenu, {
+    }), columnMenu = /* @__PURE__ */ (0, import_jsx_runtime162.jsx)(GridColumnHeaderMenu, {
       columnMenuId,
       columnMenuButtonId,
       field: colDef.field,
@@ -52425,11 +52588,11 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       ContentComponent: rootProps.slots.columnMenu,
       contentComponentProps: rootProps.slotProps?.columnMenu,
       onExited: handleExited
-    }), sortingOrder = colDef.sortingOrder ?? rootProps.sortingOrder, showSortIcon = (colDef.sortable || sortDirection != null) && !colDef.hideSortIcons && !rootProps.disableColumnSorting, columnTitleIconButtons = /* @__PURE__ */ (0, import_jsx_runtime161.jsxs)(React203.Fragment, {
-      children: [!rootProps.disableColumnFilter && /* @__PURE__ */ (0, import_jsx_runtime161.jsx)(rootProps.slots.columnHeaderFilterIconButton, _extends({
+    }), sortingOrder = colDef.sortingOrder ?? rootProps.sortingOrder, showSortIcon = (colDef.sortable || sortDirection != null) && !colDef.hideSortIcons && !rootProps.disableColumnSorting, columnTitleIconButtons = /* @__PURE__ */ (0, import_jsx_runtime162.jsxs)(React203.Fragment, {
+      children: [!rootProps.disableColumnFilter && /* @__PURE__ */ (0, import_jsx_runtime162.jsx)(rootProps.slots.columnHeaderFilterIconButton, _extends({
         field: colDef.field,
         counter: filterItemsCounter
-      }, rootProps.slotProps?.columnHeaderFilterIconButton)), showSortIcon && /* @__PURE__ */ (0, import_jsx_runtime161.jsx)(rootProps.slots.columnHeaderSortIcon, _extends({
+      }, rootProps.slotProps?.columnHeaderFilterIconButton)), showSortIcon && /* @__PURE__ */ (0, import_jsx_runtime162.jsx)(rootProps.slots.columnHeaderSortIcon, _extends({
         field: colDef.field,
         columnName: colDef.headerName ?? colDef.field,
         direction: sortDirection,
@@ -52451,7 +52614,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       field: colDef.field,
       colDef
     }) : colDef.headerClassName, label = colDef.headerName ?? colDef.field, pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition), style4 = React203.useMemo(() => attachPinnedStyle(_extends({}, props.style), isRtl, pinnedPosition, pinnedOffset !== void 0 ? pinnedOffset + pinnedScrollOffset : void 0), [pinnedPosition, pinnedOffset, pinnedScrollOffset, props.style, isRtl]);
-    return /* @__PURE__ */ (0, import_jsx_runtime161.jsx)(GridGenericColumnHeaderItem, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime162.jsx)(GridGenericColumnHeaderItem, _extends({
       ref: headerCellRef,
       classes: classes2,
       columnMenuOpen,
@@ -52487,7 +52650,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridIconButtonContainer.mjs
   var React204 = __toESM(require_react(), 1);
-  var import_jsx_runtime162 = __toESM(require_jsx_runtime(), 1), _excluded55 = ["className"], useUtilityClasses82 = (ownerState) => {
+  var import_jsx_runtime163 = __toESM(require_jsx_runtime(), 1), _excluded55 = ["className"], useUtilityClasses82 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -52505,7 +52668,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded55), rootProps = useGridRootProps(), classes2 = useUtilityClasses82(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime162.jsx)(GridIconButtonContainerRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime163.jsx)(GridIconButtonContainerRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState: rootProps
     }, other, {
@@ -52515,7 +52678,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/GridColumnSortButton.mjs
   var React205 = __toESM(require_react(), 1);
-  var import_jsx_runtime163 = __toESM(require_jsx_runtime(), 1), _excluded56 = ["columnName", "direction", "index", "sortingOrder", "disabled", "className"], useUtilityClasses83 = (ownerState) => {
+  var import_jsx_runtime164 = __toESM(require_jsx_runtime(), 1), _excluded56 = ["columnName", "direction", "index", "sortingOrder", "disabled", "className"], useUtilityClasses83 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -52534,7 +52697,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
   function getIcon(icons, direction, className, sortingOrder) {
     let Icon, iconProps = {};
-    return direction === "asc" ? Icon = icons.columnSortedAscendingIcon : direction === "desc" ? Icon = icons.columnSortedDescendingIcon : (Icon = icons.columnUnsortedIcon, iconProps.sortingOrder = sortingOrder), Icon ? /* @__PURE__ */ (0, import_jsx_runtime163.jsx)(Icon, _extends({
+    return direction === "asc" ? Icon = icons.columnSortedAscendingIcon : direction === "desc" ? Icon = icons.columnSortedDescendingIcon : (Icon = icons.columnUnsortedIcon, iconProps.sortingOrder = sortingOrder), Icon ? /* @__PURE__ */ (0, import_jsx_runtime164.jsx)(Icon, _extends({
       fontSize: "small",
       className
     }, iconProps)) : null;
@@ -52552,7 +52715,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }), classes2 = useUtilityClasses83(ownerState), iconElement = getIcon(rootProps.slots, direction, classes2.icon, sortingOrder);
     if (!iconElement)
       return null;
-    let nextDirection = getNextGridSortDirection(sortingOrder, direction), iconButton = /* @__PURE__ */ (0, import_jsx_runtime163.jsx)(GridColumnSortButtonRoot, _extends({
+    let nextDirection = getNextGridSortDirection(sortingOrder, direction), iconButton = /* @__PURE__ */ (0, import_jsx_runtime164.jsx)(GridColumnSortButtonRoot, _extends({
       as: rootProps.slots.baseIconButton,
       ownerState,
       "aria-label": apiRef.current.getLocaleText("columnHeaderSortIconAriaLabel")(columnName, nextDirection),
@@ -52562,12 +52725,12 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, rootProps.slotProps?.baseIconButton, other, {
       children: iconElement
     }));
-    return /* @__PURE__ */ (0, import_jsx_runtime163.jsx)(rootProps.slots.baseTooltip, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime164.jsx)(rootProps.slots.baseTooltip, _extends({
       title: apiRef.current.getLocaleText("columnHeaderSortIconLabel"),
       enterDelay: 1e3
     }, rootProps.slotProps?.baseTooltip, {
-      children: /* @__PURE__ */ (0, import_jsx_runtime163.jsxs)("span", {
-        children: [index != null && /* @__PURE__ */ (0, import_jsx_runtime163.jsx)(rootProps.slots.baseBadge, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime164.jsxs)("span", {
+        children: [index != null && /* @__PURE__ */ (0, import_jsx_runtime164.jsx)(rootProps.slots.baseBadge, {
           badgeContent: index,
           color: "default",
           overlap: "circular",
@@ -52578,7 +52741,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridColumnHeaderSortIcon.mjs
-  var import_jsx_runtime164 = __toESM(require_jsx_runtime(), 1), _excluded57 = ["field", "columnName", "onClick"];
+  var import_jsx_runtime165 = __toESM(require_jsx_runtime(), 1), _excluded57 = ["field", "columnName", "onClick"];
   function GridColumnHeaderSortIconRaw(props) {
     let {
       field: field2,
@@ -52587,8 +52750,8 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded57), apiRef = useGridApiContext(), handleClick = React206.useCallback((event) => {
       apiRef.current.setColumnHeaderFocus(field2, event), onClick?.(event);
     }, [apiRef, field2, onClick]);
-    return /* @__PURE__ */ (0, import_jsx_runtime164.jsx)(GridIconButtonContainer, {
-      children: /* @__PURE__ */ (0, import_jsx_runtime164.jsx)(GridColumnSortButton, _extends({}, other, {
+    return /* @__PURE__ */ (0, import_jsx_runtime165.jsx)(GridIconButtonContainer, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime165.jsx)(GridColumnSortButton, _extends({}, other, {
         field: field2,
         columnName,
         tabIndex: -1,
@@ -52600,7 +52763,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridColumnHeaderFilterIconButton.mjs
   var React207 = __toESM(require_react(), 1);
-  var import_jsx_runtime165 = __toESM(require_jsx_runtime(), 1), useUtilityClasses84 = (ownerState) => {
+  var import_jsx_runtime166 = __toESM(require_jsx_runtime(), 1), useUtilityClasses84 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -52609,7 +52772,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, getDataGridUtilityClass, classes2);
   };
   function GridColumnHeaderFilterIconButtonWrapped(props) {
-    return props.counter ? /* @__PURE__ */ (0, import_jsx_runtime165.jsx)(GridColumnHeaderFilterIconButton, _extends({}, props)) : null;
+    return props.counter ? /* @__PURE__ */ (0, import_jsx_runtime166.jsx)(GridColumnHeaderFilterIconButton, _extends({}, props)) : null;
   }
   function GridColumnHeaderFilterIconButton(props) {
     let {
@@ -52628,7 +52791,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, [apiRef, field2, onClick, panelId, labelId]);
     if (!counter)
       return null;
-    let iconButton = /* @__PURE__ */ (0, import_jsx_runtime165.jsx)(rootProps.slots.baseIconButton, _extends({
+    let iconButton = /* @__PURE__ */ (0, import_jsx_runtime166.jsx)(rootProps.slots.baseIconButton, _extends({
       id: labelId,
       onClick: toggleFilter,
       "aria-label": apiRef.current.getLocaleText("columnHeaderFiltersLabel"),
@@ -52638,17 +52801,17 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       "aria-expanded": isOpen,
       "aria-controls": isOpen ? panelId : void 0
     }, rootProps.slotProps?.baseIconButton, {
-      children: /* @__PURE__ */ (0, import_jsx_runtime165.jsx)(rootProps.slots.columnFilteredIcon, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime166.jsx)(rootProps.slots.columnFilteredIcon, {
         className: classes2.icon,
         fontSize: "small"
       })
     }));
-    return /* @__PURE__ */ (0, import_jsx_runtime165.jsx)(rootProps.slots.baseTooltip, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime166.jsx)(rootProps.slots.baseTooltip, _extends({
       title: apiRef.current.getLocaleText("columnHeaderFiltersTooltipActive")(counter),
       enterDelay: 1e3
     }, rootProps.slotProps?.baseTooltip, {
-      children: /* @__PURE__ */ (0, import_jsx_runtime165.jsxs)(GridIconButtonContainer, {
-        children: [counter > 1 && /* @__PURE__ */ (0, import_jsx_runtime165.jsx)(rootProps.slots.baseBadge, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime166.jsxs)(GridIconButtonContainer, {
+        children: [counter > 1 && /* @__PURE__ */ (0, import_jsx_runtime166.jsx)(rootProps.slots.baseBadge, {
           badgeContent: counter,
           color: "default",
           children: iconButton
@@ -52659,11 +52822,11 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/columnSelection/GridRowCheckbox.mjs
   var React208 = __toESM(require_react(), 1);
-  var import_jsx_runtime166 = __toESM(require_jsx_runtime(), 1), _excluded58 = ["rowId", "material"], GridRowCheckbox = forwardRef68(function(props, ref) {
+  var import_jsx_runtime167 = __toESM(require_jsx_runtime(), 1), _excluded58 = ["rowId", "material"], GridRowCheckbox = forwardRef68(function(props, ref) {
     let {
       material
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded58), rootProps = useGridRootProps();
-    return /* @__PURE__ */ (0, import_jsx_runtime166.jsx)(rootProps.slots.baseCheckbox, _extends({}, rootProps.slotProps?.baseCheckbox, other, {
+    return /* @__PURE__ */ (0, import_jsx_runtime167.jsx)(rootProps.slots.baseCheckbox, _extends({}, rootProps.slotProps?.baseCheckbox, other, {
       material,
       ref
     }));
@@ -52671,7 +52834,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/menu/columnMenu/GridColumnMenuContainer.mjs
   var React209 = __toESM(require_react(), 1);
-  var import_jsx_runtime167 = __toESM(require_jsx_runtime(), 1), _excluded59 = ["hideMenu", "colDef", "id", "labelledby", "className", "children", "open"], StyledMenuList = styled_default2(NotRendered, {
+  var import_jsx_runtime168 = __toESM(require_jsx_runtime(), 1), _excluded59 = ["hideMenu", "colDef", "id", "labelledby", "className", "children", "open"], StyledMenuList = styled_default2(NotRendered, {
     slot: "internal"
   })(() => ({
     minWidth: 248
@@ -52690,7 +52853,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded59), rootProps = useGridRootProps(), handleListKeyDown = React209.useCallback((event) => {
       event.key === "Tab" && event.preventDefault(), isHideMenuKey(event.key) && hideMenu(event);
     }, [hideMenu]);
-    return /* @__PURE__ */ (0, import_jsx_runtime167.jsx)(StyledMenuList, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime168.jsx)(StyledMenuList, _extends({
       as: rootProps.slots.baseMenuList,
       id,
       className: clsx_default(gridClasses.menuList, className),
@@ -52752,7 +52915,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/menu/columnMenu/menuItems/GridColumnMenuHideItem.mjs
   var React211 = __toESM(require_react(), 1);
-  var import_jsx_runtime168 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime169 = __toESM(require_jsx_runtime(), 1);
   function GridColumnMenuHideItem(props) {
     let {
       colDef,
@@ -52760,10 +52923,10 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, apiRef = useGridApiContext(), rootProps = useGridRootProps(), disabled = gridVisibleColumnDefinitionsSelector(apiRef).filter((col) => col.disableColumnMenu !== !0).length === 1, toggleColumn = React211.useCallback((event) => {
       disabled || (apiRef.current.setColumnVisibility(colDef.field, !1), onClick(event));
     }, [apiRef, colDef.field, onClick, disabled]);
-    return rootProps.disableColumnSelector || colDef.hideable === !1 ? null : /* @__PURE__ */ (0, import_jsx_runtime168.jsx)(rootProps.slots.baseMenuItem, {
+    return rootProps.disableColumnSelector || colDef.hideable === !1 ? null : /* @__PURE__ */ (0, import_jsx_runtime169.jsx)(rootProps.slots.baseMenuItem, {
       onClick: toggleColumn,
       disabled,
-      iconStart: /* @__PURE__ */ (0, import_jsx_runtime168.jsx)(rootProps.slots.columnMenuHideIcon, {
+      iconStart: /* @__PURE__ */ (0, import_jsx_runtime169.jsx)(rootProps.slots.columnMenuHideIcon, {
         fontSize: "small"
       }),
       children: apiRef.current.getLocaleText("columnMenuHideColumn")
@@ -52772,16 +52935,16 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/menu/columnMenu/menuItems/GridColumnMenuManageItem.mjs
   var React212 = __toESM(require_react(), 1);
-  var import_jsx_runtime169 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime170 = __toESM(require_jsx_runtime(), 1);
   function GridColumnMenuManageItem(props) {
     let {
       onClick
     } = props, apiRef = useGridApiContext(), rootProps = useGridRootProps(), showColumns = React212.useCallback((event) => {
       onClick(event), apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     }, [apiRef, onClick]);
-    return rootProps.disableColumnSelector ? null : /* @__PURE__ */ (0, import_jsx_runtime169.jsx)(rootProps.slots.baseMenuItem, {
+    return rootProps.disableColumnSelector ? null : /* @__PURE__ */ (0, import_jsx_runtime170.jsx)(rootProps.slots.baseMenuItem, {
       onClick: showColumns,
-      iconStart: /* @__PURE__ */ (0, import_jsx_runtime169.jsx)(rootProps.slots.columnMenuManageColumnsIcon, {
+      iconStart: /* @__PURE__ */ (0, import_jsx_runtime170.jsx)(rootProps.slots.columnMenuManageColumnsIcon, {
         fontSize: "small"
       }),
       children: apiRef.current.getLocaleText("columnMenuManageColumns")
@@ -52789,16 +52952,16 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/menu/columnMenu/menuItems/GridColumnMenuColumnsItem.mjs
-  var import_jsx_runtime170 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime171 = __toESM(require_jsx_runtime(), 1);
   function GridColumnMenuColumnsItem(props) {
-    return /* @__PURE__ */ (0, import_jsx_runtime170.jsxs)(React213.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime170.jsx)(GridColumnMenuHideItem, _extends({}, props)), /* @__PURE__ */ (0, import_jsx_runtime170.jsx)(GridColumnMenuManageItem, _extends({}, props))]
+    return /* @__PURE__ */ (0, import_jsx_runtime171.jsxs)(React213.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime171.jsx)(GridColumnMenuHideItem, _extends({}, props)), /* @__PURE__ */ (0, import_jsx_runtime171.jsx)(GridColumnMenuManageItem, _extends({}, props))]
     });
   }
 
   // node_modules/@mui/x-data-grid/components/menu/columnMenu/menuItems/GridColumnMenuFilterItem.mjs
   var React214 = __toESM(require_react(), 1);
-  var import_jsx_runtime171 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime172 = __toESM(require_jsx_runtime(), 1);
   function GridColumnMenuFilterItem(props) {
     let {
       colDef,
@@ -52806,9 +52969,9 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, apiRef = useGridApiContext(), rootProps = useGridRootProps(), showFilter = React214.useCallback((event) => {
       onClick(event), apiRef.current.showFilterPanel(colDef.field);
     }, [apiRef, colDef.field, onClick]);
-    return rootProps.disableColumnFilter || !colDef.filterable ? null : /* @__PURE__ */ (0, import_jsx_runtime171.jsx)(rootProps.slots.baseMenuItem, {
+    return rootProps.disableColumnFilter || !colDef.filterable ? null : /* @__PURE__ */ (0, import_jsx_runtime172.jsx)(rootProps.slots.baseMenuItem, {
       onClick: showFilter,
-      iconStart: /* @__PURE__ */ (0, import_jsx_runtime171.jsx)(rootProps.slots.columnMenuFilterIcon, {
+      iconStart: /* @__PURE__ */ (0, import_jsx_runtime172.jsx)(rootProps.slots.columnMenuFilterIcon, {
         fontSize: "small"
       }),
       children: apiRef.current.getLocaleText("columnMenuFilter")
@@ -52817,7 +52980,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/menu/columnMenu/menuItems/GridColumnMenuSortItem.mjs
   var React215 = __toESM(require_react(), 1);
-  var import_jsx_runtime172 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime173 = __toESM(require_jsx_runtime(), 1);
   function GridColumnMenuSortItem(props) {
     let {
       colDef,
@@ -52833,33 +52996,33 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       let label = apiRef.current.getLocaleText(key);
       return typeof label == "function" ? label(colDef) : label;
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime172.jsxs)(React215.Fragment, {
-      children: [sortingOrder.includes("asc") && sortDirection !== "asc" ? /* @__PURE__ */ (0, import_jsx_runtime172.jsx)(rootProps.slots.baseMenuItem, {
+    return /* @__PURE__ */ (0, import_jsx_runtime173.jsxs)(React215.Fragment, {
+      children: [sortingOrder.includes("asc") && sortDirection !== "asc" ? /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(rootProps.slots.baseMenuItem, {
         onClick: onSortMenuItemClick,
         "data-value": "asc",
-        iconStart: /* @__PURE__ */ (0, import_jsx_runtime172.jsx)(rootProps.slots.columnMenuSortAscendingIcon, {
+        iconStart: /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(rootProps.slots.columnMenuSortAscendingIcon, {
           fontSize: "small"
         }),
         children: getLabel("columnMenuSortAsc")
-      }) : null, sortingOrder.includes("desc") && sortDirection !== "desc" ? /* @__PURE__ */ (0, import_jsx_runtime172.jsx)(rootProps.slots.baseMenuItem, {
+      }) : null, sortingOrder.includes("desc") && sortDirection !== "desc" ? /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(rootProps.slots.baseMenuItem, {
         onClick: onSortMenuItemClick,
         "data-value": "desc",
-        iconStart: /* @__PURE__ */ (0, import_jsx_runtime172.jsx)(rootProps.slots.columnMenuSortDescendingIcon, {
+        iconStart: /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(rootProps.slots.columnMenuSortDescendingIcon, {
           fontSize: "small"
         }),
         children: getLabel("columnMenuSortDesc")
-      }) : null, sortingOrder.includes(null) && sortDirection != null ? /* @__PURE__ */ (0, import_jsx_runtime172.jsx)(rootProps.slots.baseMenuItem, {
+      }) : null, sortingOrder.includes(null) && sortDirection != null ? /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(rootProps.slots.baseMenuItem, {
         onClick: onSortMenuItemClick,
-        iconStart: rootProps.slots.columnMenuUnsortIcon ? /* @__PURE__ */ (0, import_jsx_runtime172.jsx)(rootProps.slots.columnMenuUnsortIcon, {
+        iconStart: rootProps.slots.columnMenuUnsortIcon ? /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(rootProps.slots.columnMenuUnsortIcon, {
           fontSize: "small"
-        }) : /* @__PURE__ */ (0, import_jsx_runtime172.jsx)("span", {}),
+        }) : /* @__PURE__ */ (0, import_jsx_runtime173.jsx)("span", {}),
         children: apiRef.current.getLocaleText("columnMenuUnsort")
       }) : null]
     });
   }
 
   // node_modules/@mui/x-data-grid/components/menu/columnMenu/GridColumnMenu.mjs
-  var import_jsx_runtime173 = __toESM(require_jsx_runtime(), 1), _excluded61 = ["defaultSlots", "defaultSlotProps", "slots", "slotProps"], GRID_COLUMN_MENU_SLOTS = {
+  var import_jsx_runtime174 = __toESM(require_jsx_runtime(), 1), _excluded61 = ["defaultSlots", "defaultSlotProps", "slots", "slotProps"], GRID_COLUMN_MENU_SLOTS = {
     columnMenuSortItem: GridColumnMenuSortItem,
     columnMenuFilterItem: GridColumnMenuFilterItem,
     columnMenuColumnsItem: GridColumnMenuColumnsItem
@@ -52885,12 +53048,12 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       slots,
       slotProps
     }));
-    return /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(GridColumnMenuContainer, _extends({}, other, {
+    return /* @__PURE__ */ (0, import_jsx_runtime174.jsx)(GridColumnMenuContainer, _extends({}, other, {
       ref,
-      children: orderedSlots.map(([Component, otherProps], index) => /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(Component, _extends({}, otherProps), index))
+      children: orderedSlots.map(([Component, otherProps], index) => /* @__PURE__ */ (0, import_jsx_runtime174.jsx)(Component, _extends({}, otherProps), index))
     }));
   }), GridColumnMenu = forwardRef68(function(props, ref) {
-    return /* @__PURE__ */ (0, import_jsx_runtime173.jsx)(GridGenericColumnMenu, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime174.jsx)(GridGenericColumnMenu, _extends({}, props, {
       ref,
       defaultSlots: GRID_COLUMN_MENU_SLOTS,
       defaultSlotProps: GRID_COLUMN_MENU_SLOT_PROPS
@@ -52901,7 +53064,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/panel/GridPanelWrapper.mjs
   var React216 = __toESM(require_react(), 1);
-  var import_jsx_runtime174 = __toESM(require_jsx_runtime(), 1), _excluded62 = ["className"], useUtilityClasses85 = (ownerState) => {
+  var import_jsx_runtime175 = __toESM(require_jsx_runtime(), 1), _excluded62 = ["className"], useUtilityClasses85 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -52922,7 +53085,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded62), rootProps = useGridRootProps(), classes2 = useUtilityClasses85(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime174.jsx)(GridPanelWrapperRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime175.jsx)(GridPanelWrapperRoot, _extends({
       tabIndex: -1,
       className: clsx_default(classes2.root, className),
       ownerState: rootProps
@@ -52932,17 +53095,17 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
 
   // node_modules/@mui/x-data-grid/components/panel/GridColumnsPanel.mjs
-  var import_jsx_runtime175 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime176 = __toESM(require_jsx_runtime(), 1);
   function GridColumnsPanel(props) {
     let rootProps = useGridRootProps();
-    return /* @__PURE__ */ (0, import_jsx_runtime175.jsx)(GridPanelWrapper, _extends({}, props, {
-      children: /* @__PURE__ */ (0, import_jsx_runtime175.jsx)(rootProps.slots.columnsManagement, _extends({}, rootProps.slotProps?.columnsManagement))
+    return /* @__PURE__ */ (0, import_jsx_runtime176.jsx)(GridPanelWrapper, _extends({}, props, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime176.jsx)(rootProps.slots.columnsManagement, _extends({}, rootProps.slotProps?.columnsManagement))
     }));
   }
 
   // node_modules/@mui/x-data-grid/components/panel/GridPanel.mjs
   var React217 = __toESM(require_react(), 1);
-  var import_jsx_runtime176 = __toESM(require_jsx_runtime(), 1), _excluded63 = ["children", "className", "classes", "onClose"], gridPanelClasses = generateUtilityClasses("MuiDataGrid", ["panel", "paper"]), GridPanelRoot = styled_default2(NotRendered, {
+  var import_jsx_runtime177 = __toESM(require_jsx_runtime(), 1), _excluded63 = ["children", "className", "classes", "onClose"], gridPanelClasses = generateUtilityClasses("MuiDataGrid", ["panel", "paper"]), GridPanelRoot = styled_default2(NotRendered, {
     name: "MuiDataGrid",
     slot: "panel"
   })({
@@ -52970,7 +53133,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     return React217.useEffect(() => {
       let panelAnchor = apiRef.current.rootElementRef?.current?.querySelector('[data-id="gridPanelAnchor"]');
       panelAnchor && setFallbackTarget(panelAnchor);
-    }, [apiRef]), fallbackTarget ? /* @__PURE__ */ (0, import_jsx_runtime176.jsx)(GridPanelRoot, _extends({
+    }, [apiRef]), fallbackTarget ? /* @__PURE__ */ (0, import_jsx_runtime177.jsx)(GridPanelRoot, _extends({
       as: rootProps.slots.basePopper,
       ownerState: rootProps,
       placement: "bottom-end",
@@ -52986,7 +53149,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, rootProps.slotProps?.basePopper, {
       target: props.target ?? fallbackTarget,
       ref,
-      children: /* @__PURE__ */ (0, import_jsx_runtime176.jsx)(GridPanelContent, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime177.jsx)(GridPanelContent, {
         className: classes2.paper,
         ownerState: rootProps,
         onKeyDown: handleKeyDown,
@@ -52997,7 +53160,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/panel/GridPanelContent.mjs
   var React218 = __toESM(require_react(), 1);
-  var import_jsx_runtime177 = __toESM(require_jsx_runtime(), 1), _excluded64 = ["className"], useUtilityClasses86 = (ownerState) => {
+  var import_jsx_runtime178 = __toESM(require_jsx_runtime(), 1), _excluded64 = ["className"], useUtilityClasses86 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -53020,7 +53183,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded64), rootProps = useGridRootProps(), classes2 = useUtilityClasses86(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime177.jsx)(GridPanelContentRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime178.jsx)(GridPanelContentRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState: rootProps
     }, other));
@@ -53028,7 +53191,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/panel/GridPanelFooter.mjs
   var React219 = __toESM(require_react(), 1);
-  var import_jsx_runtime178 = __toESM(require_jsx_runtime(), 1), _excluded65 = ["className"], useUtilityClasses87 = (ownerState) => {
+  var import_jsx_runtime179 = __toESM(require_jsx_runtime(), 1), _excluded65 = ["className"], useUtilityClasses87 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -53048,7 +53211,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded65), rootProps = useGridRootProps(), classes2 = useUtilityClasses87(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime178.jsx)(GridPanelFooterRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime179.jsx)(GridPanelFooterRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState: rootProps
     }, other));
@@ -53059,7 +53222,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterFormColumnInput.mjs
   var React220 = __toESM(require_react(), 1);
-  var import_react23 = __toESM(require_react(), 1), import_jsx_runtime179 = __toESM(require_jsx_runtime(), 1), _excluded66 = ["item", "columns", "value", "onChange", "disabled", "className"], FilterFormColumnInput = styled_default2("div", {
+  var import_react24 = __toESM(require_react(), 1), import_jsx_runtime180 = __toESM(require_jsx_runtime(), 1), _excluded66 = ["item", "columns", "value", "onChange", "disabled", "className"], FilterFormColumnInput = styled_default2("div", {
     name: "MuiDataGrid",
     slot: "FilterFormColumnInput"
   })({
@@ -53075,7 +53238,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded66), apiRef = useGridApiContext(), rootProps = useGridRootProps(), columnSelectId = useId(), columnSelectLabelId = useId(), isBaseSelectNative = (rootProps.slotProps?.baseSelect || {}).native ?? !1, baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {}, handleChange = (event) => {
       onChange(event.target.value);
     };
-    return /* @__PURE__ */ (0, import_jsx_runtime179.jsx)(FilterFormColumnInput, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime180.jsx)(FilterFormColumnInput, _extends({
       as: rootProps.slots.baseSelect
       // Props from `columnInputProps` go to the `baseSelect` slot.
     }, other, {
@@ -53090,7 +53253,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       native: isBaseSelectNative,
       disabled
     }, rootProps.slotProps?.baseSelect, {
-      children: columns.map((col) => /* @__PURE__ */ (0, import_react23.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+      children: columns.map((col) => /* @__PURE__ */ (0, import_react24.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
         native: isBaseSelectNative,
         key: col.field,
         value: col.field
@@ -53099,7 +53262,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterFormBase.mjs
-  var import_jsx_runtime180 = __toESM(require_jsx_runtime(), 1), import_react24 = __toESM(require_react(), 1), _excluded67 = ["item", "hasMultipleFilters", "deleteFilter", "applyFilterChanges", "showMultiFilterOperators", "disableMultiFilterOperator", "applyMultiFilterOperatorChanges", "focusElementRef", "logicOperators", "columnsSort", "filterColumns", "deleteIconProps", "logicOperatorInputProps", "operatorInputProps", "columnInputProps", "valueInputProps", "disableDebounce", "readOnly", "filterModel", "children"], _excluded213 = ["InputComponentProps"], useUtilityClasses88 = (ownerState) => {
+  var import_jsx_runtime181 = __toESM(require_jsx_runtime(), 1), import_react25 = __toESM(require_react(), 1), _excluded67 = ["item", "hasMultipleFilters", "deleteFilter", "applyFilterChanges", "showMultiFilterOperators", "disableMultiFilterOperator", "applyMultiFilterOperatorChanges", "focusElementRef", "logicOperators", "columnsSort", "filterColumns", "deleteIconProps", "logicOperatorInputProps", "operatorInputProps", "columnInputProps", "valueInputProps", "disableDebounce", "readOnly", "filterModel", "children"], _excluded213 = ["InputComponentProps"], useUtilityClasses88 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -53247,27 +53410,27 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       focus: () => {
         currentOperator?.InputComponent ? valueRef?.current?.focus() : filterSelectorRef.current.focus();
       }
-    }), [currentOperator]), /* @__PURE__ */ (0, import_jsx_runtime180.jsxs)(GridFilterFormRoot, _extends({
+    }), [currentOperator]), /* @__PURE__ */ (0, import_jsx_runtime181.jsxs)(GridFilterFormRoot, _extends({
       className: classes2.root,
       "data-id": item.id,
       ownerState: rootProps
     }, other, {
       ref,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime180.jsx)(FilterFormDeleteIcon, _extends({}, deleteIconProps, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime181.jsx)(FilterFormDeleteIcon, _extends({}, deleteIconProps, {
         className: clsx_default(classes2.deleteIcon, deleteIconProps.className),
         ownerState: rootProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime180.jsx)(rootProps.slots.baseIconButton, _extends({
+        children: /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(rootProps.slots.baseIconButton, _extends({
           "aria-label": apiRef.current.getLocaleText("filterPanelDeleteIconLabel"),
           title: apiRef.current.getLocaleText("filterPanelDeleteIconLabel"),
           onClick: handleDeleteFilter,
           size: "small",
           disabled: readOnly
         }, rootProps.slotProps?.baseIconButton, {
-          children: /* @__PURE__ */ (0, import_jsx_runtime180.jsx)(rootProps.slots.filterPanelDeleteIcon, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(rootProps.slots.filterPanelDeleteIcon, {
             fontSize: "small"
           })
         }))
-      })), /* @__PURE__ */ (0, import_jsx_runtime180.jsx)(FilterFormLogicOperatorInput, _extends({
+      })), /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(FilterFormLogicOperatorInput, _extends({
         as: rootProps.slots.baseSelect,
         sx: [hasLogicOperatorColumn ? {
           display: "flex"
@@ -53292,19 +53455,19 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         disabled: !!disableMultiFilterOperator || logicOperators.length === 1,
         native: isBaseSelectNative
       }, rootProps.slotProps?.baseSelect, {
-        children: logicOperators.map((logicOperator) => /* @__PURE__ */ (0, import_react24.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+        children: logicOperators.map((logicOperator) => /* @__PURE__ */ (0, import_react25.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
           native: isBaseSelectNative,
           key: logicOperator.toString(),
           value: logicOperator.toString()
         }), apiRef.current.getLocaleText(getLogicOperatorLocaleKey(logicOperator))))
-      })), /* @__PURE__ */ (0, import_jsx_runtime180.jsx)(rootProps.slots.filterFormColumnInput, _extends({}, columnInputProps, columnInputSlotProps, {
+      })), /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(rootProps.slots.filterFormColumnInput, _extends({}, columnInputProps, columnInputSlotProps, {
         className: clsx_default(classes2.columnInput, columnInputProps.className, columnInputSlotProps?.className),
         item,
         columns: sortedFilteredColumns,
         value: selectedField,
         onChange: changeColumn,
         disabled: readOnly
-      })), /* @__PURE__ */ (0, import_jsx_runtime180.jsx)(FilterFormOperatorInput, _extends({
+      })), /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(FilterFormOperatorInput, _extends({
         as: rootProps.slots.baseSelect,
         size: "small"
       }, operatorInputProps, {
@@ -53319,15 +53482,15 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         inputRef: filterSelectorRef,
         disabled: readOnly
       }, rootProps.slotProps?.baseSelect, {
-        children: currentColumn?.filterOperators?.map((operator) => /* @__PURE__ */ (0, import_react24.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+        children: currentColumn?.filterOperators?.map((operator) => /* @__PURE__ */ (0, import_react25.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
           native: isBaseSelectNative,
           key: operator.value,
           value: operator.value
         }), operator.label || apiRef.current.getLocaleText(`filterOperator${capitalize(operator.value)}`)))
-      })), /* @__PURE__ */ (0, import_jsx_runtime180.jsx)(FilterFormValueInput, _extends({}, valueInputPropsOther, {
+      })), /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(FilterFormValueInput, _extends({}, valueInputPropsOther, {
         className: clsx_default(classes2.valueInput, valueInputPropsOther.className),
         ownerState: rootProps,
-        children: currentOperator?.InputComponent ? /* @__PURE__ */ (0, import_jsx_runtime180.jsx)(currentOperator.InputComponent, _extends({
+        children: currentOperator?.InputComponent ? /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(currentOperator.InputComponent, _extends({
           apiRef,
           item,
           applyValue: applyFilterChanges,
@@ -53349,7 +53512,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterPanelBase.mjs
   var React222 = __toESM(require_react(), 1);
-  var import_jsx_runtime181 = __toESM(require_jsx_runtime(), 1), _excluded68 = ["logicOperators", "columnsSort", "filterFormProps", "getColumnForNewFilter", "children", "disableAddFilterButton", "disableRemoveAllButton", "disableDebounce", "filterModel", "onFilterModelChange", "onClose"], getGridFilter = (col) => ({
+  var import_jsx_runtime182 = __toESM(require_jsx_runtime(), 1), _excluded68 = ["logicOperators", "columnsSort", "filterFormProps", "getColumnForNewFilter", "children", "disableAddFilterButton", "disableRemoveAllButton", "disableDebounce", "filterModel", "onFilterModelChange", "onClose"], getGridFilter = (col) => ({
     field: col.field,
     operator: col.filterOperators[0].value,
     id: Math.round(Math.random() * 1e5)
@@ -53422,10 +53585,10 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       logicOperators.length > 0 && filterModel.logicOperator && !logicOperators.includes(filterModel.logicOperator) && applyFilterLogicOperator(logicOperators[0]);
     }, [logicOperators, applyFilterLogicOperator, filterModel.logicOperator]), React222.useEffect(() => {
       validFilters.length > 0 && lastFilterRef.current.focus();
-    }, [validFilters.length]), /* @__PURE__ */ (0, import_jsx_runtime181.jsxs)(GridPanelWrapper, _extends({}, other, {
+    }, [validFilters.length]), /* @__PURE__ */ (0, import_jsx_runtime182.jsxs)(GridPanelWrapper, _extends({}, other, {
       ref,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime181.jsxs)(GridPanelContent2, {
-        children: [readOnlyFilters.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(GridFilterFormBase, _extends({
+      children: [/* @__PURE__ */ (0, import_jsx_runtime182.jsxs)(GridPanelContent2, {
+        children: [readOnlyFilters.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime182.jsx)(GridFilterFormBase, _extends({
           item,
           filterModel,
           applyFilterChanges: applyFilter,
@@ -53439,7 +53602,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           logicOperators,
           columnsSort,
           disableDebounce
-        }, filterFormProps), item.id == null ? index : item.id)), validFilters.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(GridFilterFormBase, _extends({
+        }, filterFormProps), item.id == null ? index : item.id)), validFilters.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime182.jsx)(GridFilterFormBase, _extends({
           item,
           filterModel,
           applyFilterChanges: applyFilter,
@@ -53453,15 +53616,15 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           columnsSort,
           disableDebounce
         }, filterFormProps), item.id == null ? index + readOnlyFilters.length : item.id))]
-      }), !rootProps.disableMultipleColumnsFiltering && !(disableAddFilterButton && disableRemoveAllButton) ? /* @__PURE__ */ (0, import_jsx_runtime181.jsxs)(GridPanelFooter, {
-        children: [disableAddFilterButton ? /* @__PURE__ */ (0, import_jsx_runtime181.jsx)("span", {}) : /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(rootProps.slots.baseButton, _extends({
+      }), !rootProps.disableMultipleColumnsFiltering && !(disableAddFilterButton && disableRemoveAllButton) ? /* @__PURE__ */ (0, import_jsx_runtime182.jsxs)(GridPanelFooter, {
+        children: [disableAddFilterButton ? /* @__PURE__ */ (0, import_jsx_runtime182.jsx)("span", {}) : /* @__PURE__ */ (0, import_jsx_runtime182.jsx)(rootProps.slots.baseButton, _extends({
           onClick: addNewFilter,
-          startIcon: /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(rootProps.slots.filterPanelAddIcon, {})
+          startIcon: /* @__PURE__ */ (0, import_jsx_runtime182.jsx)(rootProps.slots.filterPanelAddIcon, {})
         }, rootProps.slotProps?.baseButton, {
           children: apiRef.current.getLocaleText("filterPanelAddFilter")
-        })), !disableRemoveAllButton && validFilters.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(rootProps.slots.baseButton, _extends({
+        })), !disableRemoveAllButton && validFilters.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime182.jsx)(rootProps.slots.baseButton, _extends({
           onClick: handleRemoveAll,
-          startIcon: /* @__PURE__ */ (0, import_jsx_runtime181.jsx)(rootProps.slots.filterPanelRemoveAllIcon, {})
+          startIcon: /* @__PURE__ */ (0, import_jsx_runtime182.jsx)(rootProps.slots.filterPanelRemoveAllIcon, {})
         }, rootProps.slotProps?.baseButton, {
           children: apiRef.current.getLocaleText("filterPanelRemoveAll")
         })) : null]
@@ -53470,14 +53633,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterPanel.mjs
-  var import_jsx_runtime182 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime183 = __toESM(require_jsx_runtime(), 1);
   var GridFilterPanel = forwardRef68(function(props, ref) {
     let apiRef = useGridApiContext(), filterModel = useGridSelector(apiRef, gridFilterModelSelector), handleFilterModelChange = React223.useCallback((model, reason) => {
       apiRef.current.setFilterModel(model, reason);
     }, [apiRef]), handleClose = React223.useCallback(() => {
       apiRef.current.hideFilterPanel();
     }, [apiRef]);
-    return /* @__PURE__ */ (0, import_jsx_runtime182.jsx)(GridFilterPanelBase, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime183.jsx)(GridFilterPanelBase, _extends({}, props, {
       filterModel,
       onFilterModelChange: handleFilterModelChange,
       onClose: handleClose,
@@ -53502,7 +53665,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/GridShadowScrollArea.mjs
   var React224 = __toESM(require_react(), 1);
-  var import_jsx_runtime183 = __toESM(require_jsx_runtime(), 1), _excluded69 = ["children"], reveal = keyframes({
+  var import_jsx_runtime184 = __toESM(require_jsx_runtime(), 1), _excluded69 = ["children"], reveal = keyframes({
     from: {
       opacity: 0
     },
@@ -53564,14 +53727,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let {
       children
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded69);
-    return /* @__PURE__ */ (0, import_jsx_runtime183.jsx)(ShadowScrollArea, _extends({}, other, {
+    return /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(ShadowScrollArea, _extends({}, other, {
       ref,
       children
     }));
   });
 
   // node_modules/@mui/x-data-grid/components/columnsManagement/GridColumnsManagement.mjs
-  var import_jsx_runtime184 = __toESM(require_jsx_runtime(), 1), useUtilityClasses89 = (ownerState) => {
+  var import_jsx_runtime185 = __toESM(require_jsx_runtime(), 1), useUtilityClasses89 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -53629,11 +53792,11 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     let firstHideableColumnFound = !1, isFirstHideableColumn = (column2) => firstHideableColumnFound === !1 && column2.hideable !== !1 ? (firstHideableColumnFound = !0, !0) : !1, handleSearchReset = React225.useCallback(() => {
       setSearchValue(""), searchInputRef.current && (searchInputRef.current.value = "", searchInputRef.current.focus());
     }, []);
-    return /* @__PURE__ */ (0, import_jsx_runtime184.jsxs)(React225.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime184.jsx)(GridColumnsManagementHeader, {
+    return /* @__PURE__ */ (0, import_jsx_runtime185.jsxs)(React225.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime185.jsx)(GridColumnsManagementHeader, {
         className: classes2.header,
         ownerState: rootProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(SearchInput, _extends({
+        children: /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(SearchInput, _extends({
           as: rootProps.slots.baseTextField,
           ownerState: rootProps,
           placeholder: apiRef.current.getLocaleText("columnsManagementSearchTitle"),
@@ -53644,10 +53807,10 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           type: "search",
           slotProps: {
             input: {
-              startAdornment: /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(rootProps.slots.quickFilterIcon, {
+              startAdornment: /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.quickFilterIcon, {
                 fontSize: "small"
               }),
-              endAdornment: /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(rootProps.slots.baseIconButton, _extends({
+              endAdornment: /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.baseIconButton, _extends({
                 size: "small",
                 "aria-label": apiRef.current.getLocaleText("columnsManagementDeleteIconLabel"),
                 style: searchValue ? {
@@ -53659,7 +53822,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
                 onClick: handleSearchReset,
                 edge: "end"
               }, rootProps.slotProps?.baseIconButton, {
-                children: /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(rootProps.slots.quickFilterClearIcon, {
+                children: /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.quickFilterClearIcon, {
                   fontSize: "small"
                 })
               }))
@@ -53671,12 +53834,12 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           autoComplete: "off",
           fullWidth: !0
         }, rootProps.slotProps?.baseTextField, searchInputProps))
-      }), /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(GridColumnsManagementScrollArea, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(GridColumnsManagementScrollArea, {
         ownerState: rootProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime184.jsxs)(GridColumnsManagementBody, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime185.jsxs)(GridColumnsManagementBody, {
           className: classes2.root,
           ownerState: rootProps,
-          children: [currentColumns.map((column2) => /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(GridColumnsManagementRow, _extends({
+          children: [currentColumns.map((column2) => /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(GridColumnsManagementRow, _extends({
             as: rootProps.slots.baseCheckbox,
             className: classes2.row,
             disabled: column2.hideable === !1 || pivotActive,
@@ -53687,15 +53850,15 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
             label: column2.headerName || column2.field,
             density: "compact",
             fullWidth: !0
-          }, rootProps.slotProps?.baseCheckbox), column2.field)), currentColumns.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(GridColumnsManagementEmptyText, {
+          }, rootProps.slotProps?.baseCheckbox), column2.field)), currentColumns.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(GridColumnsManagementEmptyText, {
             ownerState: rootProps,
             children: apiRef.current.getLocaleText("columnsManagementNoColumns")
           })]
         })
-      }), !disableShowHideToggle || !disableResetButton ? /* @__PURE__ */ (0, import_jsx_runtime184.jsxs)(GridColumnsManagementFooter, {
+      }), !disableShowHideToggle || !disableResetButton ? /* @__PURE__ */ (0, import_jsx_runtime185.jsxs)(GridColumnsManagementFooter, {
         ownerState: rootProps,
         className: classes2.footer,
-        children: [disableShowHideToggle ? /* @__PURE__ */ (0, import_jsx_runtime184.jsx)("span", {}) : /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(rootProps.slots.baseCheckbox, _extends({
+        children: [disableShowHideToggle ? /* @__PURE__ */ (0, import_jsx_runtime185.jsx)("span", {}) : /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.baseCheckbox, _extends({
           disabled: hideableColumns.length === 0 || pivotActive,
           checked: allHideableColumnsVisible,
           indeterminate: !allHideableColumnsVisible && !allHideableColumnsHidden,
@@ -53703,7 +53866,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           name: apiRef.current.getLocaleText("columnsManagementShowHideAllText"),
           label: apiRef.current.getLocaleText("columnsManagementShowHideAllText"),
           density: "compact"
-        }, rootProps.slotProps?.baseCheckbox)), disableResetButton ? null : /* @__PURE__ */ (0, import_jsx_runtime184.jsx)(rootProps.slots.baseButton, _extends({
+        }, rootProps.slotProps?.baseCheckbox)), disableResetButton ? null : /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.baseButton, _extends({
           onClick: () => apiRef.current.setColumnVisibilityModel(initialColumnVisibilityModel),
           disabled: isResetDisabled || pivotActive
         }, rootProps.slotProps?.baseButton, {
@@ -53766,21 +53929,21 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/toolbar/GridToolbarExportContainer.mjs
   var React226 = __toESM(require_react(), 1);
-  var import_jsx_runtime185 = __toESM(require_jsx_runtime(), 1), GridToolbarExportContainer = forwardRef68(function(props, ref) {
+  var import_jsx_runtime186 = __toESM(require_jsx_runtime(), 1), GridToolbarExportContainer = forwardRef68(function(props, ref) {
     let {
       children,
       slotProps = {}
     } = props, buttonProps = slotProps.button || {}, tooltipProps = slotProps.tooltip || {}, apiRef = useGridApiContext(), rootProps = useGridRootProps(), exportButtonId = useId(), exportMenuId = useId(), [open, setOpen] = React226.useState(!1), buttonRef = React226.useRef(null), handleRef = useForkRef(ref, buttonRef), handleMenuOpen = (event) => {
       setOpen((prevOpen) => !prevOpen), buttonProps.onClick?.(event);
     }, handleMenuClose = () => setOpen(!1);
-    return children == null ? null : /* @__PURE__ */ (0, import_jsx_runtime185.jsxs)(React226.Fragment, {
-      children: [/* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.baseTooltip, _extends({
+    return children == null ? null : /* @__PURE__ */ (0, import_jsx_runtime186.jsxs)(React226.Fragment, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime186.jsx)(rootProps.slots.baseTooltip, _extends({
         title: apiRef.current.getLocaleText("toolbarExportLabel"),
         enterDelay: 1e3
       }, rootProps.slotProps?.baseTooltip, tooltipProps, {
-        children: /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.baseButton, _extends({
+        children: /* @__PURE__ */ (0, import_jsx_runtime186.jsx)(rootProps.slots.baseButton, _extends({
           size: "small",
-          startIcon: /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.exportIcon, {}),
+          startIcon: /* @__PURE__ */ (0, import_jsx_runtime186.jsx)(rootProps.slots.exportIcon, {}),
           "aria-expanded": open,
           "aria-label": apiRef.current.getLocaleText("toolbarExportLabel"),
           "aria-haspopup": "menu",
@@ -53791,12 +53954,12 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           ref: handleRef,
           children: apiRef.current.getLocaleText("toolbarExport")
         }))
-      })), /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(GridMenu, {
+      })), /* @__PURE__ */ (0, import_jsx_runtime186.jsx)(GridMenu, {
         open,
         target: buttonRef.current,
         onClose: handleMenuClose,
         position: "bottom-end",
-        children: /* @__PURE__ */ (0, import_jsx_runtime185.jsx)(rootProps.slots.baseMenuList, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime186.jsx)(rootProps.slots.baseMenuList, {
           id: exportMenuId,
           className: gridClasses.menuList,
           "aria-labelledby": exportButtonId,
@@ -53810,13 +53973,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
 
   // node_modules/@mui/x-data-grid/components/toolbar/GridToolbarExport.mjs
-  var import_jsx_runtime186 = __toESM(require_jsx_runtime(), 1), _excluded70 = ["hideMenu", "options"], _excluded214 = ["hideMenu", "options"], _excluded310 = ["csvOptions", "printOptions", "excelOptions"];
+  var import_jsx_runtime187 = __toESM(require_jsx_runtime(), 1), _excluded70 = ["hideMenu", "options"], _excluded214 = ["hideMenu", "options"], _excluded310 = ["csvOptions", "printOptions", "excelOptions"];
   function GridCsvExportMenuItem(props) {
     let apiRef = useGridApiContext(), rootProps = useGridRootProps(), {
       hideMenu,
       options
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded70);
-    return /* @__PURE__ */ (0, import_jsx_runtime186.jsx)(rootProps.slots.baseMenuItem, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime187.jsx)(rootProps.slots.baseMenuItem, _extends({
       onClick: () => {
         apiRef.current.exportDataAsCsv(options), hideMenu?.();
       }
@@ -53829,7 +53992,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       hideMenu,
       options
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded214);
-    return /* @__PURE__ */ (0, import_jsx_runtime186.jsx)(rootProps.slots.baseMenuItem, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime187.jsx)(rootProps.slots.baseMenuItem, _extends({
       onClick: () => {
         apiRef.current.exportDataAsPrint(options).catch((error2) => {
           console.error("MUI X Data Grid: Error exporting the grid as print:", error2);
@@ -53849,7 +54012,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       csvOptions,
       printOptions
     }).sort((a, b) => a.componentName > b.componentName ? 1 : -1);
-    return preProcessedButtons.length === 0 ? null : /* @__PURE__ */ (0, import_jsx_runtime186.jsx)(GridToolbarExportContainer, _extends({}, other, {
+    return preProcessedButtons.length === 0 ? null : /* @__PURE__ */ (0, import_jsx_runtime187.jsx)(GridToolbarExportContainer, _extends({}, other, {
       ref,
       children: preProcessedButtons.map((button, index) => /* @__PURE__ */ React227.cloneElement(button.component, {
         key: index
@@ -53870,7 +54033,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/quickFilter/QuickFilter.mjs
-  var import_jsx_runtime187 = __toESM(require_jsx_runtime(), 1), _excluded71 = ["render", "className", "parser", "formatter", "debounceMs", "defaultExpanded", "expanded", "onExpandedChange"], DEFAULT_PARSER = (searchText) => searchText.split(" ").filter((word) => word !== ""), DEFAULT_FORMATTER = (values3) => values3.join(" ");
+  var import_jsx_runtime188 = __toESM(require_jsx_runtime(), 1), _excluded71 = ["render", "className", "parser", "formatter", "debounceMs", "defaultExpanded", "expanded", "onExpandedChange"], DEFAULT_PARSER = (searchText) => searchText.split(" ").filter((word) => word !== ""), DEFAULT_FORMATTER = (values3) => values3.join(" ");
   function QuickFilter(props) {
     let rootProps = useGridRootProps(), {
       render,
@@ -53931,7 +54094,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, {
       ref
     }), state2);
-    return /* @__PURE__ */ (0, import_jsx_runtime187.jsx)(QuickFilterContext.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime188.jsx)(QuickFilterContext.Provider, {
       value: contextValue,
       children: element
     });
@@ -53939,7 +54102,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/quickFilter/QuickFilterControl.mjs
   var React230 = __toESM(require_react(), 1);
-  var import_jsx_runtime188 = __toESM(require_jsx_runtime(), 1), _excluded72 = ["render", "className", "slotProps", "onKeyDown", "onChange"], QuickFilterControl = forwardRef68(function(props, ref) {
+  var import_jsx_runtime189 = __toESM(require_jsx_runtime(), 1), _excluded72 = ["render", "className", "slotProps", "onKeyDown", "onChange"], QuickFilterControl = forwardRef68(function(props, ref) {
     let {
       render,
       className,
@@ -53976,14 +54139,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       onKeyDown: handleKeyDown,
       ref: handleRef
     }), state2);
-    return /* @__PURE__ */ (0, import_jsx_runtime188.jsx)(React230.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime189.jsx)(React230.Fragment, {
       children: element
     });
   });
 
   // node_modules/@mui/x-data-grid/components/quickFilter/QuickFilterClear.mjs
   var React231 = __toESM(require_react(), 1);
-  var import_jsx_runtime189 = __toESM(require_jsx_runtime(), 1), _excluded73 = ["render", "className", "onClick"], QuickFilterClear = forwardRef68(function(props, ref) {
+  var import_jsx_runtime190 = __toESM(require_jsx_runtime(), 1), _excluded73 = ["render", "className", "onClick"], QuickFilterClear = forwardRef68(function(props, ref) {
     let {
       render,
       className,
@@ -54000,14 +54163,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       onClick: handleClick,
       ref
     }), state2);
-    return /* @__PURE__ */ (0, import_jsx_runtime189.jsx)(React231.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime190.jsx)(React231.Fragment, {
       children: element
     });
   });
 
   // node_modules/@mui/x-data-grid/components/quickFilter/QuickFilterTrigger.mjs
   var React232 = __toESM(require_react(), 1);
-  var import_jsx_runtime190 = __toESM(require_jsx_runtime(), 1), _excluded74 = ["render", "className", "onClick"], QuickFilterTrigger = forwardRef68(function(props, ref) {
+  var import_jsx_runtime191 = __toESM(require_jsx_runtime(), 1), _excluded74 = ["render", "className", "onClick"], QuickFilterTrigger = forwardRef68(function(props, ref) {
     let {
       render,
       className,
@@ -54027,13 +54190,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       onClick: handleClick,
       ref: handleRef
     }), state2);
-    return /* @__PURE__ */ (0, import_jsx_runtime190.jsx)(React232.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(React232.Fragment, {
       children: element
     });
   });
 
   // node_modules/@mui/x-data-grid/components/toolbar/GridToolbarQuickFilter.mjs
-  var import_jsx_runtime191 = __toESM(require_jsx_runtime(), 1), _excluded75 = ["quickFilterParser", "quickFilterFormatter", "debounceMs", "className", "slotProps"], _excluded215 = ["ref", "slotProps"], useUtilityClasses90 = (ownerState) => {
+  var import_jsx_runtime192 = __toESM(require_jsx_runtime(), 1), _excluded75 = ["quickFilterParser", "quickFilterFormatter", "debounceMs", "className", "slotProps"], _excluded215 = ["ref", "slotProps"], useUtilityClasses90 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -54086,7 +54249,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       className,
       slotProps
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded75);
-    return /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(QuickFilter, {
+    return /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(QuickFilter, {
       parser: quickFilterParser,
       formatter: quickFilterFormatter,
       debounceMs,
@@ -54094,30 +54257,30 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         let currentOwnerState = _extends({}, ownerState, {
           expanded: state2.expanded
         });
-        return /* @__PURE__ */ (0, import_jsx_runtime191.jsxs)(GridQuickFilterRoot, _extends({}, quickFilterProps, {
+        return /* @__PURE__ */ (0, import_jsx_runtime192.jsxs)(GridQuickFilterRoot, _extends({}, quickFilterProps, {
           className: clsx_default(classes2.root, className),
-          children: [/* @__PURE__ */ (0, import_jsx_runtime191.jsx)(QuickFilterTrigger, {
-            render: (triggerProps) => /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(rootProps.slots.baseTooltip, {
+          children: [/* @__PURE__ */ (0, import_jsx_runtime192.jsx)(QuickFilterTrigger, {
+            render: (triggerProps) => /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(rootProps.slots.baseTooltip, {
               title: apiRef.current.getLocaleText("toolbarQuickFilterLabel"),
               enterDelay: 0,
-              children: /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(GridQuickFilterTrigger, _extends({
+              children: /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(GridQuickFilterTrigger, _extends({
                 className: classes2.trigger
               }, triggerProps, {
                 ownerState: currentOwnerState,
                 color: "default",
                 "aria-disabled": state2.expanded,
-                children: /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(rootProps.slots.quickFilterIcon, {
+                children: /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(rootProps.slots.quickFilterIcon, {
                   fontSize: "small"
                 })
               }))
             })
-          }), /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(QuickFilterControl, {
+          }), /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(QuickFilterControl, {
             render: (_ref) => {
               let {
                 ref,
                 slotProps: controlSlotProps
               } = _ref, controlProps = _objectWithoutPropertiesLoose(_ref, _excluded215);
-              return /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(GridQuickFilterTextField, _extends({
+              return /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(GridQuickFilterTextField, _extends({
                 as: rootProps.slots.baseTextField,
                 className: classes2.control,
                 ownerState: currentOwnerState,
@@ -54127,15 +54290,15 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
                 size: "small",
                 slotProps: _extends({
                   input: _extends({
-                    startAdornment: /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(rootProps.slots.quickFilterIcon, {
+                    startAdornment: /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(rootProps.slots.quickFilterIcon, {
                       fontSize: "small"
                     }),
-                    endAdornment: controlProps.value ? /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(QuickFilterClear, {
-                      render: /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(rootProps.slots.baseIconButton, {
+                    endAdornment: controlProps.value ? /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(QuickFilterClear, {
+                      render: /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(rootProps.slots.baseIconButton, {
                         size: "small",
                         edge: "end",
                         "aria-label": apiRef.current.getLocaleText("toolbarQuickFilterDeleteIconLabel"),
-                        children: /* @__PURE__ */ (0, import_jsx_runtime191.jsx)(rootProps.slots.quickFilterClearIcon, {
+                        children: /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(rootProps.slots.quickFilterClearIcon, {
                           fontSize: "small"
                         })
                       })
@@ -54155,7 +54318,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/filterPanel/FilterPanelTrigger.mjs
   var React233 = __toESM(require_react(), 1);
-  var import_jsx_runtime192 = __toESM(require_jsx_runtime(), 1), _excluded76 = ["render", "className", "onClick", "onPointerUp"], FilterPanelTrigger = forwardRef68(function(props, ref) {
+  var import_jsx_runtime193 = __toESM(require_jsx_runtime(), 1), _excluded76 = ["render", "className", "onClick", "onPointerUp"], FilterPanelTrigger = forwardRef68(function(props, ref) {
     let {
       render,
       className,
@@ -54181,14 +54344,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, {
       ref: handleRef
     }), state2);
-    return /* @__PURE__ */ (0, import_jsx_runtime192.jsx)(React233.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime193.jsx)(React233.Fragment, {
       children: element
     });
   });
 
   // node_modules/@mui/x-data-grid/components/columnsPanel/ColumnsPanelTrigger.mjs
   var React234 = __toESM(require_react(), 1);
-  var import_jsx_runtime193 = __toESM(require_jsx_runtime(), 1), _excluded77 = ["render", "className", "onClick", "onPointerUp"], ColumnsPanelTrigger = forwardRef68(function(props, ref) {
+  var import_jsx_runtime194 = __toESM(require_jsx_runtime(), 1), _excluded77 = ["render", "className", "onClick", "onPointerUp"], ColumnsPanelTrigger = forwardRef68(function(props, ref) {
     let {
       render,
       className,
@@ -54213,14 +54376,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       onClick: handleClick,
       ref: handleRef
     }), state2);
-    return /* @__PURE__ */ (0, import_jsx_runtime193.jsx)(React234.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime194.jsx)(React234.Fragment, {
       children: element
     });
   });
 
   // node_modules/@mui/x-data-grid/components/export/ExportCsv.mjs
   var React235 = __toESM(require_react(), 1);
-  var import_jsx_runtime194 = __toESM(require_jsx_runtime(), 1), _excluded78 = ["render", "options", "onClick"], ExportCsv = forwardRef68(function(props, ref) {
+  var import_jsx_runtime195 = __toESM(require_jsx_runtime(), 1), _excluded78 = ["render", "options", "onClick"], ExportCsv = forwardRef68(function(props, ref) {
     let {
       render,
       options,
@@ -54232,14 +54395,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, {
       ref
     }));
-    return /* @__PURE__ */ (0, import_jsx_runtime194.jsx)(React235.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime195.jsx)(React235.Fragment, {
       children: element
     });
   });
 
   // node_modules/@mui/x-data-grid/components/export/ExportPrint.mjs
   var React236 = __toESM(require_react(), 1);
-  var import_jsx_runtime195 = __toESM(require_jsx_runtime(), 1), _excluded79 = ["render", "options", "onClick"], ExportPrint = forwardRef68(function(props, ref) {
+  var import_jsx_runtime196 = __toESM(require_jsx_runtime(), 1), _excluded79 = ["render", "options", "onClick"], ExportPrint = forwardRef68(function(props, ref) {
     let {
       render,
       options,
@@ -54253,13 +54416,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, {
       ref
     }));
-    return /* @__PURE__ */ (0, import_jsx_runtime195.jsx)(React236.Fragment, {
+    return /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(React236.Fragment, {
       children: element
     });
   });
 
   // node_modules/@mui/x-data-grid/components/toolbarV8/GridToolbar.mjs
-  var import_jsx_runtime196 = __toESM(require_jsx_runtime(), 1), _excluded80 = ["className"], _excluded216 = ["className"], _excluded311 = ["showQuickFilter", "quickFilterProps", "csvOptions", "printOptions", "mainControls", "additionalExportMenuItems"], useUtilityClasses91 = (ownerState) => {
+  var import_jsx_runtime197 = __toESM(require_jsx_runtime(), 1), _excluded80 = ["className"], _excluded216 = ["className"], _excluded311 = ["showQuickFilter", "quickFilterProps", "csvOptions", "printOptions", "mainControls", "additionalExportMenuItems"], useUtilityClasses91 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -54287,7 +54450,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
   function GridToolbarDivider(props) {
     let other = _objectWithoutPropertiesLoose(props, _excluded80), rootProps = useGridRootProps(), classes2 = useUtilityClasses91(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(Divider3, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(Divider3, _extends({
       as: rootProps.slots.baseDivider,
       orientation: "vertical",
       className: classes2.divider
@@ -54295,7 +54458,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
   function GridToolbarLabel(props) {
     let other = _objectWithoutPropertiesLoose(props, _excluded216), rootProps = useGridRootProps(), classes2 = useUtilityClasses91(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(Label, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(Label, _extends({
       className: classes2.label
     }, other));
   }
@@ -54308,81 +54471,81 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       mainControls,
       additionalExportMenuItems
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded311), apiRef = useGridApiContext(), rootProps = useGridRootProps(), [exportMenuOpen, setExportMenuOpen] = React237.useState(!1), exportMenuTriggerRef = React237.useRef(null), exportMenuId = useId(), exportMenuTriggerId = useId(), showExportMenu = !csvOptions?.disableToolbarButton || !printOptions?.disableToolbarButton || additionalExportMenuItems, closeExportMenu = () => setExportMenuOpen(!1);
-    return /* @__PURE__ */ (0, import_jsx_runtime196.jsxs)(Toolbar3, _extends({}, other, {
-      children: [rootProps.label && /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(GridToolbarLabel, {
+    return /* @__PURE__ */ (0, import_jsx_runtime197.jsxs)(Toolbar3, _extends({}, other, {
+      children: [rootProps.label && /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(GridToolbarLabel, {
         children: rootProps.label
-      }), mainControls || /* @__PURE__ */ (0, import_jsx_runtime196.jsxs)(React237.Fragment, {
-        children: [!rootProps.disableColumnSelector && /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.baseTooltip, {
+      }), mainControls || /* @__PURE__ */ (0, import_jsx_runtime197.jsxs)(React237.Fragment, {
+        children: [!rootProps.disableColumnSelector && /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.baseTooltip, {
           title: apiRef.current.getLocaleText("toolbarColumns"),
-          children: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(ColumnsPanelTrigger, {
-            render: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(ToolbarButton, {}),
-            children: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.columnSelectorIcon, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(ColumnsPanelTrigger, {
+            render: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(ToolbarButton, {}),
+            children: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.columnSelectorIcon, {
               fontSize: "small"
             })
           })
-        }), !rootProps.disableColumnFilter && /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.baseTooltip, {
+        }), !rootProps.disableColumnFilter && /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.baseTooltip, {
           title: apiRef.current.getLocaleText("toolbarFilters"),
-          children: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(FilterPanelTrigger, {
-            render: (triggerProps, state2) => /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(ToolbarButton, _extends({}, triggerProps, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(FilterPanelTrigger, {
+            render: (triggerProps, state2) => /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(ToolbarButton, _extends({}, triggerProps, {
               color: state2.filterCount > 0 ? "primary" : "default",
-              children: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.baseBadge, {
+              children: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.baseBadge, {
                 badgeContent: state2.filterCount,
                 color: "primary",
                 variant: "dot",
-                children: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.openFilterButtonIcon, {
+                children: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.openFilterButtonIcon, {
                   fontSize: "small"
                 })
               })
             }))
           })
         })]
-      }), showExportMenu && (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(GridToolbarDivider, {}), showExportMenu && /* @__PURE__ */ (0, import_jsx_runtime196.jsxs)(React237.Fragment, {
-        children: [/* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.baseTooltip, {
+      }), showExportMenu && (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(GridToolbarDivider, {}), showExportMenu && /* @__PURE__ */ (0, import_jsx_runtime197.jsxs)(React237.Fragment, {
+        children: [/* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.baseTooltip, {
           title: apiRef.current.getLocaleText("toolbarExport"),
           disableInteractive: exportMenuOpen,
-          children: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(ToolbarButton, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(ToolbarButton, {
             ref: exportMenuTriggerRef,
             id: exportMenuTriggerId,
             "aria-controls": exportMenuId,
             "aria-haspopup": "true",
             "aria-expanded": exportMenuOpen ? "true" : void 0,
             onClick: () => setExportMenuOpen(!exportMenuOpen),
-            children: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.exportIcon, {
+            children: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.exportIcon, {
               fontSize: "small"
             })
           })
-        }), /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(GridMenu, {
+        }), /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(GridMenu, {
           target: exportMenuTriggerRef.current,
           open: exportMenuOpen,
           onClose: closeExportMenu,
           position: "bottom-end",
-          children: /* @__PURE__ */ (0, import_jsx_runtime196.jsxs)(rootProps.slots.baseMenuList, _extends({
+          children: /* @__PURE__ */ (0, import_jsx_runtime197.jsxs)(rootProps.slots.baseMenuList, _extends({
             id: exportMenuId,
             "aria-labelledby": exportMenuTriggerId,
             autoFocusItem: !0
           }, rootProps.slotProps?.baseMenuList, {
-            children: [!printOptions?.disableToolbarButton && /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(ExportPrint, {
-              render: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.baseMenuItem, _extends({}, rootProps.slotProps?.baseMenuItem)),
+            children: [!printOptions?.disableToolbarButton && /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(ExportPrint, {
+              render: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.baseMenuItem, _extends({}, rootProps.slotProps?.baseMenuItem)),
               options: printOptions,
               onClick: closeExportMenu,
               children: apiRef.current.getLocaleText("toolbarExportPrint")
-            }), !csvOptions?.disableToolbarButton && /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(ExportCsv, {
-              render: /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(rootProps.slots.baseMenuItem, _extends({}, rootProps.slotProps?.baseMenuItem)),
+            }), !csvOptions?.disableToolbarButton && /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(ExportCsv, {
+              render: /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(rootProps.slots.baseMenuItem, _extends({}, rootProps.slotProps?.baseMenuItem)),
               options: csvOptions,
               onClick: closeExportMenu,
               children: apiRef.current.getLocaleText("toolbarExportCSV")
             }), additionalExportMenuItems?.(closeExportMenu)]
           }))
         })]
-      }), showQuickFilter && /* @__PURE__ */ (0, import_jsx_runtime196.jsxs)(React237.Fragment, {
-        children: [/* @__PURE__ */ (0, import_jsx_runtime196.jsx)(GridToolbarDivider, {}), /* @__PURE__ */ (0, import_jsx_runtime196.jsx)(GridToolbarQuickFilter, _extends({}, quickFilterProps))]
+      }), showQuickFilter && /* @__PURE__ */ (0, import_jsx_runtime197.jsxs)(React237.Fragment, {
+        children: [/* @__PURE__ */ (0, import_jsx_runtime197.jsx)(GridToolbarDivider, {}), /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(GridToolbarQuickFilter, _extends({}, quickFilterProps))]
       })]
     }));
   }
 
   // node_modules/@mui/x-data-grid/components/GridSelectedRowCount.mjs
   var React238 = __toESM(require_react(), 1);
-  var import_jsx_runtime197 = __toESM(require_jsx_runtime(), 1), _excluded81 = ["className", "selectedRowCount"], useUtilityClasses92 = (ownerState) => {
+  var import_jsx_runtime198 = __toESM(require_jsx_runtime(), 1), _excluded81 = ["className", "selectedRowCount"], useUtilityClasses92 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -54409,7 +54572,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       className,
       selectedRowCount
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded81), apiRef = useGridApiContext(), ownerState = useGridRootProps(), classes2 = useUtilityClasses92(ownerState), rowSelectedText = apiRef.current.getLocaleText("footerRowSelected")(selectedRowCount);
-    return /* @__PURE__ */ (0, import_jsx_runtime197.jsx)(GridSelectedRowCountRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime198.jsx)(GridSelectedRowCountRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState
     }, other, {
@@ -54419,14 +54582,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   });
 
   // node_modules/@mui/x-data-grid/components/GridFooter.mjs
-  var import_jsx_runtime198 = __toESM(require_jsx_runtime(), 1), GridFooter = forwardRef68(function(props, ref) {
-    let apiRef = useGridApiContext(), rootProps = useGridRootProps(), totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector), selectedRowCount = useGridSelector(apiRef, gridRowSelectionCountSelector), visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector), selectedRowCountElement = !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? /* @__PURE__ */ (0, import_jsx_runtime198.jsx)(GridSelectedRowCount, {
+  var import_jsx_runtime199 = __toESM(require_jsx_runtime(), 1), GridFooter = forwardRef68(function(props, ref) {
+    let apiRef = useGridApiContext(), rootProps = useGridRootProps(), totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector), selectedRowCount = useGridSelector(apiRef, gridRowSelectionCountSelector), visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector), selectedRowCountElement = !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? /* @__PURE__ */ (0, import_jsx_runtime199.jsx)(GridSelectedRowCount, {
       selectedRowCount
-    }) : /* @__PURE__ */ (0, import_jsx_runtime198.jsx)("div", {}), rowCountElement = !rootProps.hideFooterRowCount && !rootProps.pagination ? /* @__PURE__ */ (0, import_jsx_runtime198.jsx)(rootProps.slots.footerRowCount, _extends({}, rootProps.slotProps?.footerRowCount, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime199.jsx)("div", {}), rowCountElement = !rootProps.hideFooterRowCount && !rootProps.pagination ? /* @__PURE__ */ (0, import_jsx_runtime199.jsx)(rootProps.slots.footerRowCount, _extends({}, rootProps.slotProps?.footerRowCount, {
       rowCount: totalTopLevelRowCount,
       visibleRowCount: visibleTopLevelRowCount
-    })) : null, paginationElement = rootProps.pagination && !rootProps.hideFooterPagination && rootProps.slots.pagination && /* @__PURE__ */ (0, import_jsx_runtime198.jsx)(rootProps.slots.pagination, _extends({}, rootProps.slotProps?.pagination));
-    return /* @__PURE__ */ (0, import_jsx_runtime198.jsxs)(GridFooterContainer, _extends({}, props, {
+    })) : null, paginationElement = rootProps.pagination && !rootProps.hideFooterPagination && rootProps.slots.pagination && /* @__PURE__ */ (0, import_jsx_runtime199.jsx)(rootProps.slots.pagination, _extends({}, rootProps.slotProps?.pagination));
+    return /* @__PURE__ */ (0, import_jsx_runtime199.jsxs)(GridFooterContainer, _extends({}, props, {
       ref,
       children: [selectedRowCountElement, rowCountElement, paginationElement]
     }));
@@ -54462,7 +54625,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }, shouldCellShowLeftBorder = (pinnedPosition, indexInSection, showCellVerticalBorderRootProp, pinnedColumnsSectionSeparatorRootProp) => pinnedColumnsSectionSeparatorRootProp?.startsWith("border") ? pinnedPosition === PinnedColumnPosition.RIGHT && indexInSection === 0 : showCellVerticalBorderRootProp && pinnedPosition === PinnedColumnPosition.RIGHT && indexInSection === 0;
 
   // node_modules/@mui/x-data-grid/components/GridSkeletonLoadingOverlay.mjs
-  var import_jsx_runtime199 = __toESM(require_jsx_runtime(), 1), _excluded82 = ["skeletonRowsCount", "visibleColumns", "showFirstRowBorder"], SkeletonOverlay = styled_default2("div", {
+  var import_jsx_runtime200 = __toESM(require_jsx_runtime(), 1), _excluded82 = ["skeletonRowsCount", "visibleColumns", "showFirstRowBorder"], SkeletonOverlay = styled_default2("div", {
     name: "MuiDataGrid",
     slot: "SkeletonLoadingOverlay"
   })({
@@ -54498,11 +54661,11 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       for (let i = 0; i < skeletonRowsCount; i += 1) {
         let rowCells = [];
         for (let colIndex = 0; colIndex < columns.length; colIndex += 1) {
-          let column2 = columns[colIndex], pinnedPosition = getPinnedPosition(column2.field), isPinnedLeft = pinnedPosition === PinnedColumnPosition.LEFT, isPinnedRight = pinnedPosition === PinnedColumnPosition.RIGHT, pinnedSide = rtlFlipSide(pinnedPosition, isRtl), sectionLength = pinnedSide ? pinnedColumns[pinnedSide].length : columns.length - pinnedColumns.left.length - pinnedColumns.right.length, sectionIndex = pinnedSide ? pinnedColumns[pinnedSide].findIndex((col) => col.field === column2.field) : colIndex - pinnedColumns.left.length, scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0, pinnedStyle = attachPinnedStyle({}, isRtl, pinnedPosition, getPinnedCellOffset(pinnedPosition, column2.computedWidth, colIndex, positions, dimensions.columnsTotalWidth, scrollbarWidth)), gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width, showRightBorder = shouldCellShowRightBorder(pinnedPosition, sectionIndex, sectionLength, rootProps.showCellVerticalBorder, gridHasFiller, rootProps.pinnedColumnsSectionSeparator), showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, sectionIndex, rootProps.showCellVerticalBorder, rootProps.pinnedColumnsSectionSeparator), isLastColumn = colIndex === columns.length - 1, isFirstPinnedRight = isPinnedRight && sectionIndex === 0, hasFillerBefore = isFirstPinnedRight && gridHasFiller, hasFillerAfter = isLastColumn && !isFirstPinnedRight && gridHasFiller, expandedWidth = dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth, emptyCellWidth = Math.max(0, expandedWidth), emptyCell = /* @__PURE__ */ (0, import_jsx_runtime199.jsx)(slots.skeletonCell, {
+          let column2 = columns[colIndex], pinnedPosition = getPinnedPosition(column2.field), isPinnedLeft = pinnedPosition === PinnedColumnPosition.LEFT, isPinnedRight = pinnedPosition === PinnedColumnPosition.RIGHT, pinnedSide = rtlFlipSide(pinnedPosition, isRtl), sectionLength = pinnedSide ? pinnedColumns[pinnedSide].length : columns.length - pinnedColumns.left.length - pinnedColumns.right.length, sectionIndex = pinnedSide ? pinnedColumns[pinnedSide].findIndex((col) => col.field === column2.field) : colIndex - pinnedColumns.left.length, scrollbarWidth = dimensions.hasScrollY ? dimensions.scrollbarSize : 0, pinnedStyle = attachPinnedStyle({}, isRtl, pinnedPosition, getPinnedCellOffset(pinnedPosition, column2.computedWidth, colIndex, positions, dimensions.columnsTotalWidth, scrollbarWidth)), gridHasFiller = dimensions.columnsTotalWidth < dimensions.viewportOuterSize.width, showRightBorder = shouldCellShowRightBorder(pinnedPosition, sectionIndex, sectionLength, rootProps.showCellVerticalBorder, gridHasFiller, rootProps.pinnedColumnsSectionSeparator), showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, sectionIndex, rootProps.showCellVerticalBorder, rootProps.pinnedColumnsSectionSeparator), isLastColumn = colIndex === columns.length - 1, isFirstPinnedRight = isPinnedRight && sectionIndex === 0, hasFillerBefore = isFirstPinnedRight && gridHasFiller, hasFillerAfter = isLastColumn && !isFirstPinnedRight && gridHasFiller, expandedWidth = dimensions.viewportOuterSize.width - dimensions.columnsTotalWidth, emptyCellWidth = Math.max(0, expandedWidth), emptyCell = /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(slots.skeletonCell, {
             width: emptyCellWidth,
             empty: !0
           }, `skeleton-filler-column-${i}`);
-          hasFillerBefore && rowCells.push(emptyCell), rowCells.push(/* @__PURE__ */ (0, import_jsx_runtime199.jsx)(slots.skeletonCell, {
+          hasFillerBefore && rowCells.push(emptyCell), rowCells.push(/* @__PURE__ */ (0, import_jsx_runtime200.jsx)(slots.skeletonCell, {
             field: column2.field,
             type: column2.type,
             align: column2.align,
@@ -54516,7 +54679,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
             }, pinnedStyle)
           }, `skeleton-column-${i}-${column2.field}`)), hasFillerAfter && rowCells.push(emptyCell);
         }
-        array.push(/* @__PURE__ */ (0, import_jsx_runtime199.jsx)("div", {
+        array.push(/* @__PURE__ */ (0, import_jsx_runtime200.jsx)("div", {
           className: clsx_default(gridClasses.row, gridClasses.rowSkeleton, i === 0 && !showFirstRowBorder && gridClasses["row--firstVisible"]),
           children: rowCells
         }, `skeleton-row-${i}`));
@@ -54538,7 +54701,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       }), isPinnedRight && ref.current?.querySelectorAll(`.${gridClasses["cell--pinnedRight"]}`)?.forEach((element) => {
         getColIndex(element) < resizedColIndex && (element.style.right = `${parseInt(getComputedStyle(element).right, 10) + delta}px`);
       });
-    }), /* @__PURE__ */ (0, import_jsx_runtime199.jsx)(SkeletonOverlay, _extends({
+    }), /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(SkeletonOverlay, _extends({
       className: classes2.root
     }, other, {
       ref: handleRef,
@@ -54546,14 +54709,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }));
   }), GridSkeletonLoadingOverlay = forwardRef68(function(props, forwardedRef) {
     let apiRef = useGridApiContext(), dimensions = useGridSelector(apiRef, gridDimensionsSelector), viewportHeight = dimensions?.viewportInnerSize.height ?? 0, skeletonRowsCount = Math.ceil(viewportHeight / dimensions.rowHeight);
-    return /* @__PURE__ */ (0, import_jsx_runtime199.jsx)(GridSkeletonLoadingOverlayInner, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(GridSkeletonLoadingOverlayInner, _extends({}, props, {
       skeletonRowsCount,
       ref: forwardedRef
     }));
   });
 
   // node_modules/@mui/x-data-grid/components/GridLoadingOverlay.mjs
-  var import_jsx_runtime200 = __toESM(require_jsx_runtime(), 1), _excluded83 = ["variant", "noRowsVariant", "style"], LOADING_VARIANTS = {
+  var import_jsx_runtime201 = __toESM(require_jsx_runtime(), 1), _excluded83 = ["variant", "noRowsVariant", "style"], LOADING_VARIANTS = {
     "circular-progress": {
       component: (rootProps) => rootProps.slots.baseCircularProgress,
       style: {}
@@ -54576,31 +54739,31 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       noRowsVariant = "skeleton",
       style: style4
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded83), apiRef = useGridApiContext(), rootProps = useGridRootProps(), rowsCount = useGridSelector(apiRef, gridRowCountSelector), activeVariant = LOADING_VARIANTS[rowsCount === 0 ? noRowsVariant : variant], Component = activeVariant.component(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(GridOverlay, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime201.jsx)(GridOverlay, _extends({
       style: _extends({}, activeVariant.style, style4)
     }, other, {
       ref,
-      children: /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(Component, {})
+      children: /* @__PURE__ */ (0, import_jsx_runtime201.jsx)(Component, {})
     }));
   });
 
   // node_modules/@mui/x-data-grid/components/GridNoRowsOverlay.mjs
-  var import_jsx_runtime201 = __toESM(require_jsx_runtime(), 1), GridNoRowsOverlay = forwardRef68(function(props, ref) {
+  var import_jsx_runtime202 = __toESM(require_jsx_runtime(), 1), GridNoRowsOverlay = forwardRef68(function(props, ref) {
     let noRowsLabel = useGridApiContext().current.getLocaleText("noRowsLabel");
-    return /* @__PURE__ */ (0, import_jsx_runtime201.jsx)(GridOverlay, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime202.jsx)(GridOverlay, _extends({}, props, {
       ref,
       children: noRowsLabel
     }));
   });
 
   // node_modules/@mui/x-data-grid/components/GridNoColumnsOverlay.mjs
-  var import_jsx_runtime202 = __toESM(require_jsx_runtime(), 1), GridNoColumnsOverlay = forwardRef68(function(props, ref) {
+  var import_jsx_runtime203 = __toESM(require_jsx_runtime(), 1), GridNoColumnsOverlay = forwardRef68(function(props, ref) {
     let rootProps = useGridRootProps(), apiRef = useGridApiContext(), columns = useGridSelector(apiRef, gridColumnFieldsSelector), handleOpenManageColumns = () => {
       apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     }, showManageColumnsButton = !rootProps.disableColumnSelector && columns.length > 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime202.jsxs)(GridOverlay, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime203.jsxs)(GridOverlay, _extends({}, props, {
       ref,
-      children: [apiRef.current.getLocaleText("noColumnsOverlayLabel"), showManageColumnsButton && /* @__PURE__ */ (0, import_jsx_runtime202.jsx)(rootProps.slots.baseButton, _extends({
+      children: [apiRef.current.getLocaleText("noColumnsOverlayLabel"), showManageColumnsButton && /* @__PURE__ */ (0, import_jsx_runtime203.jsx)(rootProps.slots.baseButton, _extends({
         size: "small"
       }, rootProps.slotProps?.baseButton, {
         onClick: handleOpenManageColumns,
@@ -54611,7 +54774,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/GridPagination.mjs
   var React241 = __toESM(require_react(), 1);
-  var import_jsx_runtime203 = __toESM(require_jsx_runtime(), 1), GridPaginationRoot = styled_default2(NotRendered, {
+  var import_jsx_runtime204 = __toESM(require_jsx_runtime(), 1), GridPaginationRoot = styled_default2(NotRendered, {
     slot: "internal"
   })({
     maxHeight: "calc(100% + 1px)",
@@ -54645,7 +54808,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       }
       return !1;
     }, pageSizeOptions = !rootProps.autoPageSize && isPageSizeIncludedInPageSizeOptions(paginationModel.pageSize) ? rootProps.pageSizeOptions : [];
-    return /* @__PURE__ */ (0, import_jsx_runtime203.jsx)(GridPaginationRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime204.jsx)(GridPaginationRoot, _extends({
       as: rootProps.slots.basePagination,
       count: rowCount ?? -1,
       page: computedPage,
@@ -54659,7 +54822,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/GridRowCount.mjs
   var React242 = __toESM(require_react(), 1);
-  var import_jsx_runtime204 = __toESM(require_jsx_runtime(), 1), _excluded84 = ["className", "rowCount", "visibleRowCount"], useUtilityClasses94 = (ownerState) => {
+  var import_jsx_runtime205 = __toESM(require_jsx_runtime(), 1), _excluded84 = ["className", "rowCount", "visibleRowCount"], useUtilityClasses94 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -54682,7 +54845,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     if (rowCount === 0)
       return null;
     let text2 = visibleRowCount < rowCount ? apiRef.current.getLocaleText("footerTotalVisibleRows")(visibleRowCount, rowCount) : rowCount.toLocaleString();
-    return /* @__PURE__ */ (0, import_jsx_runtime204.jsxs)(GridRowCountRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime205.jsxs)(GridRowCountRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState
     }, other, {
@@ -54701,7 +54864,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/GridRowDragAndDropOverlay.mjs
   var React243 = __toESM(require_react(), 1);
-  var import_jsx_runtime205 = __toESM(require_jsx_runtime(), 1), GridRowDragAndDropOverlayRoot = styled_default2("div", {
+  var import_jsx_runtime206 = __toESM(require_jsx_runtime(), 1), GridRowDragAndDropOverlayRoot = styled_default2("div", {
     name: "MuiDataGrid",
     slot: "RowDragOverlay",
     shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== "action"
@@ -54745,14 +54908,14 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       rowId,
       className
     } = props, apiRef = useGridPrivateApiContext(), dropPosition = useGridSelector(apiRef, gridRowDropPositionSelector, rowId);
-    return dropPosition ? /* @__PURE__ */ (0, import_jsx_runtime205.jsx)(GridRowDragAndDropOverlayRoot, {
+    return dropPosition ? /* @__PURE__ */ (0, import_jsx_runtime206.jsx)(GridRowDragAndDropOverlayRoot, {
       action: dropPosition,
       className
     }) : null;
   });
 
   // node_modules/@mui/x-data-grid/components/GridRow.mjs
-  var import_jsx_runtime206 = __toESM(require_jsx_runtime(), 1), _excluded85 = ["selected", "rowId", "row", "index", "style", "rowHeight", "className", "visibleColumns", "pinnedColumns", "offsetLeft", "columnsTotalWidth", "firstColumnIndex", "lastColumnIndex", "retainedColumnIndexes", "focusedColumnIndex", "isFirstVisible", "isLastVisible", "isNotVisible", "showBottomBorder", "scrollbarWidth", "gridHasFiller", "onClick", "onDoubleClick", "onMouseEnter", "onMouseLeave", "onMouseOut", "onMouseOver"], isRowReorderingEnabledSelector = createSelector2(gridEditRowsStateSelector, (editRows, {
+  var import_jsx_runtime207 = __toESM(require_jsx_runtime(), 1), _excluded85 = ["selected", "rowId", "row", "index", "style", "rowHeight", "className", "visibleColumns", "pinnedColumns", "offsetLeft", "columnsTotalWidth", "firstColumnIndex", "lastColumnIndex", "retainedColumnIndexes", "focusedColumnIndex", "isFirstVisible", "isLastVisible", "isNotVisible", "showBottomBorder", "scrollbarWidth", "gridHasFiller", "onClick", "onDoubleClick", "onMouseEnter", "onMouseLeave", "onMouseOut", "onMouseOver"], isRowReorderingEnabledSelector = createSelector2(gridEditRowsStateSelector, (editRows, {
     rowReordering,
     treeData
   }) => !rowReordering || treeData ? !1 : !!isObjectEmpty4(editRows)), GridRow = forwardRef68(function(props, refProp) {
@@ -54850,7 +55013,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         return null;
       let width2 = cellColSpanInfo?.cellProps.width ?? column2.computedWidth, colSpan = cellColSpanInfo?.cellProps.colSpan ?? 1, pinnedOffset = getPinnedCellOffset(pinnedPosition, column2.computedWidth, indexRelativeToAllColumns, columnPositions, columnsTotalWidth, scrollbarWidth), cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
       if (rowNode.type === "skeletonRow")
-        return cellIsNotVisible ? null : /* @__PURE__ */ (0, import_jsx_runtime206.jsx)(slots.skeletonCell, {
+        return cellIsNotVisible ? null : /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(slots.skeletonCell, {
           type: column2.type,
           width: width2,
           height: rowHeight,
@@ -54866,7 +55029,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           }
         }, column2.field);
       let isReorderCell = column2.field === "__reorder__", canReorderColumn = !(disableColumnReorder || column2.disableReorder), canReorderRow = isRowReorderingEnabled && !sortModel.length, disableDragEvents = !(canReorderColumn || isReorderCell && canReorderRow || isRowDragActive), showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection, rootProps.showCellVerticalBorder, rootProps.pinnedColumnsSectionSeparator), showRightBorder = shouldCellShowRightBorder(pinnedPosition, indexInSection, sectionLength, rootProps.showCellVerticalBorder, gridHasFiller, rootProps.pinnedColumnsSectionSeparator);
-      return /* @__PURE__ */ (0, import_jsx_runtime206.jsx)(slots.cell, _extends({
+      return /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(slots.cell, _extends({
         column: column2,
         width: width2,
         rowId,
@@ -54905,7 +55068,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       onMouseOut: publish("rowMouseOut", onMouseOut),
       onMouseOver: publish("rowMouseOver", onMouseOver)
     } : null;
-    return /* @__PURE__ */ (0, import_jsx_runtime206.jsxs)("div", _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime207.jsxs)("div", _extends({
       "data-id": rowId,
       "data-rowindex": index,
       role: "row",
@@ -54913,16 +55076,16 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       style: style4
     }, ariaAttributes, eventHandlers, other, {
       ref: handleRef,
-      children: [leftCells, /* @__PURE__ */ (0, import_jsx_runtime206.jsx)("div", {
+      children: [leftCells, /* @__PURE__ */ (0, import_jsx_runtime207.jsx)("div", {
         role: "none",
         className: gridClasses.cellOffsetLeft,
         style: {
           width: offsetLeft
         }
-      }), cells, /* @__PURE__ */ (0, import_jsx_runtime206.jsx)("div", {
+      }), cells, /* @__PURE__ */ (0, import_jsx_runtime207.jsx)("div", {
         role: "none",
         className: clsx_default(gridClasses.cell, gridClasses.cellEmpty)
-      }), rightCells, /* @__PURE__ */ (0, import_jsx_runtime206.jsx)(GridRowDragAndDropOverlay, {
+      }), rightCells, /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(GridRowDragAndDropOverlay, {
         rowId
       })]
     }));
@@ -55046,7 +55209,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/context/GridContextProvider.mjs
   var React249 = __toESM(require_react(), 1);
-  var import_jsx_runtime207 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime208 = __toESM(require_jsx_runtime(), 1);
   function GridContextProvider({
     privateApiRef,
     configuration: configuration2,
@@ -55054,16 +55217,16 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     children
   }) {
     let apiRef = React249.useRef(privateApiRef.current.getPublicApi());
-    return /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(GridConfigurationContext.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime208.jsx)(GridConfigurationContext.Provider, {
       value: configuration2,
-      children: /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(GridRootPropsContext.Provider, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime208.jsx)(GridRootPropsContext.Provider, {
         value: props,
-        children: /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(GridPrivateApiContext.Provider, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime208.jsx)(GridPrivateApiContext.Provider, {
           value: privateApiRef,
-          children: /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(GridApiContext.Provider, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime208.jsx)(GridApiContext.Provider, {
             value: apiRef,
-            children: /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(GridPanelContextProvider, {
-              children: /* @__PURE__ */ (0, import_jsx_runtime207.jsx)(GridCSSVariablesContext, {
+            children: /* @__PURE__ */ (0, import_jsx_runtime208.jsx)(GridPanelContextProvider, {
+              children: /* @__PURE__ */ (0, import_jsx_runtime208.jsx)(GridCSSVariablesContext, {
                 children
               })
             })
@@ -55500,7 +55663,7 @@ ${CSVBody}` : CSVHead;
 
   // node_modules/@mui/x-data-grid/hooks/features/columns/useGridColumns.mjs
   var React261 = __toESM(require_react(), 1);
-  var import_jsx_runtime208 = __toESM(require_jsx_runtime(), 1), columnsStateInitializer = (state2, props, apiRef) => {
+  var import_jsx_runtime209 = __toESM(require_jsx_runtime(), 1), columnsStateInitializer = (state2, props, apiRef) => {
     apiRef.current.caches.columns = {
       lastColumnsProp: props.columns
     };
@@ -55661,7 +55824,7 @@ ${CSVBody}` : CSVHead;
     }, [apiRef]), preferencePanelPreProcessing = React261.useCallback((initialValue, value) => {
       if (value === GridPreferencePanelsValue.columns) {
         let ColumnsPanel = props.slots.columnsPanel;
-        return /* @__PURE__ */ (0, import_jsx_runtime208.jsx)(ColumnsPanel, _extends({}, props.slotProps?.columnsPanel));
+        return /* @__PURE__ */ (0, import_jsx_runtime209.jsx)(ColumnsPanel, _extends({}, props.slotProps?.columnsPanel));
       }
       return initialValue;
     }, [props.slots.columnsPanel, props.slotProps?.columnsPanel]), addColumnMenuItems = React261.useCallback((columnMenuItems) => {
@@ -55799,7 +55962,7 @@ ${CSVBody}` : CSVHead;
   };
 
   // node_modules/@mui/x-data-grid/hooks/features/export/useGridCsvExport.mjs
-  var import_jsx_runtime209 = __toESM(require_jsx_runtime(), 1), useGridCsvExport = (apiRef, props) => {
+  var import_jsx_runtime210 = __toESM(require_jsx_runtime(), 1), useGridCsvExport = (apiRef, props) => {
     let logger = useGridLogger(apiRef, "useGridCsvExport"), ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport, ignoreValueFormatter = (typeof ignoreValueFormatterProp == "object" ? ignoreValueFormatterProp?.csvExport : ignoreValueFormatterProp) || !1, getDataAsCsv = React263.useCallback((options = {}) => {
       logger.debug("Get data as CSV");
       let exportedColumns = getColumnsToExport({
@@ -55833,7 +55996,7 @@ ${CSVBody}` : CSVHead;
       exportDataAsCsv
     }, "public");
     let addExportMenuButtons = React263.useCallback((initialValue, options) => options.csvOptions?.disableToolbarButton ? initialValue : [...initialValue, {
-      component: /* @__PURE__ */ (0, import_jsx_runtime209.jsx)(GridCsvExportMenuItem, {
+      component: /* @__PURE__ */ (0, import_jsx_runtime210.jsx)(GridCsvExportMenuItem, {
         options: options.csvOptions
       }),
       componentName: "csvExport"
@@ -56007,7 +56170,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   };
 
   // node_modules/@mui/x-data-grid/hooks/features/export/useGridPrintExport.mjs
-  var import_jsx_runtime210 = __toESM(require_jsx_runtime(), 1), DEBUG_MODE = !1;
+  var import_jsx_runtime211 = __toESM(require_jsx_runtime(), 1), DEBUG_MODE = !1;
   function raf() {
     return new Promise((resolve) => {
       requestAnimationFrame(() => {
@@ -56120,7 +56283,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
     useGridApiMethod(apiRef, printExportApi, "public");
     let addExportMenuButtons = React265.useCallback((initialValue, options) => options.printOptions?.disableToolbarButton ? initialValue : [...initialValue, {
-      component: /* @__PURE__ */ (0, import_jsx_runtime210.jsx)(GridPrintExportMenuItem, {
+      component: /* @__PURE__ */ (0, import_jsx_runtime211.jsx)(GridPrintExportMenuItem, {
         options: options.printOptions
       }),
       componentName: "printExport"
@@ -56130,7 +56293,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/x-data-grid/hooks/features/filter/useGridFilter.mjs
   var React266 = __toESM(require_react(), 1);
-  var import_jsx_runtime211 = __toESM(require_jsx_runtime(), 1), filterStateInitializer = (state2, props, apiRef) => {
+  var import_jsx_runtime212 = __toESM(require_jsx_runtime(), 1), filterStateInitializer = (state2, props, apiRef) => {
     let filterModel = props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
     return _extends({}, state2, {
       filter: _extends({
@@ -56245,7 +56408,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }, [apiRef, props.disableMultipleColumnsFiltering]), preferencePanelPreProcessing = React266.useCallback((initialValue, value) => {
       if (value === GridPreferencePanelsValue.filters) {
         let FilterPanel = props.slots.filterPanel;
-        return /* @__PURE__ */ (0, import_jsx_runtime211.jsx)(FilterPanel, _extends({}, props.slotProps?.filterPanel));
+        return /* @__PURE__ */ (0, import_jsx_runtime212.jsx)(FilterPanel, _extends({}, props.slotProps?.filterPanel));
       }
       return initialValue;
     }, [props.slots.filterPanel, props.slotProps?.filterPanel]), {
@@ -59604,17 +59767,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var React288 = __toESM(require_react(), 1);
   var useGridDataSourcePolling = ({
     revalidateMs,
-    isActive,
+    isActive: isActive2,
     shouldResume = () => !0
   }) => {
     let pollingIntervalRef = React288.useRef(null), pollingCallbackRef = React288.useRef(null), isPollingAllowed = React288.useRef(!0), stopPolling = React288.useCallback(() => {
       pollingIntervalRef.current !== null && (clearInterval(pollingIntervalRef.current), pollingIntervalRef.current = null);
     }, []), startPolling = useEventCallback_default((callback) => {
-      stopPolling(), pollingCallbackRef.current = callback, !(!isPollingAllowed.current || !isActive || revalidateMs <= 0) && (pollingIntervalRef.current = setInterval(callback, revalidateMs));
+      stopPolling(), pollingCallbackRef.current = callback, !(!isPollingAllowed.current || !isActive2 || revalidateMs <= 0) && (pollingIntervalRef.current = setInterval(callback, revalidateMs));
     });
     React288.useEffect(() => {
-      (!isActive || revalidateMs <= 0) && stopPolling();
-    }, [isActive, revalidateMs, stopPolling]);
+      (!isActive2 || revalidateMs <= 0) && stopPolling();
+    }, [isActive2, revalidateMs, stopPolling]);
     let canResume = useEventCallback_default(shouldResume);
     return React288.useEffect(() => (isPollingAllowed.current = !0, pollingCallbackRef.current && canResume() && startPolling(pollingCallbackRef.current), () => {
       isPollingAllowed.current = !1, stopPolling();
@@ -59904,7 +60067,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridColumnGroupHeader.mjs
   var React292 = __toESM(require_react(), 1);
-  var import_jsx_runtime212 = __toESM(require_jsx_runtime(), 1), useUtilityClasses96 = (ownerState) => {
+  var import_jsx_runtime213 = __toESM(require_jsx_runtime(), 1), useUtilityClasses96 = (ownerState) => {
     let {
       classes: classes2,
       headerAlign,
@@ -59977,7 +60140,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       onFocus: publish("columnGroupHeaderFocus"),
       onBlur: publish("columnGroupHeaderBlur")
     }), [publish]), headerClassName = typeof group.headerClassName == "function" ? group.headerClassName(renderParams) : group.headerClassName, pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedPosition), style4 = React292.useMemo(() => attachPinnedStyle(_extends({}, props.style), isRtl, pinnedPosition, pinnedOffset !== void 0 ? pinnedOffset + pinnedScrollOffset : void 0), [pinnedPosition, pinnedOffset, pinnedScrollOffset, props.style, isRtl]);
-    return /* @__PURE__ */ (0, import_jsx_runtime212.jsx)(GridGenericColumnHeaderItem, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime213.jsx)(GridGenericColumnHeaderItem, _extends({
       ref: headerCellRef,
       classes: classes2,
       columnMenuOpen: !1,
@@ -60004,7 +60167,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // node_modules/@mui/x-data-grid/components/GridScrollbarFillerCell.mjs
-  var import_jsx_runtime213 = __toESM(require_jsx_runtime(), 1), classes = {
+  var import_jsx_runtime214 = __toESM(require_jsx_runtime(), 1), classes = {
     root: gridClasses.scrollbarFiller,
     pinnedRight: gridClasses["scrollbarFiller--pinnedRight"]
   };
@@ -60012,7 +60175,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     pinnedRight
   }) {
     let apiRef = useGridPrivateApiContext(), pinnedScrollOffset = usePinnedScrollOffset(apiRef, pinnedRight ? PinnedColumnPosition.RIGHT : void 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime213.jsx)("div", {
+    return /* @__PURE__ */ (0, import_jsx_runtime214.jsx)("div", {
       role: "none",
       className: clsx_default(classes.root, pinnedRight && classes.pinnedRight),
       style: {
@@ -60022,7 +60185,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // node_modules/@mui/x-data-grid/hooks/features/columnHeaders/useGridColumnHeaders.mjs
-  var import_jsx_runtime214 = __toESM(require_jsx_runtime(), 1), GridColumnHeaderRow = styled_default2("div", {
+  var import_jsx_runtime215 = __toESM(require_jsx_runtime(), 1), GridColumnHeaderRow = styled_default2("div", {
     name: "MuiDataGrid",
     slot: "ColumnHeaderRow"
   })({
@@ -60060,16 +60223,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       };
     }, getFillers = (params, children, leftOverflow, borderBottom2 = !1) => {
       let isPinnedRight = params?.position === PinnedColumnPosition.RIGHT, isNotPinned = params?.position === void 0, hasScrollbarFiller = pinnedColumns.right.length > 0 && isPinnedRight || pinnedColumns.right.length === 0 && isNotPinned, leftOffsetWidth = offsetLeft - leftOverflow;
-      return /* @__PURE__ */ (0, import_jsx_runtime214.jsxs)(React293.Fragment, {
-        children: [isNotPinned && /* @__PURE__ */ (0, import_jsx_runtime214.jsx)("div", {
+      return /* @__PURE__ */ (0, import_jsx_runtime215.jsxs)(React293.Fragment, {
+        children: [isNotPinned && /* @__PURE__ */ (0, import_jsx_runtime215.jsx)("div", {
           role: "none",
           style: {
             width: leftOffsetWidth
           }
-        }), children, isNotPinned && /* @__PURE__ */ (0, import_jsx_runtime214.jsx)("div", {
+        }), children, isNotPinned && /* @__PURE__ */ (0, import_jsx_runtime215.jsx)("div", {
           role: "none",
           className: clsx_default(gridClasses.filler, gridClasses["filler--horizontal"], borderBottom2 && gridClasses["filler--borderBottom"])
-        }), hasScrollbarFiller && /* @__PURE__ */ (0, import_jsx_runtime214.jsx)(GridScrollbarFillerCell, {
+        }), hasScrollbarFiller && /* @__PURE__ */ (0, import_jsx_runtime215.jsx)(GridScrollbarFillerCell, {
           pinnedRight: isPinnedRight
         })]
       });
@@ -60080,7 +60243,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       } = getColumnsToRender(params), columns = [];
       for (let i = 0; i < renderedColumns.length; i += 1) {
         let colDef = renderedColumns[i], columnIndex = firstColumnToRender + i, isFirstColumn = columnIndex === 0, tabIndex = columnHeaderTabIndexState !== null && columnHeaderTabIndexState.field === colDef.field || isFirstColumn && !hasOtherElementInTabSequence ? 0 : -1, hasFocus = columnHeaderFocus !== null && columnHeaderFocus.field === colDef.field, open = columnMenuState.open && columnMenuState.field === colDef.field, pinnedPosition = params?.position, pinnedOffset = getPinnedCellOffset(pinnedPosition, colDef.computedWidth, columnIndex, columnPositions, columnsTotalWidth, scrollbarWidth), siblingWithBorderingSeparator = pinnedPosition === PinnedColumnPosition.RIGHT ? renderedColumns[i - 1] : renderedColumns[i + 1], isSiblingFocused = siblingWithBorderingSeparator ? columnHeaderFocus !== null && columnHeaderFocus.field === siblingWithBorderingSeparator.field : !1, indexInSection = i, sectionLength = renderedColumns.length, showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection, rootProps.showColumnVerticalBorder, rootProps.pinnedColumnsSectionSeparator), showRightBorder = shouldCellShowRightBorder(pinnedPosition, indexInSection, sectionLength, rootProps.showColumnVerticalBorder, gridHasFiller, rootProps.pinnedColumnsSectionSeparator);
-        columns.push(/* @__PURE__ */ (0, import_jsx_runtime214.jsx)(Memoized3, _extends({}, sortColumnLookup[colDef.field], {
+        columns.push(/* @__PURE__ */ (0, import_jsx_runtime215.jsx)(Memoized3, _extends({}, sortColumnLookup[colDef.field], {
           columnMenuOpen: open,
           filterItemsCounter: filterColumnLookup[colDef.field] && filterColumnLookup[colDef.field].length,
           headerHeight,
@@ -60099,7 +60262,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }, other), colDef.field));
       }
       return getFillers(params, columns, 0);
-    }, getColumnHeadersRow = () => /* @__PURE__ */ (0, import_jsx_runtime214.jsxs)(GridColumnHeaderRow, {
+    }, getColumnHeadersRow = () => /* @__PURE__ */ (0, import_jsx_runtime215.jsxs)(GridColumnHeaderRow, {
       role: "row",
       "aria-rowindex": headerGroupingMaxDepth + 1,
       ownerState: rootProps,
@@ -60157,7 +60320,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }, pinnedPosition = params.position, pinnedOffset = getPinnedCellOffset(pinnedPosition, headerInfo.width, columnIndex, columnPositions, columnsTotalWidth, scrollbarWidth);
         columnIndex += columnFields.length;
         let indexInSection = index;
-        return pinnedPosition === PinnedColumnPosition.LEFT && (indexInSection = columnIndex - 1), /* @__PURE__ */ (0, import_jsx_runtime214.jsx)(GridColumnGroupHeader, {
+        return pinnedPosition === PinnedColumnPosition.LEFT && (indexInSection = columnIndex - 1), /* @__PURE__ */ (0, import_jsx_runtime215.jsx)(GridColumnGroupHeader, {
           groupId,
           width: headerInfo.width,
           fields: headerInfo.fields,
@@ -60191,7 +60354,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           return null;
         let headerRows = [];
         for (let depth = 0; depth < headerGroupingMaxDepth; depth += 1)
-          headerRows.push(/* @__PURE__ */ (0, import_jsx_runtime214.jsxs)(GridColumnHeaderRow, {
+          headerRows.push(/* @__PURE__ */ (0, import_jsx_runtime215.jsxs)(GridColumnHeaderRow, {
             role: "row",
             "aria-rowindex": depth + 1,
             ownerState: rootProps,
@@ -60232,7 +60395,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/x-data-grid/components/columnHeaders/GridBaseColumnHeaders.mjs
   var React294 = __toESM(require_react(), 1);
-  var import_jsx_runtime215 = __toESM(require_jsx_runtime(), 1), _excluded90 = ["className"], useUtilityClasses97 = (ownerState) => {
+  var import_jsx_runtime216 = __toESM(require_jsx_runtime(), 1), _excluded90 = ["className"], useUtilityClasses97 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -60251,7 +60414,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let {
       className
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded90), rootProps = useGridRootProps(), classes2 = useUtilityClasses97(rootProps);
-    return /* @__PURE__ */ (0, import_jsx_runtime215.jsx)(GridColumnHeadersRoot, _extends({
+    return /* @__PURE__ */ (0, import_jsx_runtime216.jsx)(GridColumnHeadersRoot, _extends({
       className: clsx_default(classes2.root, className),
       ownerState: rootProps
     }, other, {
@@ -60261,7 +60424,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   });
 
   // node_modules/@mui/x-data-grid/components/GridColumnHeaders.mjs
-  var import_jsx_runtime216 = __toESM(require_jsx_runtime(), 1), _excluded91 = ["className", "visibleColumns", "sortColumnLookup", "filterColumnLookup", "columnHeaderTabIndexState", "columnGroupHeaderTabIndexState", "columnHeaderFocus", "columnGroupHeaderFocus", "headerGroupingMaxDepth", "columnMenuState", "columnVisibility", "columnGroupsHeaderStructure", "hasOtherElementInTabSequence"], GridColumnHeaders2 = forwardRef68(function(props, ref) {
+  var import_jsx_runtime217 = __toESM(require_jsx_runtime(), 1), _excluded91 = ["className", "visibleColumns", "sortColumnLookup", "filterColumnLookup", "columnHeaderTabIndexState", "columnGroupHeaderTabIndexState", "columnHeaderFocus", "columnGroupHeaderFocus", "headerGroupingMaxDepth", "columnMenuState", "columnVisibility", "columnGroupsHeaderStructure", "hasOtherElementInTabSequence"], GridColumnHeaders2 = forwardRef68(function(props, ref) {
     let {
       visibleColumns,
       sortColumnLookup,
@@ -60293,7 +60456,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       columnGroupsHeaderStructure,
       hasOtherElementInTabSequence
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime216.jsxs)(GridBaseColumnHeaders, _extends({}, other, getInnerProps(), {
+    return /* @__PURE__ */ (0, import_jsx_runtime217.jsxs)(GridBaseColumnHeaders, _extends({}, other, getInnerProps(), {
       ref,
       children: [getColumnGroupHeadersRows(), getColumnHeadersRow()]
     }));
@@ -60310,9 +60473,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // node_modules/@mui/x-data-grid/components/GridNoResultsOverlay.mjs
-  var import_jsx_runtime217 = __toESM(require_jsx_runtime(), 1), GridNoResultsOverlay = forwardRef68(function(props, ref) {
+  var import_jsx_runtime218 = __toESM(require_jsx_runtime(), 1), GridNoResultsOverlay = forwardRef68(function(props, ref) {
     let noResultsOverlayLabel = useGridApiContext().current.getLocaleText("noResultsOverlayLabel");
-    return /* @__PURE__ */ (0, import_jsx_runtime217.jsx)(GridOverlay, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime218.jsx)(GridOverlay, _extends({}, props, {
       ref,
       children: noResultsOverlayLabel
     }));
@@ -60320,7 +60483,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/x-data-grid/components/virtualization/GridBottomContainer.mjs
   var React296 = __toESM(require_react(), 1);
-  var import_jsx_runtime218 = __toESM(require_jsx_runtime(), 1), useUtilityClasses98 = () => composeClasses({
+  var import_jsx_runtime219 = __toESM(require_jsx_runtime(), 1), useUtilityClasses98 = () => composeClasses({
     root: ["bottomContainer"]
   }, getDataGridUtilityClass, {}), Element4 = styled_default2("div", {
     slot: "internal",
@@ -60335,7 +60498,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   });
   function GridBottomContainer(props) {
     let classes2 = useUtilityClasses98();
-    return /* @__PURE__ */ (0, import_jsx_runtime218.jsx)(Element4, _extends({}, props, {
+    return /* @__PURE__ */ (0, import_jsx_runtime219.jsx)(Element4, _extends({}, props, {
       className: clsx_default(classes2.root, gridClasses["container--bottom"]),
       role: "none"
     }));
@@ -60491,13 +60654,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let [name, params, event = {}] = args;
       if (event.defaultMuiPrevented = !1, isSyntheticEvent(event) && event.isPropagationStopped())
         return;
-      let details = props.signature === GridSignature.DataGridPro || props.signature === GridSignature.DataGridPremium ? {
+      let details2 = props.signature === GridSignature.DataGridPro || props.signature === GridSignature.DataGridPremium ? {
         apiRef: getPublicApiRef(privateApiRef),
         api: privateApiRef.current.getPublicApi()
       } : {
         apiRef: getPublicApiRef(privateApiRef)
       };
-      privateApiRef.current.eventManager.emit(name, params, event, details);
+      privateApiRef.current.eventManager.emit(name, params, event, details2);
     }, [privateApiRef, props.signature]), subscribeEvent = React298.useCallback((event, handler, options) => {
       privateApiRef.current.eventManager.on(event, handler, options);
       let api = privateApiRef.current;
@@ -60517,7 +60680,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // node_modules/@mui/x-data-grid/DataGrid/DataGrid.mjs
-  var import_jsx_runtime219 = __toESM(require_jsx_runtime(), 1), configuration = {
+  var import_jsx_runtime220 = __toESM(require_jsx_runtime(), 1), configuration = {
     hooks: {
       useCSSVariables: useMaterialCSSVariables,
       useGridAriaAttributes,
@@ -60531,11 +60694,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }, DataGridRaw = function(inProps, ref) {
     let props = useDataGridProps(inProps), privateApiRef = useGridApiInitialization(props.apiRef, props);
-    return useDataGridComponent(privateApiRef, props, configuration), /* @__PURE__ */ (0, import_jsx_runtime219.jsx)(GridContextProvider, {
+    return useDataGridComponent(privateApiRef, props, configuration), /* @__PURE__ */ (0, import_jsx_runtime220.jsx)(GridContextProvider, {
       privateApiRef,
       configuration,
       props,
-      children: /* @__PURE__ */ (0, import_jsx_runtime219.jsx)(MemoizedGridRoot, _extends({
+      children: /* @__PURE__ */ (0, import_jsx_runtime220.jsx)(MemoizedGridRoot, _extends({
         className: props.className,
         style: props.style,
         sx: props.sx
@@ -60957,7 +61120,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/TrackListWindow.tsx
-  var import_react32 = __toESM(require_react(), 1);
+  var import_react33 = __toESM(require_react(), 1);
 
   // src/lib/crates/field-edit-view.ts
   var EDIT_FIELDS = [
@@ -61072,17 +61235,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   };
 
   // node_modules/@mui/icons-material/Pause.mjs
-  var import_jsx_runtime220 = __toESM(require_jsx_runtime(), 1), Pause_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime220.jsx)("path", {
+  var import_jsx_runtime221 = __toESM(require_jsx_runtime(), 1), Pause_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime221.jsx)("path", {
     d: "M6 19h4V5H6zm8-14v14h4V5z"
   }), "Pause");
 
   // node_modules/@mui/icons-material/PlayArrow.mjs
-  var import_jsx_runtime221 = __toESM(require_jsx_runtime(), 1), PlayArrow_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime221.jsx)("path", {
+  var import_jsx_runtime222 = __toESM(require_jsx_runtime(), 1), PlayArrow_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime222.jsx)("path", {
     d: "M8 5v14l11-7z"
   }), "PlayArrow");
 
   // src/components/PlayButton.tsx
-  var import_jsx_runtime222 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime223 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef4(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -61100,7 +61263,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onDoubleClick(event) {
       variant === "row" && event.stopPropagation();
     }
-    return variant === "bar" ? /* @__PURE__ */ (0, import_jsx_runtime222.jsx)(
+    return variant === "bar" ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)(
       IconButton_default,
       {
         type: "button",
@@ -61112,9 +61275,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-label": labelled,
         "aria-pressed": playingThis,
         onClick,
-        children: playingThis ? /* @__PURE__ */ (0, import_jsx_runtime222.jsx)(Pause_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime222.jsx)(PlayArrow_default, {})
+        children: playingThis ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)(Pause_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime223.jsx)(PlayArrow_default, {})
       }
-    ) : /* @__PURE__ */ (0, import_jsx_runtime222.jsx)(
+    ) : /* @__PURE__ */ (0, import_jsx_runtime223.jsx)(
       "button",
       {
         type: "button",
@@ -61125,13 +61288,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-pressed": playingThis,
         onClick,
         onDoubleClick,
-        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime222.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
+        children: variant === "row" ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: "row-play-icon", "aria-hidden": "true" }) : action
       }
     );
   }
 
   // src/lib/ui/track-list-columns.tsx
-  var import_jsx_runtime223 = __toESM(require_jsx_runtime(), 1), HISTORY_PLAYED_WIDTH = 136, TRACK_COLUMN_FIELDS = [
+  var import_jsx_runtime224 = __toESM(require_jsx_runtime(), 1), HISTORY_PLAYED_WIDTH = 136, TRACK_COLUMN_FIELDS = [
     "name",
     "artist",
     "bpm",
@@ -61172,16 +61335,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     "start"
   ]);
   function Cell({ text: text2, numeric = !1 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
+    return /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
   }
   function TrackTitleCell({ track }) {
     let hex = colorHex(track.color);
-    return /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime223.jsxs)("span", { className: "title-line", children: [
-      hex ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
-      track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { children: track.emoji }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
-      track.offline ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
-      track.stems ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
+    return /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime224.jsxs)("span", { className: "title-line", children: [
+      hex ? /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+      track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { children: track.emoji }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
+      track.offline ? /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
+      track.stems ? /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
     ] }) });
   }
   function playCell(params, handlers) {
@@ -61190,7 +61353,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onPlayClick(event) {
       event.stopPropagation(), handlers.selectTrack(params.row.id), handlers.onFocusList();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime223.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime224.jsx)(
       PlayButton,
       {
         variant: "row",
@@ -61243,7 +61406,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       headerAlign: "left",
       sortable: !0,
       filterable: !1,
-      renderCell: (params) => field2 === "name" ? /* @__PURE__ */ (0, import_jsx_runtime223.jsx)(TrackTitleCell, { track: params.row }) : /* @__PURE__ */ (0, import_jsx_runtime223.jsx)(Cell, { text: textOf(params.row, field2), numeric })
+      renderCell: (params) => field2 === "name" ? /* @__PURE__ */ (0, import_jsx_runtime224.jsx)(TrackTitleCell, { track: params.row }) : /* @__PURE__ */ (0, import_jsx_runtime224.jsx)(Cell, { text: textOf(params.row, field2), numeric })
     };
     return grow ? (column2.flex = 1, column2) : (column2.width = field2 === "played" ? HISTORY_PLAYED_WIDTH : 88, column2);
   }
@@ -61263,7 +61426,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       disableColumnMenu: !0,
       align: "center",
       headerAlign: "center",
-      renderHeader: () => /* @__PURE__ */ (0, import_jsx_runtime223.jsx)("span", { className: "visually-hidden", children: playLabel }),
+      renderHeader: () => /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("span", { className: "visually-hidden", children: playLabel }),
       renderCell: (params) => playCell(params, handlers)
     }, ...(history2 ? HISTORY_COLUMN_FIELDS : TRACK_COLUMN_FIELDS).map(dataColumn)];
   }
@@ -61354,13 +61517,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/player/player.ts
-  var import_react29 = __toESM(require_react(), 1);
+  var import_react30 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react26 = __toESM(require_react(), 1);
+  var import_react27 = __toESM(require_react(), 1);
 
   // src/components/PlayerCuePads.tsx
-  var import_react25 = __toESM(require_react(), 1);
+  var import_react26 = __toESM(require_react(), 1);
 
   // src/components/tooltip-ref.ts
   function tooltipRef5(spec2) {
@@ -61370,7 +61533,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/PlayerCuePads.tsx
-  var import_jsx_runtime224 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime225 = __toESM(require_jsx_runtime(), 1);
   function slotsFromPlayerCues(cues2) {
     let slots = Array.from({ length: CUE_SLOT_COUNT }, () => null);
     for (let cue of cues2) {
@@ -61383,14 +61546,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return cue.label.trim() || t("markers.cue", { number });
   }
   function PlayerCuePads() {
-    let { cues: cues2, currentTime: currentTime2, seek: seek2 } = usePlayer(), [lastClicked, setLastClicked] = (0, import_react25.useState)(null), slots = slotsFromPlayerCues(cues2), lit = activePadIndex(currentTime2, slots, lastClicked);
-    return /* @__PURE__ */ (0, import_jsx_runtime224.jsx)("div", { className: "player-cue-pads", children: slots.map((cue, slot) => {
+    let { cues: cues2, currentTime: currentTime2, seek: seek2 } = usePlayer(), [lastClicked, setLastClicked] = (0, import_react26.useState)(null), slots = slotsFromPlayerCues(cues2), lit = activePadIndex(currentTime2, slots, lastClicked);
+    return /* @__PURE__ */ (0, import_jsx_runtime225.jsx)("div", { className: "player-cue-pads", children: slots.map((cue, slot) => {
       let number = slot + 1, color2 = slotColor(slot, cue?.color), style4 = color2 ? { background: color2 } : void 0, className = [
         "player-cue-pad",
         cue ? null : "player-cue-pad-empty",
         lit === slot ? "player-cue-pad-lit" : null
       ].filter(Boolean).join(" ");
-      return cue ? /* @__PURE__ */ (0, import_jsx_runtime224.jsx)(
+      return cue ? /* @__PURE__ */ (0, import_jsx_runtime225.jsx)(
         "button",
         {
           type: "button",
@@ -61405,7 +61568,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: number
         },
         slot
-      ) : /* @__PURE__ */ (0, import_jsx_runtime224.jsx)(
+      ) : /* @__PURE__ */ (0, import_jsx_runtime225.jsx)(
         "span",
         {
           className,
@@ -61420,7 +61583,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/PlayerBar.tsx
-  var import_jsx_runtime225 = __toESM(require_jsx_runtime(), 1), PLAYER_DECK_COMPACT_MAX = 980, WAVE_SLOT_KEY = "player-wave-slot";
+  var import_jsx_runtime226 = __toESM(require_jsx_runtime(), 1), PLAYER_DECK_COMPACT_MAX = 980, WAVE_SLOT_KEY = "player-wave-slot";
   function attachWaveSlot(slot) {
     let bar = document.getElementById("player-bar");
     if (!slot) {
@@ -61433,29 +61596,29 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     wave instanceof HTMLElement && wave.parentElement !== slot && slot.append(wave);
   }
   function PlayerBar() {
-    let player2 = usePlayer(), [innerWidth, setInnerWidth] = (0, import_react26.useState)(() => window.innerWidth), compact = innerWidth <= PLAYER_DECK_COMPACT_MAX, loaded = player2.trackId !== null, shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying, named = loaded ? player2.title || playerStrings.untitled : "";
-    (0, import_react26.useEffect)(() => {
+    let player2 = usePlayer(), [innerWidth, setInnerWidth] = (0, import_react27.useState)(() => window.innerWidth), compact = innerWidth <= PLAYER_DECK_COMPACT_MAX, loaded = player2.trackId !== null, shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying, named = loaded ? player2.title || playerStrings.untitled : "";
+    (0, import_react27.useEffect)(() => {
       let onResize = () => {
         setInnerWidth(window.innerWidth);
       };
       return window.addEventListener("resize", onResize), () => window.removeEventListener("resize", onResize);
-    }, []), (0, import_react26.useLayoutEffect)(() => {
+    }, []), (0, import_react27.useLayoutEffect)(() => {
       setPlayerWaveformCompact(compact);
     }, [compact]);
-    let playControl = /* @__PURE__ */ (0, import_jsx_runtime225.jsx)(PlayButton, { variant: "bar", name: named }), title2 = /* @__PURE__ */ (0, import_jsx_runtime225.jsx)(Typography_default, { className: "player-title", component: "p", noWrap: !0, title: shownTitle, children: shownTitle }), time = /* @__PURE__ */ (0, import_jsx_runtime225.jsxs)("span", { className: "player-time", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime225.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
-      /* @__PURE__ */ (0, import_jsx_runtime225.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
-    ] }), status4 = /* @__PURE__ */ (0, import_jsx_runtime225.jsx)(Typography_default, { className: "player-status", component: "p", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error }), waveSlot = /* @__PURE__ */ (0, import_jsx_runtime225.jsx)("div", { ref: attachWaveSlot, className: "player-wave-slot" }, WAVE_SLOT_KEY);
-    return compact ? /* @__PURE__ */ (0, import_jsx_runtime225.jsxs)("div", { className: "player-controls player-deck-compact", children: [
+    let playControl = /* @__PURE__ */ (0, import_jsx_runtime226.jsx)(PlayButton, { variant: "bar", name: named }), title2 = /* @__PURE__ */ (0, import_jsx_runtime226.jsx)(Typography_default, { className: "player-title", component: "p", noWrap: !0, title: shownTitle, children: shownTitle }), time = /* @__PURE__ */ (0, import_jsx_runtime226.jsxs)("span", { className: "player-time", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime226.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
+      /* @__PURE__ */ (0, import_jsx_runtime226.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
+    ] }), status4 = /* @__PURE__ */ (0, import_jsx_runtime226.jsx)(Typography_default, { className: "player-status", component: "p", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error }), waveSlot = /* @__PURE__ */ (0, import_jsx_runtime226.jsx)("div", { ref: attachWaveSlot, className: "player-wave-slot" }, WAVE_SLOT_KEY);
+    return compact ? /* @__PURE__ */ (0, import_jsx_runtime226.jsxs)("div", { className: "player-controls player-deck-compact", children: [
       playControl,
       title2,
       waveSlot,
       time,
       status4
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime225.jsxs)("div", { className: "player-controls player-deck", children: [
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime226.jsxs)("div", { className: "player-controls player-deck", children: [
       waveSlot,
-      /* @__PURE__ */ (0, import_jsx_runtime225.jsxs)("div", { className: "player-deck-row", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime225.jsx)(PlayerCuePads, {}, player2.trackId ?? "none"),
+      /* @__PURE__ */ (0, import_jsx_runtime226.jsxs)("div", { className: "player-deck-row", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime226.jsx)(PlayerCuePads, {}, player2.trackId ?? "none"),
         playControl,
         title2,
         time
@@ -61465,23 +61628,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/player/waveform-view.ts
-  var import_react28 = __toESM(require_react(), 1);
+  var import_react29 = __toESM(require_react(), 1);
 
   // src/components/WaveformPanel.tsx
-  var import_react27 = __toESM(require_react(), 1);
+  var import_react28 = __toESM(require_react(), 1);
 
   // node_modules/@mui/icons-material/Add.mjs
-  var import_jsx_runtime226 = __toESM(require_jsx_runtime(), 1), Add_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime226.jsx)("path", {
+  var import_jsx_runtime227 = __toESM(require_jsx_runtime(), 1), Add_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime227.jsx)("path", {
     d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"
   }), "Add");
 
   // node_modules/@mui/icons-material/Remove.mjs
-  var import_jsx_runtime227 = __toESM(require_jsx_runtime(), 1), Remove_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime227.jsx)("path", {
+  var import_jsx_runtime228 = __toESM(require_jsx_runtime(), 1), Remove_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime228.jsx)("path", {
     d: "M19 13H5v-2h14z"
   }), "Remove");
 
   // src/components/WaveformPanel.tsx
-  var import_jsx_runtime228 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime229 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef6(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -61504,8 +61667,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     host,
     compact = !1
   }) {
-    let player2 = usePlayer(), wave = useWaveform(), override = useWaveformClockOverride(), clock = override ?? clockFromPlayer(player2), detailRef = (0, import_react27.useRef)(null), overviewCanvasRef = (0, import_react27.useRef)(null), overviewHitRef = (0, import_react27.useRef)(null);
-    return engine.setClock(clock), engine.setPublish(wave.publish), (0, import_react27.useLayoutEffect)(() => {
+    let player2 = usePlayer(), wave = useWaveform(), override = useWaveformClockOverride(), clock = override ?? clockFromPlayer(player2), detailRef = (0, import_react28.useRef)(null), overviewCanvasRef = (0, import_react28.useRef)(null), overviewHitRef = (0, import_react28.useRef)(null);
+    return engine.setClock(clock), engine.setPublish(wave.publish), (0, import_react28.useLayoutEffect)(() => {
       let detail2 = detailRef.current, overviewCanvas = overviewCanvasRef.current, overviewHit = overviewHitRef.current;
       if (!(!detail2 || !overviewCanvas || !overviewHit))
         return engine.attach({
@@ -61516,13 +61679,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }), () => {
           engine.detach();
         };
-    }, [engine, host]), (0, import_react27.useEffect)(() => {
+    }, [engine, host]), (0, import_react28.useEffect)(() => {
       override || engine.setTrack(player2.trackId);
-    }, [engine, override, player2.trackId]), /* @__PURE__ */ (0, import_jsx_runtime228.jsxs)(import_jsx_runtime228.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime228.jsxs)("div", { className: "player-wave-main", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime228.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase, compact }),
-        /* @__PURE__ */ (0, import_jsx_runtime228.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
-        /* @__PURE__ */ (0, import_jsx_runtime228.jsx)(
+    }, [engine, override, player2.trackId]), /* @__PURE__ */ (0, import_jsx_runtime229.jsxs)(import_jsx_runtime229.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime229.jsxs)("div", { className: "player-wave-main", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(WaveformDetail, { canvasRef: detailRef, phase: wave.phase, compact }),
+        /* @__PURE__ */ (0, import_jsx_runtime229.jsx)("p", { className: "waveform-note", hidden: wave.phase !== "unavailable", children: t("player.waveformUnavailable") }),
+        /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(
           WaveformOverview,
           {
             canvasRef: overviewCanvasRef,
@@ -61533,7 +61696,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      compact ? null : /* @__PURE__ */ (0, import_jsx_runtime228.jsx)(
+      compact ? null : /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(
         WaveformZoom,
         {
           canZoomIn: wave.canZoomIn,
@@ -61550,9 +61713,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     phase: phase2,
     compact = !1
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime228.jsxs)("div", { className: "waveform-detail-wrap", hidden: compact || phase2 === "unavailable", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime228.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
-      /* @__PURE__ */ (0, import_jsx_runtime228.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
+    return /* @__PURE__ */ (0, import_jsx_runtime229.jsxs)("div", { className: "waveform-detail-wrap", hidden: compact || phase2 === "unavailable", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime229.jsx)("canvas", { className: "waveform-detail", ref: canvasRef, "aria-hidden": "true" }),
+      /* @__PURE__ */ (0, import_jsx_runtime229.jsx)("p", { className: "waveform-reading", hidden: phase2 !== "reading", children: playerStrings.waveformReading })
     ] });
   }
   function WaveformOverview({
@@ -61562,7 +61725,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     source,
     pps
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime228.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(
       "div",
       {
         ref: (element) => {
@@ -61576,7 +61739,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-orientation": "horizontal",
         "data-pps": String(pps),
         "data-waveform-overview": source || void 0,
-        children: /* @__PURE__ */ (0, import_jsx_runtime228.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime229.jsx)("canvas", { ref: canvasRef, "aria-hidden": "true" })
       }
     );
   }
@@ -61587,8 +61750,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onZoomIn,
     onZoomOut
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime228.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime228.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime229.jsxs)("div", { className: "waveform-zoom", "data-pps": String(pps), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(
         IconButton_default,
         {
           type: "button",
@@ -61599,10 +61762,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           disabled: !canZoomIn,
           "aria-label": playerStrings.zoomIn,
           onClick: onZoomIn,
-          children: /* @__PURE__ */ (0, import_jsx_runtime228.jsx)(Add_default, {})
+          children: /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(Add_default, {})
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime228.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(
         IconButton_default,
         {
           type: "button",
@@ -61613,7 +61776,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           disabled: !canZoomOut,
           "aria-label": playerStrings.zoomOut,
           onClick: onZoomOut,
-          children: /* @__PURE__ */ (0, import_jsx_runtime228.jsx)(Remove_default, {})
+          children: /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(Remove_default, {})
         }
       )
     ] });
@@ -61635,7 +61798,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountWaveform(host, hooks2, compact = !1) {
     let engine = new WaveformEngine(compact);
     host.classList.add("player-wave"), host.classList.toggle("player-wave-compact", compact), host.hidden = !0, hooks2 && engine.setClock(hooks2);
-    let panel = (0, import_react28.createElement)(WaveformPanel, { engine, host, compact }), tree = hooks2 ? (0, import_react28.createElement)(WaveformClockProvider, { clock: hooks2, children: panel }) : panel, root = mountIsland(host, tree);
+    let panel = (0, import_react29.createElement)(WaveformPanel, { engine, host, compact }), tree = hooks2 ? (0, import_react29.createElement)(WaveformClockProvider, { clock: hooks2, children: panel }) : panel, root = mountIsland(host, tree);
     return engine.bindRoot(root), engine;
   }
   var WaveformEngine = class {
@@ -61994,7 +62157,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/player/player.ts
-  var SEEK_STEP_SECONDS = 5, SEEK_STEP_LARGE_SECONDS = 30, listeners7 = /* @__PURE__ */ new Set(), wired = /* @__PURE__ */ new WeakSet(), media = null, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, volume = 1, error = "", ignoreMediaPause = !1, cueToken = 0, cues = [], barRoot = null, waveform = null, waveHost = null, waveMarks = { cues: [], loops: [], beatgrid: [] };
+  var SEEK_STEP_SECONDS = 5, SEEK_STEP_LARGE_SECONDS = 30, listeners8 = /* @__PURE__ */ new Set(), wired = /* @__PURE__ */ new WeakSet(), media = null, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, volume = 1, error = "", ignoreMediaPause = !1, cueToken = 0, cues = [], barRoot = null, waveform = null, waveHost = null, waveMarks = { cues: [], loops: [], beatgrid: [] };
   function formatPlayerTime(seconds) {
     if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
     let total = Math.floor(seconds), secs = total % 60, minutes = Math.floor(total / 60);
@@ -62032,7 +62195,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let row = state.byId.get(nextId);
         title = row?.name || row?.title || playerStrings.untitled, artist = row?.artist ?? "", trackId = nextId, currentTime = 0, duration2 = 0, element.src = trackUrl(nextId), element.currentTime = 0, waveform?.setTrack(nextId), loadCues(nextId);
       }
-      error = "", playing = !0, emit3();
+      error = "", playing = !0, emit4();
       let pending = element.play();
       pending && typeof pending.then == "function" && pending.catch(() => {
         trackId === nextId && noteFailure(nextId);
@@ -62045,7 +62208,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     trackId === nextId && playing ? pause() : play(nextId);
   }
   function pause() {
-    trackId !== null && (playing = !1, ensureMedia().pause(), emit3());
+    trackId !== null && (playing = !1, ensureMedia().pause(), emit4());
   }
   function togglePlayPause() {
     if (trackId === null) {
@@ -62064,7 +62227,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function seek(seconds) {
     if (!Number.isFinite(seconds) || trackId === null) return;
     let element = ensureMedia(), next3 = seconds < 0 ? 0 : seconds, limit = element.duration;
-    Number.isFinite(limit) && limit > 0 && next3 > limit && (next3 = limit), element.currentTime = next3, currentTime = next3, emit3();
+    Number.isFinite(limit) && limit > 0 && next3 > limit && (next3 = limit), element.currentTime = next3, currentTime = next3, emit4();
   }
   function seekBy(deltaSeconds) {
     Number.isFinite(deltaSeconds) && seek(currentTime + deltaSeconds);
@@ -62109,22 +62272,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return canMove(delta);
   }
   function setVolume(next3) {
-    Number.isFinite(next3) && (volume = Math.min(1, Math.max(0, next3)), media && (media.volume = volume), emit3());
+    Number.isFinite(next3) && (volume = Math.min(1, Math.max(0, next3)), media && (media.volume = volume), emit4());
   }
   function subscribe(listener) {
-    return listeners7.add(listener), () => {
-      listeners7.delete(listener);
+    return listeners8.add(listener), () => {
+      listeners8.delete(listener);
     };
   }
   function mountPlayer(host) {
-    barRoot?.unmount(), barRoot = null, waveform?.destroy(), waveform = null, waveHost = null, resetPlayback(), emit3();
+    barRoot?.unmount(), barRoot = null, waveform?.destroy(), waveform = null, waveHost = null, resetPlayback(), emit4();
     let root = host === void 0 ? document.getElementById("player-bar") : host;
     if (!root) return;
     root.classList.add("player-bar"), root.setAttribute("role", "region"), root.setAttribute("aria-label", playerStrings.region);
     let element = ensureMedia();
     root.replaceChildren(), element instanceof Node && root.append(element);
     let controls = document.createElement("div");
-    root.append(controls), barRoot = mountIsland(controls, (0, import_react29.createElement)(PlayerBar));
+    root.append(controls), barRoot = mountIsland(controls, (0, import_react30.createElement)(PlayerBar));
     let compact = controls.querySelector(".player-deck-compact") !== null;
     waveHost = document.createElement("div"), waveform = mountWaveform(waveHost, void 0, compact);
     let slot = controls.querySelector(".player-wave-slot");
@@ -62137,7 +62300,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function repaintPlayer() {
     let root = document.getElementById("player-bar");
-    root && root.setAttribute("aria-label", playerStrings.region), waveform?.relabel(), emit3();
+    root && root.setAttribute("aria-label", playerStrings.region), waveform?.relabel(), emit4();
   }
   function resetPlayback() {
     cueToken += 1, trackId = null, title = "", artist = "", playing = !1, currentTime = 0, duration2 = 0, error = "", cues = [], waveMarks = { cues: [], loops: [], beatgrid: [] };
@@ -62149,15 +62312,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wire(element) {
     wired.has(element) || (wired.add(element), element.addEventListener("play", () => {
-      playing = !0, emit3();
+      playing = !0, emit4();
     }), element.addEventListener("pause", () => {
-      ignoreMediaPause || (playing = !1, emit3());
+      ignoreMediaPause || (playing = !1, emit4());
     }), element.addEventListener("ended", () => {
-      currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime, moveBy(1) || (playing = !1, emit3());
+      currentTime = Number.isFinite(element.currentTime) ? element.currentTime : currentTime, moveBy(1) || (playing = !1, emit4());
     }), element.addEventListener("timeupdate", () => {
-      currentTime = element.currentTime, Number.isFinite(element.duration) && (duration2 = element.duration), emit3();
+      currentTime = element.currentTime, Number.isFinite(element.duration) && (duration2 = element.duration), emit4();
     }), element.addEventListener("durationchange", () => {
-      duration2 = Number.isFinite(element.duration) ? element.duration : 0, emit3();
+      duration2 = Number.isFinite(element.duration) ? element.duration : 0, emit4();
     }), element.addEventListener("error", () => {
       trackId !== null && noteFailure(trackId);
     }));
@@ -62193,10 +62356,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let token4 = ++cueToken;
     cues = [], waveMarks = { cues: [], loops: [], beatgrid: [] }, waveform?.setMarkers(id, waveMarks), readCues(id).then(
       (found) => {
-        token4 !== cueToken || trackId !== id || (cues = found.cues, waveMarks = found, waveform?.setMarkers(id, found), emit3());
+        token4 !== cueToken || trackId !== id || (cues = found.cues, waveMarks = found, waveform?.setMarkers(id, found), emit4());
       },
       () => {
-        token4 !== cueToken || trackId !== id || (cues = [], waveMarks = { cues: [], loops: [], beatgrid: [] }, waveform?.setMarkers(id, waveMarks), emit3());
+        token4 !== cueToken || trackId !== id || (cues = [], waveMarks = { cues: [], loops: [], beatgrid: [] }, waveform?.setMarkers(id, waveMarks), emit4());
       }
     );
   }
@@ -62216,7 +62379,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function noteFailure(forId) {
     playing = !1, classifyStatus(forId).then((message) => {
-      trackId === forId && (playing = !1, error = message, emit3());
+      trackId === forId && (playing = !1, error = message, emit4());
     });
   }
   async function classifyStatus(forId) {
@@ -62228,9 +62391,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       return playerStrings.cannotPlay;
     }
   }
-  function emit3() {
+  function emit4() {
     let snapshot2 = getPlayerState();
-    for (let listener of [...listeners7]) listener(snapshot2);
+    for (let listener of [...listeners8]) listener(snapshot2);
     waveform?.sync();
   }
   function canMove(delta) {
@@ -62241,7 +62404,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/track-list-store.ts
-  var listeners8 = /* @__PURE__ */ new Set(), detail = { kind: "none" }, actions2 = {
+  var listeners9 = /* @__PURE__ */ new Set(), detail = { kind: "none" }, actions2 = {
     selectTrack(id) {
       bridge.selectTrack(id);
     },
@@ -62305,35 +62468,35 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detail = next3, emitTrackList();
   }
   function emitTrackList() {
-    for (let listener of listeners8) listener();
+    for (let listener of listeners9) listener();
   }
   var SELECT_ALL_EVENT = "cratecraft-select-all";
   function selectAllVisibleTracks() {
     document.dispatchEvent(new Event(SELECT_ALL_EVENT));
   }
   function subscribeTrackList(listener) {
-    return listeners8.add(listener), () => {
-      listeners8.delete(listener);
+    return listeners9.add(listener), () => {
+      listeners9.delete(listener);
     };
   }
 
   // src/containers/TrackListContext.tsx
-  var import_react30 = __toESM(require_react(), 1), import_jsx_runtime229 = __toESM(require_jsx_runtime(), 1), TrackListContext = (0, import_react30.createContext)(null);
+  var import_react31 = __toESM(require_react(), 1), import_jsx_runtime230 = __toESM(require_jsx_runtime(), 1), TrackListContext = (0, import_react31.createContext)(null);
   function TrackListProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime229.jsx)(TrackListContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime230.jsx)(TrackListContext, { value, children });
   }
   function useTrackList() {
-    let value = (0, import_react30.useContext)(TrackListContext);
+    let value = (0, import_react31.useContext)(TrackListContext);
     if (value === null)
       throw new Error("useTrackList must be used within TrackListProvider");
     return value;
   }
 
   // src/components/FieldEditorBar.tsx
-  var import_react31 = __toESM(require_react(), 1);
+  var import_react32 = __toESM(require_react(), 1);
 
   // src/lib/crates/field-edit.ts
   function body(action, ids, field2, value, files) {
@@ -62363,17 +62526,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/FieldEditorBar.tsx
-  var import_jsx_runtime230 = __toESM(require_jsx_runtime(), 1), BUTTON_SX = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime231 = __toESM(require_jsx_runtime(), 1), BUTTON_SX = { textTransform: "none", minHeight: 44 };
   function asEditField(value) {
     return EDIT_FIELDS.includes(value) ? value : "genre";
   }
   function FieldEditorBar({ selectedIds }) {
-    let list = useTrackList(), [field2, setField] = (0, import_react31.useState)("genre"), [value, setValue] = (0, import_react31.useState)(""), [plan, setPlan] = (0, import_react31.useState)(null), [previewed, setPreviewed] = (0, import_react31.useState)(null), [busy5, setBusy] = (0, import_react31.useState)(!1), [status4, setStatus] = (0, import_react31.useState)(""), [writeFiles, setWriteFiles] = (0, import_react31.useState)(!1), idsKey = selectedIds.join(",");
-    (0, import_react31.useEffect)(() => {
+    let list = useTrackList(), [field2, setField] = (0, import_react32.useState)("genre"), [value, setValue] = (0, import_react32.useState)(""), [plan, setPlan] = (0, import_react32.useState)(null), [previewed, setPreviewed] = (0, import_react32.useState)(null), [busy5, setBusy] = (0, import_react32.useState)(!1), [status4, setStatus] = (0, import_react32.useState)(""), [writeFiles, setWriteFiles] = (0, import_react32.useState)(!1), idsKey = selectedIds.join(",");
+    (0, import_react32.useEffect)(() => {
       let count = idsKey === "" ? 0 : idsKey.split(",").filter(Boolean).length;
       setPlan(null), setPreviewed(null), setBusy(!1), setStatus(fieldEditShows(count) ? fieldEditSelectedText(count) : "");
     }, [idsKey]);
-    let current3 = (0, import_react31.useMemo)(
+    let current3 = (0, import_react32.useMemo)(
       () => ({ ids: [...selectedIds], field: field2, value, files: writeFiles }),
       [selectedIds, field2, value, writeFiles]
     ), applyReady = fieldEditApplyReady(plan, previewed, current3, list.writable, busy5);
@@ -62413,11 +62576,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       }
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime230.jsxs)("div", { id: "field-edit", className: "field-edit", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime230.jsx)("p", { id: "field-edit-count", children: fieldEditSelectedText(selectedIds.length) }),
-      /* @__PURE__ */ (0, import_jsx_runtime230.jsxs)("label", { className: "field-edit-field", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime231.jsxs)("div", { id: "field-edit", className: "field-edit", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime231.jsx)("p", { id: "field-edit-count", children: fieldEditSelectedText(selectedIds.length) }),
+      /* @__PURE__ */ (0, import_jsx_runtime231.jsxs)("label", { className: "field-edit-field", children: [
         t("tags.field"),
-        /* @__PURE__ */ (0, import_jsx_runtime230.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(
           "select",
           {
             id: "field-edit-field",
@@ -62425,13 +62588,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             disabled: busy5,
             ref: tooltipRef5(tips.fieldEditField),
             onChange: (event) => setField(asEditField(event.currentTarget.value)),
-            children: EDIT_FIELDS.map((name) => /* @__PURE__ */ (0, import_jsx_runtime230.jsx)("option", { value: name, children: fieldEditLabel(name) }, name))
+            children: EDIT_FIELDS.map((name) => /* @__PURE__ */ (0, import_jsx_runtime231.jsx)("option", { value: name, children: fieldEditLabel(name) }, name))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime230.jsxs)("label", { className: "field-edit-value", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime231.jsxs)("label", { className: "field-edit-value", children: [
         t("fieldEdit.value"),
-        /* @__PURE__ */ (0, import_jsx_runtime230.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(
           "input",
           {
             id: "field-edit-value",
@@ -62444,8 +62607,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime230.jsxs)("label", { className: "field-edit-write-files", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime230.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime231.jsxs)("label", { className: "field-edit-write-files", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(
           "input",
           {
             id: "field-edit-write-files",
@@ -62458,7 +62621,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         ),
         t("fieldEdit.writeFiles")
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime230.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(
         Button_default,
         {
           id: "field-edit-preview",
@@ -62474,7 +62637,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("tags.preview")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime230.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(
         Button_default,
         {
           id: "field-edit-apply",
@@ -62490,15 +62653,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("tags.apply")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime230.jsx)("p", { id: "field-edit-status", className: "field-edit-status", "aria-live": "polite", children: status4 })
+      /* @__PURE__ */ (0, import_jsx_runtime231.jsx)("p", { id: "field-edit-status", className: "field-edit-status", "aria-live": "polite", children: status4 })
     ] });
   }
 
   // src/components/TrackListWindow.tsx
-  var import_jsx_runtime231 = __toESM(require_jsx_runtime(), 1), GRID_PAGE_SIZE = 100;
+  var import_jsx_runtime232 = __toESM(require_jsx_runtime(), 1), GRID_PAGE_SIZE = 100;
   function EmptyList() {
     let empty = useTrackList().duplicatesPending ? t("list.readingDuplicates") : t("list.noMatches");
-    return /* @__PURE__ */ (0, import_jsx_runtime231.jsx)("p", { className: "empty-list", children: empty });
+    return /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("p", { className: "empty-list", children: empty });
   }
   function gridLocaleText(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
@@ -62565,22 +62728,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackListWindow({ pane, onFocusList }) {
     ensureGridDom();
-    let list = useTrackList(), hostRef = (0, import_react32.useRef)(null), [height2, setHeight] = (0, import_react32.useState)(() => 600), view = pane === "b" ? list.viewB : list.view, history2 = list.mode === "history", cratesMode = list.mode === "crates", [selectedIds, setSelectedIds] = (0, import_react32.useState)(
+    let list = useTrackList(), hostRef = (0, import_react33.useRef)(null), [height2, setHeight] = (0, import_react33.useState)(() => 600), view = pane === "b" ? list.viewB : list.view, history2 = list.mode === "history", cratesMode = list.mode === "crates", [selectedIds, setSelectedIds] = (0, import_react33.useState)(
       () => list.selectedId == null ? [] : [list.selectedId]
-    ), columns = (0, import_react32.useMemo)(
+    ), columns = (0, import_react33.useMemo)(
       () => trackListColumns(history2, {
         selectTrack: list.selectTrack,
         onFocusList
       }),
       [history2, list.selectTrack, list.locale, onFocusList]
-    ), sortModel = (0, import_react32.useMemo)(() => list.sort ? [{ field: list.sort, sort: list.sortDir < 0 ? "desc" : "asc" }] : [], [list.sort, list.sortDir]), rowSelectionModel = (0, import_react32.useMemo)(() => cratesMode ? { type: "include", ids: new Set(selectedIds) } : {
+    ), sortModel = (0, import_react33.useMemo)(() => list.sort ? [{ field: list.sort, sort: list.sortDir < 0 ? "desc" : "asc" }] : [], [list.sort, list.sortDir]), rowSelectionModel = (0, import_react33.useMemo)(() => cratesMode ? { type: "include", ids: new Set(selectedIds) } : {
       type: "include",
       ids: list.selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([list.selectedId])
-    }, [cratesMode, list.selectedId, selectedIds]), localeText = (0, import_react32.useMemo)(() => gridLocaleText(list.locale), [list.locale]), [page, setPage] = (0, import_react32.useState)(0), maxPage = Math.max(0, Math.ceil(view.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react32.useMemo)(
+    }, [cratesMode, list.selectedId, selectedIds]), localeText = (0, import_react33.useMemo)(() => gridLocaleText(list.locale), [list.locale]), [page, setPage] = (0, import_react33.useState)(0), maxPage = Math.max(0, Math.ceil(view.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react33.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
     ), hideFooter = view.length <= GRID_PAGE_SIZE;
-    (0, import_react32.useEffect)(() => {
+    (0, import_react33.useEffect)(() => {
       if (cratesMode) {
         if (list.selectedId == null) {
           setSelectedIds([]);
@@ -62588,27 +62751,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
         setSelectedIds((prev2) => prev2.includes(list.selectedId) ? prev2 : [list.selectedId]);
       }
-    }, [cratesMode, list.selectedId]), (0, import_react32.useEffect)(() => {
+    }, [cratesMode, list.selectedId]), (0, import_react33.useEffect)(() => {
       function onSelectAll() {
         cratesMode && setSelectedIds(view.filter((row) => !row.entry).map((row) => row.id));
       }
       return document.addEventListener(SELECT_ALL_EVENT, onSelectAll), () => document.removeEventListener(SELECT_ALL_EVENT, onSelectAll);
-    }, [cratesMode, view]), (0, import_react32.useLayoutEffect)(() => {
+    }, [cratesMode, view]), (0, import_react33.useLayoutEffect)(() => {
       setPage(0);
-    }, [history2, list.mode, list.sort, list.sortDir, view.length]), (0, import_react32.useLayoutEffect)(() => {
+    }, [history2, list.mode, list.sort, list.sortDir, view.length]), (0, import_react33.useLayoutEffect)(() => {
       let parent = hostRef.current?.parentElement ?? null, measure = () => {
         setHeight(paneHeight(parent));
       };
       if (measure(), typeof ResizeObserver != "function" || !parent) return;
       let observer = new ResizeObserver(measure);
       return observer.observe(parent), () => observer.disconnect();
-    }, []), (0, import_react32.useLayoutEffect)(() => {
+    }, []), (0, import_react33.useLayoutEffect)(() => {
       let node2 = hostRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, view, list.locale, height2]), (0, import_react32.useEffect)(() => {
+    }, [columns, view, list.locale, height2]), (0, import_react33.useEffect)(() => {
       let node2 = hostRef.current;
       node2 && attachGridTooltips(node2);
     }, [columns, view, list.locale, height2]);
@@ -62646,9 +62809,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       setPage(model.page);
     }
     let gridHeight = cratesMode && fieldEditShows(selectedIds.length) ? Math.max(120, height2 - 56) : height2;
-    return /* @__PURE__ */ (0, import_jsx_runtime231.jsxs)("div", { ref: hostRef, className: "track-grid", style: { height: height2, width: "100%" }, children: [
-      cratesMode ? /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(FieldEditorBar, { selectedIds }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime231.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime232.jsxs)("div", { ref: hostRef, className: "track-grid", style: { height: height2, width: "100%" }, children: [
+      cratesMode ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)(FieldEditorBar, { selectedIds }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime232.jsx)(
         DataGrid2,
         {
           rows: [...view],
@@ -62695,7 +62858,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/ReportGrid.tsx
-  var import_jsx_runtime232 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime233 = __toESM(require_jsx_runtime(), 1);
   function gridLocaleText2(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
   }
@@ -62705,19 +62868,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     getRowId
   }) {
     ensureGridDom();
-    let hostRef = (0, import_react33.useRef)(null), locale = getLocale(), localeText = (0, import_react33.useMemo)(() => gridLocaleText2(locale), [locale]), [page, setPage] = (0, import_react33.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react33.useMemo)(
+    let hostRef = (0, import_react34.useRef)(null), locale = getLocale(), localeText = (0, import_react34.useMemo)(() => gridLocaleText2(locale), [locale]), [page, setPage] = (0, import_react34.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react34.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
     ), hideFooter = rows.length <= GRID_PAGE_SIZE, height2 = Math.max(180, Math.min(36 * (rows.length + 2) + (hideFooter ? 0 : 52), 400));
-    return (0, import_react33.useLayoutEffect)(() => {
+    return (0, import_react34.useLayoutEffect)(() => {
       setPage(0);
-    }, [rows.length]), (0, import_react33.useLayoutEffect)(() => {
+    }, [rows.length]), (0, import_react34.useLayoutEffect)(() => {
       let node2 = hostRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, rows, locale, height2]), /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("div", { ref: hostRef, className: "report-grid", style: { height: height2, width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime232.jsx)(
+    }, [columns, rows, locale, height2]), /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("div", { ref: hostRef, className: "report-grid", style: { height: height2, width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime233.jsx)(
       DataGrid2,
       {
         rows: [...rows],
@@ -62779,7 +62942,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/DriftReport.tsx
-  var import_jsx_runtime233 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime234 = __toESM(require_jsx_runtime(), 1);
   function driftColumns() {
     return [
       {
@@ -62812,22 +62975,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let { drift } = useGig(), payload = drift.report, rows = payload ? driftViewRows(payload.flags || []) : [], columns = driftColumns();
     if (!payload) return null;
     let flags = payload.flags || [];
-    return /* @__PURE__ */ (0, import_jsx_runtime233.jsxs)(import_jsx_runtime233.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
-      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
-      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
-      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
-      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
-      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
-      flags.length ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)(ReportGrid, { rows, columns, getRowId: (row) => row.id }) : /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("p", { className: "gig-note", children: t("drift.empty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime234.jsxs)(import_jsx_runtime234.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: flags.length ? t("drift.summary", { checked: payload.checked, count: flags.length }) : t("drift.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.tooQuiet", { count: payload.too_quiet }) }) : null,
+      payload.mapped ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.mapped", { count: payload.mapped }) }) : null,
+      flags.length ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(ReportGrid, { rows, columns, getRowId: (row) => row.id }) : /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("p", { className: "gig-note", children: t("drift.empty") })
     ] });
   }
 
   // src/lib/gig/drift.ts
-  var listeners9 = /* @__PURE__ */ new Set(), latest = null, islandRoot2 = null;
-  function emit4() {
+  var listeners10 = /* @__PURE__ */ new Set(), latest = null, islandRoot2 = null;
+  function emit5() {
     let snapshot2 = getDriftSnapshot();
-    for (let listener of listeners9) listener(snapshot2);
+    for (let listener of listeners10) listener(snapshot2);
   }
   function beginBusy() {
     let button = el("drift-refresh");
@@ -62847,22 +63010,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { report: latest, scope: driftScopeLabel() };
   }
   function subscribeDrift(listener) {
-    return listeners9.add(listener), () => {
-      listeners9.delete(listener);
+    return listeners10.add(listener), () => {
+      listeners10.delete(listener);
     };
   }
   function wireDrift() {
     let panel = el("drift-panel");
     panel.dataset.driftWired !== "true" && (panel.dataset.driftWired = "true", el("drift-refresh").addEventListener("click", () => {
       loadDrift();
-    }), islandRoot2 = mountIsland(el("drift-report"), (0, import_react34.createElement)(DriftReport)));
+    }), islandRoot2 = mountIsland(el("drift-report"), (0, import_react35.createElement)(DriftReport)));
   }
   async function loadDrift() {
     let token4 = ++state.driftToken;
     beginBusy();
     let settle = "none";
     if (state.activeCrate === "all") {
-      failStatus(t("error.tempo_needs_crate")), endBusy(), updateScope(), emit4(), el("drift-refresh").focus();
+      failStatus(t("error.tempo_needs_crate")), endBusy(), updateScope(), emit5(), el("drift-refresh").focus();
       return;
     }
     let crate = String(state.activeCrate);
@@ -62877,7 +63040,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus(serverMessage(payload, t("drift.unreadable"))), settle = "retry";
         return;
       }
-      latest = payload, el("drift-status").textContent = "", updateScope(), emit4(), settle = "report";
+      latest = payload, el("drift-status").textContent = "", updateScope(), emit5(), settle = "report";
     } catch {
       if (token4 !== state.driftToken) return;
       failStatus(t("drift.unreachable")), settle = "retry";
@@ -62891,11 +63054,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus(message), endBusy(), el("drift-refresh").focus();
   }
   function repaintDrift() {
-    updateScope(), emit4();
+    updateScope(), emit5();
   }
 
   // src/lib/gig/portable.ts
-  var import_react35 = __toESM(require_react(), 1);
+  var import_react36 = __toESM(require_react(), 1);
 
   // src/lib/gig/portable-view.ts
   var KIND_KEY = {
@@ -62932,7 +63095,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/PortableReport.tsx
-  var import_jsx_runtime234 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime235 = __toESM(require_jsx_runtime(), 1);
   function portableColumns() {
     return [
       {
@@ -62940,7 +63103,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         headerName: t("portable.column.problem"),
         flex: 1,
         minWidth: 140,
-        renderCell: (params) => /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("span", { className: "portable-kind", children: params.value })
+        renderCell: (params) => /* @__PURE__ */ (0, import_jsx_runtime235.jsx)("span", { className: "portable-kind", children: params.value })
       },
       {
         field: "crate",
@@ -62959,13 +63122,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         headerName: t("portable.column.fix"),
         flex: 1.4,
         minWidth: 160,
-        renderCell: (params) => params.value ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("span", { className: "portable-fix", children: String(params.value) }) : null
+        renderCell: (params) => params.value ? /* @__PURE__ */ (0, import_jsx_runtime235.jsx)("span", { className: "portable-fix", children: String(params.value) }) : null
       }
     ];
   }
   function PortableReport() {
     let { portable } = useGig(), report = portable.report, rows = report ? portableViewRows(report) : [], columns = portableColumns();
-    return rows.length ? /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(ReportGrid, { rows, columns, getRowId: (row) => row.id }) : null;
+    return rows.length ? /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(ReportGrid, { rows, columns, getRowId: (row) => row.id }) : null;
   }
 
   // src/lib/gig/portable-bind.ts
@@ -62979,15 +63142,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/portable.ts
-  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners10 = /* @__PURE__ */ new Set();
+  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners11 = /* @__PURE__ */ new Set();
   function emitPortable() {
     let snapshot2 = portableSnapshot();
-    for (let listener of listeners10) listener(snapshot2);
+    for (let listener of listeners11) listener(snapshot2);
     emitFiles();
   }
   function subscribePortable(listener) {
-    return listeners10.add(listener), () => {
-      listeners10.delete(listener);
+    return listeners11.add(listener), () => {
+      listeners11.delete(listener);
     };
   }
   function portableSnapshot() {
@@ -63094,7 +63257,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       runPortableCheck(el("portable-drive").value);
     }), el("portable-drive").addEventListener("change", () => {
       runPortableCheck(el("portable-drive").value);
-    }), islandRoot3 = mountIsland(el("portable-view-findings"), (0, import_react35.createElement)(PortableReport)));
+    }), islandRoot3 = mountIsland(el("portable-view-findings"), (0, import_react36.createElement)(PortableReport)));
   }
   function renderPortableReport(report) {
     latest2 = report;
@@ -63178,14 +63341,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/health-events.ts
-  var listeners11 = /* @__PURE__ */ new Set();
+  var listeners12 = /* @__PURE__ */ new Set();
   function subscribeHealth(listener) {
-    return listeners11.add(listener), () => {
-      listeners11.delete(listener);
+    return listeners12.add(listener), () => {
+      listeners12.delete(listener);
     };
   }
   function emitHealth() {
-    for (let listener of [...listeners11]) listener();
+    for (let listener of [...listeners12]) listener();
   }
 
   // src/lib/health/health-list.ts
@@ -63215,16 +63378,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/health.ts
-  var import_react40 = __toESM(require_react(), 1);
+  var import_react41 = __toESM(require_react(), 1);
 
   // src/lib/ui/shared-dialog-mount.tsx
-  var import_react38 = __toESM(require_react(), 1);
+  var import_react39 = __toESM(require_react(), 1);
 
   // src/pages/SharedDialogs.tsx
-  var import_react37 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
+  var import_react38 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
 
   // src/components/CenteredDialog.tsx
-  var import_react36 = __toESM(require_react(), 1);
+  var import_react37 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Dialog/Dialog.mjs
   var React301 = __toESM(require_react(), 1);
@@ -63239,7 +63402,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var React300 = __toESM(require_react(), 1), DialogContext = /* @__PURE__ */ React300.createContext({}), DialogContext_default = DialogContext;
 
   // node_modules/@mui/material/Dialog/Dialog.mjs
-  var import_jsx_runtime235 = __toESM(require_jsx_runtime(), 1), DialogBackdrop = styled_default2(Backdrop_default, {
+  var import_jsx_runtime236 = __toESM(require_jsx_runtime(), 1), DialogBackdrop = styled_default2(Backdrop_default, {
     name: "MuiDialog",
     slot: "Backdrop"
   })({
@@ -63502,7 +63665,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         role: "presentation"
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(RootSlot, {
       closeAfterTransition: !0,
       slots: {
         backdrop: BackdropSlot
@@ -63518,15 +63681,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       onClick: handleBackdropClick,
       ...rootSlotProps,
       ...other,
-      children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(TransitionSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(TransitionSlot, {
         ...transitionSlotProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(ContainerSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(ContainerSlot, {
           onMouseDown: handleMouseDown,
           ...containerSlotProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(PaperSlot, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(PaperSlot, {
             as: PaperComponent,
             ...paperSlotProps,
-            children: /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(DialogContext_default.Provider, {
+            children: /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(DialogContext_default.Provider, {
               value: dialogContextValue,
               children
             })
@@ -63552,7 +63715,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", ["root"]), dialogTitleClasses_default = dialogTitleClasses;
 
   // node_modules/@mui/material/DialogContent/DialogContent.mjs
-  var import_jsx_runtime236 = __toESM(require_jsx_runtime(), 1), useUtilityClasses100 = (ownerState) => {
+  var import_jsx_runtime237 = __toESM(require_jsx_runtime(), 1), useUtilityClasses100 = (ownerState) => {
     let {
       classes: classes2,
       dividers
@@ -63614,7 +63777,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ...props,
       dividers
     }, classes2 = useUtilityClasses100(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime236.jsx)(DialogContentRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime237.jsx)(DialogContentRoot, {
       className: clsx_default(classes2.root, className),
       ownerState,
       ref,
@@ -63624,7 +63787,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/components/CenteredDialog.tsx
   init_shared_dialog();
-  var import_jsx_runtime237 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1);
   function bindSharedRoot(node2, id) {
     node2 && (node2.id || (node2.id = id), node2.setAttribute("data-shared-dialog", id), node2.setAttribute("data-open", isSharedDialogOpen(id) ? "true" : "false"), bindDialogApi(node2, id));
   }
@@ -63636,10 +63799,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     contentRef,
     onRoot
   }) {
-    let open = isSharedDialogOpen(id), rootRef = (0, import_react36.useRef)(null);
-    return (0, import_react36.useLayoutEffect)(() => {
+    let open = isSharedDialogOpen(id), rootRef = (0, import_react37.useRef)(null);
+    return (0, import_react37.useLayoutEffect)(() => {
       rootRef.current?.setAttribute("data-open", open ? "true" : "false");
-    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime237.jsx)(
+    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime238.jsx)(
       Dialog_default,
       {
         open,
@@ -63656,7 +63819,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onClose: (_event, reason) => {
           reason !== "backdropClick" && setSharedDialogOpen(id, !1);
         },
-        children: /* @__PURE__ */ (0, import_jsx_runtime237.jsx)(DialogContent_default, { ref: contentRef, sx: { p: 0 }, children })
+        children: /* @__PURE__ */ (0, import_jsx_runtime238.jsx)(DialogContent_default, { ref: contentRef, sx: { p: 0 }, children })
       }
     );
   }
@@ -63671,7 +63834,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogActionsClasses = generateUtilityClasses("MuiDialogActions", ["root", "spacing"]);
 
   // node_modules/@mui/material/DialogActions/DialogActions.mjs
-  var import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1), useUtilityClasses101 = (ownerState) => {
+  var import_jsx_runtime239 = __toESM(require_jsx_runtime(), 1), useUtilityClasses101 = (ownerState) => {
     let {
       classes: classes2,
       disableSpacing
@@ -63716,7 +63879,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ...props,
       disableSpacing
     }, classes2 = useUtilityClasses101(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime238.jsx)(DialogActionsRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(DialogActionsRoot, {
       className: clsx_default(classes2.root, className),
       ownerState,
       ref,
@@ -63734,7 +63897,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var dialogContentTextClasses = generateUtilityClasses("MuiDialogContentText", ["root"]);
 
   // node_modules/@mui/material/DialogContentText/DialogContentText.mjs
-  var import_jsx_runtime239 = __toESM(require_jsx_runtime(), 1), useUtilityClasses102 = (ownerState) => {
+  var import_jsx_runtime240 = __toESM(require_jsx_runtime(), 1), useUtilityClasses102 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState, composedClasses = composeClasses({
@@ -63758,7 +63921,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       className,
       ...ownerState
     } = props, classes2 = useUtilityClasses102(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime239.jsx)(DialogContentTextRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(DialogContentTextRoot, {
       component: "p",
       variant: "body1",
       color: "textSecondary",
@@ -63772,7 +63935,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/material/DialogTitle/DialogTitle.mjs
   var React305 = __toESM(require_react(), 1);
-  var import_jsx_runtime240 = __toESM(require_jsx_runtime(), 1), useUtilityClasses103 = (ownerState) => {
+  var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1), useUtilityClasses103 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -63796,7 +63959,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     } = props, ownerState = props, classes2 = useUtilityClasses103(ownerState), {
       titleId = idProp
     } = React305.useContext(DialogContext_default);
-    return /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(DialogTitleRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(DialogTitleRoot, {
       component: "h2",
       className: clsx_default(classes2.root, className),
       ownerState,
@@ -63809,20 +63972,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/components/ConfirmDialog.tsx
   init_shared_dialog();
-  var import_jsx_runtime241 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1);
   function ConfirmDialog() {
     let prompt = getConfirm(), open = isSharedDialogOpen("confirm-dialog");
-    return /* @__PURE__ */ (0, import_jsx_runtime241.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(
       CenteredDialog,
       {
         id: "confirm-dialog",
         labelledBy: "confirm-title",
         describedBy: "confirm-message",
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(DialogTitle_default, { id: "confirm-title", children: prompt.title }),
-          /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(DialogContentText_default, { id: "confirm-message", sx: { px: 3, pb: 1 }, children: prompt.message }),
-          /* @__PURE__ */ (0, import_jsx_runtime241.jsxs)(DialogActions_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(DialogTitle_default, { id: "confirm-title", children: prompt.title }),
+          /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(DialogContentText_default, { id: "confirm-message", sx: { px: 3, pb: 1 }, children: prompt.message }),
+          /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(DialogActions_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
               Button_default,
               {
                 id: "confirm-cancel",
@@ -63834,7 +63997,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("common.cancel")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
               Button_default,
               {
                 id: "confirm-confirm",
@@ -63856,12 +64019,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/components/CratePromptDialog.tsx
   init_shared_dialog();
-  var import_jsx_runtime242 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1);
   function CratePromptDialog() {
     let prompt = getCratePrompt(), open = isSharedDialogOpen("crate-prompt-dialog"), ready = !!prompt.value.trim(), pathMode = !!prompt.fieldLabel;
-    return /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(CenteredDialog, { id: "crate-prompt-dialog", labelledBy: "crate-prompt-title", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(DialogTitle_default, { id: "crate-prompt-title", children: prompt.title }),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(CenteredDialog, { id: "crate-prompt-dialog", labelledBy: "crate-prompt-title", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(DialogTitle_default, { id: "crate-prompt-title", children: prompt.title }),
+      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
         TextField_default,
         {
           id: "crate-prompt-input",
@@ -63878,8 +64041,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime242.jsxs)(DialogActions_default, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(DialogActions_default, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
           Button_default,
           {
             id: "crate-prompt-cancel",
@@ -63890,7 +64053,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("common.cancel")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime242.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
           Button_default,
           {
             id: "crate-prompt-confirm",
@@ -63909,7 +64072,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // src/pages/SharedDialogs.tsx
   init_shared_dialog();
-  var import_jsx_runtime243 = __toESM(require_jsx_runtime(), 1), ADOPTED = [
+  var import_jsx_runtime244 = __toESM(require_jsx_runtime(), 1), ADOPTED = [
     { id: "consent-dialog", labelledBy: "consent-title", describedBy: "consent-body" },
     { id: "merge-dialog", labelledBy: "merge-title", describedBy: "merge-intro" },
     { id: "album-art-dialog", labelledBy: "album-art-title", describedBy: "album-art-intro" },
@@ -63962,9 +64125,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     labelledBy,
     describedBy
   }) {
-    return (0, import_react37.useLayoutEffect)(() => {
+    return (0, import_react38.useLayoutEffect)(() => {
       adoptNative(id), placeBucket(id, null);
-    }, [id]), /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(
+    }, [id]), /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(
       CenteredDialog,
       {
         id,
@@ -63984,15 +64147,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     );
   }
   function SharedDialogs() {
-    let [, setEpoch] = (0, import_react37.useState)(0);
-    return (0, import_react37.useEffect)(() => subscribeSharedDialogs(() => {
+    let [, setEpoch] = (0, import_react38.useState)(0);
+    return (0, import_react38.useEffect)(() => subscribeSharedDialogs(() => {
       (0, import_react_dom3.flushSync)(() => {
         setEpoch((value) => value + 1);
       });
-    }), []), /* @__PURE__ */ (0, import_jsx_runtime243.jsxs)(import_jsx_runtime243.Fragment, { children: [
-      ADOPTED.map((dialog) => /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(AdoptedDialog, { ...dialog }, dialog.id)),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(CratePromptDialog, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime243.jsx)(ConfirmDialog, {})
+    }), []), /* @__PURE__ */ (0, import_jsx_runtime244.jsxs)(import_jsx_runtime244.Fragment, { children: [
+      ADOPTED.map((dialog) => /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(AdoptedDialog, { ...dialog }, dialog.id)),
+      /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(CratePromptDialog, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(ConfirmDialog, {})
     ] });
   }
 
@@ -64010,7 +64173,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let host = document.getElementById("shared-dialogs");
     if (!(host instanceof HTMLElement)) return;
     let nativeLeft = !!document.querySelector("dialog#rekordbox-dialog");
-    islandRoot4 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot4), islandRoot4 = mountIsland(host, (0, import_react38.createElement)(SharedDialogs)), islandHost = host);
+    islandRoot4 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot4), islandRoot4 = mountIsland(host, (0, import_react39.createElement)(SharedDialogs)), islandHost = host);
   }
   bindSharedDialogMount(mountSharedDialogs);
 
@@ -64104,7 +64267,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HealthPanel.tsx
-  var import_react39 = __toESM(require_react(), 1);
+  var import_react40 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Accordion/Accordion.mjs
   var React308 = __toESM(require_react(), 1);
@@ -64119,7 +64282,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var collapseClasses = generateUtilityClasses("MuiCollapse", ["root", "horizontal", "vertical", "entered", "hidden", "wrapper", "wrapperInner"]);
 
   // node_modules/@mui/material/Collapse/Collapse.mjs
-  var import_jsx_runtime244 = __toESM(require_jsx_runtime(), 1), EMPTY_OBJECT2 = {}, useUtilityClasses104 = (ownerState) => {
+  var import_jsx_runtime245 = __toESM(require_jsx_runtime(), 1), EMPTY_OBJECT2 = {}, useUtilityClasses104 = (ownerState) => {
     let {
       orientation,
       classes: classes2
@@ -64320,7 +64483,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(TransitionComponent, {
+    return /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(TransitionComponent, {
       in: inProp,
       onEnter: handleEnter,
       onEntered: handleEntered,
@@ -64342,7 +64505,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           ...ownerState,
           state: state2
         };
-        return /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(RootSlot, {
+        return /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(RootSlot, {
           ...rootSlotProps,
           className: clsx_default(rootSlotProps.className, {
             entered: classes2.entered,
@@ -64350,10 +64513,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }[state2]),
           ownerState: stateOwnerState,
           ...restChildProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(WrapperSlot, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(WrapperSlot, {
             ...wrapperSlotProps,
             ownerState: stateOwnerState,
-            children: /* @__PURE__ */ (0, import_jsx_runtime244.jsx)(WrapperInnerSlot, {
+            children: /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(WrapperInnerSlot, {
               ...wrapperInnerSlotProps,
               ownerState: stateOwnerState,
               children
@@ -64376,7 +64539,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var accordionClasses = generateUtilityClasses("MuiAccordion", ["root", "heading", "rounded", "expanded", "disabled", "gutters", "region"]), accordionClasses_default = accordionClasses;
 
   // node_modules/@mui/material/Accordion/Accordion.mjs
-  var import_jsx_runtime245 = __toESM(require_jsx_runtime(), 1), useUtilityClasses105 = (ownerState) => {
+  var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1), useUtilityClasses105 = (ownerState) => {
     let {
       classes: classes2,
       square,
@@ -64549,19 +64712,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         role: "region"
       }
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime245.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime246.jsxs)(RootSlot, {
       ...rootProps,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime245.jsx)(AccordionHeadingSlot, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionHeadingSlot, {
         ...accordionProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(AccordionContext_default.Provider, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionContext_default.Provider, {
           value: contextValue,
           children: summary
         })
-      }), /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(TransitionSlot, {
+      }), /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(TransitionSlot, {
         in: expanded2,
         timeout: "auto",
         ...transitionProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime245.jsx)(AccordionRegionSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionRegionSlot, {
           ...accordionRegionProps,
           children
         })
@@ -64579,7 +64742,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var accordionDetailsClasses = generateUtilityClasses("MuiAccordionDetails", ["root"]);
 
   // node_modules/@mui/material/AccordionDetails/AccordionDetails.mjs
-  var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1), useUtilityClasses106 = (ownerState) => {
+  var import_jsx_runtime247 = __toESM(require_jsx_runtime(), 1), useUtilityClasses106 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -64601,7 +64764,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       className,
       ...other
     } = props, ownerState = props, classes2 = useUtilityClasses106(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime246.jsx)(AccordionDetailsRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(AccordionDetailsRoot, {
       className: clsx_default(classes2.root, className),
       ref,
       ownerState,
@@ -64611,7 +64774,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/material/AccordionSummary/AccordionSummary.mjs
   var React310 = __toESM(require_react(), 1);
-  var import_jsx_runtime247 = __toESM(require_jsx_runtime(), 1), useUtilityClasses107 = (ownerState) => {
+  var import_jsx_runtime248 = __toESM(require_jsx_runtime(), 1), useUtilityClasses107 = (ownerState) => {
     let {
       classes: classes2,
       expanded: expanded2,
@@ -64755,12 +64918,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime247.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime248.jsxs)(RootSlot, {
       ...rootSlotProps,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime247.jsx)(ContentSlot, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime248.jsx)(ContentSlot, {
         ...contentSlotProps,
         children
-      }), expandIcon && /* @__PURE__ */ (0, import_jsx_runtime247.jsx)(ExpandIconWrapperSlot, {
+      }), expandIcon && /* @__PURE__ */ (0, import_jsx_runtime248.jsx)(ExpandIconWrapperSlot, {
         ...expandIconWrapperSlotProps,
         children: expandIcon
       })]
@@ -64768,19 +64931,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), AccordionSummary_default = AccordionSummary;
 
   // node_modules/@mui/icons-material/ExpandMore.mjs
-  var import_jsx_runtime248 = __toESM(require_jsx_runtime(), 1), ExpandMore_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime248.jsx)("path", {
+  var import_jsx_runtime249 = __toESM(require_jsx_runtime(), 1), ExpandMore_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime249.jsx)("path", {
     d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
   }), "ExpandMore");
 
   // src/pages/HealthPanel.tsx
-  var import_jsx_runtime249 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX = {
+  var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX = {
     disableGutters: !0,
     square: !0,
     elevation: 0,
     slotProps: { transition: { timeout: 0 } }
   };
   function useSectionOpen(start2) {
-    let [open, setOpen] = (0, import_react39.useState)(start2);
+    let [open, setOpen] = (0, import_react40.useState)(start2);
     return {
       expanded: open,
       onChange: (_event, next3) => {
@@ -64810,7 +64973,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onNavigate
   }) {
     let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
       Accordion_default,
       {
         className: "health-accordion",
@@ -64818,9 +64981,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label, count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
-            action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label, count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            action === "missing" ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
               Button_default,
               {
                 type: "button",
@@ -64833,8 +64996,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("health.openMissing")
               }
             ) : null,
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: tracks.map((track) => /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("li", { className: findArt ? "health-art-row" : "", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
                 Button_default,
                 {
                   type: "button",
@@ -64848,7 +65011,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   children: trackLine(track)
                 }
               ),
-              findArt ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+              findArt ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
                 Button_default,
                 {
                   type: "button",
@@ -64865,7 +65028,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 }
               ) : null
             ] }, track.id)) }),
-            count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
+            count > tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - tracks.length }) }) : null
           ] })
         ]
       }
@@ -64873,7 +65036,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function Bitrate({ onNavigate }) {
     let accordion = useSectionOpen(!0);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
       Accordion_default,
       {
         className: "health-accordion",
@@ -64881,9 +65044,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("health.bitrate") }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("health.bitrate") }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
               Button_default,
               {
                 type: "button",
@@ -64896,7 +65059,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("health.openBitrate")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.bitrateNote") })
           ] })
         ]
       }
@@ -64907,7 +65070,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onNavigate
   }) {
     let count = section?.count ?? 0, files = section?.files ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
       Accordion_default,
       {
         className: "health-accordion",
@@ -64915,9 +65078,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label: t("health.unused"), count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label: t("health.unused"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
               Button_default,
               {
                 type: "button",
@@ -64930,8 +65093,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("health.openFiles")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
-            count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: files.map((row) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("li", { children: t("health.fileRow", { file: row.file }) }, row.path || row.file)) }),
+            count > files.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - files.length }) }) : null
           ] })
         ]
       }
@@ -64942,7 +65105,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onNavigate
   }) {
     let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(
       Accordion_default,
       {
         className: "health-accordion",
@@ -64950,9 +65113,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthSection), children: t("gig.groupCount", { label: t("health.duplicates"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
               Button_default,
               {
                 type: "button",
@@ -64965,11 +65128,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("health.openDuplicates")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("li", { children: t("health.duplicateRow", {
+            /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("ul", { children: groups.map((group) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("li", { children: t("health.duplicateRow", {
               title: [group.artist, group.name].filter(Boolean).join(" — ") || group.name,
               count: group.ids.length
             }) }, group.ids.join(","))) }),
-            count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
+            count > groups.length ? /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.more", { count: count - groups.length }) }) : null
           ] })
         ]
       }
@@ -64977,11 +65140,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HealthPanel() {
     let health = useHealth(), payload = health.healthReport, listed = 0;
-    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count), /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
           Button_default,
           {
             id: "health-refresh",
@@ -64999,11 +65162,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime249.jsxs)(import_jsx_runtime249.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
-        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-hint", className: "gig-note", children: t("health.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
+        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
           Section,
           {
             label: t(spec2.label),
@@ -65014,20 +65177,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           },
           spec2.key
         )),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
-        /* @__PURE__ */ (0, import_jsx_runtime249.jsx)(Bitrate, { onNavigate: health.navigate }),
-        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime249.jsx)("p", { className: "gig-note", children: t("health.clear") })
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(Bitrate, { onNavigate: health.navigate }),
+        listed ? null : /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("p", { className: "gig-note", children: t("health.clear") })
       ] }) : null })
     ] });
   }
 
   // src/pages/HealthListChrome.tsx
-  var import_jsx_runtime250 = __toESM(require_jsx_runtime(), 1), BUTTON_SX3 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime251 = __toESM(require_jsx_runtime(), 1), BUTTON_SX3 = { textTransform: "none", minHeight: 44 };
   function HealthListChrome() {
     let health = useHealth();
-    return /* @__PURE__ */ (0, import_jsx_runtime250.jsxs)(import_jsx_runtime250.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("div", { id: "duplicate-actions", className: "crate-actions", hidden: !health.mergeVisible, children: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
         Button_default,
         {
           id: "merge-duplicates",
@@ -65040,7 +65203,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("merge.title")
         }
       ) }),
-      /* @__PURE__ */ (0, import_jsx_runtime250.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("div", { id: "relink-actions", className: "crate-actions", hidden: !health.relinkVisible, children: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
         Button_default,
         {
           id: "open-relink",
@@ -65072,13 +65235,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function wireHealth(navigate) {
     go = navigate;
     let panel = el("health-panel");
-    panelRoot && panelHost !== panel && (panelRoot.unmount(), panelRoot = void 0), panelHost = panel, panelRoot = mountIsland(panel, (0, import_react40.createElement)(HealthPanel), panelRoot), mountHealthListChrome(), albumArtWired || (albumArtWired = !0, wireAlbumArt(() => {
+    panelRoot && panelHost !== panel && (panelRoot.unmount(), panelRoot = void 0), panelHost = panel, panelRoot = mountIsland(panel, (0, import_react41.createElement)(HealthPanel), panelRoot), mountHealthListChrome(), albumArtWired || (albumArtWired = !0, wireAlbumArt(() => {
       loadHealth();
     }));
   }
   function mountHealthListChrome() {
     let host = document.getElementById("health-list-chrome");
-    host instanceof HTMLElement && (listRoot && listHost !== host && (listRoot.unmount(), listRoot = void 0), listHost = host, listRoot = mountIsland(host, (0, import_react40.createElement)(HealthListChrome), listRoot), emitHealth());
+    host instanceof HTMLElement && (listRoot && listHost !== host && (listRoot.unmount(), listRoot = void 0), listHost = host, listRoot = mountIsland(host, (0, import_react41.createElement)(HealthListChrome), listRoot), emitHealth());
   }
   async function loadHealth() {
     let token4 = ++state.healthToken;
@@ -65122,18 +65285,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/history/history-stats.ts
-  var import_react42 = __toESM(require_react(), 1);
+  var import_react43 = __toESM(require_react(), 1);
 
   // src/pages/StatsPanel.tsx
-  var import_react41 = __toESM(require_react(), 1);
-  var import_jsx_runtime251 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100, BUTTON_SX4 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX2 = {
+  var import_react42 = __toESM(require_react(), 1);
+  var import_jsx_runtime252 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100, BUTTON_SX4 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX2 = {
     disableGutters: !0,
     square: !0,
     elevation: 0,
     slotProps: { transition: { timeout: 0 } }
   };
   function useSectionOpen2(start2) {
-    let [open, setOpen] = (0, import_react41.useState)(start2);
+    let [open, setOpen] = (0, import_react42.useState)(start2);
     return {
       expanded: open,
       onChange: (_event, next3) => {
@@ -65142,20 +65305,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function noteLine(text2) {
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("p", { className: "gig-note", children: text2 });
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("p", { className: "gig-note", children: text2 });
   }
   function StatsTable({
     headers,
     rows
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)("table", { className: "stats-table", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("tr", { children: headers.map((key) => /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("th", { scope: "col", children: t(key) }, key)) }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("tbody", { children: rows.map((cells, index) => /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("tr", { children: cells.map((cell, cellIndex) => /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("td", { children: cell }, `${index}:${cellIndex}`)) }, cells.join("\0") + String(index))) })
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)("table", { className: "stats-table", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("tr", { children: headers.map((key) => /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("th", { scope: "col", children: t(key) }, key)) }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("tbody", { children: rows.map((cells, index) => /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("tr", { children: cells.map((cell, cellIndex) => /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("td", { children: cell }, `${index}:${cellIndex}`)) }, cells.join("\0") + String(index))) })
     ] });
   }
   function TrackGroup({ rows }) {
     let accordion = useSectionOpen2(rows.length > 0), shown = rows.slice(0, LIST_CAP);
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -65163,9 +65326,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.tracks"), count: rows.length }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.tracks"), count: rows.length }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
               StatsTable,
               {
                 headers: ["column.title", "column.artist", "column.plays", "column.lastPlayed"],
@@ -65185,7 +65348,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function ArtistGroup({ rows }) {
     let accordion = useSectionOpen2(rows.length > 0), shown = rows.slice(0, LIST_CAP);
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -65193,9 +65356,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.artists"), count: rows.length }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.artists"), count: rows.length }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionDetails_default, { children: rows.length ? /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
               StatsTable,
               {
                 headers: ["column.artist", "column.plays", "stats.artistTracks", "column.lastPlayed"],
@@ -65219,7 +65382,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     idleDays
   }) {
     let stats = useStats(), accordion = useSectionOpen2(count > 0), shown = rows.slice(0, LIST_CAP), extra = count > rows.length ? count - rows.length : rows.length > LIST_CAP ? rows.length - LIST_CAP : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -65227,10 +65390,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX2,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.idle"), count }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(AccordionDetails_default, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label: t("stats.idle"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(AccordionDetails_default, { children: [
             noteLine(t("stats.idleHint", { days: idleDays })),
-            /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
               Button_default,
               {
                 type: "button",
@@ -65246,10 +65409,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("stats.idleCrate")
               }
             ),
-            count ? /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("ul", { children: shown.map((row, index) => {
+            count ? /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("ul", { children: shown.map((row, index) => {
                 let last = row.last_played == null ? t("stats.never") : clockLabel(row.last_played) || "—";
-                return /* @__PURE__ */ (0, import_jsx_runtime251.jsx)("li", { children: t("stats.idleRow", {
+                return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("li", { children: t("stats.idleRow", {
                   title: [row.artist, row.name].filter(Boolean).join(" — ") || row.name || "—",
                   last
                 }) }, `${row.id ?? row.asset_id ?? index}:${row.name ?? ""}`);
@@ -65265,11 +65428,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let { report } = useStats();
     if (!report) return null;
     let plays = report.plays ?? 0, sessions = report.sessions ?? 0, idleDays = report.idle_days ?? 365, idleCount = report.not_played_count ?? 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime251.jsxs)(import_jsx_runtime251.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
       noteLine(plays ? t("stats.summary", { plays, sessions }) : t("stats.empty")),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(TrackGroup, { rows: report.top_tracks ?? [] }),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(ArtistGroup, { rows: report.top_artists ?? [] }),
-      /* @__PURE__ */ (0, import_jsx_runtime251.jsx)(IdleGroup, { rows: report.not_played ?? [], count: idleCount, idleDays })
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(TrackGroup, { rows: report.top_tracks ?? [] }),
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ArtistGroup, { rows: report.top_artists ?? [] }),
+      /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(IdleGroup, { rows: report.not_played ?? [], count: idleCount, idleDays })
     ] });
   }
 
@@ -65315,9 +65478,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/history/history-stats.ts
-  var listeners12 = /* @__PURE__ */ new Set(), latest5 = null, crateBusy = !1, panelRoot2, reportHost = null;
-  function emit5() {
-    for (let listener of [...listeners12]) listener();
+  var listeners13 = /* @__PURE__ */ new Set(), latest5 = null, crateBusy = !1, panelRoot2, reportHost = null;
+  function emit6() {
+    for (let listener of [...listeners13]) listener();
   }
   function getStatsSnapshot() {
     return {
@@ -65327,8 +65490,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function subscribeStats(listener) {
-    return listeners12.add(listener), () => {
-      listeners12.delete(listener);
+    return listeners13.add(listener), () => {
+      listeners13.delete(listener);
     };
   }
   function wireHistoryStats() {
@@ -65347,7 +65510,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("stats-csv").addEventListener("click", () => {
       let link = document.createElement("a");
       link.href = csvHref(currentQuery()), link.download = "play-stats.csv", link.click();
-    }), syncPeriodFields()), reportHost = report, panelRoot2 = mountIsland(report, (0, import_react42.createElement)(StatsPanel), panelRoot2);
+    }), syncPeriodFields()), reportHost = report, panelRoot2 = mountIsland(report, (0, import_react43.createElement)(StatsPanel), panelRoot2);
   }
   async function loadHistoryStats() {
     let token4 = ++state.statsToken;
@@ -65362,7 +65525,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus4(serverMessage(payload, t("stats.unreadable"))), settle = "retry";
         return;
       }
-      latest5 = payload, el("stats-status").textContent = "", el("stats-scope").textContent = t("gig.wholeSpace"), emit5(), settle = "report";
+      latest5 = payload, el("stats-status").textContent = "", el("stats-scope").textContent = t("gig.wholeSpace"), emit6(), settle = "report";
     } catch {
       if (token4 !== state.statsToken) return;
       failStatus4(t("stats.unreachable")), settle = "retry";
@@ -65376,7 +65539,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus4(message), endBusy4(), el("stats-refresh").focus();
   }
   function repaintHistoryStats() {
-    el("stats-scope").textContent = t("gig.wholeSpace"), syncPeriodFields(), emit5();
+    el("stats-scope").textContent = t("gig.wholeSpace"), syncPeriodFields(), emit6();
   }
   function currentPeriod() {
     let value = el("stats-period").value;
@@ -65409,7 +65572,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function makeIdleCrate() {
     if (crateBusy) return;
     let idleDays = idleDaysFromInput(el("stats-idle-days").value), name = t("stats.idleCrateName", { days: idleDays });
-    crateBusy = !0, emit5();
+    crateBusy = !0, emit6();
     try {
       let preview = await postJSON("/api/history-stats", {
         action: "preview",
@@ -65452,19 +65615,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       el("stats-status").textContent = failureOf(error2).message;
     } finally {
-      crateBusy = !1, emit5();
+      crateBusy = !1, emit6();
     }
   }
 
   // src/lib/health/scan.ts
-  var import_react45 = __toESM(require_react(), 1);
+  var import_react46 = __toESM(require_react(), 1);
 
   // src/pages/ScanPanel.tsx
-  var import_react44 = __toESM(require_react(), 1);
+  var import_react45 = __toESM(require_react(), 1);
 
   // src/components/HealthDataGrid.tsx
-  var import_react43 = __toESM(require_react(), 1);
-  var import_jsx_runtime252 = __toESM(require_jsx_runtime(), 1);
+  var import_react44 = __toESM(require_react(), 1);
+  var import_jsx_runtime253 = __toESM(require_jsx_runtime(), 1);
   function gridLocaleText3(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
   }
@@ -65475,22 +65638,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onSelectId
   }) {
     ensureGridDom();
-    let hostRef = (0, import_react43.useRef)(null), locale = getLocale(), localeText = (0, import_react43.useMemo)(() => gridLocaleText3(locale), [locale]), [page, setPage] = (0, import_react43.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react43.useMemo)(
+    let hostRef = (0, import_react44.useRef)(null), locale = getLocale(), localeText = (0, import_react44.useMemo)(() => gridLocaleText3(locale), [locale]), [page, setPage] = (0, import_react44.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react44.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
-    ), hideFooter = rows.length <= GRID_PAGE_SIZE, rowSelectionModel = (0, import_react43.useMemo)(() => ({
+    ), hideFooter = rows.length <= GRID_PAGE_SIZE, rowSelectionModel = (0, import_react44.useMemo)(() => ({
       type: "include",
       ids: selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([selectedId])
     }), [selectedId]);
-    (0, import_react43.useLayoutEffect)(() => {
+    (0, import_react44.useLayoutEffect)(() => {
       setPage(0);
-    }, [rows.length]), (0, import_react43.useLayoutEffect)(() => {
+    }, [rows.length]), (0, import_react44.useLayoutEffect)(() => {
       let node2 = hostRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, rows, locale, paginationModel]), (0, import_react43.useEffect)(() => {
+    }, [columns, rows, locale, paginationModel]), (0, import_react44.useEffect)(() => {
       let node2 = hostRef.current;
       node2 && attachGridTooltips(node2);
     }, [columns, rows, locale, paginationModel]);
@@ -65502,7 +65665,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let id = [...next3.ids][0];
       id == null || id === selectedId || onSelectId(id);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("div", { ref: hostRef, className: "health-grid", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("div", { ref: hostRef, className: "health-grid", style: { width: "100%" }, children: /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(
       DataGrid2,
       {
         rows,
@@ -65563,12 +65726,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/ScanPanel.tsx
-  var import_jsx_runtime253 = __toESM(require_jsx_runtime(), 1), BUTTON_SX5 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime254 = __toESM(require_jsx_runtime(), 1), BUTTON_SX5 = { textTransform: "none", minHeight: 44 };
   function ScanPanel() {
-    let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [], rows = (0, import_react44.useMemo)(
+    let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [], rows = (0, import_react45.useMemo)(
       () => problems.map((item) => ({ ...item, id: item.id })),
       [problems]
-    ), columns = (0, import_react44.useMemo)(() => [
+    ), columns = (0, import_react45.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -65590,11 +65753,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         valueGetter: (_value, row) => scanProblemDetail(row)
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)(import_jsx_runtime253.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
-        /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("h2", { id: "scan-heading", className: "visually-hidden", children: t("scan.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "scan-scope", className: "files-path", children: health.scanScope }),
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
           Button_default,
           {
             id: "scan-quick",
@@ -65611,7 +65774,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("scan.checkQuick")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
           Button_default,
           {
             id: "scan-full",
@@ -65629,13 +65792,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime253.jsxs)(import_jsx_runtime253.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
-        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
-        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
-        problems.length ? /* @__PURE__ */ (0, import_jsx_runtime253.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime253.jsx)("p", { className: "gig-note", children: t("scan.empty") })
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "scan-hint", className: "gig-note", children: t("scan.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "scan-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.scanStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("div", { id: "scan-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: problems.length ? t("scan.summary", { checked: payload.checked, count: problems.length }) : t("scan.summaryClear", { checked: payload.checked }) }),
+        payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: t("scan.notFound", { count: payload.not_found }) }) : null,
+        payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: t("scan.unchecked", { count: payload.unchecked }) }) : null,
+        problems.length ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: t("scan.empty") })
       ] }) : null })
     ] });
   }
@@ -65657,7 +65820,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wireScan() {
     let panel = el("scan-panel");
-    panelRoot3 && panelHost2 !== panel && (panelRoot3.unmount(), panelRoot3 = void 0), panelHost2 = panel, panelRoot3 = mountIsland(panel, (0, import_react45.createElement)(ScanPanel), panelRoot3);
+    panelRoot3 && panelHost2 !== panel && (panelRoot3.unmount(), panelRoot3 = void 0), panelHost2 = panel, panelRoot3 = mountIsland(panel, (0, import_react46.createElement)(ScanPanel), panelRoot3);
   }
   async function loadScan(depth) {
     let chosen = resolveDepth(depth), token4 = ++state.scanToken;
@@ -65710,10 +65873,51 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/tags.ts
-  var import_react47 = __toESM(require_react(), 1);
+  var import_react48 = __toESM(require_react(), 1);
 
   // src/pages/TagsPanel.tsx
-  var import_react46 = __toESM(require_react(), 1);
+  var import_react47 = __toESM(require_react(), 1);
+
+  // src/components/JobProgress.tsx
+  var import_jsx_runtime255 = __toESM(require_jsx_runtime(), 1);
+  function JobProgress({
+    job,
+    onCancel
+  }) {
+    if (!isActive(job) || job == null) return null;
+    let line2 = progressText(job), determinate = job.total > 0, value = determinate ? Math.min(100, job.done / job.total * 100) : 0;
+    return /* @__PURE__ */ (0, import_jsx_runtime255.jsxs)(
+      Box_default,
+      {
+        id: "job-progress",
+        "aria-live": "polite",
+        sx: { display: "grid", gap: 1, mt: 1, width: "100%" },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime255.jsx)("p", { id: "job-progress-text", children: line2 }),
+          /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+            LinearProgress_default,
+            {
+              variant: determinate ? "determinate" : "indeterminate",
+              value: determinate ? value : void 0,
+              "aria-label": line2
+            }
+          ),
+          job.cancelable && onCancel ? /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(
+            Button_default,
+            {
+              type: "button",
+              size: "small",
+              id: "job-cancel",
+              ref: tooltipRef5(tips.jobsCancel),
+              onClick: onCancel,
+              sx: { textTransform: "none", justifySelf: "start", minHeight: 44 },
+              children: t("jobs.cancel")
+            }
+          ) : null
+        ]
+      }
+    );
+  }
 
   // src/lib/health/tags-view.ts
   function tagsSummary(field2, values3, groups) {
@@ -65731,9 +65935,6 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function titlesPreviewSummary(plan) {
     return plan.changes.length ? t("tags.titlesPreviewSummary", { count: plan.changes.length }) : t("tags.summaryTitlesClear");
-  }
-  function writtenSummary(plan) {
-    return t("tags.written", { count: plan.changes.length, value: plan.value });
   }
   function titlesWrittenSummary(plan) {
     return t("tags.titlesWritten", { count: plan.changes.length });
@@ -65774,20 +65975,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/TagsPanel.tsx
-  var import_jsx_runtime254 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100, TITLE_KEY = "clean", MAPPING_KEY = "saved", BUTTON_SX6 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime256 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100, TITLE_KEY = "clean", MAPPING_KEY = "saved", BUTTON_SX6 = { textTransform: "none", minHeight: 44 };
   function DiffLines({ plan }) {
     let lines = previewLines(plan.changes).slice(0, LIST_CAP2);
-    return lines.length ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("ul", { children: lines.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("li", { children: line2 }, line2)) }) : null;
+    return lines.length ? /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("ul", { children: lines.map((line2) => /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("li", { children: line2 }, line2)) }) : null;
   }
   function MappingCard({
     plan,
     canApply,
     onApply
   }) {
-    return plan.changes.length ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "tags-mappings", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    return plan.changes.length ? /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("div", { className: "tags-mappings", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { className: "gig-note", children: mappingPreviewSummary(plan) }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
         Button_default,
         {
           type: "button",
@@ -65808,10 +66009,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     canApply,
     onApply
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(DiffLines, { plan }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(import_jsx_runtime256.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { className: "gig-note", children: titlesSummary(plan.changes.length) }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(DiffLines, { plan }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("div", { className: "tags-actions", children: /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
         Button_default,
         {
           type: "button",
@@ -65837,10 +66038,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onApply,
     onSelect
   }) {
-    let showPlan = plan && plan.value === chosen;
-    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "tags-cluster-chrome", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("label", { className: "tags-spelling", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    let jobs2 = useJobs(), running = jobs2.running?.kind === "tag_spelling" ? jobs2.running : null, showPlan = plan && plan.value === chosen;
+    return /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("div", { className: "tags-cluster-chrome", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("ul", { className: "tags-spellings", children: group.spellings.map((spelling) => /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("label", { className: "tags-spelling", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
           "input",
           {
             ref: tooltipRef5(tips.tagsSpelling),
@@ -65852,11 +66053,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             onChange: (event) => onSelect(event.currentTarget.value)
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
+        /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("span", { children: spellingLabel(spelling.value, spelling.count, spelling.value === group.suggested) })
       ] }) }, spelling.value)) }),
-      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(DiffLines, { plan }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "tags-actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+      showPlan ? /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(DiffLines, { plan }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("div", { className: "tags-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
           Button_default,
           {
             type: "button",
@@ -65871,7 +66072,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("tags.preview")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
           Button_default,
           {
             type: "button",
@@ -65882,15 +66083,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             "data-tags-action": "apply",
             "data-key": group.key,
             disabled: !canApply || !!(plan && plan.value === chosen && !plan.changes.length),
+            startIcon: busy5 ? /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(CircularProgress_default, { size: 16, color: "inherit" }) : void 0,
             onClick: onApply,
             children: t("tags.apply")
           }
         )
-      ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
+        JobProgress,
+        {
+          job: running,
+          onCancel: running ? () => {
+            jobs2.cancelJob(running.id);
+          } : void 0
+        }
+      )
     ] });
   }
   function TagsPanel() {
-    let health = useHealth(), field2 = health.tagsField, groups = health.tagsClusters?.groups ?? [], [selectedKey, setSelectedKey] = (0, import_react46.useState)(""), selected = groups.find((row) => row.key === selectedKey) ?? groups[0];
+    let health = useHealth(), field2 = health.tagsField, groups = health.tagsClusters?.groups ?? [], [selectedKey, setSelectedKey] = (0, import_react47.useState)(""), selected = groups.find((row) => row.key === selectedKey) ?? groups[0];
     function onField(next3) {
       health.tagsField !== next3 && (health.setTagsField(next3), health.loadTags());
     }
@@ -65898,10 +66109,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let plan = health.tagsPlans.get(key), group = groups.find((row) => row.key === key), value = health.tagsSelected.get(key) ?? group?.suggested ?? "";
       return !!(plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key);
     }
-    let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY), rows = (0, import_react46.useMemo)(
+    let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY), rows = (0, import_react47.useMemo)(
       () => groups.map((group) => ({ ...group, id: group.key })),
       [groups]
-    ), columns = (0, import_react46.useMemo)(() => [
+    ), columns = (0, import_react47.useMemo)(() => [
       {
         field: "suggested",
         headerName: t("tags.column.suggested"),
@@ -65922,12 +66133,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         valueGetter: (_value, row) => row.spellings.length
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(import_jsx_runtime256.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("h2", { id: "tags-heading", className: "visually-hidden", children: t("tags.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { id: "tags-scope", className: "files-path", children: t("gig.wholeSpace") }),
+        /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("div", { id: "tags-fields", role: "group", "aria-label": t("tags.field"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
             Button_default,
             {
               id: "tags-genre",
@@ -65943,7 +66154,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: t("tags.genre")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
             Button_default,
             {
               id: "tags-artist",
@@ -65959,7 +66170,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: t("tags.artist")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
             Button_default,
             {
               id: "tags-titles",
@@ -65976,7 +66187,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
           Button_default,
           {
             id: "tags-refresh",
@@ -65993,8 +66204,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("gig.checkAgain")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("label", { className: "tags-write-files", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("label", { className: "tags-write-files", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
             "input",
             {
               id: "tags-write-files",
@@ -66007,15 +66218,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           t("tags.writeFiles")
         ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
-        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => {
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { id: "tags-hint", className: "gig-note", children: field2 === "titles" ? t("tags.introTitles") : t("tags.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { id: "tags-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.tagsStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)("div", { id: "tags-report", className: "gig-report", tabIndex: -1, children: [
+        field2 === "titles" && health.titlePlan ? /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(TitlesReport, { plan: health.titlePlan, canApply: canApplyTitles, onApply: () => {
           health.applyTitles();
         } }) : null,
-        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime254.jsxs)(import_jsx_runtime254.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime254.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
-          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+        field2 !== "titles" && health.tagsClusters ? /* @__PURE__ */ (0, import_jsx_runtime256.jsxs)(import_jsx_runtime256.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime256.jsx)("p", { className: "gig-note", children: tagsSummary(field2, health.tagsClusters.values ?? 0, groups.length) }),
+          health.mappingPlan ? /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
             MappingCard,
             {
               plan: health.mappingPlan,
@@ -66025,7 +66236,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             }
           ) : null,
-          selected ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+          selected ? /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
             ClusterActions,
             {
               group: selected,
@@ -66042,7 +66253,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               onSelect: (value) => health.selectSpelling(selected.key, value)
             }
           ) : null,
-          selected ? /* @__PURE__ */ (0, import_jsx_runtime254.jsx)(
+          selected ? /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
             HealthDataGrid,
             {
               rows,
@@ -66086,7 +66297,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function wireTags() {
     field = "genre";
     let panel = el("tags-panel");
-    panelRoot4 && panelHost3 !== panel && (panelRoot4.unmount(), panelRoot4 = void 0), panelHost3 = panel, panelRoot4 = mountIsland(panel, (0, import_react47.createElement)(TagsPanel), panelRoot4);
+    panelRoot4 && panelHost3 !== panel && (panelRoot4.unmount(), panelRoot4 = void 0), panelHost3 = panel, panelRoot4 = mountIsland(panel, (0, import_react48.createElement)(TagsPanel), panelRoot4);
   }
   async function loadTags() {
     let token4 = ++state.tagsToken;
@@ -66153,8 +66364,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (!(!plan || !value || plan.value !== value || !plan.changes.length || !state.writable)) {
       actionKey = key, panelBusy = !0, beginBusy6(), emitHealth();
       try {
-        let written = await postJSON("/api/tag-clusters", filesPayload({
-          action: "apply",
+        let written = await startJob(filesPayload({
+          kind: "tag_spelling",
           space: state.space,
           field: field === "titles" ? "genre" : field,
           value
@@ -66163,7 +66374,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           status3 = t("gigLock.queued"), setNotice(t("gigLock.queued"));
           return;
         }
-        await bridge.reloadLibrary(), actionKey = "", panelBusy = !1, endBusy6(), await loadTags(), status3 = writtenSummary(written), emitHealth();
+        let job = written;
+        if (job.state === "failed" || job.state === "cancelled") {
+          failApply(new Error(toastText(job)));
+          return;
+        }
+        await bridge.reloadLibrary(), actionKey = "", panelBusy = !1, endBusy6(), await loadTags(), status3 = toastText(job), emitHealth();
       } catch (error2) {
         failApply(error2);
       } finally {
@@ -66257,22 +66473,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/containers/SnapshotsContext.tsx
-  var import_react48 = __toESM(require_react(), 1), import_jsx_runtime255 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react48.createContext)(null);
+  var import_react49 = __toESM(require_react(), 1), import_jsx_runtime257 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react49.createContext)(null);
   function SnapshotsProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime255.jsx)(SnapshotsContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(SnapshotsContext, { value, children });
   }
   function useSnapshots() {
-    let value = (0, import_react48.useContext)(SnapshotsContext);
+    let value = (0, import_react49.useContext)(SnapshotsContext);
     if (value === null)
       throw new Error("useSnapshots must be used within SnapshotsProvider");
     return value;
   }
 
   // src/containers/WizardContext.tsx
-  var import_react49 = __toESM(require_react(), 1);
+  var import_react50 = __toESM(require_react(), 1);
 
   // src/lib/wizard/wizard.ts
   function createWizard(input) {
@@ -66293,7 +66509,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/containers/WizardContext.tsx
-  var import_jsx_runtime256 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime258 = __toESM(require_jsx_runtime(), 1);
   function noop8() {
   }
   function noopFlag(_value) {
@@ -66328,16 +66544,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       onBrowse: noopPath
     };
   }
-  var WizardContext = (0, import_react49.createContext)(null);
+  var WizardContext = (0, import_react50.createContext)(null);
   function WizardProvider({
     value,
     children
   }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(WizardContext, { value, children });
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(WizardContext, { value, children });
   }
 
   // src/lib/snapshots/restore.ts
-  var import_react53 = __toESM(require_react(), 1);
+  var import_react54 = __toESM(require_react(), 1);
 
   // src/lib/snapshots/restore-view.ts
   var OPERATION_ACTIONS = {
@@ -66437,64 +66653,64 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/RestoreDialog.tsx
-  var import_jsx_runtime257 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1);
   function CueSide({ cue, slot }) {
     let color2 = slotColor(slot, cue?.color);
-    return /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { className: "swatch", style: color2 ? { background: color2 } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)("span", { className: cue ? "cue-diff-side" : "cue-diff-side marker-empty", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("span", { className: "swatch", style: color2 ? { background: color2 } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("span", { children: cueSummary(cue, t("markers.cueEmpty")) })
     ] });
   }
   function CueDiffRow({ diff }) {
     let empty = t("markers.cueEmpty"), beforeText = cueSummary(diff.before, empty), afterText = cueSummary(diff.after, empty);
-    return /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(
       "p",
       {
         className: "cue-diff",
         "aria-label": `${t("markers.cue", { number: diff.slot + 1 })}: ${t("plan.cueDiff", { before: beforeText, after: afterText })}`,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
+          /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("span", { className: "marker-slot", children: String(diff.slot + 1) }),
+          /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(CueSide, { cue: diff.before, slot: diff.slot }),
+          /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("span", { className: "cue-diff-arrow", "aria-hidden": "true", children: "→" }),
+          /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(CueSide, { cue: diff.after, slot: diff.slot })
         ]
       }
     );
   }
   function PlanLine({ label, rows }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: planLineText(label, rows) });
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: planLineText(label, rows) });
   }
   function ChangedCrates({ rows }) {
     let items = rows || [], label = t("plan.cratesChanged");
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: planLineText(label, items) }),
-      items.map((row, index) => /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: crateContentsText(row) }, `${row.path ?? row.name ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.none", { label }) });
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: planLineText(label, items) }),
+      items.map((row, index) => /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: crateContentsText(row) }, `${row.path ?? row.name ?? ""}:${index}`))
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: t("plan.none", { label }) });
   }
   function CueDiffs({ label, rows }) {
     let items = rows || [];
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
-      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: fileName(item.path || "") }),
-        cueDiffRows(item.before, item.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: fileName(item.path || "") }),
+        cueDiffRows(item.before, item.after).map((diff) => /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(CueDiffRow, { diff }, `${diff.slot}:${diff.before?.start_ms ?? ""}:${diff.after?.start_ms ?? ""}`))
       ] }, `${item.path ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.none", { label }) });
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: t("plan.none", { label }) });
   }
   function FrameDiffs({ label, rows }) {
     let items = rows || [];
-    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
-      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: fileName(item.path || "") }, `${item.path ?? ""}:${index}`))
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: t("plan.none", { label }) });
+    return items.length ? /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: t("plan.files", { label, count: items.length }) }),
+      items.slice(0, 12).map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: fileName(item.path || "") }, `${item.path ?? ""}:${index}`))
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: t("plan.none", { label }) });
   }
   function RestoreDialog() {
-    let snapshots = useSnapshots(), plan = snapshots.plan, blocked = plan?.restore_blocked ? codedText(
+    let snapshots = useSnapshots(), jobs2 = useJobs(), restoreJob = jobs2.running?.kind === "snapshot_restore" ? jobs2.running : null, plan = snapshots.plan, blocked = plan?.restore_blocked ? codedText(
       plan.restore_blocked,
       plan.restore_blocked_code,
       messageParams(plan.restore_blocked_params)
     ) : "", reading = snapshots.planOpen && !plan, confirmDisabled = snapshots.confirming || reading || !!plan?.restore_blocked, blockText = reading ? t("snapshots.readingPlan") : blocked || (plan != null && plan.dry_run ? t("plan.nothingChanged") : ""), touched = (snapshots.snapshots.find((row) => row.id === snapshots.snapshotPlanId)?.touched ?? []).filter((name) => name.length > 0), touchedLine = touched.length ? t("snapshots.whatChanged", { files: touched.join(", ") }) : "";
-    return /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(
       Dialog_default,
       {
         open: snapshots.planOpen,
@@ -66508,33 +66724,42 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         fullWidth: !0,
         slotProps: { paper: { id: "snapshot-dialog" } },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(DialogTitle_default, { id: "snapshot-title", component: "h2", children: t("snapshots.restoreTitle") }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(DialogContent_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(DialogContentText_default, { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
-            touchedLine ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { id: "snapshot-touched", children: touchedLine }) : null,
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(ChangedCrates, { rows: plan.crates?.changed }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
-              plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
-              /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
+          /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(DialogTitle_default, { id: "snapshot-title", component: "h2", children: t("snapshots.restoreTitle") }),
+          /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(DialogContent_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(DialogContentText_default, { id: "snapshot-intro", children: t("snapshots.restoreIntro") }),
+            touchedLine ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { id: "snapshot-touched", children: touchedLine }) : null,
+            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("div", { id: "snapshot-plan", "aria-live": "polite", children: plan ? /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(import_jsx_runtime259.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.cratesAdded"), rows: plan.crates?.added }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.cratesRemoved"), rows: plan.crates?.removed }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(ChangedCrates, { rows: plan.crates?.changed }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.cratesUnavailable"), rows: plan.crates?.unavailable }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.cratesRegistered"), rows: plan.crates_registered }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.cratesSkipped"), rows: plan.crates_skipped }),
+              plan.registration_warning ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { children: codedText(plan.registration_warning, plan.registration_warning_code) }) : null,
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.tracksAdded"), rows: plan.tracks?.added }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.tracksRemoved"), rows: plan.tracks?.removed }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.tracksUnavailable"), rows: plan.tracks?.unavailable }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(CueDiffs, { label: t("plan.cueChanges"), rows: plan.cues }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(FrameDiffs, { label: t("plan.gridChanges"), rows: plan.grids }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.deletedCrates"), rows: plan.deleted?.crates }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.deletedTracks"), rows: plan.deleted?.tracks }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.deletedCues"), rows: plan.deleted?.cues }),
+              /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(PlanLine, { label: t("plan.deletedGrids"), rows: plan.deleted?.grids })
             ] }) : null }),
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus })
+            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { id: "snapshot-block", className: "dialog-note", role: "status", children: blockText }),
+            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { id: "snapshot-status", className: "dialog-status", role: "status", "aria-live": "polite", children: snapshots.planStatus }),
+            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
+              JobProgress,
+              {
+                job: restoreJob,
+                onCancel: restoreJob ? () => {
+                  jobs2.cancelJob(restoreJob.id);
+                } : void 0
+              }
+            )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
               Button_default,
               {
                 id: "snapshot-cancel",
@@ -66544,7 +66769,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("common.cancel")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(
               Button_default,
               {
                 id: "snapshot-confirm",
@@ -66552,6 +66777,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 variant: "contained",
                 ref: tooltipRef5(tips.snapshotConfirm),
                 disabled: confirmDisabled,
+                startIcon: snapshots.confirming ? /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(CircularProgress_default, { size: 16, color: "inherit" }) : void 0,
                 onClick: () => {
                   snapshots.confirmSnapshotRestore().catch((error2) => snapshots.setSnapshotDialogStatus(failureOf(error2).message));
                 },
@@ -66565,7 +66791,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/SnapshotsPanel.tsx
-  var import_react52 = __toESM(require_react(), 1);
+  var import_react53 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/ListItem/ListItem.mjs
   var React312 = __toESM(require_react(), 1);
@@ -66586,7 +66812,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var listItemSecondaryActionClasses = generateUtilityClasses("MuiListItemSecondaryAction", ["root", "disableGutters"]);
 
   // node_modules/@mui/material/ListItemSecondaryAction/ListItemSecondaryAction.mjs
-  var import_jsx_runtime258 = __toESM(require_jsx_runtime(), 1), useUtilityClasses108 = (ownerState) => {
+  var import_jsx_runtime260 = __toESM(require_jsx_runtime(), 1), useUtilityClasses108 = (ownerState) => {
     let {
       disableGutters,
       classes: classes2
@@ -66628,7 +66854,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ...props,
       disableGutters: context.disableGutters
     }, classes2 = useUtilityClasses108(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime258.jsx)(ListItemSecondaryActionRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(ListItemSecondaryActionRoot, {
       as: component,
       className: clsx_default(classes2.root, className),
       ownerState,
@@ -66640,7 +66866,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var ListItemSecondaryAction_default = ListItemSecondaryAction;
 
   // node_modules/@mui/material/ListItem/ListItem.mjs
-  var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1), overridesResolver3 = (props, styles5) => {
+  var import_jsx_runtime261 = __toESM(require_jsx_runtime(), 1), overridesResolver3 = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -66800,11 +67026,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ownerState,
       className: classes2.secondaryAction
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(ListContext_default.Provider, {
+    return /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(ListContext_default.Provider, {
       value: childContext,
-      children: /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)(RootSlot, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)(RootSlot, {
         ...rootSlotProps,
-        children: [childrenProp, secondaryAction && /* @__PURE__ */ (0, import_jsx_runtime259.jsx)(SecondaryActionSlot, {
+        children: [childrenProp, secondaryAction && /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(SecondaryActionSlot, {
           ...secondaryActionSlotProps,
           children: secondaryAction
         })]
@@ -66813,10 +67039,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), ListItem_default = ListItem;
 
   // src/lib/snapshots/snapshot-columns.tsx
-  var import_jsx_runtime260 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime262 = __toESM(require_jsx_runtime(), 1);
   function restoreCell(params, handlers) {
-    return /* @__PURE__ */ (0, import_jsx_runtime260.jsxs)(import_jsx_runtime260.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(import_jsx_runtime262.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
         Button_default,
         {
           type: "button",
@@ -66828,7 +67054,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("snapshots.reviewRestore")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
         Button_default,
         {
           type: "button",
@@ -66880,7 +67106,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/MusicMirrorPanel.tsx
-  var import_react50 = __toESM(require_react(), 1);
+  var import_react51 = __toESM(require_react(), 1);
 
   // src/lib/snapshots/music-mirror.ts
   async function fetchMirrorPreview(dest) {
@@ -66917,9 +67143,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/MusicMirrorPanel.tsx
-  var import_jsx_runtime261 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime263 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none", minHeight: 44 };
   function MusicMirrorPanel() {
-    let [dest, setDest] = (0, import_react50.useState)(""), [report, setReport] = (0, import_react50.useState)(null), [error2, setError] = (0, import_react50.useState)(""), [busy5, setBusy] = (0, import_react50.useState)(!1), tokenRef = (0, import_react50.useRef)(0), ready = hasMirrorDest(dest) && !busy5;
+    let [dest, setDest] = (0, import_react51.useState)(""), [report, setReport] = (0, import_react51.useState)(null), [error2, setError] = (0, import_react51.useState)(""), [busy5, setBusy] = (0, import_react51.useState)(!1), tokenRef = (0, import_react51.useRef)(0), ready = hasMirrorDest(dest) && !busy5;
     async function run(action, confirm) {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -66938,10 +67164,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         token4 === tokenRef.current && setBusy(!1);
       }
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)("section", { id: "music-mirror", className: "operations", "aria-labelledby": "music-mirror-heading", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("h2", { id: "music-mirror-heading", className: "operations-heading", children: t("musicMirror.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { className: "notice", children: t("musicMirror.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)("section", { id: "music-mirror", className: "operations", "aria-labelledby": "music-mirror-heading", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("h2", { id: "music-mirror-heading", className: "operations-heading", children: t("musicMirror.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "notice", children: t("musicMirror.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
         TextField_default,
         {
           id: "music-mirror-dest",
@@ -66955,8 +67181,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           onChange: (event) => setDest(event.target.value)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsxs)(Stack_default, { direction: "row", spacing: 1, sx: { mt: 1, flexWrap: "wrap", gap: 1 }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)(Stack_default, { direction: "row", spacing: 1, sx: { mt: 1, flexWrap: "wrap", gap: 1 }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
           Button_default,
           {
             id: "music-mirror-preview",
@@ -66972,7 +67198,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("musicMirror.preview")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
           Button_default,
           {
             id: "music-mirror-copy",
@@ -66988,7 +67214,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("musicMirror.copy")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
           Button_default,
           {
             id: "music-mirror-restore",
@@ -67004,7 +67230,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("musicMirror.restore")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
           Button_default,
           {
             id: "music-mirror-crate",
@@ -67020,7 +67246,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("musicMirror.crate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
           Button_default,
           {
             id: "music-mirror-relink",
@@ -67037,12 +67263,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime261.jsx)("p", { id: "music-mirror-status", className: "notice", role: "status", "aria-live": "polite", children: error2 || mirrorStatusText(report) })
+      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { id: "music-mirror-status", className: "notice", role: "status", "aria-live": "polite", children: error2 || mirrorStatusText(report) })
     ] });
   }
 
   // src/components/GigLockPanel.tsx
-  var import_react51 = __toESM(require_react(), 1);
+  var import_react52 = __toESM(require_react(), 1);
 
   // src/lib/snapshots/write-queue.ts
   async function fetchWriteQueue() {
@@ -67078,9 +67304,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/GigLockPanel.tsx
-  var import_jsx_runtime262 = __toESM(require_jsx_runtime(), 1), BUTTON_SX8 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime264 = __toESM(require_jsx_runtime(), 1), BUTTON_SX8 = { textTransform: "none", minHeight: 44 };
   function GigLockPanel() {
-    let [listing, setListing] = (0, import_react51.useState)(null), [error2, setError] = (0, import_react51.useState)(""), [busy5, setBusy] = (0, import_react51.useState)(!1), tokenRef = (0, import_react51.useRef)(0);
+    let [listing, setListing] = (0, import_react52.useState)(null), [error2, setError] = (0, import_react52.useState)(""), [busy5, setBusy] = (0, import_react52.useState)(!1), tokenRef = (0, import_react52.useRef)(0);
     async function load() {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -67109,15 +67335,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         token4 === tokenRef.current && setBusy(!1);
       }
     }
-    (0, import_react51.useEffect)(() => {
+    (0, import_react52.useEffect)(() => {
       load();
     }, []);
     let pending = listing?.pending ?? [], undo = listing?.undo ?? [], locked = listing?.locked === !0, hasPending = pending.length > 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)("section", { id: "gig-lock-queue", className: "operations", "aria-labelledby": "gig-lock-heading", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("h2", { id: "gig-lock-heading", className: "operations-heading", children: t("gigLock.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { className: "notice", children: t("gigLock.intro") }),
-      /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)(Stack_default, { direction: "row", spacing: 1, sx: { mt: 1, flexWrap: "wrap", gap: 1 }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)("section", { id: "gig-lock-queue", className: "operations", "aria-labelledby": "gig-lock-heading", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("h2", { id: "gig-lock-heading", className: "operations-heading", children: t("gigLock.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("p", { className: "notice", children: t("gigLock.intro") }),
+      /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(Stack_default, { direction: "row", spacing: 1, sx: { mt: 1, flexWrap: "wrap", gap: 1 }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
           Button_default,
           {
             id: "gig-lock-preview",
@@ -67133,7 +67359,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("gigLock.preview")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
           Button_default,
           {
             id: "gig-lock-apply",
@@ -67149,7 +67375,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("gigLock.apply")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
           Button_default,
           {
             id: "gig-lock-drop",
@@ -67166,13 +67392,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("ul", { className: "operations-list", children: pending.map((item) => /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)("li", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("ul", { className: "operations-list", children: pending.map((item) => /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)("li", { children: [
         item.label,
         item.conflict && item.layer ? ` ${t("gigLock.conflict", { layer: item.layer })}` : ""
       ] }, String(item.id))) }),
-      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("ul", { className: "operations-list", children: undo.map((item) => /* @__PURE__ */ (0, import_jsx_runtime262.jsxs)("li", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("ul", { className: "operations-list", children: undo.map((item) => /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)("li", { children: [
         item.label,
-        /* @__PURE__ */ (0, import_jsx_runtime262.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(
           Button_default,
           {
             type: "button",
@@ -67188,12 +67414,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }, String(item.id))) }),
-      /* @__PURE__ */ (0, import_jsx_runtime262.jsx)("p", { id: "gig-lock-status", className: "notice", role: "status", "aria-live": "polite", children: error2 || queueStatusText(listing) })
+      /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("p", { id: "gig-lock-status", className: "notice", role: "status", "aria-live": "polite", children: error2 || queueStatusText(listing) })
     ] });
   }
 
   // src/pages/SnapshotsPanel.tsx
-  var import_jsx_runtime263 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime265 = __toESM(require_jsx_runtime(), 1);
   function gridLocaleText4(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
   }
@@ -67204,11 +67430,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return snapshots.snapshotLoading ? t("snapshots.reading") : snapshots.snapshotError ? snapshots.snapshotError : snapshots.statusOverride ? snapshots.statusOverride : snapshots.snapshotMessage ? t(snapshots.snapshotMessage) : "";
   }
   function EmptySnapshots() {
-    return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { className: "empty-list", children: t("snapshots.empty") });
+    return /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { className: "empty-list", children: t("snapshots.empty") });
   }
   function SnapshotsPanel() {
     ensureGridDom();
-    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, pruneSnapshot2 = snapshots.pruneSnapshot, failSnapshots2 = snapshots.failSnapshots, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react52.useMemo)(
+    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, pruneSnapshot2 = snapshots.pruneSnapshot, failSnapshots2 = snapshots.failSnapshots, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react53.useMemo)(
       () => snapshotColumns({
         onRestore: (snapshotId) => {
           openSnapshotPlan2(snapshotId).catch((error2) => setSnapshotDialogStatus2(failureOf(error2).message));
@@ -67218,20 +67444,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       }),
       [locale, openSnapshotPlan2, pruneSnapshot2, failSnapshots2, setSnapshotDialogStatus2]
-    ), localeText = (0, import_react52.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react52.useMemo)(
+    ), localeText = (0, import_react53.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react53.useMemo)(
       () => [...snapshots.operations].reverse(),
       [snapshots.operations]
-    ), listRef = (0, import_react52.useRef)(null);
-    return (0, import_react52.useLayoutEffect)(() => {
+    ), listRef = (0, import_react53.useRef)(null);
+    return (0, import_react53.useLayoutEffect)(() => {
       let node2 = listRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, snapshots.snapshots, locale]), /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)(import_jsx_runtime263.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)("div", { className: "browser-bar", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+    }, [columns, snapshots.snapshots, locale]), /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)(import_jsx_runtime265.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("div", { className: "browser-bar", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "snapshots-heading", className: "files-path", children: t("view.snapshots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
           Button_default,
           {
             id: "snapshots-refresh",
@@ -67243,7 +67469,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("common.refresh")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
           Button_default,
           {
             id: "snapshots-take",
@@ -67257,7 +67483,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: snapshots.taking ? t("snapshots.saving") : t("snapshots.take")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
           Button_default,
           {
             id: "snapshots-drives",
@@ -67272,11 +67498,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "snapshots-drives-note", className: "notice", role: "status", children: driveNote(snapshots.backingDrives, snapshots.driveNoteError, snapshots.driveBackup) }),
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "snapshots-block", className: "notice", role: "status", hidden: !writeBlock, children: writeBlock }),
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("div", { id: "snapshots-undo", className: "snapshot-undo", hidden: !undoId, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "snapshots-undo-text", children: snapshots.snapshotUndo?.source === "Lexicon" ? t("snapshots.outsideChangeLexicon") : t("snapshots.outsideChange") }),
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
           Button_default,
           {
             id: "snapshots-undo-button",
@@ -67289,8 +67515,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "snapshots-status", className: "notice", role: "status", "aria-live": "polite", children: listStatus(snapshots) }),
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
         "div",
         {
           id: "snapshots-list",
@@ -67302,7 +67528,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             listRef.current = element, tooltipRef5(tips.snapshotsList)(element);
           },
           style: { height: 320, width: "100%", minWidth: 640 },
-          children: snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+          children: snapshots.snapshotError ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
             Button_default,
             {
               type: "button",
@@ -67312,7 +67538,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               },
               children: t("common.tryAgain")
             }
-          ) : /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+          ) : /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
             DataGrid2,
             {
               rows: [...snapshots.snapshots],
@@ -67343,12 +67569,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(MusicMirrorPanel, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(GigLockPanel, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsxs)("div", { className: "browser-bar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
-          /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(MusicMirrorPanel, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(GigLockPanel, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("section", { id: "operations", className: "operations", "aria-labelledby": "operations-heading", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsxs)("div", { className: "browser-bar", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("h2", { id: "operations-heading", className: "operations-heading", children: t("operations.heading") }),
+          /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
             Button_default,
             {
               id: "operations-refresh",
@@ -67362,9 +67588,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
-        /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "operations-alert", className: "operations-alert", role: "alert", hidden: !failed, children: failed ? t("operations.rollbackFailed") : "" }),
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)("p", { id: "operations-status", className: "notice", role: "status", "aria-live": "polite", children: snapshots.operationsLoading && snapshots.operations.length === 0 ? t("operations.reading") : snapshots.operationsError }),
+        /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
           List_default,
           {
             id: "operations-list",
@@ -67374,7 +67600,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             tabIndex: 0,
             ref: tooltipRef5(tips.operationsList),
             dense: !0,
-            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+            children: snapshots.operationsError ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
               Button_default,
               {
                 type: "button",
@@ -67385,13 +67611,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 },
                 children: t("common.tryAgain")
               }
-            ) }) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(ListItemText_default, { primary: t("operations.empty") }) }) : operations.map((item, index) => {
+            ) }) : snapshots.operationsLoading && snapshots.operations.length === 0 ? null : snapshots.operations.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(ListItem_default, { children: /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(ListItemText_default, { primary: t("operations.empty") }) }) : operations.map((item, index) => {
               let copy2 = operationCardText(item);
-              return /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(
+              return /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(
                 ListItem_default,
                 {
                   className: "operation-card snapshot-card",
-                  children: /* @__PURE__ */ (0, import_jsx_runtime263.jsx)(ListItemText_default, { primary: copy2.title, secondary: copy2.detail || void 0 })
+                  children: /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(ListItemText_default, { primary: copy2.title, secondary: copy2.detail || void 0 })
                 },
                 `${item.time ?? ""}:${item.action ?? ""}:${item.target ?? ""}:${index}`
               );
@@ -67409,7 +67635,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function bindLibraryReload(reload) {
     reloadLibrary = reload;
   }
-  var hosts = /* @__PURE__ */ new WeakMap(), listeners13 = /* @__PURE__ */ new Set(), lastPlan = null, planOpen = !1, planStatus = "", taking = !1, backingDrives = !1, confirming = !1, driveNoteError = "", statusOverride = "";
+  var hosts = /* @__PURE__ */ new WeakMap(), listeners14 = /* @__PURE__ */ new Set(), lastPlan = null, planOpen = !1, planStatus = "", taking = !1, backingDrives = !1, confirming = !1, driveNoteError = "", statusOverride = "";
   function isDriveCopy(value) {
     if (!value || typeof value != "object") return !1;
     let record = value;
@@ -67453,12 +67679,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function subscribe2(listener) {
-    return listeners13.add(listener), () => {
-      listeners13.delete(listener);
+    return listeners14.add(listener), () => {
+      listeners14.delete(listener);
     };
   }
-  function emit6() {
-    for (let listener of [...listeners13]) listener();
+  function emit7() {
+    for (let listener of [...listeners14]) listener();
   }
   function bindHost(host, node2) {
     if (!host) return;
@@ -67466,7 +67692,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     hosts.set(host, mountIsland(host, node2, existing));
   }
   function mountSnapshots() {
-    bindHost(document.getElementById("snapshots-panel"), (0, import_react53.createElement)(SnapshotsPanel)), bindHost(document.getElementById("snapshot-dialog-host"), (0, import_react53.createElement)(RestoreDialog));
+    bindHost(document.getElementById("snapshots-panel"), (0, import_react54.createElement)(SnapshotsPanel)), bindHost(document.getElementById("snapshot-dialog-host"), (0, import_react54.createElement)(RestoreDialog));
   }
   function ensureMounted() {
     mountSnapshots();
@@ -67476,7 +67702,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     foot && (foot.textContent = state.snapshotLoading ? t("snapshots.reading") : t("snapshots.count", { count: state.snapshots.length }));
   }
   function paint() {
-    ensureMounted(), updateCrateFoot(), emit6();
+    ensureMounted(), updateCrateFoot(), emit7();
   }
   async function loadSnapshots() {
     state.snapshotLoading = !0, state.snapshotError = "", statusOverride = "";
@@ -67554,9 +67780,31 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function confirmSnapshotRestore() {
     confirming = !0, planStatus = "", paint();
     try {
-      let body2 = state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId ? { action: "undo", confirm: !0 } : { action: "restore", id: state.snapshotPlanId, confirm: !0 }, skipped = (await postJSON("/api/snapshots", body2)).crates_skipped || [];
+      if (state.snapshotUndo && state.snapshotUndo.restore_id === state.snapshotPlanId) {
+        let skipped2 = (await postJSON("/api/snapshots", { action: "undo", confirm: !0 })).crates_skipped || [];
+        if (closePlan(), state.snapshotMessage = skipped2.length ? "" : "snapshots.restored", await loadSnapshots(), await reloadLibrary(), skipped2.length) {
+          let names = skipped2.map((item) => item.name || item.path || t("plan.item")).join(", ");
+          statusOverride = t("snapshots.skippedCrates", { count: skipped2.length, names }), paint();
+        }
+        return;
+      }
+      let result = await startJob({
+        kind: "snapshot_restore",
+        id: state.snapshotPlanId,
+        confirm: !0
+      });
+      if (isQueuedWrite(result)) {
+        statusOverride = t("gigLock.queued"), setNotice(t("gigLock.queued")), closePlan();
+        return;
+      }
+      let job = result;
+      if (job.state === "failed" || job.state === "cancelled") {
+        planStatus = toastText(job), confirming = !1, await loadOperations(), paint();
+        return;
+      }
+      let skipped = job.errors;
       if (closePlan(), state.snapshotMessage = skipped.length ? "" : "snapshots.restored", await loadSnapshots(), await reloadLibrary(), skipped.length) {
-        let names = skipped.map((item) => item.name || item.path || t("plan.item")).join(", ");
+        let names = skipped.join(", ");
         statusOverride = t("snapshots.skippedCrates", { count: skipped.length, names }), paint();
       }
     } catch (error2) {
@@ -67567,7 +67815,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/app/providers.tsx
-  var import_jsx_runtime264 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime266 = __toESM(require_jsx_runtime(), 1);
   function readPlayerValue() {
     return {
       ...getPlayerState(),
@@ -67691,14 +67939,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function PlayerProvider2({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readPlayerValue);
-    (0, import_react54.useEffect)(() => subscribe(() => {
+    let [value, setValue] = (0, import_react55.useState)(readPlayerValue);
+    (0, import_react55.useEffect)(() => subscribe(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readPlayerValue());
       });
     }), []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(PlayerProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(PlayerProvider, { value: current3, children });
   }
   function readHistoryValue() {
     return {
@@ -67713,14 +67961,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HistoryProvider2({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readHistoryValue);
-    (0, import_react54.useEffect)(() => subscribeHistory(() => {
+    let [value, setValue] = (0, import_react55.useState)(readHistoryValue);
+    (0, import_react55.useEffect)(() => subscribeHistory(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readHistoryValue());
       });
     }), []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(HistoryProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(HistoryProvider, { value: current3, children });
   }
   function readStatsValue() {
     return {
@@ -67729,18 +67977,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function StatsRoot({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readStatsValue);
-    (0, import_react54.useLayoutEffect)(() => subscribeStats(() => {
+    let [value, setValue] = (0, import_react55.useState)(readStatsValue);
+    (0, import_react55.useLayoutEffect)(() => subscribeStats(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readStatsValue());
       });
     }), []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(StatsProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(StatsProvider, { value: current3, children });
   }
   function GigProvider({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readGigValue);
-    (0, import_react54.useEffect)(() => {
+    let [value, setValue] = (0, import_react55.useState)(readGigValue);
+    (0, import_react55.useEffect)(() => {
       let refresh = () => {
         (0, import_react_dom4.flushSync)(() => {
           setValue(readGigValue());
@@ -67750,12 +67998,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stopGig(), stopDrift(), stopPortable();
       };
     }, []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(GigStateProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigStateProvider, { value: current3, children });
   }
   function FilesProvider2({ children }) {
-    let hostRef = (0, import_react54.useRef)(null), [value, setValue] = (0, import_react54.useState)(readFilesValue);
-    (0, import_react54.useEffect)(() => {
+    let hostRef = (0, import_react55.useRef)(null), [value, setValue] = (0, import_react55.useState)(readFilesValue);
+    (0, import_react55.useEffect)(() => {
       let refresh = () => {
         hostRef.current?.isConnected && (0, import_react_dom4.flushSync)(() => {
           setValue(readFilesValue());
@@ -67765,25 +68013,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         unsub(), document.removeEventListener(LOCALE_EVENT, refresh);
       };
     }, []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsxs)(FilesProvider, { value: current3, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime264.jsx)("span", { ref: hostRef, hidden: !0 }),
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(FilesProvider, { value: current3, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("span", { ref: hostRef, hidden: !0 }),
       children
     ] });
   }
   function CrateProvider2({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readCrateValue);
-    (0, import_react54.useEffect)(() => subscribeCrates(() => {
+    let [value, setValue] = (0, import_react55.useState)(readCrateValue);
+    (0, import_react55.useEffect)(() => subscribeCrates(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readCrateValue());
       });
     }), []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(CrateProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(CrateProvider, { value: current3, children });
   }
   function SettingsProvider2({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readSettingsValue);
-    (0, import_react54.useEffect)(() => {
+    let [value, setValue] = (0, import_react55.useState)(readSettingsValue);
+    (0, import_react55.useEffect)(() => {
       let refresh = () => {
         (0, import_react_dom4.flushSync)(() => {
           setValue(readSettingsValue());
@@ -67793,8 +68041,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stopStore(), stopLocale();
       };
     }, []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(SettingsProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(SettingsProvider, { value: current3, children });
   }
   function readTrackListValue() {
     return {
@@ -67803,14 +68051,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function TrackListRoot({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readTrackListValue);
-    (0, import_react54.useLayoutEffect)(() => subscribeTrackList(() => {
+    let [value, setValue] = (0, import_react55.useState)(readTrackListValue);
+    (0, import_react55.useLayoutEffect)(() => subscribeTrackList(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readTrackListValue());
       });
     }), []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(TrackListProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(TrackListProvider, { value: current3, children });
   }
   function readSnapshotsValue() {
     return {
@@ -67828,18 +68076,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function SnapshotsProvider2({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readSnapshotsValue);
-    (0, import_react54.useEffect)(() => subscribe2(() => {
+    let [value, setValue] = (0, import_react55.useState)(readSnapshotsValue);
+    (0, import_react55.useEffect)(() => subscribe2(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readSnapshotsValue());
       });
     }), []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(SnapshotsProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(SnapshotsProvider, { value: current3, children });
   }
   function WizardProvider2({ children }) {
-    let value = (0, import_react54.useMemo)(() => idleWizardValue(), []);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(WizardProvider, { value, children });
+    let value = (0, import_react55.useMemo)(() => idleWizardValue(), []);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(WizardProvider, { value, children });
   }
   function readHealthValue() {
     return {
@@ -67861,38 +68109,62 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HealthProvider2({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readHealthValue);
-    (0, import_react54.useLayoutEffect)(() => subscribeHealth(() => {
+    let [value, setValue] = (0, import_react55.useState)(readHealthValue);
+    (0, import_react55.useLayoutEffect)(() => subscribeHealth(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readHealthValue());
       });
     }), []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(HealthProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(HealthProvider, { value: current3, children });
   }
   function readNoticeValue() {
     return { notice: getNotice(), dismiss: dismissNotice };
   }
   function NoticeProvider2({ children }) {
-    let [value, setValue] = (0, import_react54.useState)(readNoticeValue);
-    (0, import_react54.useLayoutEffect)(() => subscribeNotice(() => {
+    let [value, setValue] = (0, import_react55.useState)(readNoticeValue);
+    (0, import_react55.useLayoutEffect)(() => subscribeNotice(() => {
       (0, import_react_dom4.flushSync)(() => {
         setValue(readNoticeValue());
       });
     }), []);
-    let current3 = (0, import_react54.useMemo)(() => value, [value]);
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(NoticeProvider, { value: current3, children });
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(NoticeProvider, { value: current3, children });
+  }
+  function readJobValue() {
+    return {
+      jobs: getJobs(),
+      running: getRunning(),
+      toast: getToast(),
+      details: getDetails(),
+      startJob,
+      cancelJob,
+      undoJob,
+      dismissToast,
+      openDetails,
+      closeDetails
+    };
+  }
+  function JobProvider2({ children }) {
+    let [value, setValue] = (0, import_react55.useState)(readJobValue);
+    (0, import_react55.useLayoutEffect)(() => subscribeJobs(() => {
+      (0, import_react_dom4.flushSync)(() => {
+        setValue(readJobValue());
+      });
+    }), []);
+    let current3 = (0, import_react55.useMemo)(() => value, [value]);
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(JobProvider, { value: current3, children });
   }
   function AppProviders({ children }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(MuiThemeRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(NoticeProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(StatsRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(TrackListRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(SnapshotsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(WizardProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime264.jsx)(HealthProvider2, { children }) }) }) }) }) }) }) }) }) }) }) }) }) });
+    return /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(MuiThemeRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(NoticeProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(JobProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(PlayerProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(CrateProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(WaveformProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(GigProvider, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(FilesProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(HistoryProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(StatsRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(SettingsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(TrackListRoot, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(SnapshotsProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(WizardProvider2, { children: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(HealthProvider2, { children }) }) }) }) }) }) }) }) }) }) }) }) }) }) });
   }
 
   // src/app/mount.tsx
-  var import_jsx_runtime265 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime267 = __toESM(require_jsx_runtime(), 1);
   function mountIsland(host, node2, existing) {
     let root = existing ?? (0, import_client.createRoot)(host);
     return (0, import_react_dom5.flushSync)(() => {
-      root.render(/* @__PURE__ */ (0, import_jsx_runtime265.jsx)(AppProviders, { children: node2 }));
+      root.render(/* @__PURE__ */ (0, import_jsx_runtime267.jsx)(AppProviders, { children: node2 }));
     }), root;
   }
 
@@ -67944,11 +68216,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/GigDetailsGroup.tsx
-  var import_react55 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
-  var import_jsx_runtime266 = __toESM(require_jsx_runtime(), 1), LIST_CAP3 = 100;
+  var import_react56 = __toESM(require_react(), 1), import_react_dom6 = __toESM(require_react_dom(), 1);
+  var import_jsx_runtime268 = __toESM(require_jsx_runtime(), 1), LIST_CAP3 = 100;
   function GigDetailsGroup({ label, lines }) {
-    let [expanded2, setExpanded] = (0, import_react55.useState)(!1), [open, setOpen] = (0, import_react55.useState)(!0), shown = expanded2 || lines.length <= LIST_CAP3 ? lines : lines.slice(0, LIST_CAP3);
-    return /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(
+    let [expanded2, setExpanded] = (0, import_react56.useState)(!1), [open, setOpen] = (0, import_react56.useState)(!0), shown = expanded2 || lines.length <= LIST_CAP3 ? lines : lines.slice(0, LIST_CAP3);
+    return /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -67964,17 +68236,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           "&:before": { display: "none" }
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
             AccordionSummary_default,
             {
-              expandIcon: /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(ExpandMore_default, { fontSize: "small" }),
+              expandIcon: /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(ExpandMore_default, { fontSize: "small" }),
               ref: tooltipRef5(tips.gigGroup),
               children: t("gig.groupCount", { label, count: lines.length })
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime266.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("ul", { children: shown.map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime266.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
-            lines.length > LIST_CAP3 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime266.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("ul", { children: shown.map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
+            lines.length > LIST_CAP3 && !expanded2 ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
               "button",
               {
                 type: "button",
@@ -67993,7 +68265,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/GigReport.tsx
-  var import_jsx_runtime267 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime269 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef7(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68001,8 +68273,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function GigActions({ primary, stepIndex: stepIndex2 }) {
     let gig = useGig();
-    return /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)("div", { className: "gig-actions", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)("div", { className: "gig-actions", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(
         "button",
         {
           type: "button",
@@ -68013,7 +68285,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.back")
         }
       ),
-      primary ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      primary ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(
         "button",
         {
           type: "button",
@@ -68024,7 +68296,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: primary
         }
       ) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(
         "button",
         {
           type: "button",
@@ -68041,12 +68313,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       label,
       key === "tags_edited" ? tagEditLines(changes) : changes?.[key] || []
     ]).filter(([, lines]) => lines.length > 0), snapshotId = payload.snapshot_id?.trim() ?? "", canRevert = !!snapshotId && groups.length > 0, revertBlocked = state.seratoRunning || !!state.writeBlock;
-    return /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(import_jsx_runtime267.Fragment, { children: [
-      note ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: note }) : null,
-      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
-      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
-      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null,
-      canRevert ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(import_jsx_runtime269.Fragment, { children: [
+      note ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-note", children: note }) : null,
+      !changes && !note ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-note", children: t("gig.noSnapshot") }) : null,
+      groups.map(([label, lines]) => /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(GigDetailsGroup, { label: t(label), lines }, label)),
+      changes && groups.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-note", children: t(GIG_STEPS[GIG_STEP_COUNT - 1].empty) }) : null,
+      canRevert ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(
         "button",
         {
           type: "button",
@@ -68065,43 +68337,43 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let { gig } = useGig(), payload = gig.report;
     if (!payload) return null;
     let done = gig.stepIndex >= GIG_STEP_COUNT, step = done ? null : GIG_STEPS[gig.stepIndex], verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady"), crate = payload.scope?.crate_name || t("gig.wholeSpaceInline"), time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "", holding = (payload.holding_it_back || []).map((item) => item.summary), lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
-    return /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(import_jsx_runtime267.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(import_jsx_runtime269.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(
         "p",
         {
           className: "gig-score",
           "aria-label": t("gig.scoreLabel", { score: payload.score, verdict: verdictWord }),
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
+            /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("span", { className: "gig-score-value", children: t("gig.score", { score: payload.score }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("span", { className: payload.ready ? "gig-verdict" : "gig-verdict not-ready", children: t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady") })
           ]
         }
       ),
-      done ? /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(import_jsx_runtime267.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
-        /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
-        /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
+      done ? /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(import_jsx_runtime269.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
+        /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
+        /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-done", children: t(payload.ready ? "gig.doneReady" : "gig.doneNotReady", {
           score: payload.score,
           crate,
           time
         }) }),
-        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime267.jsxs)(import_jsx_runtime267.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
-        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime267.jsx)("p", { className: "gig-note", children: t(step.empty) }),
-        /* @__PURE__ */ (0, import_jsx_runtime267.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
+        holding.length ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(GigDetailsGroup, { label: t("gig.holding"), lines: holding }) : null,
+        /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(GigActions, { primary: null, stepIndex: gig.stepIndex })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(import_jsx_runtime269.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-kicker", children: t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t(step.title) }),
+        gig.stepIndex === GIG_STEP_COUNT - 1 ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(GigSince, { payload }) : lines.length ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(GigDetailsGroup, { label: t(step.title), lines }) : /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-note", children: t(step.empty) }),
+        /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(GigActions, { primary: t(step.action), stepIndex: gig.stepIndex })
       ] })
     ] });
   }
 
   // src/lib/gig/gig.ts
-  var listeners14 = /* @__PURE__ */ new Set(), stepIndex = 0, latest8 = null, checkedAt = null, exitGig = () => {
+  var listeners15 = /* @__PURE__ */ new Set(), stepIndex = 0, latest8 = null, checkedAt = null, exitGig = () => {
   };
-  function emit7() {
+  function emit8() {
     let snapshot2 = getGigSnapshot();
-    for (let listener of listeners14) listener(snapshot2);
+    for (let listener of listeners15) listener(snapshot2);
   }
   function focusHeading() {
     let headingNode = document.getElementById("gig-step-heading");
@@ -68125,15 +68397,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { report: latest8, stepIndex, checkedAt };
   }
   function subscribeGig(listener) {
-    return listeners14.add(listener), () => {
-      listeners14.delete(listener);
+    return listeners15.add(listener), () => {
+      listeners15.delete(listener);
     };
   }
   function nextGigStep() {
-    latest8 && (stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT), emit7(), focusHeading());
+    latest8 && (stepIndex = Math.min(stepIndex + 1, GIG_STEP_COUNT), emit8(), focusHeading());
   }
   function backGigStep() {
-    latest8 && (stepIndex = Math.max(0, stepIndex - 1), emit7(), focusHeading());
+    latest8 && (stepIndex = Math.max(0, stepIndex - 1), emit8(), focusHeading());
   }
   function exitGigCheck() {
     exitGig();
@@ -68143,7 +68415,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("gig-panel");
     panel.dataset.gigWired !== "true" && (panel.dataset.gigWired = "true", el("gig-refresh").addEventListener("click", () => {
       loadGigCheck(!0);
-    }), mountIsland(el("gig-report"), (0, import_react56.createElement)(GigReport)));
+    }), mountIsland(el("gig-report"), (0, import_react57.createElement)(GigReport)));
   }
   async function loadGigCheck(keepStep = !1) {
     let token4 = ++state.gigToken;
@@ -68160,7 +68432,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failStatus7(serverMessage(payload, t("gig.unreadable"))), settle = "retry";
         return;
       }
-      checkedAt = /* @__PURE__ */ new Date(), latest8 = payload, el("gig-status").textContent = "", updateScope2(payload), emit7(), settle = "heading";
+      checkedAt = /* @__PURE__ */ new Date(), latest8 = payload, el("gig-status").textContent = "", updateScope2(payload), emit8(), settle = "heading";
     } catch {
       if (token4 !== state.gigToken) return;
       failStatus7(t("gig.unreachable")), settle = "retry";
@@ -68174,14 +68446,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     failStatus7(message), endBusy7(), el("gig-refresh").focus();
   }
   function repaintGig() {
-    latest8 && (updateScope2(latest8), emit7());
+    latest8 && (updateScope2(latest8), emit8());
   }
 
   // src/lib/health/bitrate.ts
-  var import_react58 = __toESM(require_react(), 1);
+  var import_react59 = __toESM(require_react(), 1);
 
   // src/pages/BitrateReport.tsx
-  var import_react57 = __toESM(require_react(), 1);
+  var import_react58 = __toESM(require_react(), 1);
 
   // src/lib/health/bitrate-view.ts
   var REASON_KEYS2 = {
@@ -68199,14 +68471,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/BitrateReport.tsx
-  var import_jsx_runtime268 = __toESM(require_jsx_runtime(), 1), BUTTON_SX9 = { textTransform: "none", minHeight: 44 };
+  var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1), BUTTON_SX9 = { textTransform: "none", minHeight: 44 };
   function PlanNote({
     cratePlan: cratePlan2,
     writable
   }) {
-    return cratePlan2 ? cratePlan2.written && cratePlan2.saved ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: t("bitrate.written", { count: cratePlan2.added, name: cratePlan2.name }) }) : cratePlan2.added ? /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(import_jsx_runtime268.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: t("bitrate.preview", { count: cratePlan2.added, name: cratePlan2.name }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(
+    return cratePlan2 ? cratePlan2.written && cratePlan2.saved ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("bitrate.written", { count: cratePlan2.added, name: cratePlan2.name }) }) : cratePlan2.added ? /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)(import_jsx_runtime270.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("bitrate.preview", { count: cratePlan2.added, name: cratePlan2.name }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
         Button_default,
         {
           type: "button",
@@ -68219,17 +68491,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("bitrate.confirmCrate")
         }
       )
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: t("bitrate.previewEmpty") }) : null;
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("bitrate.previewEmpty") }) : null;
   }
   function BitrateReport({
     payload,
     cratePlan: cratePlan2,
     writable
   }) {
-    let suspects = payload.suspects || [], rows = (0, import_react57.useMemo)(
+    let suspects = payload.suspects || [], rows = (0, import_react58.useMemo)(
       () => suspects.map((item) => ({ ...item, id: item.id })),
       [suspects]
-    ), columns = (0, import_react57.useMemo)(() => [
+    ), columns = (0, import_react58.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -68258,14 +68530,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         valueGetter: (_value, row) => bitrateDetail(row)
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime268.jsxs)(import_jsx_runtime268.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked }) }),
-      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: t("bitrate.notFound", { count: payload.not_found }) }) : null,
-      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: t("bitrate.unreadableFiles", { count: payload.unreadable }) }) : null,
-      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: t("bitrate.unchecked", { count: payload.unchecked }) }) : null,
-      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: t("bitrate.tooQuiet", { count: payload.too_quiet }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(PlanNote, { cratePlan: cratePlan2, writable }),
-      suspects.length ? /* @__PURE__ */ (0, import_jsx_runtime268.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime268.jsx)("p", { className: "gig-note", children: t("bitrate.empty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)(import_jsx_runtime270.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: suspects.length ? t("bitrate.summary", { checked: payload.checked, count: suspects.length }) : t("bitrate.summaryClear", { checked: payload.checked }) }),
+      payload.not_found ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("bitrate.notFound", { count: payload.not_found }) }) : null,
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("bitrate.unreadableFiles", { count: payload.unreadable }) }) : null,
+      payload.unchecked ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("bitrate.unchecked", { count: payload.unchecked }) }) : null,
+      payload.too_quiet ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("bitrate.tooQuiet", { count: payload.too_quiet }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(PlanNote, { cratePlan: cratePlan2, writable }),
+      suspects.length ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("bitrate.empty") })
     ] });
   }
 
@@ -68320,7 +68592,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("bitrate-report");
     reportRoot && reportHost2 !== report && (reportRoot.unmount(), reportRoot = void 0), reportHost2 = report, reportRoot = mountIsland(
       report,
-      (0, import_react58.createElement)(BitrateReport, {
+      (0, import_react59.createElement)(BitrateReport, {
         payload,
         cratePlan,
         writable: state.writable
@@ -68403,11 +68675,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/lost-tags.ts
-  var import_react60 = __toESM(require_react(), 1);
+  var import_react61 = __toESM(require_react(), 1);
 
   // src/pages/LostTagsPanel.tsx
-  var import_react59 = __toESM(require_react(), 1);
-  var import_jsx_runtime269 = __toESM(require_jsx_runtime(), 1);
+  var import_react60 = __toESM(require_react(), 1);
+  var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1);
   function pairLabel(name, artist2) {
     let title2 = name.trim(), who = artist2.trim();
     return title2 && who ? `${who} — ${title2}` : title2 || who || "—";
@@ -68416,10 +68688,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return pairLabel(proposed.name ?? "", proposed.artist ?? "");
   }
   function LostTagsPanel({ payload }) {
-    let fixes = payload.fixes || [], rows = (0, import_react59.useMemo)(
+    let fixes = payload.fixes || [], rows = (0, import_react60.useMemo)(
       () => fixes.map((item) => ({ ...item, id: item.asset_id })),
       [fixes]
-    ), columns = (0, import_react59.useMemo)(() => [
+    ), columns = (0, import_react60.useMemo)(() => [
       {
         field: "path",
         headerName: t("lost.column.path"),
@@ -68441,10 +68713,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         valueGetter: (_value, row) => proposedLabel(row.proposed)
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime269.jsxs)(import_jsx_runtime269.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-note", children: fixes.length ? t("lost.summary", { checked: payload.checked, count: fixes.length }) : t("lost.summaryClear", { checked: payload.checked }) }),
-      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-note", children: t("lost.unreadableFiles", { count: payload.unreadable }) }) : null,
-      fixes.length ? /* @__PURE__ */ (0, import_jsx_runtime269.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime269.jsx)("p", { className: "gig-note", children: t("lost.empty") })
+    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(import_jsx_runtime271.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { className: "gig-note", children: fixes.length ? t("lost.summary", { checked: payload.checked, count: fixes.length }) : t("lost.summaryClear", { checked: payload.checked }) }),
+      payload.unreadable ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { className: "gig-note", children: t("lost.unreadableFiles", { count: payload.unreadable }) }) : null,
+      fixes.length ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(HealthDataGrid, { rows, columns }) : /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { className: "gig-note", children: t("lost.empty") })
     ] });
   }
 
@@ -68491,7 +68763,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("lost-report");
     reportRoot2 && reportHost3 !== report && (reportRoot2.unmount(), reportRoot2 = void 0), reportHost3 = report, reportRoot2 = mountIsland(
       report,
-      (0, import_react60.createElement)(LostTagsPanel, { payload }),
+      (0, import_react61.createElement)(LostTagsPanel, { payload }),
       reportRoot2
     );
   }
@@ -68552,18 +68824,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/crates/crate-compare.ts
-  var import_react62 = __toESM(require_react(), 1);
+  var import_react63 = __toESM(require_react(), 1);
 
   // src/pages/CrateComparePanel.tsx
-  var import_react61 = __toESM(require_react(), 1);
-  var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1), BUTTON_SX10 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX3 = {
+  var import_react62 = __toESM(require_react(), 1);
+  var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1), BUTTON_SX10 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX3 = {
     disableGutters: !0,
     square: !0,
     elevation: 0,
     slotProps: { transition: { timeout: 0 } }
   };
   function useSectionOpen3(start2) {
-    let [open, setOpen] = (0, import_react61.useState)(start2);
+    let [open, setOpen] = (0, import_react62.useState)(start2);
     return {
       expanded: open,
       onChange: (_event, next3) => {
@@ -68578,7 +68850,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     writable,
     busy: busy5
   }) {
-    let accordion = useSectionOpen3(tracks.length > 0), columns = (0, import_react61.useMemo)(() => [
+    let accordion = useSectionOpen3(tracks.length > 0), columns = (0, import_react62.useMemo)(() => [
       {
         field: "name",
         headerName: t("column.title"),
@@ -68592,7 +68864,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         minWidth: 140
       }
     ], []);
-    return /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(
       Accordion_default,
       {
         className: "gig-group",
@@ -68600,9 +68872,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onChange: accordion.onChange,
         ...ACCORDION_SX3,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label, count: tracks.length }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)(AccordionDetails_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.gigGroup), children: t("gig.groupCount", { label, count: tracks.length }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
               Button_default,
               {
                 type: "button",
@@ -68615,7 +68887,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("compare.save")
               }
             ),
-            tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(HealthDataGrid, { rows: tracks, columns }) : /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("compare.empty") })
+            tracks.length ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(HealthDataGrid, { rows: tracks, columns }) : /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { className: "gig-note", children: t("compare.empty") })
           ] })
         ]
       }
@@ -68627,9 +68899,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     busy: busy5
   }) {
     let both = payload.both || [], onlyA = payload.only_a || [], onlyB = payload.only_b || [], smart = payload.a.smart || payload.b.smart;
-    return /* @__PURE__ */ (0, import_jsx_runtime270.jsxs)(import_jsx_runtime270.Fragment, { children: [
-      smart ? /* @__PURE__ */ (0, import_jsx_runtime270.jsx)("p", { className: "gig-note", children: t("compare.smart") }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(import_jsx_runtime272.Fragment, { children: [
+      smart ? /* @__PURE__ */ (0, import_jsx_runtime272.jsx)("p", { className: "gig-note", children: t("compare.smart") }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         SetGroup,
         {
           setKey: "both",
@@ -68639,7 +68911,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           busy: busy5
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         SetGroup,
         {
           setKey: "only_a",
@@ -68649,7 +68921,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           busy: busy5
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime270.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
         SetGroup,
         {
           setKey: "only_b",
@@ -68712,7 +68984,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("compare-report");
     reportRoot3 && reportHost4 !== report && (reportRoot3.unmount(), reportRoot3 = void 0), reportHost4 = report, reportRoot3 = mountIsland(
       report,
-      (0, import_react62.createElement)(CrateComparePanel, {
+      (0, import_react63.createElement)(CrateComparePanel, {
         payload,
         writable: state.writable,
         busy: busy4
@@ -68788,10 +69060,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/files/files-mount.tsx
-  var import_react64 = __toESM(require_react(), 1);
+  var import_react65 = __toESM(require_react(), 1);
 
   // src/pages/FilesDialog.tsx
-  var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime273 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef8(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -68799,7 +69071,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function FilesDialog() {
     let files = useFiles(), action = files.dialogAction, preview = files.dialogPreview, ready = !!(preview?.ok && files.writable && preview.needs_confirm), reviewHidden = action === "delete" || action === "move" || action === "move_folder" || action === "rename_from_tags", status4 = files.writable ? files.dialogStatus : document.getElementById("status")?.textContent ?? files.dialogStatus, confirmLabel = action === "delete" ? t("files.moveToTrash") : t("common.confirm"), confirmTip = action === "delete" ? tips.filesMoveTrash : tips.filesConfirm;
-    return /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(
       Dialog_default,
       {
         open: files.dialogOpen,
@@ -68814,18 +69086,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         maxWidth: "sm",
         sx: { "& .MuiDialog-paper": { maxWidth: "42rem" } },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(DialogTitle_default, { id: "files-dialog-title", component: "h2", children: t("files.reviewTitle") }),
-          /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(DialogContent_default, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(DialogContentText_default, { id: "files-summary", component: "p", children: preview?.summary || "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(DialogContentText_default, { className: "dialog-note", component: "p", children: t("files.nothingUntilConfirm") }),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(DialogTitle_default, { id: "files-dialog-title", component: "h2", children: t("files.reviewTitle") }),
+          /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(DialogContent_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(DialogContentText_default, { id: "files-summary", component: "p", children: preview?.summary || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(DialogContentText_default, { className: "dialog-note", component: "p", children: t("files.nothingUntilConfirm") }),
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
               Box_default,
               {
                 id: "files-name-label",
                 className: "files-field",
                 hidden: action !== "rename",
                 sx: action !== "rename" ? { display: "none" } : void 0,
-                children: /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
                   TextField_default,
                   {
                     id: "files-name",
@@ -68839,14 +69111,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
               Box_default,
               {
                 id: "files-replace-label",
                 className: "files-field",
                 hidden: action !== "replace",
                 sx: action !== "replace" ? { display: "none" } : void 0,
-                children: /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
                   TextField_default,
                   {
                     id: "files-replacement",
@@ -68861,19 +69133,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)("ul", { id: "files-changes", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)("ul", { id: "files-changes", children: [
               (preview?.changes || []).map((change, index) => {
                 let crates = Array.isArray(change.crates) && change.crates.length ? ` ${t("files.changeCrates", { crates: change.crates.join(", ") })}` : "", effect4 = change.effect === "trash" ? t("files.trash") : change.to;
-                return /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("li", { children: `${change.from} → ${effect4}${crates}` }, `change-${index}`);
+                return /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("li", { children: `${change.from} → ${effect4}${crates}` }, `change-${index}`);
               }),
-              (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("li", { children: skip2 }, `skip-${index}`)),
-              preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
+              (preview?.skipped || []).map((skip2, index) => /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("li", { children: skip2 }, `skip-${index}`)),
+              preview?.more ? /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("li", { children: t("files.andMore", { count: Number(preview.more) }) }, "more") : null
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 })
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("p", { id: "files-warning", className: "dialog-note", children: preview?.warning || "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("p", { id: "files-dialog-status", className: "dialog-status", role: "status", "aria-live": "polite", children: status4 })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime271.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime273.jsxs)(DialogActions_default, { className: "dialog-actions", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
               Button_default,
               {
                 id: "files-cancel",
@@ -68883,7 +69155,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("common.cancel")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
               Button_default,
               {
                 id: "files-review",
@@ -68897,7 +69169,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 children: t("files.review")
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime271.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(
               Button_default,
               {
                 id: "files-confirm",
@@ -68920,18 +69192,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/FilesPanel.tsx
-  var import_react63 = __toESM(require_react(), 1), import_react_dom7 = __toESM(require_react_dom(), 1);
+  var import_react64 = __toESM(require_react(), 1), import_react_dom7 = __toESM(require_react_dom(), 1);
 
   // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
   var React313 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/internal/svg-icons/MoreHoriz.mjs
-  var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1), MoreHoriz_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime272.jsx)("path", {
+  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1), MoreHoriz_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime274.jsx)("path", {
     d: "M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
   }), "MoreHoriz");
 
   // node_modules/@mui/material/Breadcrumbs/BreadcrumbCollapsed.mjs
-  var import_jsx_runtime273 = __toESM(require_jsx_runtime(), 1), BreadcrumbCollapsedButton = styled_default2(ButtonBase_default, {
+  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1), BreadcrumbCollapsedButton = styled_default2(ButtonBase_default, {
     name: "MuiBreadcrumbCollapsed"
   })(memoTheme_default(({
     theme
@@ -68972,12 +69244,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       nativeButton,
       ...buttonBaseProps
     } = otherProps, ownerState = props;
-    return /* @__PURE__ */ (0, import_jsx_runtime273.jsx)("li", {
-      children: /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(BreadcrumbCollapsedButton, {
+    return /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("li", {
+      children: /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(BreadcrumbCollapsedButton, {
         focusRipple: !0,
         ...buttonBaseProps,
         ownerState,
-        children: /* @__PURE__ */ (0, import_jsx_runtime273.jsx)(BreadcrumbCollapsedIcon, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(BreadcrumbCollapsedIcon, {
           as: slots.CollapsedIcon,
           ownerState,
           ...slotProps.collapsedIcon
@@ -68994,7 +69266,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var breadcrumbsClasses = generateUtilityClasses("MuiBreadcrumbs", ["root", "ol", "li", "separator"]), breadcrumbsClasses_default = breadcrumbsClasses;
 
   // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
-  var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1), useUtilityClasses110 = (ownerState) => {
+  var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1), useUtilityClasses110 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -69030,7 +69302,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     marginRight: 8
   });
   function insertSeparators(items, className, separator, ownerState) {
-    return items.reduce((acc, current3, index) => (acc.push(current3), index < items.length - 1 && acc.push(/* @__PURE__ */ (0, import_jsx_runtime274.jsx)(BreadcrumbsSeparator, {
+    return items.reduce((acc, current3, index) => (acc.push(current3), index < items.length - 1 && acc.push(/* @__PURE__ */ (0, import_jsx_runtime276.jsx)(BreadcrumbsSeparator, {
       "aria-hidden": !0,
       className,
       ownerState,
@@ -69072,7 +69344,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         let focusable = listRef.current.querySelector("a[href],button,[tabindex]");
         focusable && focusable.focus();
       };
-      return itemsBeforeCollapse + itemsAfterCollapse >= allItems2.length ? allItems2 : [...allItems2.slice(0, itemsBeforeCollapse), /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(BreadcrumbCollapsed_default, {
+      return itemsBeforeCollapse + itemsAfterCollapse >= allItems2.length ? allItems2 : [...allItems2.slice(0, itemsBeforeCollapse), /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(BreadcrumbCollapsed_default, {
         "aria-label": expandText,
         slots: {
           CollapsedIcon: slots.CollapsedIcon
@@ -69082,18 +69354,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         },
         onClick: handleClickExpand
       }, "ellipsis"), ...allItems2.slice(allItems2.length - itemsAfterCollapse, allItems2.length)];
-    }, allItems = React313.Children.toArray(children).filter((child) => /* @__PURE__ */ React313.isValidElement(child)).map((child, index) => /* @__PURE__ */ (0, import_jsx_runtime274.jsx)("li", {
+    }, allItems = React313.Children.toArray(children).filter((child) => /* @__PURE__ */ React313.isValidElement(child)).map((child, index) => /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("li", {
       className: classes2.li,
       children: child
     }, `child-${index}`));
-    return /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(BreadcrumbsRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(BreadcrumbsRoot, {
       ref,
       component,
       color: "textSecondary",
       className: clsx_default(classes2.root, className),
       ownerState,
       ...other,
-      children: /* @__PURE__ */ (0, import_jsx_runtime274.jsx)(BreadcrumbsOl, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(BreadcrumbsOl, {
         className: classes2.ol,
         ref: listRef,
         ownerState,
@@ -69103,14 +69375,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), Breadcrumbs_default = Breadcrumbs;
 
   // src/pages/FilesPanel.tsx
-  var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef9(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function FileIcon({ kind: kind2 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
       "svg",
       {
         viewBox: "0 0 24 24",
@@ -69118,13 +69390,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         height: "20",
         "aria-hidden": "true",
         className: `files-icon ${kind2 === "drive" ? "files-icon-drive" : "files-icon-folder"}`,
-        children: /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
+        children: /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("path", { fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinejoin: "round", d: kind2 === "drive" ? "M5 8.5h14v8H5z M8 14.5h.01 M12 14.5h4" : "M4 8.5h6l2 2h8v7.5H4z" })
       }
     );
   }
   function FilesToolbar() {
     let files = useFiles(), crumbs = files.breadcrumb.length ? files.breadcrumb : files.atRoots || !files.path ? [{ name: t("files.roots"), path: "" }] : [{ name: files.path, path: files.path }];
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(
       Toolbar_default,
       {
         className: "browser-bar",
@@ -69133,7 +69405,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-label": t("files.toolbar"),
         sx: { minHeight: 0, flexWrap: "wrap", gap: 1 },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             Button_default,
             {
               id: "files-up",
@@ -69144,7 +69416,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: t("common.up")
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             Breadcrumbs_default,
             {
               id: "files-path",
@@ -69156,7 +69428,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 minWidth: 0,
                 "& .MuiBreadcrumbs-ol": { flexWrap: "nowrap" }
               },
-              children: crumbs.map((crumb, index) => !(index === crumbs.length - 1) && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+              children: crumbs.map((crumb, index) => !(index === crumbs.length - 1) && crumb.path ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
                 Button_default,
                 {
                   type: "button",
@@ -69166,7 +69438,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                   children: crumb.name
                 },
                 `${crumb.path}:${crumb.name}:${index}`
-              ) : /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+              ) : /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
                 Typography_default,
                 {
                   className: "files-crumb",
@@ -69178,7 +69450,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               ))
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             TextField_default,
             {
               id: "files-search",
@@ -69194,8 +69466,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               onInput: (event) => files.onSearchInput(event.target.value)
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(Button_default, { id: "files-refresh", type: "button", ref: tooltipRef9(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
-          /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(Button_default, { id: "files-refresh", type: "button", ref: tooltipRef9(tips.filesRefresh), onClick: () => files.refresh(), children: t("common.refresh") }),
+          /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
             Button_default,
             {
               id: "files-elsewhere",
@@ -69212,8 +69484,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function FilesActions() {
     let files = useFiles(), selected = files.selectedEntries, locked = files.locked;
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(Box_default, { className: "files-actions", "aria-label": t("files.actionsLabel"), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(Box_default, { className: "files-actions", "aria-label": t("files.actionsLabel"), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
           id: "files-rename",
@@ -69224,7 +69496,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
           id: "files-rename-from-tags",
@@ -69236,7 +69508,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.renameFromTags")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
           id: "files-move",
@@ -69247,7 +69519,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveToFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
           id: "files-move-folder",
@@ -69258,7 +69530,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveFolder")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
           id: "files-replace",
@@ -69269,7 +69541,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.replaceFile")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
           id: "files-delete",
@@ -69280,7 +69552,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
           id: "files-move-here",
@@ -69293,7 +69565,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("files.moveHere")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         Button_default,
         {
           id: "files-pick-cancel",
@@ -69314,8 +69586,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       entry2.missing ? "is-missing" : "",
       active2 ? "is-active" : ""
     ].filter(Boolean).join(" ");
-    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className, role: "listitem", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(
+    return openKind ? /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className, role: "listitem", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(
         "button",
         {
           type: "button",
@@ -69330,19 +69602,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             entry2.missing ? files.markActive(index) : files.openRow(entry2, index);
           },
           children: [
-            entry2.kind === "drive" || entry2.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(FileIcon, { kind: entry2.kind === "drive" ? "drive" : "folder" }) : null,
-            entry2.detail && (entry2.kind === "folder" || entry2.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("span", { className: "files-root-copy", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "files-root-label", children: entry2.name }),
-              /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "files-root-detail", children: entry2.detail })
-            ] }) : /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { children: entry2.name }),
-              entry2.detail ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "files-match-detail", children: entry2.detail }) : null
+            entry2.kind === "drive" || entry2.kind === "folder" ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(FileIcon, { kind: entry2.kind === "drive" ? "drive" : "folder" }) : null,
+            entry2.detail && (entry2.kind === "folder" || entry2.kind === "drive") ? /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("span", { className: "files-root-copy", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "files-root-label", children: entry2.name }),
+              /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "files-root-detail", children: entry2.detail })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(import_jsx_runtime277.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { children: entry2.name }),
+              entry2.detail ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "files-match-detail", children: entry2.detail }) : null
             ] }),
-            entry2.missing ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
+            entry2.missing ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "files-badge", children: t("files.driveMissing") }) : null
           ]
         }
       ),
-      entry2.removable && entry2.serato ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      entry2.removable && entry2.serato ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         "button",
         {
           type: "button",
@@ -69356,7 +69628,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("portable.check")
         }
       ) : null
-    ] }) : entry2.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    ] }) : entry2.kind !== "file" ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
       "button",
       {
         type: "button",
@@ -69368,8 +69640,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         "aria-label": t("files.shortcut", { name: entry2.name }),
         children: t("files.shortcut", { name: entry2.name })
       }
-    ) }) : /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("label", { className: "files-file", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    ) }) : /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("div", { className, role: "listitem", children: /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("label", { className: "files-file", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         "input",
         {
           ref: tooltipRef9(selectFile(entry2.name, entry2.path)),
@@ -69382,9 +69654,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           onChange: (event) => files.toggleFile(entry2, index, event.currentTarget.checked)
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "files-name", children: entry2.name }),
-      entry2.detail ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "files-match-detail", children: entry2.detail }) : null,
-      entry2.in_library ? /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "files-name", children: entry2.name }),
+      entry2.detail ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "files-match-detail", children: entry2.detail }) : null,
+      entry2.in_library ? /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { className: "files-badge", children: t("files.inLibrary") }) : null
     ] }) });
   }
   var FILE_OVERSCAN = 8;
@@ -69393,8 +69665,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return { start: start2, end: end2 };
   }
   function FilesList() {
-    let files = useFiles(), listRef = (0, import_react63.useRef)(null), [scrollTop, setScrollTop] = (0, import_react63.useState)(0), [viewHeight, setViewHeight] = (0, import_react63.useState)(600);
-    (0, import_react63.useLayoutEffect)(() => {
+    let files = useFiles(), listRef = (0, import_react64.useRef)(null), [scrollTop, setScrollTop] = (0, import_react64.useState)(0), [viewHeight, setViewHeight] = (0, import_react64.useState)(600);
+    (0, import_react64.useLayoutEffect)(() => {
       let list = listRef.current;
       if (!list) return;
       setViewHeight(list.clientHeight || 600), setScrollTop(list.scrollTop);
@@ -69410,14 +69682,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let ariaLabel = files.searching ? t("files.searchResults") : files.atRoots ? t("files.roots") : t("files.contents"), emptyLoading = files.loading && !rows.length, emptyError = !!files.error && !rows.length, emptyRoots = files.atRoots && !files.roots.length, emptyFolder = !rows.length, body2, tabIndex = 0;
     if (emptyLoading) {
       let reading = files.searching ? t("files.searching") : files.atRoots ? t("files.readingRootsNote") : t("files.readingFolderNote");
-      body2 = /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "files-empty", children: reading });
+      body2 = /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "files-empty", children: reading });
     } else if (emptyError)
-      body2 = /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "files-empty", children: files.error });
+      body2 = /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "files-empty", children: files.error });
     else if (emptyRoots)
-      tabIndex = -1, body2 = /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)("div", { className: "files-empty-state", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("h2", { children: t("files.noRoots") }),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { children: t("files.noRootsBody") }),
-        /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+      tabIndex = -1, body2 = /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("div", { className: "files-empty-state", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("h2", { children: t("files.noRoots") }),
+        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { children: t("files.noRootsBody") }),
+        /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
           Button_default,
           {
             id: "files-run-setup",
@@ -69432,15 +69704,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ] });
     else if (emptyFolder) {
       let empty = files.searching ? t("files.noMatches", { query: files.query }) : t("files.empty");
-      body2 = /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { className: "files-empty", children: empty });
+      body2 = /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { className: "files-empty", children: empty });
     } else {
       tabIndex = -1;
       let windowRows = [];
       for (let index = start2; index < end2; index += 1) {
         let entry2 = rows[index];
-        entry2 && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime275.jsx)(FileRow, { entry: entry2, index }, `${entry2.path}:${index}`));
+        entry2 && windowRows.push(/* @__PURE__ */ (0, import_jsx_runtime277.jsx)(FileRow, { entry: entry2, index }, `${entry2.path}:${index}`));
       }
-      body2 = /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("div", { className: "files-spacer", style: { height: `${rows.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("div", { className: "files-window", style: { transform: `translateY(${start2 * rowHeight}px)` }, children: windowRows }) });
+      body2 = /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("div", { className: "files-spacer", style: { height: `${rows.length * rowHeight}px` }, children: /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("div", { className: "files-window", style: { transform: `translateY(${start2 * rowHeight}px)` }, children: windowRows }) });
     }
     function onScroll2(event) {
       let node2 = event.currentTarget;
@@ -69451,10 +69723,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onKey2(event) {
       files.onListKey(event.nativeEvent);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(import_jsx_runtime277.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { id: "files-pick", className: "files-pick", hidden: !files.pick, children: t("files.chooseDestination") }),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("p", { id: "files-status", className: "notice", role: "status", "aria-live": "polite", children: notes.join(" ") }),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
         "div",
         {
           id: "files-list",
@@ -69473,37 +69745,37 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function FilesPanel() {
-    return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(FilesToolbar, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(FilesList, {}),
-      /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(FilesActions, {})
+    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(import_jsx_runtime277.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(FilesToolbar, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(FilesList, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(FilesActions, {})
     ] });
   }
 
   // src/components/PortableDialog.tsx
-  var import_jsx_runtime276 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
     let files = useFiles(), report = files.portableReport, verdict = "";
     report && (report.missing_drive ? verdict = t("portable.missing") : report.ready ? verdict = t("portable.ready") : verdict = t("portable.notReady"));
     let shown = report ? report.findings.slice(0, FINDING_CAP) : [], hidden = report ? report.findings.length - shown.length : 0;
-    return /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)(import_jsx_runtime276.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("p", { id: "portable-verdict", children: verdict }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)("ul", { id: "portable-findings", children: [
-        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)("li", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
-          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime276.jsxs)(import_jsx_runtime276.Fragment, { children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(import_jsx_runtime278.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { id: "portable-verdict", children: verdict }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("ul", { id: "portable-findings", children: [
+        shown.map((finding, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)("li", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "portable-kind", children: portableKindLabel(finding.kind) }),
+          finding.fix ? /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(import_jsx_runtime278.Fragment, { children: [
             " ",
-            /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("span", { className: "portable-fix", children: finding.fix })
+            /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { className: "portable-fix", children: finding.fix })
           ] }) : null
         ] }, `finding-${index}`)),
-        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
-        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
+        (report?.errors ?? []).map((error2, index) => /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("li", { children: error2.crate ? `${error2.crate}: ${error2.message}` : error2.message }, `error-${index}`)),
+        hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime276.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime276.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
+      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
         "button",
         {
           id: "portable-close",
@@ -69533,7 +69805,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function mountFilesIslands() {
     let panel = el("files-panel"), dialog = el("files-dialog"), portable = el("portable-dialog");
-    panelRoot5 = mountIsland(panel, (0, import_react64.createElement)(FilesPanel), rootFor(panel, panelRoot5, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react64.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react64.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
+    panelRoot5 = mountIsland(panel, (0, import_react65.createElement)(FilesPanel), rootFor(panel, panelRoot5, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react65.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react65.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
   }
   bindFilesMount(mountFilesIslands);
   bindPortableMount(mountFilesIslands);
@@ -69587,11 +69859,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/views.ts
-  var import_react69 = __toESM(require_react(), 1);
+  var import_react70 = __toESM(require_react(), 1);
 
   // src/components/CrateOverflowMenu.tsx
-  var import_react65 = __toESM(require_react(), 1);
-  var import_jsx_runtime277 = __toESM(require_jsx_runtime(), 1), BUTTON_SX11 = { textTransform: "none", minWidth: 0 };
+  var import_react66 = __toESM(require_react(), 1);
+  var import_jsx_runtime279 = __toESM(require_jsx_runtime(), 1), BUTTON_SX11 = { textTransform: "none", minWidth: 0 };
   function moreInk(ink) {
     return ink === "sheet" ? "var(--color-text)" : "var(--color-text-muted-on-dark)";
   }
@@ -69613,10 +69885,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ink = "rail",
     items
   }) {
-    let [anchor, setAnchor] = (0, import_react65.useState)(null), [colorway, setColorway] = (0, import_react65.useState)(() => getSettingsState().colorway), moreRef = (0, import_react65.useRef)(null), skipRestore = (0, import_react65.useRef)(!1), open = !!anchor, label = moreLabel ?? t("crates.moreActions"), bindTooltip = tooltipRef5(moreTip);
-    (0, import_react65.useLayoutEffect)(() => subscribeSettings(() => {
+    let [anchor, setAnchor] = (0, import_react66.useState)(null), [colorway, setColorway] = (0, import_react66.useState)(() => getSettingsState().colorway), moreRef = (0, import_react66.useRef)(null), skipRestore = (0, import_react66.useRef)(!1), open = !!anchor, label = moreLabel ?? t("crates.moreActions"), bindTooltip = tooltipRef5(moreTip);
+    (0, import_react66.useLayoutEffect)(() => subscribeSettings(() => {
       setColorway(getSettingsState().colorway);
-    }), []), (0, import_react65.useLayoutEffect)(() => {
+    }), []), (0, import_react66.useLayoutEffect)(() => {
       let node2 = moreRef.current;
       node2 && paintMoreInk(node2, ink);
     }, [colorway, ink]);
@@ -69627,8 +69899,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let node2 = moreRef.current;
       node2 && node2.isConnected && node2.focus();
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)("span", { className: "crate-overflow", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)("span", { className: "crate-overflow", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
         Button_default,
         {
           id: buttonId,
@@ -69647,7 +69919,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.more")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
         Menu_default,
         {
           id: menuId,
@@ -69668,7 +69940,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               dense: !0
             }
           },
-          children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(
+          children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
             MenuItem_default,
             {
               id: item.id,
@@ -69704,11 +69976,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateActions.tsx
-  var import_jsx_runtime278 = __toESM(require_jsx_runtime(), 1), BUTTON_SX12 = { textTransform: "none", minWidth: 0 };
+  var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1), BUTTON_SX12 = { textTransform: "none", minWidth: 0 };
   function CrateActions() {
     let crates = useCrates(), copiesLabel = copiesChipText(crates.copies);
-    return /* @__PURE__ */ (0, import_jsx_runtime278.jsxs)(import_jsx_runtime278.Fragment, { children: [
-      copiesLabel ? /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)(import_jsx_runtime280.Fragment, { children: [
+      copiesLabel ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
         Chip_default,
         {
           id: "library-copies",
@@ -69716,8 +69988,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: copiesLabel,
           ref: tooltipRef5(tips.libraryCopies)
         }
-      ) : /* @__PURE__ */ (0, import_jsx_runtime278.jsx)("span", { id: "library-copies", hidden: !0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+      ) : /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { id: "library-copies", hidden: !0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
         Button_default,
         {
           id: "crate-new",
@@ -69731,7 +70003,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.new")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
         Button_default,
         {
           id: "crate-rename",
@@ -69745,7 +70017,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("crates.rename")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
         Button_default,
         {
           id: "crate-delete",
@@ -69759,7 +70031,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: t("common.delete")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime278.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
         CrateOverflowMenu,
         {
           buttonId: "crate-actions-more",
@@ -69820,10 +70092,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateBrowserActions.tsx
-  var import_jsx_runtime279 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1);
   function CrateBrowserActions() {
     let crates = useCrates();
-    return /* @__PURE__ */ (0, import_jsx_runtime279.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
       CrateOverflowMenu,
       {
         buttonId: "crate-browser-more",
@@ -69861,7 +70133,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/CrateTree.tsx
-  var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime282 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef10(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -69873,9 +70145,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function Twist({ row, toggle }) {
     if (!row.childCount)
-      return /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
+      return /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "twist-gap", "aria-hidden": "true" });
     let spec2 = row.expanded ? collapseCrate(row.name) : expandCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
       "button",
       {
         type: "button",
@@ -69895,14 +70167,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     toggle
   }) {
     let hex = colorHex(row.color), tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
-    return /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)(
       "div",
       {
         className: row.holds ? "crate-row holds-selection" : "crate-row",
         style: { paddingLeft: `${row.depth * 14}px` },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(Twist, { row, toggle }),
-          /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(Twist, { row, toggle }),
+          /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)(
             "button",
             {
               type: "button",
@@ -69918,12 +70190,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               "aria-expanded": row.childCount ? row.expanded : void 0,
               onClick: (event) => select(row.id, event.nativeEvent),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("span", { className: "name", children: [
-                  hex ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)("span", { className: "name", children: [
+                  hex ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
                   row.name
                 ] }),
-                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
-                /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("span", { className: "meta", children: formatNumber(row.count) })
+                row.smart ? /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "smart", children: t("crates.smartBadge") }) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "meta", children: formatNumber(row.count) })
               ]
             }
           )
@@ -69933,7 +70205,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function CrateTree() {
     let crates = useCrates(), focusId = focusedCrateId(), tabbable = crates.rows.find((row) => String(row.id) === focusId) ?? crates.rows[0];
-    return /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(import_jsx_runtime280.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(import_jsx_runtime282.Fragment, { children: crates.rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
       CrateRow,
       {
         row,
@@ -69946,16 +70218,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistoryDetail.tsx
-  var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime283 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef11(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
     };
   }
   function Field({ label, value }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("div", { className: "label", children: label }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("div", { className: "value", children: value })
+    return /* @__PURE__ */ (0, import_jsx_runtime283.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("div", { className: "label", children: label }),
+      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("div", { className: "value", children: value })
     ] });
   }
   function HistoryDetail() {
@@ -69967,11 +70239,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry2.start_time) || "—"],
       [t("history.file"), entry2.file || "—"]
     ];
-    return entry2.notes && lines.push([t("history.notes"), entry2.notes]), /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h2", { children: entry2.name || t("track.untitled") }),
-      entry2.artist ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { className: "artist", children: entry2.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(Field, { label, value }, label)),
-      entry2.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+    return entry2.notes && lines.push([t("history.notes"), entry2.notes]), /* @__PURE__ */ (0, import_jsx_runtime283.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("h2", { children: entry2.name || t("track.untitled") }),
+      entry2.artist ? /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("p", { className: "artist", children: entry2.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime283.jsx)(Field, { label, value }, label)),
+      entry2.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime283.jsx)(
         "button",
         {
           type: "button",
@@ -69987,7 +70259,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HistorySessions.tsx
-  var import_jsx_runtime282 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime284 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef12(spec2) {
     return (element) => {
       element && setTooltip(element, spec2);
@@ -69995,9 +70267,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HistorySessions() {
     let history2 = useHistory();
-    return /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(import_jsx_runtime282.Fragment, { children: history2.sessions.map((session) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(import_jsx_runtime284.Fragment, { children: history2.sessions.map((session) => {
       let name = session.name || t("history.session");
-      return /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)(
+      return /* @__PURE__ */ (0, import_jsx_runtime284.jsxs)(
         "button",
         {
           type: "button",
@@ -70009,8 +70281,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             history2.openSession(session.id);
           },
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "name", children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime282.jsx)("span", { className: "meta", children: String(session.played || 0) })
+            /* @__PURE__ */ (0, import_jsx_runtime284.jsx)("span", { className: "name", children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime284.jsx)("span", { className: "meta", children: String(session.played || 0) })
           ]
         },
         session.id
@@ -70019,32 +70291,32 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/TrackDetail.tsx
-  var import_react67 = __toESM(require_react(), 1);
+  var import_react68 = __toESM(require_react(), 1);
 
   // src/components/BeatgridBlock.tsx
-  var import_jsx_runtime283 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime285 = __toESM(require_jsx_runtime(), 1);
   function BeatgridMarker({ mark }) {
     let bpmNumber = Number(mark.bpm), name = "";
-    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime283.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("span", { children: beatSeconds(mark.position) }),
-      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("span", { children: name })
+    return mark.bpm != null && mark.bpm !== "" && Number.isFinite(bpmNumber) ? name = t("markers.bpm", { bpm: formatNumber(bpmNumber, { maximumFractionDigits: 20 }) }) : mark.beats != null && (name = t("markers.beats", { count: Number(mark.beats) })), /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("span", { children: beatSeconds(mark.position) }),
+      /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("span", { children: name })
     ] });
   }
   function BeatgridBlock({ track }) {
     if (!beatgridViewOnly(track.markers_unavailable)) return null;
     let suspect = beatgridIsSuspect(track.beatgrid_warning_code), key = beatgridWarningKey(track.beatgrid_warning_code), reason = key === "markers.gridUnknown" ? typeof track.beatgrid_warning == "string" && track.beatgrid_warning ? track.beatgrid_warning : t("markers.gridUnknown") : t(key ?? "markers.gridUnknown"), empty = !suspect && !(track.beatgrid && track.beatgrid.length > 0);
-    return /* @__PURE__ */ (0, import_jsx_runtime283.jsxs)(import_jsx_runtime283.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("h4", { children: t("markers.gridHeading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
-      suspect ? /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime283.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
-      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime283.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
+    return /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)(import_jsx_runtime285.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("h4", { children: t("markers.gridHeading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "detail-kicker", children: t("markers.gridViewOnly") }),
+      suspect ? /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "detail-kicker warn", role: "status", children: t("markers.gridSuspect", { reason }) }) : empty ? /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "detail-kicker", children: t("markers.gridNone") }) : null,
+      (track.beatgrid || []).map((mark, index) => /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(BeatgridMarker, { mark }, `${beatSeconds(mark.position)}-${index}`))
     ] });
   }
 
   // src/components/CuePads.tsx
-  var import_jsx_runtime284 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime286 = __toESM(require_jsx_runtime(), 1);
   function CueSlot({ slot, cue }) {
     let color2 = slotColor(slot, cue?.color), named = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0, jumpable = !!cue && slot >= 0 && slot < 8;
     function onJump() {
@@ -70053,7 +70325,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onKeyDown2(event) {
       jumpable && (event.key !== "Enter" && event.key !== " " || (event.preventDefault(), jumpCue(slot)));
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime284.jsxs)(
+    return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)(
       "div",
       {
         className: cue ? "marker" : "marker marker-empty",
@@ -70062,29 +70334,29 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onClick: jumpable ? onJump : void 0,
         onKeyDown: jumpable ? onKeyDown2 : void 0,
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime284.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime284.jsx)("span", { className: "swatch", style: swatchStyle }),
-          /* @__PURE__ */ (0, import_jsx_runtime284.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
-          /* @__PURE__ */ (0, import_jsx_runtime284.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { className: "swatch", style: swatchStyle }),
+          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
+          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
         ]
       }
     );
   }
   function CuePads({ cues: cues2 }) {
     let slots = cueSlots(cues2), extra = extraCues(cues2);
-    return /* @__PURE__ */ (0, import_jsx_runtime284.jsxs)(import_jsx_runtime284.Fragment, { children: [
-      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(CueSlot, { slot, cue }, slot)),
+    return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)(import_jsx_runtime286.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(CueSlot, { slot, cue }, slot)),
       extra.map((cue, index) => {
         let cueIndex = Number(cue.index), slot = Number.isInteger(cueIndex) ? cueIndex : -1;
-        return /* @__PURE__ */ (0, import_jsx_runtime284.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+        return /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
       })
     ] });
   }
 
   // src/components/RelatedTracks.tsx
-  var import_react66 = __toESM(require_react(), 1);
+  var import_react67 = __toESM(require_react(), 1);
   init_shared_dialog();
-  var import_jsx_runtime285 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1);
   function relatedPath(track) {
     return track.resolved_path || track.edit?.portable_id || "";
   }
@@ -70097,8 +70369,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return item.artist ? `${title2} · ${item.artist}` : title2;
   }
   function RelatedTracks({ track, writable }) {
-    let list = useTrackList(), path = relatedPath(track), [busy5, setBusy] = (0, import_react66.useState)(!!path), [loadError, setLoadError] = (0, import_react66.useState)(""), [payload, setPayload] = (0, import_react66.useState)(null), [query, setQuery] = (0, import_react66.useState)(""), [chosen, setChosen] = (0, import_react66.useState)(null), [note, setNote] = (0, import_react66.useState)(""), [rating, setRating] = (0, import_react66.useState)(""), [mutual, setMutual] = (0, import_react66.useState)(!0), [saving2, setSaving] = (0, import_react66.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react66.useState)(!1);
-    (0, import_react66.useEffect)(() => {
+    let list = useTrackList(), path = relatedPath(track), [busy5, setBusy] = (0, import_react67.useState)(!!path), [loadError, setLoadError] = (0, import_react67.useState)(""), [payload, setPayload] = (0, import_react67.useState)(null), [query, setQuery] = (0, import_react67.useState)(""), [chosen, setChosen] = (0, import_react67.useState)(null), [note, setNote] = (0, import_react67.useState)(""), [rating, setRating] = (0, import_react67.useState)(""), [mutual, setMutual] = (0, import_react67.useState)(!0), [saving2, setSaving] = (0, import_react67.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react67.useState)(!1);
+    (0, import_react67.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
         return;
@@ -70120,7 +70392,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         cancelled = !0;
       };
     }, [path, list.space, list.activeCrate, crateOnly, track.id]);
-    let hits2 = (0, import_react66.useMemo)(() => {
+    let hits2 = (0, import_react67.useMemo)(() => {
       let parsed = parseQuery(query);
       return !parsed.terms.length && !parsed.filters.length ? null : list.tracks.filter((item) => item.id !== track.id && matchesQuery(item, parsed)).slice(0, 8);
     }, [query, list.tracks, track.id]);
@@ -70162,14 +70434,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy5, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("h3", { id: headingId, children: t("related.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
-      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("ul", { className: "related-list", children: saved.map((link) => {
+    return /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy5, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("h3", { id: headingId, children: t("related.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
+      payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("ul", { className: "related-list", children: saved.map((link) => {
         let other = link.track || {}, label = other.title || t("track.untitled"), bits = [];
-        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("div", { children: [
-            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+        return other.artist && bits.push(other.artist), other.key && bits.push(other.key), other.bpm != null && other.bpm !== "" && bits.push(t("markers.bpm", { bpm: String(other.bpm) })), bits.push(link.mutual ? t("related.twoWay") : t("related.oneWay")), link.rating != null && bits.push(t("related.ratingOutOf", { rating: String(link.rating) })), other.in_library || bits.push(t("related.notInLibrary")), /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("div", { children: [
+            other.asset_id != null && other.in_library ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
               "button",
               {
                 type: "button",
@@ -70178,11 +70450,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 onClick: () => list.selectTrack(other.asset_id),
                 children: label
               }
-            ) : /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("span", { children: label }),
-            /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
-            link.note ? /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "related-note", children: link.note }) : null
+            ) : /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("span", { children: label }),
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-meta", children: bits.join(" · ") }),
+            link.note ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-note", children: link.note }) : null
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
             "button",
             {
               type: "button",
@@ -70197,10 +70469,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] }, String(link.id));
       }) }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("div", { className: "related-search", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("label", { children: [
+      payload && /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("div", { className: "related-search", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("label", { children: [
           t("related.find"),
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
             "input",
             {
               ref: tooltipRef(tips.findRelated),
@@ -70212,9 +70484,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
+        /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("ul", { className: "related-results", children: hits2 === null ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("li", { className: "related-meta", children: t("related.typeHint") }) : hits2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("li", { className: "related-meta", children: t("list.noMatches") }) : hits2.map((hit) => {
           let name = relatedLabel(hit);
-          return /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
             "button",
             {
               type: "button",
@@ -70227,11 +70499,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           ) }, hit.id);
         }) }),
-        chosen && /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("div", { className: "related-form", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("label", { children: [
+        chosen && /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("div", { className: "related-form", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-meta", children: relatedLabel(chosen) }),
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("label", { children: [
             t("related.note"),
-            /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkNote),
@@ -70243,23 +70515,23 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("label", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("label", { children: [
             t("related.linkRating"),
-            /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)(
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)(
               "select",
               {
                 ref: tooltipRef(tips.linkRating),
                 value: rating,
                 onChange: (event) => setRating(event.currentTarget.value),
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("option", { value: "", children: t("rating.none") }),
-                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("option", { value, children: value }, value))
+                  /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("option", { value: "", children: t("rating.none") }),
+                  ["1", "2", "3", "4", "5"].map((value) => /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("option", { value, children: value }, value))
                 ]
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("label", { className: "check", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("label", { className: "check", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
               "input",
               {
                 ref: tooltipRef(tips.linkMutual),
@@ -70270,7 +70542,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ),
             t("related.twoWayLink")
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
             "button",
             {
               type: "button",
@@ -70292,9 +70564,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           )
         ] })
       ] }),
-      payload && /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)(import_jsx_runtime285.Fragment, { children: [
-        list.mode === "crates" && typeof list.activeCrate == "number" ? /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("label", { className: "check", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+      payload && /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)(import_jsx_runtime287.Fragment, { children: [
+        list.mode === "crates" && typeof list.activeCrate == "number" ? /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("label", { className: "check", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
             "input",
             {
               "data-related-crate-only": "",
@@ -70306,13 +70578,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           ),
           t("related.crateOnly")
         ] }) : null,
-        /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
-        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("li", { className: "related-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsxs)("div", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("span", { children: relatedLabel(item) }),
-            /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "related-meta", children: Array.isArray(item.reasons) ? item.reasons.join(" · ") : "" })
+        /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "detail-kicker", children: suggested.length ? t("related.suggested") : t("related.noSuggestions") }),
+        suggested.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("ul", { className: "related-list", children: suggested.map((item, index) => /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("li", { className: "related-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("span", { children: relatedLabel(item) }),
+            /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "related-meta", children: Array.isArray(item.reasons) ? item.reasons.join(" · ") : "" })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
             "button",
             {
               type: "button",
@@ -70334,7 +70606,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           )
         ] }, `${item.asset_id ?? index}`)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime285.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(
           "button",
           {
             type: "button",
@@ -70348,13 +70620,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("related.updateCrate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime285.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
+        /* @__PURE__ */ (0, import_jsx_runtime287.jsx)("p", { className: "detail-kicker", children: writable ? t("related.crateNote", { name: crateName }) : t("related.quitSerato") })
       ] })
     ] });
   }
 
   // src/components/TrackDetail.tsx
-  var import_jsx_runtime286 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
+  var import_jsx_runtime288 = __toESM(require_jsx_runtime(), 1), EDITOR_FIELDS = [
     ["name", "column.title", !0],
     ["artist", "column.artist", !1],
     ["album", "field.album", !1],
@@ -70392,36 +70664,36 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MarkerSection({ track }) {
     let note = t("markers.readOnly");
-    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("h3", { children: t("markers.heading") }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-kicker", children: note }),
-      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(CuePads, { cues: track.cues || [] }),
-      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(LoopRow, { loop }, `loop-${index}`)),
-      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "marker", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", {}),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
+    return track.markers_unavailable ? note = t("markers.unavailable") : track.markers_found || (note = t("markers.none")), /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("h3", { children: t("markers.heading") }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "detail-kicker", children: note }),
+      !track.markers_unavailable && /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(CuePads, { cues: track.cues || [] }),
+      (track.loops || []).map((loop, index) => /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(LoopRow, { loop }, `loop-${index}`)),
+      (track.flips || []).map((flip2, index) => /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "marker", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", {}),
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: flip2.enabled ? t("common.on") : t("common.off") }),
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: flip2.name || t("markers.flip", { number: flip2.index + 1 }) })
       ] }, `flip-${index}`)),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(BeatgridBlock, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(BeatgridBlock, { track })
     ] });
   }
   function LoopRow({ loop }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "marker", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", {}),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
+    return /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "marker", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", {}),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { className: "swatch", style: loop.color ? { background: loop.color } : void 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: `${formatCueTime(loop.start_ms)}–${formatCueTime(loop.end_ms)}` }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: loop.name || t(loop.locked ? "markers.loopLocked" : "markers.loop", { number: loop.index + 1 }) })
     ] });
   }
   function CopySection({ fromId, copies, writable }) {
     let list = useTrackList();
-    return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("h3", { children: t("copies.heading") }),
+    return /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("h3", { children: t("copies.heading") }),
       copies.map((copy2) => {
         let name = copy2.file || t("track.numbered", { id: String(copy2.id) }), file = copy2.file || `Track ${copy2.id}`;
-        return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "copy-row", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "copy-row", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
             "button",
             {
               type: "button",
@@ -70431,10 +70703,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               children: name
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: copy2.bitrate == null ? "" : String(copy2.bitrate) }),
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: copy2.play_count == null ? "" : String(copy2.play_count) }),
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: copy2.missing ? "missing" : copy2.crates || "" }),
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
             "button",
             {
               type: "button",
@@ -70455,11 +70727,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function MembershipSection({ track, writable }) {
     let list = useTrackList(), chosen = new Set(track.crate_ids || []), crates = [...list.crates].filter((crate) => !crate.smart).sort((a, b) => a.name.localeCompare(b.name)), smart = list.crates.filter((crate) => crate.smart && chosen.has(crate.id));
-    return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("h3", { children: t("crates.heading") }),
-      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("label", { className: "member", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("h3", { children: t("crates.heading") }),
+      smart.length ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "detail-kicker", children: t("crates.smartList", { names: smart.map((crate) => crate.name).join(", ") }) }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("div", { className: "member-list", children: crates.map((crate) => /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("label", { className: "member", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "input",
           {
             ref: tooltipRef(membershipTip(crate.name)),
@@ -70474,29 +70746,29 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: crate.name })
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: crate.name })
       ] }, crate.id)) })
     ] });
   }
   function FieldGroups({ track }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(import_jsx_runtime286.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
+    return /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(import_jsx_runtime288.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
   }
   function FieldGroupBlock({ group }) {
-    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react67.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "field", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "label", children: [
+    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react68.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "field", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "label", children: [
         field2.label ?? "",
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { className: "column", children: field2.column ?? "" })
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { className: "column", children: field2.column ?? "" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("span", { className: "color-value", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { className: "swatch", style: { background: field2.display } }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("div", { className: "value", children: field2.column === "color" && field2.display.startsWith("#") ? /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("span", { className: "color-value", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { className: "swatch", style: { background: field2.display } }),
         field2.display
       ] }) : field2.display })
     ] }, `${field2.column ?? field2.label ?? index}`));
-    return open ? /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("section", { className: "group", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("h3", { children: group.name ?? "" }),
+    return open ? /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("section", { className: "group", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("h3", { children: group.name ?? "" }),
       rows
-    ] }) : /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)(import_jsx_runtime286.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+    ] }) : /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)(import_jsx_runtime288.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
         "button",
         {
           type: "button",
@@ -70506,8 +70778,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           children: shown ? t("detail.hideSearchCopies") : t("detail.searchCopies", { count: group.fields.length })
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("section", { className: "group", hidden: !shown, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("h3", { children: group.name ?? "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("section", { className: "group", hidden: !shown, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("h3", { children: group.name ?? "" }),
         rows
       ] })
     ] });
@@ -70532,10 +70804,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       list.saveTrack(track.id, fields);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("form", { className: "editor", onSubmit, children: [
-      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("label", { className: wide ? "wide" : void 0, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("form", { className: "editor", onSubmit, children: [
+      EDITOR_FIELDS.map(([name, label, wide]) => /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("label", { className: wide ? "wide" : void 0, children: [
         t(label),
-        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        name === "comments" ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "textarea",
           {
             ref: tooltipRef(editField(t(label))),
@@ -70543,7 +70815,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             defaultValue: String(edit[name] ?? ""),
             disabled: !writable
           }
-        ) : /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        ) : /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "input",
           {
             ref: tooltipRef(editField(t(label))),
@@ -70554,34 +70826,34 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         )
       ] }, name)),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("label", { children: [
         t("field.color"),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackColor),
             name: "color",
             defaultValue: String(currentColor),
             disabled: !writable,
-            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("option", { value: String(value), children: label }, value))
+            children: palette2.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("option", { value: String(value), children: label }, value))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("label", { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("label", { children: [
         t("field.rating"),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "select",
           {
             ref: tooltipRef(tips.trackRating),
             name: "rating",
             defaultValue: ratingValue,
             disabled: !writable,
-            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("option", { value, children: label }, value || "none"))
+            children: ratings.map(([value, label]) => /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("option", { value, children: label }, value || "none"))
           }
         )
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("label", { className: "check", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("label", { className: "check", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "input",
           {
             ref: tooltipRef(tips.beatgridLock),
@@ -70593,7 +70865,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         ),
         t("field.beatgridLocked")
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
         "button",
         {
           type: "submit",
@@ -70611,25 +70883,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       ["column.key", track.key || "—"],
       ["column.time", track.length]
     ];
-    return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "detail-body", children: [
-      track.album ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("h2", { children: track.title ?? "" }),
-      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "artist", children: track.artist }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "deck", children: [
-        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: t(key) })
+    return /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "detail-body", children: [
+      track.album ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "detail-kicker", children: track.album }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("h2", { children: track.title ?? "" }),
+      track.artist ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "artist", children: track.artist }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(PlayButton, { variant: "detail", trackId: track.id, name: playTitle }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "deck", children: [
+        facts.map(([key, value]) => /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("strong", { className: key === "column.bpm" ? "bpm" : void 0, children: String(value || "—") }),
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: t(key) })
         ] }, key)),
-        track.color ? /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
-          /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("span", { children: t("field.color") })
+        track.color ? /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { className: "swatch swatch-lg", style: { background: String(track.color ?? "") } }),
+          /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("span", { children: t("field.color") })
         ] }) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(TrackEditor, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "actions", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "lock-note", children: track.serato?.message || list.serato?.message || "" }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(TrackEditor, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "button",
           {
             type: "button",
@@ -70641,7 +70913,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.reveal", { manager: manager2 })
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "button",
           {
             type: "button",
@@ -70653,7 +70925,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: track.in_prepare ? t("detail.removePrepare") : t("detail.sendPrepare")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "button",
           {
             type: "button",
@@ -70665,7 +70937,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.relocate")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "button",
           {
             type: "button",
@@ -70677,7 +70949,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.removeFromLibrary")
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "button",
           {
             type: "button",
@@ -70691,7 +70963,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             children: t("detail.useInCrates")
           }
         ),
-        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+        list.mode === "duplicates" && list.duplicateGroupSelected ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
           "button",
           {
             type: "button",
@@ -70706,11 +70978,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         ) : null
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(RelatedTracks, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(MarkerSection, { track }),
-      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(MembershipSection, { track, writable }),
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(FieldGroups, { track })
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(RelatedTracks, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(MarkerSection, { track }),
+      track.copies?.length ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(CopySection, { fromId: track.id, copies: track.copies, writable }) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(MembershipSection, { track, writable }),
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(FieldGroups, { track })
     ] });
   }
   function HistoryBody({ entry: entry2 }) {
@@ -70720,14 +70992,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       [t("history.started"), clockLabel(entry2.start_time) || "—"],
       [t("history.file"), entry2.file || "—"]
     ];
-    return entry2.notes && lines.push([t("history.notes"), entry2.notes]), /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "detail-body", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("h2", { children: entry2.name || t("track.untitled") }),
-      entry2.artist ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "artist", children: entry2.artist }) : null,
-      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)("div", { className: "field", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("div", { className: "label", children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("div", { className: "value", children: value })
+    return entry2.notes && lines.push([t("history.notes"), entry2.notes]), /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "detail-body", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("h2", { children: entry2.name || t("track.untitled") }),
+      entry2.artist ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "artist", children: entry2.artist }) : null,
+      lines.map(([label, value]) => /* @__PURE__ */ (0, import_jsx_runtime288.jsxs)("div", { className: "field", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("div", { className: "label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("div", { className: "value", children: value })
       ] }, label)),
-      entry2.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(
+      entry2.asset_id ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(
         "button",
         {
           type: "button",
@@ -70741,19 +71013,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackDetailPane() {
     let list = useTrackList(), { detail: detail2 } = list;
-    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime286.jsx)(TrackBody, { track: detail2.track });
+    return detail2.kind === "none" ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "detail-empty", children: t("detail.empty") }) : detail2.kind === "empty" ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "detail-empty", children: detail2.message }) : detail2.kind === "reading" ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "detail-empty", children: t("detail.reading") }) : detail2.kind === "error" ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)("p", { className: "detail-error", children: detail2.message }) : detail2.kind === "entry" ? /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(HistoryBody, { entry: detail2.entry }) : /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(TrackBody, { track: detail2.track });
   }
 
   // src/lib/ui/views.ts
   init_shared_dialog();
 
   // src/lib/ui/virtual-scroll.ts
-  var import_react68 = __toESM(require_react(), 1);
+  var import_react69 = __toESM(require_react(), 1);
   var paneRoots = /* @__PURE__ */ new WeakMap();
   function mountPane(list, pane) {
     let root = mountIsland(
       list,
-      (0, import_react68.createElement)(TrackListWindow, {
+      (0, import_react69.createElement)(TrackListWindow, {
         pane,
         onFocusList: () => {
           list.focus({ preventScroll: !0 });
@@ -70982,7 +71254,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot?.unmount(), historyDetailRoot = null, historyDetailHost = null;
   }
   function paintDetailIsland() {
-    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react69.createElement)(TrackDetailPane));
+    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react70.createElement)(TrackDetailPane));
   }
   function remountIsland(host, node2, slot) {
     return slot.root && slot.host !== host && (slot.root.unmount(), slot.root = null), slot.host = host, slot.root = mountIsland(host, node2, slot.root ?? void 0), slot.root;
@@ -70993,21 +71265,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountCrates() {
     let list = document.getElementById("crate-list"), listMount = mountCrateIsland(
       list instanceof HTMLElement ? list : null,
-      (0, import_react69.createElement)(CrateTree),
+      (0, import_react70.createElement)(CrateTree),
       crateListRoot,
       crateListHost
     );
     crateListRoot = listMount.root, crateListHost = listMount.host;
     let actions3 = document.getElementById("crate-actions"), actionsMount = mountCrateIsland(
       actions3 instanceof HTMLElement ? actions3 : null,
-      (0, import_react69.createElement)(CrateActions),
+      (0, import_react70.createElement)(CrateActions),
       crateActionsRoot,
       crateActionsHost
     );
     crateActionsRoot = actionsMount.root, crateActionsHost = actionsMount.host;
     let browser = document.getElementById("crate-browser-actions"), browserMount = mountCrateIsland(
       browser instanceof HTMLElement ? browser : null,
-      (0, import_react69.createElement)(CrateBrowserActions),
+      (0, import_react70.createElement)(CrateBrowserActions),
       crateBrowserRoot,
       crateBrowserHost
     );
@@ -71276,7 +71548,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function selectEntry(id) {
     if (state.selectedId = id, paintRows(), notifyHistory(), !state.entries.some((item) => item.id === id)) return;
     let host = el("detail");
-    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react69.createElement)(HistoryDetail), {
+    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react70.createElement)(HistoryDetail), {
       host: historyDetailHost,
       root: historyDetailRoot
     }), historyDetailHost = host;
@@ -71563,7 +71835,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function renderSessions() {
     notifyHistory();
     let host = el("session-list");
-    sessionRoot = remountIsland(host, (0, import_react69.createElement)(HistorySessions), {
+    sessionRoot = remountIsland(host, (0, import_react70.createElement)(HistorySessions), {
       host: sessionHost,
       root: sessionRoot
     }), sessionHost = host;
@@ -71665,8 +71937,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("crate-search").addEventListener("input", (event) => {
       state.crateQuery = event.target.value, renderCrates();
     }), el("reload").addEventListener("click", () => {
-      let jobs = [loadLibrary()];
-      state.mode === "history" && jobs.push(loadHistory()), state.mode === "duplicates" && jobs.push(loadDuplicates()), state.mode === "gig" && jobs.push(loadGigCheck().catch(showGigFailure)), state.mode === "portable" && jobs.push(loadPortableView().catch(showPortableFailure)), state.mode === "drift" && jobs.push(loadDrift().catch(showDriftFailure)), state.mode === "health" && jobs.push(loadHealth().catch(showHealthFailure)), state.mode === "stats" && jobs.push(loadHistoryStats().catch(showHistoryStatsFailure)), state.mode === "scan" && jobs.push(loadScan().catch(showScanFailure)), state.mode === "bitrate" && jobs.push(loadBitrate().catch(showBitrateFailure)), state.mode === "tags" && jobs.push(loadTags().catch(showTagsFailure)), state.mode === "lost" && jobs.push(loadLostTags().catch(showLostTagsFailure)), state.mode === "compare" && jobs.push(loadCrateCompare().catch(showCrateCompareFailure)), Promise.all(jobs).catch(showFailure);
+      let jobs2 = [loadLibrary()];
+      state.mode === "history" && jobs2.push(loadHistory()), state.mode === "duplicates" && jobs2.push(loadDuplicates()), state.mode === "gig" && jobs2.push(loadGigCheck().catch(showGigFailure)), state.mode === "portable" && jobs2.push(loadPortableView().catch(showPortableFailure)), state.mode === "drift" && jobs2.push(loadDrift().catch(showDriftFailure)), state.mode === "health" && jobs2.push(loadHealth().catch(showHealthFailure)), state.mode === "stats" && jobs2.push(loadHistoryStats().catch(showHistoryStatsFailure)), state.mode === "scan" && jobs2.push(loadScan().catch(showScanFailure)), state.mode === "bitrate" && jobs2.push(loadBitrate().catch(showBitrateFailure)), state.mode === "tags" && jobs2.push(loadTags().catch(showTagsFailure)), state.mode === "lost" && jobs2.push(loadLostTags().catch(showLostTagsFailure)), state.mode === "compare" && jobs2.push(loadCrateCompare().catch(showCrateCompareFailure)), Promise.all(jobs2).catch(showFailure);
     }), el("export-m3u").addEventListener("click", () => exportPlaylistM3u()), el("import-m3u").addEventListener("click", () => {
       if (playlistCrate() != null) {
         if (!state.writable) {
@@ -73778,10 +74050,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   });
 
   // src/lib/ui/app-shell.ts
-  var import_react71 = __toESM(require_react(), 1);
+  var import_react73 = __toESM(require_react(), 1);
 
   // src/pages/AppShell.tsx
-  var import_react70 = __toESM(require_react(), 1);
+  var import_react72 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
   var React314 = __toESM(require_react(), 1);
@@ -73793,7 +74065,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var appBarClasses = generateUtilityClasses("MuiAppBar", ["root", "positionFixed", "positionAbsolute", "positionSticky", "positionStatic", "positionRelative", "colorDefault", "colorPrimary", "colorSecondary", "colorInherit", "colorTransparent", "colorError", "colorInfo", "colorSuccess", "colorWarning"]);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
-  var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1), useUtilityClasses111 = (ownerState) => {
+  var import_jsx_runtime289 = __toESM(require_jsx_runtime(), 1), useUtilityClasses111 = (ownerState) => {
     let {
       color: color2,
       position: position2,
@@ -73946,7 +74218,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       position: position2,
       enableColorOnDark
     }, classes2 = useUtilityClasses111(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime287.jsx)(AppBarRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(AppBarRoot, {
       square: !0,
       component: "header",
       ownerState,
@@ -73962,7 +74234,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/material/Slide/Slide.mjs
   var React315 = __toESM(require_react(), 1);
-  var import_jsx_runtime288 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
+  var import_jsx_runtime290 = __toESM(require_jsx_runtime(), 1), hiddenStyles3 = {
     visibility: "hidden"
   }, DEFAULT_TRANSLATE_OPTIONS = {};
   function isGestureTranslate(transform) {
@@ -74071,7 +74343,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       };
     }, [direction, inProp, containerProp]), React315.useEffect(() => {
       !inProp && !preserveInlineTransformRef.current && updatePosition();
-    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime288.jsx)(Transition_default, {
+    }, [inProp, updatePosition]), /* @__PURE__ */ (0, import_jsx_runtime290.jsx)(Transition_default, {
       nodeRef: childrenRef,
       onEnter: handleEnter,
       onEntered: handleEntered,
@@ -74113,7 +74385,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var drawerClasses = generateUtilityClasses("MuiDrawer", ["root", "docked", "paper", "anchorLeft", "anchorRight", "anchorTop", "anchorBottom", "modal"]);
 
   // node_modules/@mui/material/Drawer/Drawer.mjs
-  var import_jsx_runtime289 = __toESM(require_jsx_runtime(), 1), overridesResolver4 = (props, styles5) => {
+  var import_jsx_runtime291 = __toESM(require_jsx_runtime(), 1), overridesResolver4 = (props, styles5) => {
     let {
       ownerState
     } = props;
@@ -74349,37 +74621,108 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           container: resolveSlideContainer
         }
       }
-    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(PaperSlot, {
+    }), drawer = /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(PaperSlot, {
       ...paperSlotProps,
       children
     });
     if (variant === "permanent")
-      return /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(DockedSlot, {
+      return /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(DockedSlot, {
         ...dockedSlotProps,
         children: drawer
       });
-    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(TransitionSlot, {
+    let slidingDrawer = /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(TransitionSlot, {
       ...transitionSlotProps,
       children: drawer
     });
-    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(DockedSlot, {
+    return variant === "persistent" ? /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(DockedSlot, {
       ...dockedSlotProps,
       children: slidingDrawer
-    }) : /* @__PURE__ */ (0, import_jsx_runtime289.jsx)(RootSlot, {
+    }) : /* @__PURE__ */ (0, import_jsx_runtime291.jsx)(RootSlot, {
       ...rootSlotProps,
       children: slidingDrawer
     });
   }), Drawer_default = Drawer;
 
   // node_modules/@mui/icons-material/ChevronLeft.mjs
-  var import_jsx_runtime290 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime290.jsx)("path", {
+  var import_jsx_runtime292 = __toESM(require_jsx_runtime(), 1), ChevronLeft_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime292.jsx)("path", {
     d: "M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
   }), "ChevronLeft");
 
   // node_modules/@mui/icons-material/Menu.mjs
-  var import_jsx_runtime291 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime291.jsx)("path", {
+  var import_jsx_runtime293 = __toESM(require_jsx_runtime(), 1), Menu_default2 = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime293.jsx)("path", {
     d: "M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"
   }), "Menu");
+
+  // node_modules/@mui/icons-material/PendingActions.mjs
+  var import_jsx_runtime294 = __toESM(require_jsx_runtime(), 1), PendingActions_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime294.jsx)("path", {
+    d: "M17 12c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5m1.65 7.35L16.5 17.2V14h1v2.79l1.85 1.85zM18 3h-3.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H6c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h6.11c-.59-.57-1.07-1.25-1.42-2H6V5h2v3h8V5h2v5.08c.71.1 1.38.31 2 .6V5c0-1.1-.9-2-2-2m-6 2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1"
+  }), "PendingActions");
+
+  // src/components/ActivityTray.tsx
+  var import_react71 = __toESM(require_react(), 1);
+  var import_jsx_runtime295 = __toESM(require_jsx_runtime(), 1);
+  function ActivityTray() {
+    let jobs2 = useJobs(), [anchor, setAnchor] = (0, import_react71.useState)(null), running = jobs2.running, recent = jobs2.jobs.filter((job) => isTerminal(job.state)).slice(0, 8), open = !!anchor;
+    return /* @__PURE__ */ (0, import_jsx_runtime295.jsxs)(import_jsx_runtime295.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(
+        IconButton_default,
+        {
+          id: "jobs-tray",
+          type: "button",
+          color: "inherit",
+          "aria-label": t("jobs.tray"),
+          "aria-haspopup": "menu",
+          "aria-expanded": open,
+          "aria-controls": open ? "jobs-tray-menu" : void 0,
+          ref: tooltipRef5(tips.jobsTray),
+          onClick: (event) => setAnchor(event.currentTarget),
+          children: /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(
+            Badge_default,
+            {
+              color: "primary",
+              variant: "dot",
+              invisible: !isActive(running),
+              overlap: "circular",
+              children: /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(PendingActions_default, {})
+            }
+          )
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime295.jsxs)(
+        Menu_default,
+        {
+          id: "jobs-tray-menu",
+          anchorEl: anchor,
+          open,
+          onClose: () => setAnchor(null),
+          slotProps: { list: { "aria-label": t("jobs.tray") } },
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(ListSubheader_default, { disableSticky: !0, children: t("jobs.running") }),
+            running ? /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(
+              MenuItem_default,
+              {
+                onClick: () => {
+                  jobs2.openDetails(running), setAnchor(null);
+                },
+                children: running.label
+              }
+            ) : /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(MenuItem_default, { disabled: !0, children: t("jobs.idle") }),
+            /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(ListSubheader_default, { disableSticky: !0, children: t("jobs.recent") }),
+            recent.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(MenuItem_default, { disabled: !0, children: t("jobs.idle") }) : recent.map((job) => /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(
+              MenuItem_default,
+              {
+                onClick: () => {
+                  jobs2.openDetails(job), setAnchor(null);
+                },
+                children: toastText(job)
+              },
+              job.id
+            ))
+          ]
+        }
+      )
+    ] });
+  }
 
   // node_modules/@mui/material/Alert/Alert.mjs
   var React317 = __toESM(require_react(), 1);
@@ -74391,27 +74734,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var alertClasses = generateUtilityClasses("MuiAlert", ["root", "action", "icon", "message", "filled", "colorSuccess", "colorInfo", "colorWarning", "colorError", "outlined", "standard"]), alertClasses_default = alertClasses;
 
   // node_modules/@mui/material/internal/svg-icons/SuccessOutlined.mjs
-  var import_jsx_runtime292 = __toESM(require_jsx_runtime(), 1), SuccessOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime292.jsx)("path", {
+  var import_jsx_runtime296 = __toESM(require_jsx_runtime(), 1), SuccessOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime296.jsx)("path", {
     d: "M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2, 4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0, 0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z"
   }), "SuccessOutlined");
 
   // node_modules/@mui/material/internal/svg-icons/ReportProblemOutlined.mjs
-  var import_jsx_runtime293 = __toESM(require_jsx_runtime(), 1), ReportProblemOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime293.jsx)("path", {
+  var import_jsx_runtime297 = __toESM(require_jsx_runtime(), 1), ReportProblemOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime297.jsx)("path", {
     d: "M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"
   }), "ReportProblemOutlined");
 
   // node_modules/@mui/material/internal/svg-icons/ErrorOutline.mjs
-  var import_jsx_runtime294 = __toESM(require_jsx_runtime(), 1), ErrorOutline_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime294.jsx)("path", {
+  var import_jsx_runtime298 = __toESM(require_jsx_runtime(), 1), ErrorOutline_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime298.jsx)("path", {
     d: "M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
   }), "ErrorOutline");
 
   // node_modules/@mui/material/internal/svg-icons/InfoOutlined.mjs
-  var import_jsx_runtime295 = __toESM(require_jsx_runtime(), 1), InfoOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime295.jsx)("path", {
+  var import_jsx_runtime299 = __toESM(require_jsx_runtime(), 1), InfoOutlined_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime299.jsx)("path", {
     d: "M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"
   }), "InfoOutlined");
 
   // node_modules/@mui/material/Alert/Alert.mjs
-  var import_jsx_runtime296 = __toESM(require_jsx_runtime(), 1), useUtilityClasses113 = (ownerState) => {
+  var import_jsx_runtime300 = __toESM(require_jsx_runtime(), 1), useUtilityClasses113 = (ownerState) => {
     let {
       variant,
       color: color2,
@@ -74514,16 +74857,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     marginLeft: "auto",
     marginRight: -8
   }), defaultIconMapping = {
-    success: /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(SuccessOutlined_default, {
+    success: /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(SuccessOutlined_default, {
       fontSize: "inherit"
     }),
-    warning: /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(ReportProblemOutlined_default, {
+    warning: /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(ReportProblemOutlined_default, {
       fontSize: "inherit"
     }),
-    error: /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(ErrorOutline_default, {
+    error: /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(ErrorOutline_default, {
       fontSize: "inherit"
     }),
-    info: /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(InfoOutlined_default, {
+    info: /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(InfoOutlined_default, {
       fontSize: "inherit"
     })
   }, Alert = /* @__PURE__ */ React317.forwardRef(function(inProps, ref) {
@@ -74592,27 +74935,27 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       externalForwardedProps,
       ownerState
     });
-    return /* @__PURE__ */ (0, import_jsx_runtime296.jsxs)(RootSlot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime300.jsxs)(RootSlot, {
       ...rootSlotProps,
-      children: [icon !== !1 ? /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(IconSlot, {
+      children: [icon !== !1 ? /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(IconSlot, {
         ...iconSlotProps,
         children: icon || iconMapping[severity] || defaultIconMapping[severity]
-      }) : null, /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(MessageSlot, {
+      }) : null, /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(MessageSlot, {
         ...messageSlotProps,
         children
-      }), action != null ? /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(ActionSlot, {
+      }), action != null ? /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(ActionSlot, {
         ...actionSlotProps,
         children: action
-      }) : null, action == null && onClose ? /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(ActionSlot, {
+      }) : null, action == null && onClose ? /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(ActionSlot, {
         ...actionSlotProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(CloseButtonSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(CloseButtonSlot, {
           size: "small",
           "aria-label": closeText,
           title: closeText,
           color: "inherit",
           onClick: onClose,
           ...closeButtonProps,
-          children: /* @__PURE__ */ (0, import_jsx_runtime296.jsx)(CloseIconSlot, {
+          children: /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(CloseIconSlot, {
             fontSize: "small",
             ...closeIconProps
           })
@@ -74707,7 +75050,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var snackbarContentClasses = generateUtilityClasses("MuiSnackbarContent", ["root", "message", "action"]);
 
   // node_modules/@mui/material/SnackbarContent/SnackbarContent.mjs
-  var import_jsx_runtime297 = __toESM(require_jsx_runtime(), 1), useUtilityClasses114 = (ownerState) => {
+  var import_jsx_runtime301 = __toESM(require_jsx_runtime(), 1), useUtilityClasses114 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -74763,18 +75106,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       role = "alert",
       ...other
     } = props, ownerState = props, classes2 = useUtilityClasses114(ownerState);
-    return /* @__PURE__ */ (0, import_jsx_runtime297.jsxs)(SnackbarContentRoot, {
+    return /* @__PURE__ */ (0, import_jsx_runtime301.jsxs)(SnackbarContentRoot, {
       role,
       elevation: 6,
       className: clsx_default(classes2.root, className),
       ownerState,
       ref,
       ...other,
-      children: [/* @__PURE__ */ (0, import_jsx_runtime297.jsx)(SnackbarContentMessage, {
+      children: [/* @__PURE__ */ (0, import_jsx_runtime301.jsx)(SnackbarContentMessage, {
         className: classes2.message,
         ownerState,
         children: message
-      }), action ? /* @__PURE__ */ (0, import_jsx_runtime297.jsx)(SnackbarContentAction, {
+      }), action ? /* @__PURE__ */ (0, import_jsx_runtime301.jsx)(SnackbarContentAction, {
         className: classes2.action,
         ownerState,
         children: action
@@ -74789,7 +75132,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var snackbarClasses = generateUtilityClasses("MuiSnackbar", ["root", "anchorOriginTopCenter", "anchorOriginBottomCenter", "anchorOriginTopRight", "anchorOriginBottomRight", "anchorOriginTopLeft", "anchorOriginBottomLeft"]);
 
   // node_modules/@mui/material/Snackbar/Snackbar.mjs
-  var import_jsx_runtime298 = __toESM(require_jsx_runtime(), 1), useUtilityClasses115 = (ownerState) => {
+  var import_jsx_runtime302 = __toESM(require_jsx_runtime(), 1), useUtilityClasses115 = (ownerState) => {
     let {
       classes: classes2,
       anchorOrigin
@@ -74968,16 +75311,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       },
       ownerState
     });
-    return !open && exited ? null : /* @__PURE__ */ (0, import_jsx_runtime298.jsx)(ClickAwaySlot, {
+    return !open && exited ? null : /* @__PURE__ */ (0, import_jsx_runtime302.jsx)(ClickAwaySlot, {
       ...clickAwayListenerProps,
       ...slots.clickAwayListener && {
         ownerState: clickAwayOwnerStateProp
       },
-      children: /* @__PURE__ */ (0, import_jsx_runtime298.jsx)(Root, {
+      children: /* @__PURE__ */ (0, import_jsx_runtime302.jsx)(Root, {
         ...rootProps,
-        children: /* @__PURE__ */ (0, import_jsx_runtime298.jsx)(TransitionSlot, {
+        children: /* @__PURE__ */ (0, import_jsx_runtime302.jsx)(TransitionSlot, {
           ...transitionProps,
-          children: children || /* @__PURE__ */ (0, import_jsx_runtime298.jsx)(ContentSlot, {
+          children: children || /* @__PURE__ */ (0, import_jsx_runtime302.jsx)(ContentSlot, {
             ...contentSlotProps
           })
         })
@@ -74985,12 +75328,95 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     });
   }), Snackbar_default = Snackbar;
 
+  // src/components/JobToast.tsx
+  var import_jsx_runtime303 = __toESM(require_jsx_runtime(), 1);
+  function JobToast() {
+    let jobs2 = useJobs(), toast2 = jobs2.toast, details2 = jobs2.details;
+    async function onUndo() {
+      if (toast2)
+        try {
+          await jobs2.undoJob(toast2.id), jobs2.dismissToast(), await bridge.reloadLibrary();
+        } catch (error2) {
+          setNotice(failureOf(error2).message, "error");
+        }
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime303.jsxs)(import_jsx_runtime303.Fragment, { children: [
+      toast2 ? /* @__PURE__ */ (0, import_jsx_runtime303.jsx)(
+        Snackbar_default,
+        {
+          open: !0,
+          autoHideDuration: 8e3,
+          onClose: (_, reason) => {
+            reason !== "clickaway" && jobs2.dismissToast();
+          },
+          anchorOrigin: { vertical: "bottom", horizontal: "center" },
+          children: /* @__PURE__ */ (0, import_jsx_runtime303.jsx)(
+            Alert_default,
+            {
+              id: "job-toast",
+              severity: toastSeverity(toast2.state),
+              role: toast2.state === "failed" ? "alert" : "status",
+              "aria-live": toast2.state === "failed" ? "assertive" : "polite",
+              onClose: jobs2.dismissToast,
+              slotProps: {
+                closeButton: { "aria-label": t("common.close") }
+              },
+              action: /* @__PURE__ */ (0, import_jsx_runtime303.jsxs)(import_jsx_runtime303.Fragment, { children: [
+                toast2.snapshot_id ? /* @__PURE__ */ (0, import_jsx_runtime303.jsx)(
+                  Button_default,
+                  {
+                    color: "inherit",
+                    size: "small",
+                    id: "job-undo",
+                    ref: tooltipRef5(tips.jobsUndo),
+                    onClick: () => {
+                      onUndo();
+                    },
+                    children: t("jobs.undo")
+                  }
+                ) : null,
+                /* @__PURE__ */ (0, import_jsx_runtime303.jsx)(
+                  Button_default,
+                  {
+                    color: "inherit",
+                    size: "small",
+                    id: "job-details",
+                    ref: tooltipRef5(tips.jobsDetails),
+                    onClick: () => jobs2.openDetails(toast2),
+                    children: t("jobs.details")
+                  }
+                )
+              ] }),
+              children: toastText(toast2)
+            }
+          )
+        }
+      ) : null,
+      /* @__PURE__ */ (0, import_jsx_runtime303.jsxs)(
+        Dialog_default,
+        {
+          open: details2 !== null,
+          onClose: jobs2.closeDetails,
+          "aria-labelledby": "job-details-title",
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime303.jsx)(DialogTitle_default, { id: "job-details-title", children: details2?.label ?? "" }),
+            /* @__PURE__ */ (0, import_jsx_runtime303.jsxs)(DialogContent_default, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("ul", { id: "job-details-errors", "aria-live": "assertive", children: (details2?.errors ?? []).map((line2, index) => /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("li", { children: line2 }, `${index}:${line2}`)) }),
+              details2 && details2.errors.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("p", { children: toastText(details2) }) : null
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime303.jsx)(DialogActions_default, { children: /* @__PURE__ */ (0, import_jsx_runtime303.jsx)(Button_default, { type: "button", onClick: jobs2.closeDetails, children: t("jobs.closeDetails") }) })
+          ]
+        }
+      )
+    ] });
+  }
+
   // src/components/NoticeBanner.tsx
-  var import_jsx_runtime299 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime304 = __toESM(require_jsx_runtime(), 1);
   function NoticeBanner() {
     let { notice, dismiss: dismiss2 } = useNotice();
     if (!notice) return null;
-    let assertive = notice.severity === "error" || notice.severity === "warning", alert = /* @__PURE__ */ (0, import_jsx_runtime299.jsx)(
+    let assertive = notice.severity === "error" || notice.severity === "warning", alert = /* @__PURE__ */ (0, import_jsx_runtime304.jsx)(
       Alert_default,
       {
         id: "app-notice",
@@ -75003,7 +75429,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         children: notice.text
       }
     );
-    return notice.severity === "error" ? /* @__PURE__ */ (0, import_jsx_runtime299.jsx)(
+    return notice.severity === "error" ? /* @__PURE__ */ (0, import_jsx_runtime304.jsx)(
       Snackbar_default,
       {
         open: !0,
@@ -75012,11 +75438,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         anchorOrigin: { vertical: "bottom", horizontal: "center" },
         children: alert
       }
-    ) : /* @__PURE__ */ (0, import_jsx_runtime299.jsx)(Box_default, { sx: { px: 2, py: 1, flexShrink: 0 }, children: alert });
+    ) : /* @__PURE__ */ (0, import_jsx_runtime304.jsx)(Box_default, { sx: { px: 2, py: 1, flexShrink: 0 }, children: alert });
   }
 
   // src/pages/AppShell.tsx
-  var import_jsx_runtime300 = __toESM(require_jsx_runtime(), 1);
+  var import_jsx_runtime305 = __toESM(require_jsx_runtime(), 1);
   function drawerExpanded(saved, innerWidth) {
     return innerWidth > DRAWER_MINI_CUTOFF && (saved ?? !0);
   }
@@ -75034,14 +75460,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     !slot || !node2 || node2.parentElement !== slot && slot.append(node2);
   }
   function AppShell() {
-    let [savedOpen, setSavedOpen] = (0, import_react70.useState)(null), [innerWidth, setInnerWidth] = (0, import_react70.useState)(() => window.innerWidth), [hasTrack, setHasTrack] = (0, import_react70.useState)(() => getPlayerState().trackId !== null), open = drawerExpanded(savedOpen, innerWidth), deckOpen = hasTrack && !playerDeckIsCompact(innerWidth), postedOpen = (0, import_react70.useRef)(!1), [, setLocaleTick] = (0, import_react70.useState)(0), headingSlot = (0, import_react70.useRef)(null), generationSlot = (0, import_react70.useRef)(null), actionsSlot = (0, import_react70.useRef)(null), playerSlot = (0, import_react70.useRef)(null), lockSlot = (0, import_react70.useRef)(null), navSlot = (0, import_react70.useRef)(null), bodySlot = (0, import_react70.useRef)(null);
-    (0, import_react70.useEffect)(() => onLocaleChange(() => {
+    let [savedOpen, setSavedOpen] = (0, import_react72.useState)(null), [innerWidth, setInnerWidth] = (0, import_react72.useState)(() => window.innerWidth), [hasTrack, setHasTrack] = (0, import_react72.useState)(() => getPlayerState().trackId !== null), open = drawerExpanded(savedOpen, innerWidth), deckOpen = hasTrack && !playerDeckIsCompact(innerWidth), postedOpen = (0, import_react72.useRef)(!1), [, setLocaleTick] = (0, import_react72.useState)(0), headingSlot = (0, import_react72.useRef)(null), generationSlot = (0, import_react72.useRef)(null), actionsSlot = (0, import_react72.useRef)(null), playerSlot = (0, import_react72.useRef)(null), lockSlot = (0, import_react72.useRef)(null), navSlot = (0, import_react72.useRef)(null), bodySlot = (0, import_react72.useRef)(null);
+    (0, import_react72.useEffect)(() => onLocaleChange(() => {
       setLocaleTick((n) => n + 1);
-    }), []), (0, import_react70.useEffect)(() => subscribeDrawerOpen((saved) => {
+    }), []), (0, import_react72.useEffect)(() => subscribeDrawerOpen((saved) => {
       postedOpen.current || setSavedOpen(saved);
-    }), []), (0, import_react70.useEffect)(() => subscribe((snapshot2) => {
+    }), []), (0, import_react72.useEffect)(() => subscribe((snapshot2) => {
       setHasTrack(snapshot2.trackId !== null);
-    }), []), (0, import_react70.useEffect)(() => {
+    }), []), (0, import_react72.useEffect)(() => {
       let onResize = () => {
         setInnerWidth(window.innerWidth);
       };
@@ -75051,9 +75477,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let next3 = !open;
       postedOpen.current = !0, setSavedOpen(next3), saveDrawerOpen(next3);
     }
-    return (0, import_react70.useLayoutEffect)(() => {
+    return (0, import_react72.useLayoutEffect)(() => {
       adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
-    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime300.jsxs)(
+    }, [open]), /* @__PURE__ */ (0, import_jsx_runtime305.jsxs)(
       Box_default,
       {
         sx: {
@@ -75063,7 +75489,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           minHeight: 0
         },
         children: [
-          /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime300.jsxs)(
+          /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(AppBar_default, { position: "static", color: "default", elevation: 0, children: /* @__PURE__ */ (0, import_jsx_runtime305.jsxs)(
             Toolbar_default,
             {
               sx: (theme) => ({
@@ -75076,7 +75502,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 }
               }),
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
                   IconButton_default,
                   {
                     id: "drawer-toggle",
@@ -75089,10 +75515,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     onClick: toggleDrawer,
                     ref: tooltipRef13(tips.drawerToggle),
                     sx: deckOpen ? { alignSelf: "flex-start" } : void 0,
-                    children: open ? /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(Menu_default2, {})
+                    children: open ? /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(ChevronLeft_default, {}) : /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(Menu_default2, {})
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
                   Box_default,
                   {
                     ref: headingSlot,
@@ -75110,7 +75536,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     }
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
                   Box_default,
                   {
                     ref: generationSlot,
@@ -75118,7 +75544,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     sx: deckOpen ? { alignSelf: "flex-start" } : void 0
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
                   Box_default,
                   {
                     ref: playerSlot,
@@ -75133,7 +75559,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     }
                   }
                 ),
-                /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+                /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
                   Box_default,
                   {
                     ref: actionsSlot,
@@ -75144,16 +75570,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                       flexShrink: 0,
                       ml: "auto",
                       alignSelf: deckOpen ? "flex-start" : void 0
-                    }
+                    },
+                    children: /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(ActivityTray, {})
                   }
                 )
               ]
             }
           ) }),
-          /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(Box_default, { ref: lockSlot, className: "app-bar-lock", sx: { flexShrink: 0 } }),
-          /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(NoticeBanner, {}),
-          /* @__PURE__ */ (0, import_jsx_runtime300.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(Box_default, { ref: lockSlot, className: "app-bar-lock", sx: { flexShrink: 0 } }),
+          /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(NoticeBanner, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(JobToast, {}),
+          /* @__PURE__ */ (0, import_jsx_runtime305.jsxs)(Box_default, { sx: { display: "flex", flex: 1, minHeight: 0, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
               Drawer_default,
               {
                 id: "app-drawer",
@@ -75192,7 +75620,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                     flexDirection: "column"
                   }
                 },
-                children: /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+                children: /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
                   Box_default,
                   {
                     sx: {
@@ -75201,7 +75629,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                       height: "100%",
                       minHeight: 0
                     },
-                    children: /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+                    children: /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
                       Box_default,
                       {
                         ref: navSlot,
@@ -75215,7 +75643,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 )
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime300.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime305.jsx)(
               Box_default,
               {
                 ref: bodySlot,
@@ -75233,7 +75661,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountAppShell(host) {
     islandRoot5?.unmount(), islandRoot5 = null;
     let root = host === void 0 ? document.getElementById("app-shell") : host;
-    root && (islandRoot5 = mountIsland(root, (0, import_react71.createElement)(AppShell)));
+    root && (islandRoot5 = mountIsland(root, (0, import_react73.createElement)(AppShell)));
   }
 
   // src/lib/ui/desktop-actions.ts

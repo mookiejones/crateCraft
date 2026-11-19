@@ -37,6 +37,7 @@ import files
 import gig_check
 import help_report
 import history_stats
+import jobs
 import legacy_library
 import lost_tags
 import library
@@ -1821,6 +1822,17 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/write-queue":
                 self.send_json(write_queue.listing())
                 return
+            if parsed.path == "/api/jobs":
+                job_id = query_text(query, "id")
+                if job_id:
+                    found = jobs.get(job_id)
+                    if found is None:
+                        self.send_json({"error": jobs.UNKNOWN_JOB}, status=404)
+                        return
+                    self.send_json(found)
+                    return
+                self.send_json(jobs.listing())
+                return
             if parsed.path == "/api/setup":
                 self._get_setup(query)
                 return
@@ -2156,6 +2168,9 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(
                     as_dict(_library_call("reveal", required_int(payload["id"])))
                 )
+                return
+            if parsed.path == "/api/jobs":
+                self._post_jobs(payload)
                 return
             if parsed.path == "/api/snapshots":
                 with _lock:
@@ -2868,6 +2883,35 @@ class Handler(BaseHTTPRequestHandler):
             body["write_block_code"] = notice.code
             body["write_block_params"] = dict(notice.params or {})
         self.send_json(body)
+
+    def _post_jobs(self, payload: dict[str, object]) -> None:
+        """Start, cancel, or undo a background write job.
+
+        Start and cancel do not take the library write lock. Undo restores
+        the snapshot taken before that job and does take it.
+
+        Args:
+            payload: ``kind`` to start, or ``action`` ``cancel`` / ``undo``
+                with ``id``.
+        """
+        action = payload.get("action")
+        if action == "cancel":
+            job_id = payload.get("id")
+            if not isinstance(job_id, str) or not job_id:
+                raise library.LibraryError(jobs.UNKNOWN_JOB, 400)
+            self.send_json(jobs.cancel(job_id))
+            return
+        if action == "undo":
+            job_id = payload.get("id")
+            if not isinstance(job_id, str) or not job_id:
+                raise library.LibraryError(jobs.UNKNOWN_JOB, 400)
+            with _lock:
+                with snapshots.own_writes():
+                    self.send_json(as_dict(jobs.undo(job_id)))
+            return
+        if action is not None:
+            raise library.LibraryError(jobs.UNKNOWN_ACTION, 404)
+        self.send_json(jobs.start(payload))
 
     def _post_snapshots(self, payload: dict[str, object]) -> None:
         """Create a snapshot, plan a restore, restore, prune, or undo.

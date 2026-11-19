@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { JobProvider, idleJobValue } from "../../containers/JobContext";
+import { NoticeProvider } from "../../containers/NoticeContext";
 import { AppShell } from "../../pages/AppShell";
 
 function ShellSlots() {
   return (
+    <NoticeProvider value={{ notice: null, dismiss: () => {} }}>
+      <JobProvider value={idleJobValue()}>
     <div style={{ height: "100vh" }}>
       <div id="app-body">
         <aside className="rail">
@@ -39,6 +43,8 @@ function ShellSlots() {
       </div>
       <AppShell />
     </div>
+      </JobProvider>
+    </NoticeProvider>
   );
 }
 

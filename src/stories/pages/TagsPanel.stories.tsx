@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { HealthProvider } from "../../containers/HealthContext";
+import { JobProvider, idleJobValue } from "../../containers/JobContext";
 import {
   healthArgTypes,
   healthStoryArgs,
@@ -10,9 +11,11 @@ import { TagsPanel } from "../../pages/TagsPanel";
 
 function Host(args: HealthStoryArgs) {
   return (
-    <HealthProvider value={healthValueFromArgs(args)}>
-      <TagsPanel />
-    </HealthProvider>
+    <JobProvider value={idleJobValue()}>
+      <HealthProvider value={healthValueFromArgs(args)}>
+        <TagsPanel />
+      </HealthProvider>
+    </JobProvider>
   );
 }
 

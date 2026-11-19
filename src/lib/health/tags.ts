@@ -2,12 +2,13 @@
  * Tag spellings: groups, preview, apply, and title cleanup.
  *
  * GET /api/tag-clusters lists genre and artist groups. POST preview
- * lists the rows a chosen spelling would rewrite. POST apply writes
- * through safe_write and remembers the spelling. Genre and Artist also
- * POST refresh-preview; Apply saved mappings POSTs refresh-apply.
- * Titles uses POST clean-preview and clean-apply. Check Write to files
- * too to also write ID3 and MP4. A newer load ignores a late response.
- * TagsPanel paints from HealthContext.
+ * lists the rows a chosen spelling would rewrite. Apply posts
+ * `/api/jobs` with `kind: tag_spelling` and polls until the job
+ * finishes. Genre and Artist also POST refresh-preview; Apply saved
+ * mappings POSTs refresh-apply. Titles uses POST clean-preview and
+ * clean-apply. Check Write to files too to also write ID3 and MP4. A
+ * newer load ignores a late response. TagsPanel paints from
+ * HealthContext.
  *
  * Page text is in the locale catalogs under tags.*.
  */
@@ -15,7 +16,9 @@
 import { createElement } from "react";
 import { failureOf, postJSON, readJSON } from "../api";
 import { isQueuedWrite } from "../crates/queue-notice";
-import type { TagClusterGroup, TagClusterPlan, TagClusters } from "../api-types";
+import type { Job, TagClusterGroup, TagClusterPlan, TagClusters } from "../api-types";
+import { startJob } from "../jobs/job-store";
+import { toastText } from "../jobs/job-view";
 import { mountIsland, type IslandRoot } from "../../app/mount";
 import { TagsPanel } from "../../pages/TagsPanel";
 import { bridge } from "../bridge";
@@ -302,8 +305,8 @@ export async function applyGroup(key: string): Promise<void> {
   beginBusy();
   emitHealth();
   try {
-    const written = await postJSON<TagClusterPlan>("/api/tag-clusters", filesPayload({
-      action: "apply",
+    const written = await startJob(filesPayload({
+      kind: "tag_spelling",
       space: state.space,
       field: field === "titles" ? "genre" : field,
       value,
@@ -313,12 +316,17 @@ export async function applyGroup(key: string): Promise<void> {
       setNotice(t("gigLock.queued"));
       return;
     }
+    const job = written as Job;
+    if (job.state === "failed" || job.state === "cancelled") {
+      failApply(new Error(toastText(job)));
+      return;
+    }
     await bridge.reloadLibrary();
     actionKey = "";
     panelBusy = false;
     endBusy();
     await loadTags();
-    status = writtenSummary(written);
+    status = toastText(job);
     emitHealth();
   } catch (error) {
     failApply(error);
