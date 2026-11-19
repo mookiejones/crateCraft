@@ -32949,57 +32949,6 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           label: t("settings.gigLock")
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
-        FormControlLabel_default,
-        {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
-            Switch_default,
-            {
-              id: "protect-bpm",
-              slotProps: { input: { ref: tooltipRef3(tips.protectBpm) } },
-              checked: settings.protectBpm,
-              onChange: (event) => {
-                settings.saveProtected("bpm", event.currentTarget.checked);
-              }
-            }
-          ),
-          label: t("settings.protectBpm")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
-        FormControlLabel_default,
-        {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
-            Switch_default,
-            {
-              id: "protect-key",
-              slotProps: { input: { ref: tooltipRef3(tips.protectKey) } },
-              checked: settings.protectKey,
-              onChange: (event) => {
-                settings.saveProtected("key", event.currentTarget.checked);
-              }
-            }
-          ),
-          label: t("settings.protectKey")
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
-        FormControlLabel_default,
-        {
-          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
-            Switch_default,
-            {
-              id: "protect-cues",
-              slotProps: { input: { ref: tooltipRef3(tips.protectCues) } },
-              checked: settings.protectCues,
-              onChange: (event) => {
-                settings.saveProtected("cues", event.currentTarget.checked);
-              }
-            }
-          ),
-          label: t("settings.protectCues")
-        }
-      ),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(FormControl_default, { className: "settings-field", size: "small", fullWidth: !0, children: [
         /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(InputLabel_default, { htmlFor: "min-copies", shrink: !0, children: t("settings.minCopies") }),
         /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
@@ -33055,6 +33004,57 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "language-status", className: "dialog-status", component: "p", role: "status", "aria-live": "polite", children: settings.languageStatus }),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(ShortcutTable, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        FormControlLabel_default,
+        {
+          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+            Switch_default,
+            {
+              id: "protect-bpm",
+              slotProps: { input: { ref: tooltipRef3(tips.protectBpm) } },
+              checked: settings.protectBpm,
+              onChange: (event) => {
+                settings.saveProtected("bpm", event.currentTarget.checked);
+              }
+            }
+          ),
+          label: t("settings.protectBpm")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        FormControlLabel_default,
+        {
+          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+            Switch_default,
+            {
+              id: "protect-key",
+              slotProps: { input: { ref: tooltipRef3(tips.protectKey) } },
+              checked: settings.protectKey,
+              onChange: (event) => {
+                settings.saveProtected("key", event.currentTarget.checked);
+              }
+            }
+          ),
+          label: t("settings.protectKey")
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+        FormControlLabel_default,
+        {
+          control: /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(
+            Switch_default,
+            {
+              id: "protect-cues",
+              slotProps: { input: { ref: tooltipRef3(tips.protectCues) } },
+              checked: settings.protectCues,
+              onChange: (event) => {
+                settings.saveProtected("cues", event.currentTarget.checked);
+              }
+            }
+          ),
+          label: t("settings.protectCues")
+        }
+      ),
       /* @__PURE__ */ (0, import_jsx_runtime64.jsxs)(Box_default, { className: "about", component: "section", "aria-labelledby": "about-title", children: [
         /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "about-title", variant: "h6", component: "h3", children: t("settings.about") }),
         /* @__PURE__ */ (0, import_jsx_runtime64.jsx)(Typography_default, { id: "about-version", className: "about-version", component: "p", children: settings.aboutVersion }),
@@ -33316,11 +33316,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function applyProtected(payload) {
     let flags = payload.protected_fields;
-    flags == null || typeof flags != "object" || patchSettings({
+    if (flags == null || typeof flags != "object") return;
+    let next3 = {
       protectBpm: flags.bpm === !0,
       protectKey: flags.key === !0,
       protectCues: flags.cues === !0
-    });
+    };
+    snapshot.protectBpm === next3.protectBpm && snapshot.protectKey === next3.protectKey && snapshot.protectCues === next3.protectCues || patchSettings(next3);
   }
   async function saveProtected(field2, on) {
     let patch = {

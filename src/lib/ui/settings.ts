@@ -455,11 +455,17 @@ export function applyGigLock(payload: SettingsPayload): void {
 export function applyProtected(payload: SettingsPayload): void {
   const flags = payload.protected_fields;
   if (flags == null || typeof flags !== "object") return;
-  patchSettings({
+  const next = {
     protectBpm: flags.bpm === true,
     protectKey: flags.key === true,
     protectCues: flags.cues === true,
-  });
+  };
+  if (
+    snapshot.protectBpm === next.protectBpm
+    && snapshot.protectKey === next.protectKey
+    && snapshot.protectCues === next.protectCues
+  ) return;
+  patchSettings(next);
 }
 
 /**

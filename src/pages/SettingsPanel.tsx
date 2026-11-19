@@ -162,45 +162,6 @@ export function SettingsPanel() {
         }
         label={t("settings.gigLock")}
       />
-      <FormControlLabel
-        control={
-          <Switch
-            id="protect-bpm"
-            slotProps={{ input: { ref: tooltipRef(tips.protectBpm) } }}
-            checked={settings.protectBpm}
-            onChange={(event) => {
-              void settings.saveProtected("bpm", event.currentTarget.checked);
-            }}
-          />
-        }
-        label={t("settings.protectBpm")}
-      />
-      <FormControlLabel
-        control={
-          <Switch
-            id="protect-key"
-            slotProps={{ input: { ref: tooltipRef(tips.protectKey) } }}
-            checked={settings.protectKey}
-            onChange={(event) => {
-              void settings.saveProtected("key", event.currentTarget.checked);
-            }}
-          />
-        }
-        label={t("settings.protectKey")}
-      />
-      <FormControlLabel
-        control={
-          <Switch
-            id="protect-cues"
-            slotProps={{ input: { ref: tooltipRef(tips.protectCues) } }}
-            checked={settings.protectCues}
-            onChange={(event) => {
-              void settings.saveProtected("cues", event.currentTarget.checked);
-            }}
-          />
-        }
-        label={t("settings.protectCues")}
-      />
       <FormControl className="settings-field" size="small" fullWidth>
         <InputLabel htmlFor="min-copies" shrink>{t("settings.minCopies")}</InputLabel>
         <Select
@@ -257,6 +218,45 @@ export function SettingsPanel() {
         {settings.languageStatus}
       </Typography>
       <ShortcutTable />
+      <FormControlLabel
+        control={
+          <Switch
+            id="protect-bpm"
+            slotProps={{ input: { ref: tooltipRef(tips.protectBpm) } }}
+            checked={settings.protectBpm}
+            onChange={(event) => {
+              void settings.saveProtected("bpm", event.currentTarget.checked);
+            }}
+          />
+        }
+        label={t("settings.protectBpm")}
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            id="protect-key"
+            slotProps={{ input: { ref: tooltipRef(tips.protectKey) } }}
+            checked={settings.protectKey}
+            onChange={(event) => {
+              void settings.saveProtected("key", event.currentTarget.checked);
+            }}
+          />
+        }
+        label={t("settings.protectKey")}
+      />
+      <FormControlLabel
+        control={
+          <Switch
+            id="protect-cues"
+            slotProps={{ input: { ref: tooltipRef(tips.protectCues) } }}
+            checked={settings.protectCues}
+            onChange={(event) => {
+              void settings.saveProtected("cues", event.currentTarget.checked);
+            }}
+          />
+        }
+        label={t("settings.protectCues")}
+      />
       <Box className="about" component="section" aria-labelledby="about-title">
         <Typography id="about-title" variant="h6" component="h3">{t("settings.about")}</Typography>
         <Typography id="about-version" className="about-version" component="p">{settings.aboutVersion}</Typography>
