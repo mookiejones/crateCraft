@@ -174,6 +174,11 @@ PARAM_CODES: dict[str, str] = {
         "A value that is not a dotted number, including an unreadable plist, is unknown. "
         "Snapshots can still be taken and read."
     ),
+    "serato_version_unprobed": (
+        "Serato {version} (build {build}) is listed but its library schema has not been probed. "
+        "Writes and restores are off until a schema probe is recorded. "
+        "Snapshots can still be taken and read."
+    ),
     "library_log_unconfirmed": (
         "The session log does not confirm this library file ({database}). "
         "Writes and restores are off. Snapshots can still be taken and read."

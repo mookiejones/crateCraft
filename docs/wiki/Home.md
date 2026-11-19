@@ -43,7 +43,7 @@ Cue points live in the audio file. A normal save does not rewrite them.
 
 Open **Backups**, choose **Review restore**, then **Restore**. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 
-Quit Serato DJ Pro before a write. On Serato 5, writes and restores stay off.
+Quit Serato DJ Pro before a write. On Serato 5.0, writes and restores run when Protect Library is off. Serato 5.1.0 stays read-only until its library schema is probed.
 
 ## One download
 
