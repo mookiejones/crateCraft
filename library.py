@@ -749,7 +749,9 @@ def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, ob
         exists is reported as open too, with the SQLite text in
         ``message`` and ``open_error``. ``generation`` says whether the
         session logs named Serato 4, Serato 5, or neither. file_manager
-        names Finder or File Explorer.
+        names Finder or File Explorer. ``controlled_folder_access`` is
+        ``off``, ``on``, ``audit``, ``unknown``, or ``unsupported``. It
+        does not change ``writable``.
 
     Raises:
         LibraryError: If the database file does not exist.
@@ -788,6 +790,12 @@ def status(path: Path | None = None, *, from_copy: bool = False) -> dict[str, ob
         if notice.code:
             info["code"] = notice.code
             info["params"] = dict(notice.params or {})
+    import folder_access
+
+    try:
+        info["controlled_folder_access"] = folder_access.controlled_folder_access()
+    except (OSError, ImportError):
+        info["controlled_folder_access"] = "unknown"
     return info
 
 

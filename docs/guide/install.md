@@ -70,4 +70,6 @@ If that file is missing, the app stays open. Setup says **No Serato library was 
 
 Another copy may already be running. Its window should come forward. If it does not, close the crateCraft window and try again. If you started `server.py` from a terminal, the message is **http://127.0.0.1:8765 is already in use. Quit the other Serato library server (server.py or the desktop app) and try again.**
 
+On Windows, Controlled folder access can block a save into Music. The bar shows **Allow**, which opens Windows Security. crateCraft does not turn that setting off. The steps are in [Troubleshooting](troubleshooting.md#windows-blocks-a-save-into-music).
+
 Gatekeeper, SmartScreen, and Removable Volumes steps are in [First install](../first-install.md) and [Troubleshooting](troubleshooting.md).

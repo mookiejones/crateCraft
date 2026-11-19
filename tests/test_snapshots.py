@@ -308,6 +308,39 @@ class FrameRestoreTests(unittest.TestCase):
             self.assertEqual(snapshot_frames.read_stored_frames(m4a), m4a_frames)
             self.assertEqual(snapshot_frames.read_audio(m4a), before_audio)
 
+    def test_a_dropped_tag_write_rolls_back_and_is_not_saved(self) -> None:
+        """A rewrite whose frames did not land restores the previous file.
+
+        The audio digest still matches. The verify is what refuses the save.
+        Removing every frame is still a successful write.
+
+        Returns:
+            None. The test fails if the dropped frames stay on disk, or if
+            the error says the write was saved.
+        """
+        audio = b"AUDIOFRAME" * 4
+        frames = [
+            _geob("Serato Markers2", _markers()),
+            _geob("Serato BeatGrid", _grid()),
+            _geob("Serato Autotags", _autotags()),
+        ]
+        with TempLibrary() as temp:
+            mp3 = temp.root / "track.mp3"
+            mp3.write_bytes(_id3(frames, audio))
+            original = snapshot_frames.read_stored_frames(mp3)
+            self.assertIn("Markers2", original)
+            self._corrupt(mp3, original)
+            corrupted = mp3.read_bytes()
+            with mock.patch("snapshot_frames.read_stored_frames", return_value={}):
+                with self.assertRaises(snapshot_frames.FrameRewriteError) as caught:
+                    snapshot_frames.restore_stored_frames(mp3, original)
+            self.assertIn("did not land", str(caught.exception))
+            self.assertEqual(mp3.read_bytes(), corrupted)
+
+            snapshot_frames.restore_stored_frames(mp3, {})
+            self.assertEqual(snapshot_frames.read_stored_frames(mp3), {})
+            self.assertEqual(snapshot_frames.read_audio(mp3), audio)
+
     def _corrupt(self, path: Path, frames: dict[str, bytes]) -> None:
         """Flip the last byte of each stored frame inside the file.
 

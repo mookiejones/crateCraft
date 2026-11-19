@@ -63,6 +63,10 @@ These builds are unsigned, so macOS may ask again after an update, or the switch
 
 If you used the portable zip, run the exe from the extracted folder. Do not run it from inside the zip.
 
+## Windows blocks a save into Music
+
+Controlled folder access can block a write into Music. The bar says so and shows **Allow**. Choose **Allow**. Windows Security opens. Allow crateCraft there. crateCraft does not change that Windows setting. If a tag write does not land, the file is left as it was and the save is not reported as done.
+
 ## The page never appears, and no error is obvious
 
 Another copy may already be running.
