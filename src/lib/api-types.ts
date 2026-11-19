@@ -1005,6 +1005,33 @@ export interface LibraryHealthDuplicateGroup {
   ids: number[];
 }
 
+export interface SuspiciousCueDrop {
+  index: number;
+  start_ms: number;
+  name: string;
+}
+
+export interface SuspiciousCueTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  cues: SuspiciousCueDrop[];
+}
+
+export interface SuspiciousCuePlan {
+  preview: boolean;
+  written: boolean;
+  space: string;
+  crate: number | null;
+  count: number;
+  dropped: number;
+  tracks: SuspiciousCueTrack[];
+  error?: string;
+  code?: string;
+  touched?: string[];
+}
+
 export interface AlbumArtCandidate {
   release_id: string;
   title: string;
@@ -1044,6 +1071,7 @@ export interface LibraryHealthReport {
   no_key: LibraryHealthSection;
   no_beatgrid: LibraryHealthSection;
   no_artwork: LibraryHealthSection;
+  suspicious_cues: LibraryHealthSection;
   empty_genre: LibraryHealthSection;
   no_crate: LibraryHealthSection;
   unused: LibraryHealthFiles;

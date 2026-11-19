@@ -4,7 +4,7 @@
  * Accordion sections list counts and sample tracks. Not a Data Grid.
  */
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -17,6 +17,7 @@ import type {
   LibraryHealthTrack,
 } from "../lib/api-types";
 import { openAlbumArt } from "../lib/health/album-art";
+import { applySuspiciousCues, previewSuspiciousCues } from "../lib/health/suspicious-cues";
 import { useHealth, type HealthAction } from "../containers/HealthContext";
 import { t, type MessageKey } from "../lib/i18n";
 import { tips } from "../lib/ui/tooltip-strings";
@@ -133,6 +134,100 @@ function Section({
                 </Button>
               ) : null}
             </li>
+          ))}
+        </ul>
+        {count > tracks.length ? <p className="gig-note">{t("health.more", { count: count - tracks.length })}</p> : null}
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
+function SuspiciousCues({
+  section,
+  onReload,
+}: {
+  section: LibraryHealthSection | undefined;
+  onReload: () => Promise<void>;
+}) {
+  const count = section?.count ?? 0;
+  const tracks = section?.tracks ?? [];
+  const accordion = useSectionOpen(count > 0);
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [canApply, setCanApply] = useState(false);
+
+  async function review(): Promise<void> {
+    setBusy(true);
+    setCanApply(false);
+    try {
+      const plan = await previewSuspiciousCues();
+      setCanApply(plan.dropped > 0);
+      setNote(plan.dropped > 0 ? t("health.cuesDropped", { count: plan.dropped }) : t("health.cuesClear"));
+    } catch (error) {
+      setNote(error instanceof Error ? error.message : t("health.unreadable"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function removeDuplicates(): Promise<void> {
+    setBusy(true);
+    try {
+      const plan = await applySuspiciousCues();
+      setCanApply(false);
+      setNote(plan.written ? t("health.cuesRemoved", { count: plan.dropped }) : t("health.cuesClear"));
+      await onReload();
+    } catch (error) {
+      setNote(error instanceof Error ? error.message : t("health.unreadable"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Accordion
+      className="health-accordion"
+      expanded={accordion.expanded}
+      onChange={accordion.onChange}
+      {...ACCORDION_SX}
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} ref={tooltipRef(tips.healthSection)}>
+        {t("gig.groupCount", { label: t("health.suspiciousCues"), count })}
+      </AccordionSummary>
+      <AccordionDetails>
+        <Button
+          type="button"
+          size="small"
+          variant="outlined"
+          sx={BUTTON_SX}
+          ref={tooltipRef(tips.suspiciousCues)}
+          data-health-action="cues-preview"
+          disabled={busy}
+          onClick={() => {
+            void review();
+          }}
+        >
+          {t("health.reviewCues")}
+        </Button>
+        <Button
+          type="button"
+          size="small"
+          variant="outlined"
+          sx={BUTTON_SX}
+          ref={tooltipRef(tips.suspiciousCues)}
+          data-health-action="cues-apply"
+          disabled={busy || !canApply}
+          onClick={() => {
+            void removeDuplicates();
+          }}
+        >
+          {t("health.applyCues")}
+        </Button>
+        <p className="gig-note">{t("health.cuesNote")}</p>
+        {note ? <p className="gig-note">{note}</p> : null}
+        <ul>
+          {tracks.map((track) => (
+            <li key={track.id}>{trackLine(track)}</li>
           ))}
         </ul>
         {count > tracks.length ? <p className="gig-note">{t("health.more", { count: count - tracks.length })}</p> : null}
@@ -275,6 +370,7 @@ export function HealthPanel() {
     listed += payload.no_key.count;
     listed += payload.no_beatgrid.count;
     listed += payload.no_artwork.count;
+    listed += payload.suspicious_cues.count;
     listed += payload.empty_genre.count;
     listed += payload.no_crate.count;
     listed += payload.unused.count;
@@ -309,14 +405,18 @@ export function HealthPanel() {
           <>
             <p className="gig-note">{t("health.summary", { count: payload.checked })}</p>
             {SECTIONS.map((spec) => (
-              <Section
-                key={spec.key}
-                label={t(spec.label)}
-                section={payload[spec.key]}
-                {...(spec.action ? { action: spec.action } : {})}
-                {...(spec.key === "no_artwork" ? { findArt: true } : {})}
-                onNavigate={health.navigate}
-              />
+              <Fragment key={spec.key}>
+                <Section
+                  label={t(spec.label)}
+                  section={payload[spec.key]}
+                  {...(spec.action ? { action: spec.action } : {})}
+                  {...(spec.key === "no_artwork" ? { findArt: true } : {})}
+                  onNavigate={health.navigate}
+                />
+                {spec.key === "no_artwork" ? (
+                  <SuspiciousCues section={payload.suspicious_cues} onReload={health.loadHealth} />
+                ) : null}
+              </Fragment>
             ))}
             <Unused section={payload.unused} onNavigate={health.navigate} />
             <Duplicates section={payload.duplicates} onNavigate={health.navigate} />

@@ -52,6 +52,7 @@ import setup_flow
 import smart_presets
 import smart_rules
 import snapshots
+import suspicious_cues
 import tag_cleanup
 import tempo_drift
 import telemetry
@@ -2256,6 +2257,7 @@ class Handler(BaseHTTPRequestHandler):
                     losting = parsed.path == "/api/lost-tags"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
+                    cueing = parsed.path == "/api/suspicious-cues"
                     history = parsed.path == "/api/history-stats"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
@@ -2276,6 +2278,8 @@ class Handler(BaseHTTPRequestHandler):
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
                         or (bitrate_crate and payload.get("action") == "preview")
+                        or (cueing and payload.get("action") == "preview")
+                        or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
                         or (
                             mirroring
                             and (
@@ -2363,6 +2367,10 @@ class Handler(BaseHTTPRequestHandler):
                         result = bitrate_check.action(request)
                         if request.get("action") == "create" and result.get("written"):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif cueing:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = suspicious_cues.action(request)
                     elif mirroring:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
