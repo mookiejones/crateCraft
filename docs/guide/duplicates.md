@@ -1,10 +1,12 @@
 # Duplicates
 
-**Duplicates** lists tracks that share a title, artist, and length in whole seconds. The note says **Same title, artist, and length. Select a copy, then merge the others into it.**
+**Duplicates** lists tracks that share a title, artist, and length within 4 seconds. The note says **Same title, artist, and length within 4 seconds. Select a copy, then merge the others into it.**
 
 ![The Duplicates view. Two sample tracks share a title, artist, and length, and Merge copies is in the left rail.](../media/duplicates.png)
 
-Empty titles and empty artists are left out of the groups. A track with a different length, counted in whole seconds, is not a duplicate.
+Empty titles and empty artists are left out of the groups. A track more than 4 seconds longer or shorter is not the same recording.
+
+A file that rekordbox, Engine DJ, Traktor, VirtualDJ, or djay still uses is not moved to the Trash. Turn Trash off to merge the library rows and keep that file. The kept copy still joins the crates. Merge is refused while one of those apps is open.
 
 Open a track to see **Other copies**. Each line shows the file, the bitrate, the play count, and the crates. A missing copy says **missing**. Click a file name to open that copy. **Use in crates** puts that file in every crate the open track is in, at the same position. Both files can stay. **Merge copies** folds the group into one library row and can move the other files to the Trash.
 

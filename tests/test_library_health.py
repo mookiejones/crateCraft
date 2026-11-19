@@ -262,6 +262,27 @@ class ReportTests(unittest.TestCase):
             body = library_health.report(temp.db, library.LIBRARY_SPACE)
         self.assertNotIn(1, _ids(body["no_beatgrid"]))
 
+    def test_length_outside_four_seconds_is_not_a_duplicate(self) -> None:
+        """A 4 second gap stays one group. One more millisecond splits it.
+
+        Asset 1 stays at 180000 ms. 184000 ms is still the same recording.
+        184001 ms is not. The report writes nothing.
+
+        Returns:
+            None. The test fails if the wider gap is still listed.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET length_ms = 184000 WHERE id = 2")
+            near = library_health.report(temp.db, library.LIBRARY_SPACE)
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET length_ms = 184001 WHERE id = 2")
+            far = library_health.report(temp.db, library.LIBRARY_SPACE)
+        self.assertEqual(near["duplicates"]["count"], 1)
+        self.assertEqual(near["duplicates"]["groups"][0]["ids"], [1, 2])
+        self.assertEqual(far["duplicates"]["count"], 0)
+        self.assertEqual(far["duplicates"]["groups"], [])
+
 
 class ApiTests(unittest.TestCase):
     """``GET /api/library-health``."""

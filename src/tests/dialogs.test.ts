@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadPrivacy, rankReplaceCandidates, rekordboxExportUrl, renderCratesReplacePreview, renderMergePreview, saveRekordboxExport, wireDialogs } from "../lib/ui/dialogs";
 import { el } from "../lib/dom";
+import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
 import { mountSharedDialogs, unmountSharedDialogs } from "../lib/ui/shared-dialog-mount";
 import { parkSharedDialogBucket } from "../pages/SharedDialogs";
@@ -338,6 +339,53 @@ describe("renderMergePreview", () => {
       "dup.mp3 has Serato cues",
     );
     expect(el("merge-preview").textContent).not.toContain("will be copied");
+  });
+
+  it("translates a file another DJ app still uses", () => {
+    setLocale("en");
+    renderMergePreview({
+      crates_added: [],
+      crates_kept: [],
+      spaces_added: [],
+      fields: [],
+      history_repointed: false,
+      history_entries: 0,
+      removed: [{ id: 2 }],
+      files: [
+        {
+          file: "same-b.mp3",
+          reason_code: "other_dj",
+          used_by: ["VirtualDJ"],
+          reason: "VirtualDJ still uses this file. It was not moved.",
+          blocks_trash: true,
+        },
+      ],
+    });
+    expect(el("merge-preview").textContent).toContain(
+      "same-b.mp3: VirtualDJ still uses this file. It was not moved.",
+    );
+    setLocale("es");
+    renderMergePreview({
+      crates_added: [],
+      crates_kept: [],
+      spaces_added: [],
+      fields: [],
+      history_repointed: false,
+      history_entries: 0,
+      removed: [{ id: 2 }],
+      files: [
+        {
+          file: "same-b.mp3",
+          reason_code: "other_dj",
+          used_by: ["VirtualDJ"],
+          blocks_trash: true,
+        },
+      ],
+    });
+    expect(el("merge-preview").textContent).toContain(
+      "same-b.mp3: VirtualDJ todavía usa este archivo. No se movió.",
+    );
+    setLocale("en");
   });
 });
 

@@ -1587,30 +1587,54 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
         track_name = data.get("name")
         track_artist = data.get("artist")
         length_ms = data.get("length_ms")
-        if track_name and track_artist and length_ms is not None:
-            seconds = required_int(length_ms) // 1000
-            others: list[sqlite3.Row] = []
-            copy_params: list[object] = [
-                chosen,
-                track_name,
-                track_artist,
-                seconds,
-                asset_id,
-            ]
-            for other in conn.execute(
+        if (
+            isinstance(track_name, str)
+            and track_name.strip()
+            and isinstance(track_artist, str)
+            and track_artist.strip()
+            and isinstance(length_ms, int)
+            and not isinstance(length_ms, bool)
+            and length_ms >= 0
+            and isinstance(asset_id, int)
+            and not isinstance(asset_id, bool)
+        ):
+            partner_rows = conn.execute(
                 """
-                SELECT a.id, a.file_bit_rate, a.dj_play_count, a.is_missing, a.file_name
+                SELECT a.id, a.length_ms
                 FROM asset a
                 JOIN space_asset sa ON sa.asset_id = a.id
                 JOIN space s ON s.id = sa.space_id
                 WHERE s.name = ? AND a.name = ? AND a.artist = ?
-                  AND CAST(a.length_ms / 1000 AS INTEGER) = ? AND a.id != ?
+                  AND a.length_ms IS NOT NULL AND a.length_ms >= 0
                 ORDER BY a.id
-                LIMIT 12
                 """,
-                copy_params,
-            ):
-                others.append(other)
+                (chosen, track_name, track_artist),
+            ).fetchall()
+            packed: list[tuple[object, object, int, int]] = []
+            for row in partner_rows:
+                raw_id = cell(row, "id")
+                raw_length = cell(row, "length_ms")
+                if isinstance(raw_id, bool) or not isinstance(raw_id, int):
+                    continue
+                if isinstance(raw_length, bool) or not isinstance(raw_length, int):
+                    continue
+                packed.append((track_name, track_artist, raw_id, raw_length))
+            partner_ids = library.recording_partner_ids(
+                packed, asset_id, length_ms, limit=12
+            )
+            others: list[sqlite3.Row] = []
+            if partner_ids:
+                marks = ",".join("?" * len(partner_ids))
+                for other in conn.execute(
+                    f"""
+                    SELECT a.id, a.file_bit_rate, a.dj_play_count, a.is_missing, a.file_name
+                    FROM asset a
+                    WHERE a.id IN ({marks})
+                    ORDER BY a.id
+                    """,
+                    partner_ids,
+                ):
+                    others.append(other)
             if others:
                 other_ids = [cell(other, "id") for other in others]
                 marks = ",".join("?" * len(other_ids))

@@ -139,7 +139,7 @@ class DuplicateDeleteGateTests(_ConfigCase):
         """Point asset 2 at a duplicate path on ``volume_path``.
 
         Asset 1 stays a real file under the temp music folder. Both rows
-        already share title, artist, and whole-second length.
+        already share title, artist, and a length within 4 seconds.
 
         Args:
             temp: Open fixture library.

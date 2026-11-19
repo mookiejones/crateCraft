@@ -31,6 +31,7 @@ from typing import Protocol, cast
 from urllib.parse import quote, unquote, urlparse
 
 import app_log
+import other_dj
 import snapshot_frames
 import telemetry
 from tags import SeratoTags, read_serato_tags
@@ -4728,17 +4729,137 @@ def history_entries(session_id: int) -> dict[str, object]:
     }
 
 
-def duplicate_groups(space: str = LIBRARY_SPACE) -> list[dict[str, object]]:
-    """Group tracks that share a title, artist, and length in whole seconds.
+SAME_RECORDING_MS = 4000
 
-    Reads the asset and space tables. Whole seconds come from integer
-    division of length_ms. The query does not write.
+
+def group_recordings(
+    rows: Sequence[tuple[object, object, int, int]],
+) -> list[dict[str, object]]:
+    """Group rows that are the same recording.
+
+    A row is ``(name, artist, id, length_ms)``. Title and artist must match
+    exactly. One group's longest and shortest lengths differ by at most
+    4000 ms. Clusters do not overlap and start with the shortest track.
+    ``seconds`` is that shortest length divided by 1000. Ids are sorted.
+
+    Groups are ordered by size descending, then name, artist, seconds, and
+    the first id. Blank names, missing names, booleans, and a negative
+    length are skipped.
+
+    Args:
+        rows: Candidate tracks. Order does not matter.
+
+    Returns:
+        Groups with ``name``, ``artist``, ``seconds``, and ``ids``.
+    """
+    buckets: dict[tuple[str, str], list[tuple[int, int]]] = {}
+    for name, artist, asset_id, length_ms in rows:
+        if not isinstance(name, str) or _blank_text(name):
+            continue
+        if not isinstance(artist, str) or _blank_text(artist):
+            continue
+        if isinstance(asset_id, bool) or not isinstance(asset_id, int):
+            continue
+        if isinstance(length_ms, bool) or not isinstance(length_ms, int):
+            continue
+        if length_ms < 0:
+            continue
+        buckets.setdefault((name, artist), []).append((length_ms, asset_id))
+    groups: list[dict[str, object]] = []
+    for (name, artist), members in buckets.items():
+        members.sort()
+        start = 0
+        count = len(members)
+        while start < count:
+            floor = members[start][0]
+            end = start + 1
+            while end < count and members[end][0] - floor <= SAME_RECORDING_MS:
+                end += 1
+            cluster = members[start:end]
+            if len(cluster) >= 2:
+                ids = sorted(item[1] for item in cluster)
+                shortest = cluster[0][0]
+                groups.append(
+                    {
+                        "name": name,
+                        "artist": artist,
+                        "seconds": shortest // 1000,
+                        "ids": ids,
+                    }
+                )
+            start = end
+    groups.sort(
+        key=lambda group: (
+            -len(cast(list[int], group["ids"])),
+            str(group["name"]).casefold(),
+            str(group["artist"]).casefold(),
+            int(cast(int, group["seconds"])),
+            cast(list[int], group["ids"])[0],
+        )
+    )
+    return groups
+
+
+def recording_partner_ids(
+    rows: Sequence[tuple[object, object, int, int]],
+    asset_id: int,
+    length_ms: int,
+    limit: int = 12,
+) -> list[int]:
+    """Return other ids in the same recording as ``asset_id``.
+
+    Rows must include the asset. A lone track returns an empty list. When
+    the asset is present, ``length_ms`` is ignored and the stored length is
+    used. When the asset is absent, the result is empty. Only rows with
+    that asset's exact title and artist are clustered.
+
+    Args:
+        rows: ``(name, artist, id, length_ms)`` including the asset.
+        asset_id: Asset whose partners are wanted.
+        length_ms: Ignored when the asset is in ``rows``.
+        limit: Maximum number of partner ids.
+
+    Returns:
+        Partner ids, sorted, capped at ``limit``.
+    """
+    del length_ms
+    if isinstance(asset_id, bool) or not isinstance(asset_id, int):
+        return []
+    own: tuple[object, object] | None = None
+    for name, artist, row_id, _row_length in rows:
+        if isinstance(row_id, bool) or not isinstance(row_id, int):
+            continue
+        if row_id == asset_id:
+            own = (name, artist)
+            break
+    if own is None:
+        return []
+    name, artist = own
+    if not isinstance(name, str) or _blank_text(name):
+        return []
+    if not isinstance(artist, str) or _blank_text(artist):
+        return []
+    filtered = [row for row in rows if row[0] == name and row[1] == artist]
+    for group in group_recordings(filtered):
+        ids = cast(list[int], group["ids"])
+        if asset_id in ids:
+            return [item for item in ids if item != asset_id][:limit]
+    return []
+
+
+def duplicate_groups(space: str = LIBRARY_SPACE) -> list[dict[str, object]]:
+    """Group tracks that share a title, artist, and length within 4 seconds.
+
+    One group's longest and shortest lengths differ by at most 4000 ms.
+    Clusters do not overlap and start with the shortest track. ``seconds``
+    is the shortest member's length divided by 1000. The query does not write.
 
     Args:
         space: Space to scan.
 
     Returns:
-        Groups with name, artist, seconds, and asset ids sorted by id. Empty titles and artists are skipped.
+        Groups with name, artist, seconds, and asset ids sorted by id.
+        Empty titles, empty artists, and a negative length are skipped.
 
     Raises:
         LibraryError: If the space is not allowed.
@@ -4748,34 +4869,22 @@ def duplicate_groups(space: str = LIBRARY_SPACE) -> list[dict[str, object]]:
     with closing(read_conn()) as conn:
         rows = conn.execute(
             """
-            SELECT a.name, a.artist, CAST(a.length_ms / 1000 AS INTEGER) AS seconds,
-                   GROUP_CONCAT(a.id) AS ids
+            SELECT a.name, a.artist, a.id, a.length_ms
             FROM asset a
             JOIN space_asset sa ON sa.asset_id = a.id
             JOIN space s ON s.id = sa.space_id
             WHERE s.name = ?
-              AND TRIM(COALESCE(a.name, '')) != ''
-              AND TRIM(COALESCE(a.artist, '')) != ''
               AND a.length_ms IS NOT NULL
-            GROUP BY a.name, a.artist, seconds
-            HAVING COUNT(*) > 1
-            ORDER BY COUNT(*) DESC, a.name COLLATE NOCASE
+              AND a.length_ms >= 0
+            ORDER BY a.id
             """,
             (space,),
         ).fetchall()
-    groups: list[dict[str, object]] = []
-    for row in rows:
-        raw_ids: object = row["ids"] or ""
-        ids = sorted(int(part) for part in cast(str, raw_ids).split(",") if part)
-        groups.append(
-            {
-                "name": row["name"],
-                "artist": row["artist"],
-                "seconds": row["seconds"],
-                "ids": ids,
-            }
-        )
-    return groups
+    packed = [
+        (row["name"], row["artist"], int(row["id"]), int(row["length_ms"]))
+        for row in rows
+    ]
+    return group_recordings(packed)
 
 
 # Text copied onto the kept track only when that field is empty. These describe
@@ -4826,7 +4935,15 @@ _CUE_WARNING_TAIL = (
     "This app does not copy them when the frames cannot be rewritten safely. "
     "Keep that copy instead if you need its cues."
 )
-_PUBLIC_FILE_KEYS = ("id", "file", "on_disk", "blocks_trash", "reason")
+_PUBLIC_FILE_KEYS = (
+    "id",
+    "file",
+    "on_disk",
+    "blocks_trash",
+    "reason",
+    "reason_code",
+    "used_by",
+)
 _PUBLIC_CUE_COPY_KEYS = ("file", "markers", "beatgrid", "status")
 
 
@@ -5175,14 +5292,19 @@ def _classify_audio(
     file_name: object,
     asset_id: int,
     kept_path: Path | None,
+    index: other_dj.LibraryIndex | None = None,
 ) -> dict[str, object]:
     """Decide whether one duplicate file may move to the Trash.
+
+    A file that rekordbox, Engine DJ, Traktor, VirtualDJ, or djay still
+    uses is not moved. A shortcut is refused before that check.
 
     Args:
         portable_id: Stored path.
         file_name: Display name stored on the asset.
         asset_id: Asset id.
         kept_path: Resolved path of the copy being kept, or None.
+        index: Other DJ libraries. None skips that check.
 
     Returns:
         A file dict. ``path`` is private and is removed before the response
@@ -5195,6 +5317,8 @@ def _classify_audio(
         "on_disk": False,
         "blocks_trash": False,
         "reason": "This file is already absent.",
+        "reason_code": "",
+        "used_by": [],
         "path": None,
     }
     raw = _resolved(portable_id if isinstance(portable_id, str) else None)
@@ -5228,6 +5352,13 @@ def _classify_audio(
         return info
     info["on_disk"] = True
     info["reason"] = ""
+    if index is not None:
+        apps = index.used_by(raw, path)
+        if apps:
+            info["blocks_trash"] = True
+            info["reason_code"] = "other_dj"
+            info["used_by"] = apps
+            info["reason"] = other_dj.file_reason(apps)
     return info
 
 
@@ -5627,7 +5758,7 @@ def _group_members(
     """Load the duplicate group that contains the kept track.
 
     The group is the same set ``duplicate_groups`` would return: one space,
-    exact title, exact artist, and length in whole seconds.
+    exact title, exact artist, and length within 4 seconds.
 
     Args:
         conn: Open connection.
@@ -5670,14 +5801,30 @@ def _group_members(
           AND a.name = ?
           AND a.artist = ?
           AND a.length_ms IS NOT NULL
-          AND CAST(a.length_ms / 1000 AS INTEGER) = CAST(? / 1000 AS INTEGER)
+          AND a.length_ms >= 0
         ORDER BY a.id
         """,
-        (space, name, artist, int(cast(int, length))),
+        (space, name, artist),
     ).fetchall()
     members = [_row_values(item) for item in rows]
-    if len(members) < 2 or not any(int(cast(int, item["id"])) == keep_id for item in members):
+    packed: list[tuple[object, object, int, int]] = []
+    for item in members:
+        item_id = item.get("id")
+        item_length = item.get("length_ms")
+        if isinstance(item_id, bool) or not isinstance(item_id, int):
+            continue
+        if isinstance(item_length, bool) or not isinstance(item_length, int):
+            continue
+        packed.append((name, artist, item_id, item_length))
+    cluster_ids: set[int] = set()
+    for group in group_recordings(packed):
+        ids = cast(list[int], group["ids"])
+        if keep_id in ids:
+            cluster_ids = set(ids)
+            break
+    if len(cluster_ids) < 2:
         raise LibraryError("That track is not in a duplicate group.")
+    members = [item for item in members if int(cast(int, item["id"])) in cluster_ids]
     removes = [item for item in members if int(cast(int, item["id"])) != keep_id]
     kept = next(item for item in members if int(cast(int, item["id"])) == keep_id)
     return kept, removes
@@ -5702,8 +5849,15 @@ def _build_merge_plan(conn: sqlite3.Connection, space: str, keep_id: int) -> dic
     kept_path = Path(kept_raw) if kept_raw else None
     if kept_path is not None and (kept_path.is_symlink() or not kept_path.is_file()):
         kept_path = None
+    index = other_dj.LibraryIndex(other_dj.locate_libraries())
     files = [
-        _classify_audio(row.get("portable_id"), row.get("file_name"), int(cast(int, row["id"])), kept_path)
+        _classify_audio(
+            row.get("portable_id"),
+            row.get("file_name"),
+            int(cast(int, row["id"])),
+            kept_path,
+            index,
+        )
         for row in removes
     ]
     kept_spaces = set(_asset_spaces(conn, keep_id))
@@ -6437,7 +6591,7 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
     """Fold a duplicate group into the copy the user keeps.
 
     The group matches ``duplicate_groups``: same space, title, artist, and
-    length in whole seconds. The kept track is added to every normal crate
+    length within 4 seconds. The kept track is added to every normal crate
     any duplicate was in. When the kept track is already in a crate, it stays
     at its current position. Otherwise it takes the earliest duplicate's
     position in that crate. Smart crates are left to their rules.
@@ -6511,6 +6665,8 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
         raise LibraryError("Confirm the merge before it runs.")
     if delete_files and not confirm_delete:
         raise LibraryError("Moving audio files to the Trash needs a separate confirmation.")
+    if other_dj.apps_open():
+        raise LibraryError(other_dj.OTHER_DJ_OPEN)
     with closing(read_conn()) as conn:
         early = _build_merge_plan(conn, space, keep_id)
     if delete_files:

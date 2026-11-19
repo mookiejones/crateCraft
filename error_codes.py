@@ -27,6 +27,7 @@ import folder_sync
 import version_family
 import legacy_library
 import music_mirror
+import other_dj
 import smart_presets
 import suspicious_cues
 import tag_cleanup
@@ -100,6 +101,7 @@ ERROR_CODES: dict[str, str] = {
     REGISTRATION_NO_SPACE: "registration_no_space",
     "The file could not be moved. Nothing was changed.": "move_failed",
     "That track is not in a duplicate group.": "not_duplicate",
+    other_dj.OTHER_DJ_OPEN: "other_dj_open",
     "Choose the copy to keep.": "choose_copy",
     "Choose the track to replace.": "choose_replace_from",
     "Choose the track to put in those crates.": "choose_replace_to",

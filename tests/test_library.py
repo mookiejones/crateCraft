@@ -8,11 +8,13 @@ import shutil
 import struct
 import subprocess
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import cast
 from unittest import mock
 
 import library
+import other_dj
 import snapshot_frames
 from library import LibraryError, SeratoOpen
 from tags import read_serato_tags
@@ -353,7 +355,7 @@ class LibraryTests(unittest.TestCase):
         """Group the fixture pair and read its history session.
 
         Both reads use the temporary master database. Tracks that share a title,
-        artist, and whole-second length form one group. Nothing is written.
+        artist, and length within 4 seconds form one group. Nothing is written.
 
         Returns:
             None. The test fails if the pair or the Friday session is missing.
@@ -524,7 +526,7 @@ def _seed_merge_group(conn: object) -> None:
     """Add a third duplicate, a bystander track, and crate positions.
 
     Asset 1 is the copy tests keep. Assets 2 and 3 share its title, artist,
-    and whole-second length and carry the metadata the merge should fold in.
+    and a length within 4 seconds, and carry the metadata the merge should fold in.
     Asset 4 sits in a crate so its position can be checked afterwards.
 
     Args:
@@ -1873,6 +1875,175 @@ class ReplaceInCratesTests(unittest.TestCase):
             warmup = _crate_orders(temp.db, 10)
             self.assertFalse((temp.db.parent / "Backups").exists())
         self.assertEqual(warmup, [(1, 3)])
+
+
+class RecordingWindowTests(unittest.TestCase):
+    """Same recording means title, artist, and length within 4 seconds."""
+
+    def test_four_seconds_is_one_cluster_and_partners_stay_in_it(self) -> None:
+        """4000 ms groups. 4001 ms does not. A chain does not bridge the gap.
+
+        100 s, 103 s, and 107 s keep only the first pair, even though 103 s
+        is also within 4 seconds of 107 s. A different title stays out.
+        Partners ignore a caller length once the row is present, and stop
+        at 12.
+
+        Returns:
+            None. The test fails if 100 s and 107 s share a group.
+        """
+        near = library.group_recordings(
+            [
+                ("Same", "Artist", 1, 180000),
+                ("Same", "Artist", 2, 184000),
+            ]
+        )
+        far = library.group_recordings(
+            [
+                ("Same", "Artist", 1, 180000),
+                ("Same", "Artist", 2, 184001),
+            ]
+        )
+        chain = library.group_recordings(
+            [
+                ("Same", "Artist", 1, 100000),
+                ("Same", "Artist", 2, 103000),
+                ("Same", "Artist", 3, 107000),
+            ]
+        )
+        spread = library.group_recordings(
+            [
+                ("Same", "Artist", 1, 180000),
+                ("Same", "Artist", 2, 182000),
+                ("Same", "Artist", 3, 186000),
+                ("Other", "Artist", 4, 180000),
+                ("", "Artist", 5, 180000),
+                ("Same", "Artist", True, 180000),
+                ("Same", "Artist", 6, -1),
+            ]
+        )
+        self.assertEqual(near[0]["ids"], [1, 2])
+        self.assertEqual(near[0]["seconds"], 180)
+        self.assertEqual(far, [])
+        self.assertEqual(chain[0]["ids"], [1, 2])
+        self.assertEqual(len(chain), 1)
+        self.assertEqual(spread[0]["ids"], [1, 2])
+        self.assertEqual(len(spread), 1)
+        rows = [("Same", "Artist", item, 180000) for item in range(1, 15)]
+        rows.append(("Different", "Artist", 99, 180000))
+        self.assertEqual(library.recording_partner_ids(rows, 1, 999999, limit=12), list(range(2, 14)))
+        self.assertEqual(library.recording_partner_ids(rows, 50, 180000), [])
+        self.assertEqual(library.recording_partner_ids([(" ", "Artist", 1, 180000)], 1, 180000), [])
+
+    def test_library_groups_184000_and_splits_184001(self) -> None:
+        """The fixture pair stays together at exactly 4 seconds.
+
+        Asset 1 is 180000 ms. Nothing is written outside the temporary
+        database.
+
+        Returns:
+            None. The test fails if 184001 ms is still a duplicate.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET length_ms = 184000 WHERE id = 2")
+            grouped = library.duplicate_groups()
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET length_ms = 184001 WHERE id = 2")
+            split = library.duplicate_groups()
+            self.assertFalse((temp.db.parent / "Backups").exists())
+        self.assertEqual(grouped[0]["ids"], [1, 2])
+        self.assertEqual(grouped[0]["seconds"], 180)
+        self.assertEqual(split, [])
+
+    def test_other_app_file_is_not_trashed_and_crates_move(self) -> None:
+        """VirtualDJ keeps the audio. The library row can still merge.
+
+        Asset 2 is 3 seconds longer and is named in a VirtualDJ library.
+        Trash is refused and the file and both rows stay. A merge with
+        Trash off removes only that row. Asset 3 is 10 seconds longer, so
+        it stays, and Prepare is not copied. Warmup is copied onto asset 1.
+
+        Returns:
+            None. The test fails if the audio moves or asset 3 is removed.
+        """
+        with TempLibrary() as temp:
+            with open_database(temp.db) as conn:
+                _seed_merge_group(conn)
+                conn.execute("UPDATE asset SET length_ms = 183000 WHERE id = 2")
+                conn.execute("UPDATE asset SET length_ms = 190000 WHERE id = 3")
+            _folder, _kept, audio = _audio_pair(temp, "kept.mp3", "same-b.mp3")
+            audio.write_bytes(b"keep-me")
+            xml = temp.root / "database.xml"
+            tree = ET.Element("VirtualDJ_Database")
+            ET.SubElement(tree, "Song", FilePath=str(audio))
+            xml.write_bytes(ET.tostring(tree))
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    "UPDATE asset SET portable_id = ?, file_name = ? WHERE id = 2",
+                    (str(audio), audio.name),
+                )
+            other_dj.locate_libraries = lambda home=None: [("VirtualDJ", xml)]
+            groups = library.duplicate_groups()
+            preview = library.merge_duplicates({"keep_id": 1, "preview": True})
+            copied = next(
+                item
+                for item in cast(list[dict[str, object]], preview["files"])
+                if item["id"] == 2
+            )
+            with self.assertRaises(LibraryError) as raised:
+                library.merge_duplicates(
+                    {
+                        "keep_id": 1,
+                        "confirm": True,
+                        "delete_files": True,
+                        "confirm_delete_files": True,
+                    }
+                )
+            self.assertEqual(audio.read_bytes(), b"keep-me")
+            self.assertEqual(_asset_count(temp.db, 2), 1)
+            self.assertEqual(_asset_count(temp.db, 3), 1)
+            self.assertFalse((temp.db.parent / "Backups").exists())
+            result = library.merge_duplicates({"keep_id": 1, "confirm": True})
+            names = {
+                item["name"]
+                for item in cast(list[dict[str, object]], result["crates_added"])
+            }
+            self.assertEqual(audio.read_bytes(), b"keep-me")
+            self.assertEqual(_asset_count(temp.db, 2), 0)
+            self.assertEqual(_asset_count(temp.db, 3), 1)
+            self.assertFalse((temp.db.parent / "Backups").exists())
+        self.assertEqual([group["ids"] for group in groups], [[1, 2]])
+        self.assertTrue(copied["blocks_trash"])
+        self.assertEqual(copied["reason_code"], "other_dj")
+        self.assertEqual(copied["used_by"], ["VirtualDJ"])
+        self.assertEqual(
+            str(raised.exception),
+            "VirtualDJ still uses this file. It was not moved. "
+            "Leave the Trash option off to merge the library rows.",
+        )
+        self.assertEqual(result["remove_ids"], [2])
+        self.assertIn("Warmup", names)
+        self.assertNotIn("Prepare", names)
+
+    def test_open_dj_app_blocks_confirm_and_preview_still_plans(self) -> None:
+        """A running rekordbox refuses the merge before any write.
+
+        Preview still returns the plan. The duplicate row stays.
+
+        Returns:
+            None. The test fails if confirm writes or preview raises.
+        """
+        with TempLibrary() as temp:
+            other_dj.apps_open = lambda names=None: ["rekordbox"]
+            preview = library.merge_duplicates({"keep_id": 1, "preview": True})
+            with self.assertRaises(LibraryError) as raised:
+                library.merge_duplicates({"keep_id": 1, "confirm": True})
+            left = _asset_count(temp.db, 2)
+            self.assertFalse((temp.db.parent / "Backups").exists())
+        self.assertTrue(preview["preview"])
+        self.assertEqual(preview["remove_ids"], [2])
+        self.assertEqual(str(raised.exception), other_dj.OTHER_DJ_OPEN)
+        self.assertEqual(left, 1)
 
 
 if __name__ == "__main__":

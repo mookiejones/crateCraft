@@ -349,7 +349,12 @@ export function renderMergePreview(preview: MergePreview | null) {
   const removed = (preview.removed || []).length;
   item(t("merge.removeCopies", { count: removed }));
   for (const file of preview.files || []) {
-    if (file.reason) item(`${file.file}: ${file.reason}`);
+    if (file.reason_code === "other_dj") {
+      const apps = (file.used_by ?? []).join(", ");
+      item(`${file.file ?? ""}: ${t("merge.otherDjUsesFile", { apps })}`);
+    } else if (file.reason) {
+      item(`${file.file}: ${file.reason}`);
+    }
   }
   const copy = preview.cue_copy;
   if (copy && (copy.markers || copy.beatgrid) && copy.status !== "failed") {

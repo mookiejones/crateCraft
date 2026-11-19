@@ -486,6 +486,8 @@ export interface MergeField {
 export interface MergeFile {
   file?: string;
   reason?: string;
+  reason_code?: string;
+  used_by?: string[];
   on_disk?: boolean;
   blocks_trash?: boolean;
 }
