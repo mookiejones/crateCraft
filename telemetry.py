@@ -840,13 +840,14 @@ def public_settings() -> dict[str, object]:
         pane layout, whether this build has a key, the app version, the
         Rekordbox export bar, the saved page language (None follows the
         OS), ``colorway``, ``icon_follows_theme``, ``gig_lock``,
-        ``shortcuts``, ``min_copies``, ``untrusted_volumes``, and
-        ``icon_href``.
+        ``shortcuts``, ``min_copies``, ``untrusted_volumes``,
+        ``protected_fields``, and ``icon_href``.
         ``app_version`` is the ``version`` string from
         ``GET /api/version``. The install id and the telemetry keys are not
         included.
     """
     import app_icons
+    import protected_fields
 
     settings = app_config.load_settings()
     follow = settings.icon_follows_theme is True
@@ -870,6 +871,7 @@ def public_settings() -> dict[str, object]:
         "min_copies": settings.min_copies,
         "untrusted_volumes": list(settings.untrusted_volumes),
         "shortcuts": copy.deepcopy(settings.shortcuts),
+        "protected_fields": protected_fields.load(),
     }
 
 

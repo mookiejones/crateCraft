@@ -15,6 +15,7 @@ export type SettingsContextValue = SettingsSnapshot & {
   saveColorway: (value: Colorway | string) => Promise<void>;
   saveIconFollow: (follow: boolean) => Promise<void>;
   saveGigLock: (on: boolean) => Promise<void>;
+  saveProtected: (field: "bpm" | "key" | "cues", on: boolean) => Promise<void>;
   saveMinCopies: (value: number) => Promise<void>;
   setUntrustedDraft: (text: string) => void;
   saveUntrustedVolumes: (text?: string) => Promise<void>;

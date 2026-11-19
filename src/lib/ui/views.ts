@@ -1938,7 +1938,12 @@ async function saveTrack(id: number, fields: TrackSaveFields) {
       setNotice(t("gigLock.queued"));
       return;
     }
-    setNotice(result.warning || t("common.saved"));
+    const restored = Array.isArray(result.restored) ? result.restored : [];
+    if (restored.length > 0) {
+      setNotice(t("detail.restored", { fields: restored.join(", ") }));
+    } else {
+      setNotice(result.warning || t("common.saved"));
+    }
     await loadLibrary();
     selectTrack(id);
   } catch (error) {

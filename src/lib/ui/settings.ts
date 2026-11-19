@@ -31,6 +31,9 @@ export type SettingsSnapshot = {
   colorway: Colorway;
   iconFollowsTheme: boolean;
   gigLock: boolean;
+  protectBpm: boolean;
+  protectKey: boolean;
+  protectCues: boolean;
   minCopies: number;
   untrustedVolumes: string;
   iconStatus: string;
@@ -57,6 +60,9 @@ const DEFAULT_SNAPSHOT: SettingsSnapshot = {
   colorway: "serato-like",
   iconFollowsTheme: true,
   gigLock: false,
+  protectBpm: false,
+  protectKey: false,
+  protectCues: false,
   minCopies: 2,
   untrustedVolumes: "",
   iconStatus: "",
@@ -438,6 +444,48 @@ export function applyGigLock(payload: SettingsPayload): void {
  * @param next Checkbox value, or the control's current value.
  * @returns {Promise<void>}
  */
+/**
+ * Apply the saved field-protection switches.
+ *
+ * A payload without protected_fields leaves the controls alone.
+ *
+ * @param payload Settings object from the server.
+ * @returns {void}
+ */
+export function applyProtected(payload: SettingsPayload): void {
+  const flags = payload.protected_fields;
+  if (flags == null || typeof flags !== "object") return;
+  patchSettings({
+    protectBpm: flags.bpm === true,
+    protectKey: flags.key === true,
+    protectCues: flags.cues === true,
+  });
+}
+
+/**
+ * Save one protected-field switch.
+ *
+ * @param field bpm, key, or cues.
+ * @param on True keeps that field.
+ * @returns {Promise<void>}
+ */
+export async function saveProtected(field: "bpm" | "key" | "cues", on: boolean): Promise<void> {
+  const patch = {
+    protectBpm: field === "bpm" ? on : snapshot.protectBpm,
+    protectKey: field === "key" ? on : snapshot.protectKey,
+    protectCues: field === "cues" ? on : snapshot.protectCues,
+  };
+  patchSettings(patch);
+  try {
+    const payload = await postJSON<SettingsPayload>("/api/settings", {
+      protected_fields: { [field]: on },
+    });
+    applyProtected(payload);
+  } catch {
+    patchSettings({ iconStatus: t("error.protected_not_saved") });
+  }
+}
+
 export async function saveGigLock(next?: boolean): Promise<void> {
   const on = next ?? checkboxChecked("gig-lock");
   patchSettings({ gigLock: on, iconStatus: "" });
