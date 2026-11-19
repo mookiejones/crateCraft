@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gc
 import os
 import sqlite3
 import subprocess
@@ -26,15 +27,22 @@ def _touch(path: Path, text: str = "x") -> None:
 
 
 def _sqlite(path: Path, statements: str) -> None:
-    """Create a small SQLite file.
+    """Create a small SQLite file and close it.
+
+    The connection and its statement cache keep each other alive until a
+    cyclic collection. Windows cannot delete the file while that handle is
+    open, so close it before the caller removes the directory.
 
     Args:
         path: Database to create.
         statements: SQL script.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(path) as conn:
+    conn = sqlite3.connect(path)
+    try:
         conn.executescript(statements)
+    finally:
+        conn.close()
 
 
 class PathKeyTests(unittest.TestCase):
@@ -82,6 +90,38 @@ class PathKeyTests(unittest.TestCase):
 
 class ParserTests(unittest.TestCase):
     """Each app's library file. These tests do not open a home directory."""
+
+    def test_helper_closes_the_database_before_cleanup(self) -> None:
+        """Drop the SQLite handle before the temporary directory is removed.
+
+        The connection and its statement cache keep each other alive until
+        a cyclic collection. Windows cannot delete a file that handle still
+        has open.
+
+        Returns:
+            None. The test fails if this database is still open.
+        """
+        gc.disable()
+        try:
+            with tempfile.TemporaryDirectory() as raw:
+                path = Path(raw) / "djay.db"
+                _sqlite(path, "CREATE TABLE media (path TEXT);")
+                wanted = path.resolve()
+                for obj in gc.get_objects():
+                    if type(obj) is not sqlite3.Connection:
+                        continue
+                    try:
+                        rows = obj.execute("PRAGMA database_list").fetchall()
+                    except sqlite3.ProgrammingError:
+                        continue
+                    for _seq, _name, filename in rows:
+                        if not isinstance(filename, str) or not filename:
+                            continue
+                        if Path(filename).resolve() == wanted:
+                            self.fail(f"{path} is still open")
+        finally:
+            gc.enable()
+            gc.collect()
 
     def test_each_library_names_only_its_own_file(self) -> None:
         """A stored path matches that file and not a longer name.
