@@ -167,6 +167,8 @@ def library_copies(store: SnapshotStore) -> dict[str, object]:
 def _duplicate_paths(paths: Sequence[str]) -> list[list[str]]:
     """Return duplicate-group portable ids that include any of ``paths``.
 
+    A group is the same 4-second cluster ``library.duplicate_groups`` uses.
+
     Args:
         paths: Files the caller wants to trash.
 
@@ -175,31 +177,39 @@ def _duplicate_paths(paths: Sequence[str]) -> list[list[str]]:
     """
     wanted = {str(Path(path)) for path in paths}
     wanted.update(paths)
-    groups: dict[tuple[str, str, int], list[str]] = {}
     with closing(library.read_conn()) as conn:
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
             """
-            SELECT a.name, a.artist, CAST(a.length_ms / 1000 AS INTEGER) AS seconds,
-                   a.portable_id
+            SELECT a.name, a.artist, a.id, a.length_ms, a.portable_id
             FROM asset a
             JOIN space_asset sa ON sa.asset_id = a.id
             JOIN space s ON s.id = sa.space_id
             WHERE s.name = ?
-              AND TRIM(COALESCE(a.name, '')) != ''
-              AND TRIM(COALESCE(a.artist, '')) != ''
               AND a.length_ms IS NOT NULL
+              AND a.length_ms >= 0
             """,
             (library.LIBRARY_SPACE,),
         ).fetchall()
+    packed: list[tuple[object, object, int, int]] = []
+    by_id: dict[int, str] = {}
     for row in rows:
         stored = str(row["portable_id"] or "")
         if not stored:
             continue
-        key = (str(row["name"]), str(row["artist"]), int(row["seconds"]))
-        groups.setdefault(key, []).append(stored)
+        asset_id = int(row["id"])
+        packed.append((row["name"], row["artist"], asset_id, int(row["length_ms"])))
+        by_id[asset_id] = stored
     matched: list[list[str]] = []
-    for members in groups.values():
+    for group in library.group_recordings(packed):
+        ids = group["ids"]
+        if not isinstance(ids, list):
+            continue
+        members = [
+            by_id[asset_id]
+            for asset_id in ids
+            if isinstance(asset_id, int) and not isinstance(asset_id, bool) and asset_id in by_id
+        ]
         if len(members) < 2:
             continue
         if any(member in wanted or str(Path(member)) in wanted for member in members):

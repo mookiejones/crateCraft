@@ -169,40 +169,41 @@ def _crate_ids_in_space(conn: sqlite3.Connection, space_id: int) -> list[int]:
 def _duplicate_groups(
     conn: sqlite3.Connection, space: str, members: set[int] | None
 ) -> list[dict[str, object]]:
-    """Group tracks that share title, artist, and whole seconds.
+    """Group tracks that share title, artist, and length within 4 seconds.
 
-    Empty titles and artists are skipped, matching ``library.duplicate_groups``.
-    A crate filter keeps a group when any member is in the crate, and keeps
-    the full id list so the other copy is visible.
+    Uses the same clusters as ``library.duplicate_groups``. A crate filter
+    keeps a group when any member is in the crate, and keeps the full id
+    list so the other copy is visible.
     """
     rows = conn.execute(
         """
-        SELECT a.name, a.artist, CAST(a.length_ms / 1000 AS INTEGER) AS seconds,
-               GROUP_CONCAT(a.id) AS ids
+        SELECT a.name, a.artist, a.id, a.length_ms
         FROM asset a
         JOIN space_asset sa ON sa.asset_id = a.id
         JOIN space s ON s.id = sa.space_id
         WHERE s.name = ?
-          AND TRIM(COALESCE(a.name, '')) != ''
-          AND TRIM(COALESCE(a.artist, '')) != ''
           AND a.length_ms IS NOT NULL
-        GROUP BY a.name, a.artist, seconds
-        HAVING COUNT(*) > 1
-        ORDER BY COUNT(*) DESC, a.name COLLATE NOCASE
+          AND a.length_ms >= 0
         """,
         (space,),
     ).fetchall()
+    packed = [
+        (row["name"], row["artist"], int(row["id"]), int(row["length_ms"]))
+        for row in rows
+    ]
     groups: list[dict[str, object]] = []
-    for row in rows:
-        raw_ids: object = row["ids"] or ""
-        ids = sorted(int(part) for part in str(raw_ids).split(",") if part)
+    for group in library.group_recordings(packed):
+        raw_ids = group["ids"]
+        if not isinstance(raw_ids, list):
+            continue
+        ids = [item for item in raw_ids if isinstance(item, int) and not isinstance(item, bool)]
         if members is not None and not any(asset_id in members for asset_id in ids):
             continue
         groups.append(
             {
-                "name": row["name"],
-                "artist": row["artist"],
-                "seconds": row["seconds"],
+                "name": group["name"],
+                "artist": group["artist"],
+                "seconds": group["seconds"],
                 "ids": ids,
             }
         )

@@ -15,6 +15,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import library
+import other_dj
 import server
 
 SCHEMA = """
@@ -303,6 +304,39 @@ def build_database(path: Path) -> None:
         conn.commit()
 
 
+def _no_other_apps(names: object = None) -> list[str]:
+    """Return no running DJ apps.
+
+    Tests replace this when they need a named app. The default keeps the
+    suite from reading the machine's process list.
+
+    Args:
+        names: Ignored process lines.
+
+    Returns:
+        An empty list.
+    """
+    del names
+    return []
+
+
+def _no_other_libraries(home: object = None) -> list[tuple[str, Path]]:
+    """Return no other DJ libraries.
+
+    Tests pass an explicit home to ``other_dj.locate_libraries`` when they
+    plant a file. This stand-in keeps a library test from opening the
+    user's rekordbox or Traktor files.
+
+    Args:
+        home: Ignored profile root.
+
+    Returns:
+        An empty list.
+    """
+    del home
+    return []
+
+
 class TempLibrary:
     """Point library.MASTER at a throwaway database for the duration of a test.
 
@@ -325,6 +359,8 @@ class TempLibrary:
         self._old_master = library.MASTER
         self._old_backed = set(library._backed_up)
         self._old_drives = {key: set(value) for key, value in library._copied_drives.items()}
+        self._old_apps_open = other_dj.apps_open
+        self._old_locate = other_dj.locate_libraries
 
     def __enter__(self) -> TempLibrary:
         """Build the fixture database and point ``library.MASTER`` at it.
@@ -342,6 +378,8 @@ class TempLibrary:
         Writes ``master.sqlite`` in the temporary directory and replaces
         the process-wide library path until ``__exit__``.
         """
+        other_dj.apps_open = _no_other_apps
+        other_dj.locate_libraries = _no_other_libraries
         build_database(self.db)
         library.MASTER = self.db
         library._backed_up.clear()
@@ -375,6 +413,8 @@ class TempLibrary:
             RuntimeError: If the directory cannot be removed, or a descriptor
                 for the database is still open on a system that exposes ``/proc``.
         """
+        other_dj.apps_open = self._old_apps_open
+        other_dj.locate_libraries = self._old_locate
         library.MASTER = self._old_master
         library._backed_up.clear()
         library._backed_up.update(self._old_backed)

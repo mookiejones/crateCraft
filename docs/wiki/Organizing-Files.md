@@ -28,7 +28,7 @@ Quit Serato DJ Pro first. Every change opens **Review this change** as a centere
 | **Move to folder** | The ticked files move. Pick the folder, click **Move here**, then **Confirm**. A move to another drive copies, checks the size, then removes the original. |
 | **Move this folder** | The folder in the path line moves. Home, a whole drive, the library folder, and a backup folder are refused. |
 | **Upgrade file (keep cues)** | One library track points at a different file. The old file stays on disk. Cue points are copied only when the dialog says that is safe. |
-| **Delete** | The track leaves the library and its crates. **Move to Trash** puts the audio file in the Trash on a Mac, or the Recycle Bin on Windows. A duplicate-group delete is refused when fewer than **Verified copies before delete** remain (Settings). A unique file delete is not gated that way. |
+| **Delete** | The track leaves the library and its crates. **Move to Trash** puts the audio file in the Trash on a Mac, or the Recycle Bin on Windows. Two files count as the same recording when the title and artist match and the lengths are within 4 seconds. A duplicate-group delete is refused when fewer than **Verified copies before delete** remain (Settings). A file that rekordbox, Engine DJ, Traktor, VirtualDJ, or djay still uses is not moved. A unique file delete is not gated that way. |
 
 **Cancel** writes nothing. A shortcut cannot be selected. A missing library file can leave the library, and nothing goes to the Trash, because the file is not on disk.
 
