@@ -192,32 +192,35 @@ class LiveWalOpenTests(unittest.TestCase):
         """
         with TempLibrary() as temp:
             writer = sqlite3.connect(temp.db)
-            self.addCleanup(writer.close)
-            writer.setconfig(sqlite3.SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE, True)
-            writer.execute("PRAGMA journal_mode=WAL")
-            writer.execute("PRAGMA wal_autocheckpoint=0")
-            writer.execute(
-                """
-                INSERT INTO asset (id, name, artist, file_name, portable_id)
-                VALUES (99, 'Wal Only', 'DJ', 'wal-only.mp3', 'Music/wal-only.mp3')
-                """
-            )
-            writer.execute(
-                "INSERT INTO space_asset (id, asset_id, space_id) VALUES (99, 99, 1)"
-            )
-            writer.commit()
-            before = _tree_stamp(temp.root)
-            self.assertIn("master.sqlite-wal", before)
-            conn = gig_check.open_read_only(temp.db)
             try:
-                names = [
-                    str(row[0])
-                    for row in conn.execute("SELECT name FROM asset ORDER BY id")
-                ]
+                writer.setconfig(sqlite3.SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE, True)
+                writer.execute("PRAGMA journal_mode=WAL")
+                writer.execute("PRAGMA wal_autocheckpoint=0")
+                writer.execute(
+                    """
+                    INSERT INTO asset (id, name, artist, file_name, portable_id)
+                    VALUES (99, 'Wal Only', 'DJ', 'wal-only.mp3', 'Music/wal-only.mp3')
+                    """
+                )
+                writer.execute(
+                    "INSERT INTO space_asset (id, asset_id, space_id) VALUES (99, 99, 1)"
+                )
+                writer.commit()
+                before = _tree_stamp(temp.root)
+                self.assertIn("master.sqlite-wal", before)
+                conn = gig_check.open_read_only(temp.db)
+                try:
+                    names = [
+                        str(row[0])
+                        for row in conn.execute("SELECT name FROM asset ORDER BY id")
+                    ]
+                finally:
+                    conn.close()
+                self.assertIn("Wal Only", names)
+                self.assertEqual(_tree_stamp(temp.root), before)
             finally:
-                conn.close()
-            self.assertIn("Wal Only", names)
-            self.assertEqual(_tree_stamp(temp.root), before)
+                # TempLibrary.__exit__ checks /proc before unittest addCleanup.
+                writer.close()
 
 
 class OutsideChangeReadTests(unittest.TestCase):
