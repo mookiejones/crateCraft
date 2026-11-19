@@ -63,7 +63,7 @@ function CrateRow({
   toggle: CrateContextValue["toggle"];
 }) {
   const hex = colorHex(row.color);
-  const tip = row.id === "all" ? tips.allTracks : openCrate(row.name);
+  const tip = row.id === "all" ? tips.allTracks : row.offline ? tips.crateNotConnected : openCrate(row.name);
   return (
     <div
       className={row.holds ? "crate-row holds-selection" : "crate-row"}
@@ -73,7 +73,7 @@ function CrateRow({
       <button
         type="button"
         ref={tooltipRef(tip)}
-        className="crate"
+        className={row.offline ? "crate offline" : "crate"}
         data-id={String(row.id)}
         data-parent={row.parent != null ? String(row.parent) : undefined}
         data-pane={row.pane ?? undefined}
@@ -88,6 +88,9 @@ function CrateRow({
           {hex ? <span className="swatch" style={{ background: hex }} /> : null}
           {row.name}
         </span>
+        {row.offline ? (
+          <span className="offline-label">{t("crates.notConnected")}</span>
+        ) : null}
         {row.smart ? <span className="smart">{t("crates.smartBadge")}</span> : null}
         <span className="meta">{formatNumber(row.count)}</span>
       </button>

@@ -21,7 +21,7 @@ The track list puts a checkbox first, then **Play**. **Title** is the name. Head
 
 Check two or more rows to rewrite one text field on those tracks. Choose the field, type the value, click **Review**, then **Apply**. Apply stays off until Review matches, the library is writable, and at least one row would change. Check **Write to files too** to also write ID3 and MP4. Quit Serato DJ Pro first. History has no checkboxes.
 
-**Crates** is the list on the left. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
+**Crates** is the list on the left. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename. A crate whose tracks are all on a drive that is not plugged in says **Not connected** and is dimmed. Those tracks are not missing. **New** has **Overwrite a crate with the same name**, and it starts off.
 
 The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**. Each space has its own crates. Switching space returns you to **All tracks**. The address bar keeps the open view and crate (`#library/crates` for All tracks). Refresh and Back restore that screen.
 

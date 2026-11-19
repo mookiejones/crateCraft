@@ -1,6 +1,6 @@
 # Crates
 
-Crates are the lists on the left when **Crates** is selected. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename.
+Crates are the lists on the left when **Crates** is selected. The first row is **All tracks**. That row is the whole space. It is not a crate you can rename. A crate whose tracks are all on a drive that is not plugged in says **Not connected** and is dimmed. Those tracks are not missing. **New** has **Overwrite a crate with the same name**, and it starts off, so a crate file that already has that name on a drive is left as it is.
 
 The navigation highlights the open section. On a window 980 pixels wide or narrower the rail starts mini; use the menu button to open labels. The crate list, track grid, and details share the window so Title, Artist, and BPM stay readable. A saved list width cannot hide the crate list or the details. Search and the field menu sit above the crate actions. **New**, **Rename**, and **Delete** stay on that row. A chip on that row names the live library and each complete snapshot. **Color**, **Preset**, **Tree**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list. A long crate list scrolls inside the crate pane. Collapsing the navigation drawer leaves crate names in the main column. Scroll sideways inside the track grid to reach more columns; the search controls and track details stay in place.
 

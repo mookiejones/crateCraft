@@ -69,16 +69,35 @@ describe("crate prompt dialog", () => {
     const dialog = el("crate-prompt-dialog").querySelector("[role='dialog']");
     expect(dialog?.getAttribute("aria-labelledby")).toBe("crate-prompt-title");
     expect(el("crate-prompt-title").textContent).toBe("New crate name");
+    const overwrite = el("overwrite-same-name") as HTMLInputElement;
+    expect(overwrite.checked).toBe(false);
     setCratePromptValue("Warmup");
     el("crate-prompt-confirm").click();
     await pending;
     expect(calls).toEqual([
       {
         url: "/api/crate",
-        body: { action: "create", name: "Warmup", parent: 1, space: "Serato Library" },
+        body: {
+          action: "create",
+          name: "Warmup",
+          parent: 1,
+          space: "Serato Library",
+          overwrite: false,
+        },
       },
     ]);
     expect(el("crate-prompt-dialog").open).toBe(false);
+  });
+
+  it("posts overwrite true only after the switch is turned on", async () => {
+    answer();
+    const pending = createCrate();
+    await vi.waitFor(() => expect(el("crate-prompt-dialog").open).toBe(true));
+    (el("overwrite-same-name") as HTMLInputElement).click();
+    setCratePromptValue("Warmup");
+    el("crate-prompt-confirm").click();
+    await pending;
+    expect(calls[0]?.body).toMatchObject({ action: "create", name: "Warmup", overwrite: true });
   });
 
   it("posts nothing on cancel", async () => {
@@ -112,6 +131,7 @@ describe("crate prompt dialog", () => {
     await vi.waitFor(() => expect(el("crate-prompt-dialog").open).toBe(true));
     expect(el("crate-prompt-title").textContent).toBe("Rename crate");
     expect(el("crate-prompt-input").value).toBe("House");
+    expect(document.getElementById("overwrite-same-name")).toBeNull();
     el("crate-prompt-confirm").click();
     await pending;
     expect(calls).toEqual([]);

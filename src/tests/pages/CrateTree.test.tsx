@@ -59,6 +59,22 @@ describe("CrateTree context", () => {
     };
   });
 
+  it("dims a crate whose drive is not connected", () => {
+    state.crates = [
+      { id: 2, name: "House", parent: 1, order: 0, drive_status: "not_connected", drive_name: "GIG" },
+    ];
+    bindCrateActions({ select: vi.fn() });
+    const treeRoot = createRoot(el("crate-list"));
+    flushSync(() => {
+      treeRoot.render(createElement(AppProviders, { children: createElement(CrateTree) }));
+    });
+    const offline = el("crate-list").querySelector(".crate.offline");
+    expect(offline).not.toBeNull();
+    expect(offline?.textContent).toContain("Not connected");
+    expect(offline?.textContent).not.toContain("missing");
+    treeRoot.unmount();
+  });
+
   it("paints the rail and actions from one crate context", () => {
     const select = vi.fn();
     const create = vi.fn();
@@ -79,6 +95,7 @@ describe("CrateTree context", () => {
       (node) => node.textContent ?? "",
     );
     expect(names).toEqual(["All tracks", "House", "Deep"]);
+    expect(el("crate-list").querySelector(".offline")).toBeNull();
     expect(el("crate-list").querySelector(".swatch")).not.toBeNull();
     expect(el("crate-list").querySelector(".smart")?.textContent).toBe("smart");
     expect(el("library-copies").textContent).toBe(

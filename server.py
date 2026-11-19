@@ -304,6 +304,8 @@ class _Crate(TypedDict):
     added: object
     tracks: list[object]
     rules: NotRequired[object]
+    drive_status: NotRequired[str]
+    drive_name: NotRequired[str]
 
 
 _cache: _Cache = {"stamp": None, "libraries": {}}
@@ -1451,6 +1453,37 @@ def _load_library(space: str) -> dict[str, object]:
                 parsed = smart_rules.parse_rules(crate["rules"])
                 if crate["smart"] and not crate["tracks"] and parsed is not None:
                     crate["tracks"].extend(smart_rules.asset_ids(conn, space, parsed))
+
+        offline_ids = {track["id"] for track in tracks if track.get("offline")}
+        offline_names = {
+            track["id"]: track["offline_drive"]
+            for track in tracks
+            if track.get("offline") and isinstance(track.get("offline_drive"), str)
+        }
+        absent_crates: dict[object, str] = {}
+        try:
+            for row in conn.execute("SELECT container_id, location_id FROM location_container"):
+                location = cell(row, "location_id")
+                if not isinstance(location, int):
+                    continue
+                name = _offline_drive("", uris.get(location, ""), mounts)
+                if name:
+                    absent_crates[cell(row, "container_id")] = name
+        except sqlite3.OperationalError:
+            absent_crates = {}
+        for crate in crates:
+            members = crate["tracks"]
+            online = [item for item in members if item not in offline_ids]
+            if online:
+                continue
+            if members:
+                crate["drive_status"] = "not_connected"
+                named = offline_names.get(members[0])
+                if isinstance(named, str) and named:
+                    crate["drive_name"] = named
+            elif crate["id"] in absent_crates:
+                crate["drive_status"] = "not_connected"
+                crate["drive_name"] = absent_crates[crate["id"]]
 
     payload: dict[str, object] = {
         "source": str(db_path()),

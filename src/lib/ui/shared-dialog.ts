@@ -34,6 +34,8 @@ export type CratePromptState = {
   value: string;
   confirmLabel: string;
   fieldLabel?: string;
+  showOverwrite?: boolean;
+  overwrite?: boolean;
 };
 
 export type ConfirmState = {
@@ -202,6 +204,19 @@ export function getCratePrompt(): CratePromptState {
  */
 export function setCratePromptValue(value: string): void {
   cratePrompt = { ...cratePrompt, value };
+  emit();
+}
+
+/**
+ * Turn the same-name overwrite choice on or off.
+ *
+ * The choice starts off. Only a new-crate prompt shows the switch.
+ *
+ * @param overwrite True when an existing drive crate may be changed.
+ * @returns {void}
+ */
+export function setCratePromptOverwrite(overwrite: boolean): void {
+  cratePrompt = { ...cratePrompt, overwrite };
   emit();
 }
 

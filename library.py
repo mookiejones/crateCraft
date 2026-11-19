@@ -4123,6 +4123,62 @@ def _expect_crate(
         session.check(check_prepare)
 
 
+def _join_warning(result: dict[str, object], extra: str | None) -> None:
+    """Append a drive-crate sentence to an action result.
+
+    Args:
+        result: Action dict that may already have ``warning``.
+        extra: Sentence to add, or None.
+    """
+    if not extra:
+        return
+    current = result.get("warning")
+    if isinstance(current, str) and current:
+        result["warning"] = f"{current} {extra}"
+    else:
+        result["warning"] = extra
+
+
+def _sync_drive_crates(
+    conn: sqlite3.Connection,
+    crate_id: int,
+    asset_ids: list[int],
+    *,
+    add: bool,
+    overwrite: bool,
+) -> str | None:
+    """Write this crate's external tracks into each drive's ``_Serato_`` folder.
+
+    Args:
+        conn: Open master connection.
+        crate_id: Container id.
+        asset_ids: Tracks this action added or removed.
+        add: True adds the paths. False removes them.
+        overwrite: True may change a crate file that already exists.
+
+    Returns:
+        A warning when a drive was skipped, or None when there was nothing
+        to say. Boot-drive tracks are not mentioned.
+    """
+    if not asset_ids:
+        return None
+    row = conn.execute("SELECT name, type FROM container WHERE id = ?", (crate_id,)).fetchone()
+    if row is None or int(row["type"] or 0) != 1:
+        return None
+    stored = row["name"] if isinstance(row["name"], str) else ""
+    paths: list[str] = []
+    for asset_id in asset_ids:
+        asset = conn.execute("SELECT portable_id FROM asset WHERE id = ?", (asset_id,)).fetchone()
+        if asset is None or not isinstance(asset["portable_id"], str) or not asset["portable_id"]:
+            continue
+        paths.append(asset["portable_id"])
+    import drive_crates
+
+    return drive_crates.warning(
+        drive_crates.sync_tracks(paths, display_name(stored), add=add, overwrite=overwrite)
+    )
+
+
 def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
     """Run one crate edit.
 
@@ -4163,6 +4219,7 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
             LibraryError: If the action is unknown or its fields are invalid.
             KeyError: If a required id is missing.
         """
+        overwrite = payload.get("overwrite") is True
         if action == "create":
             assets = _create_asset_ids(payload)
             smart = bool(payload.get("smart"))
@@ -4182,6 +4239,8 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
             for asset_id in assets:
                 _membership(conn, crate_id, asset_id, space, True)
             result["added"] = len(assets)
+            if not smart:
+                _join_warning(result, _sync_drive_crates(conn, crate_id, assets, add=True, overwrite=overwrite))
         elif action == "rename":
             result = _rename_crate(conn, space, _as_int(payload["id"]), cast(str, payload.get("name") or ""))
         elif action == "delete":
@@ -4193,9 +4252,15 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
         elif action == "rules":
             result = _set_rules(conn, space, _as_int(payload["id"]), payload.get("rules"))
         elif action == "add":
-            result = _membership(conn, _as_int(payload["id"]), _as_int(payload["asset"]), space, True)
+            asset_id = _as_int(payload["asset"])
+            crate_id = _as_int(payload["id"])
+            result = _membership(conn, crate_id, asset_id, space, True)
+            _join_warning(result, _sync_drive_crates(conn, crate_id, [asset_id], add=True, overwrite=overwrite))
         elif action == "remove":
-            result = _membership(conn, _as_int(payload["id"]), _as_int(payload["asset"]), space, False)
+            asset_id = _as_int(payload["asset"])
+            crate_id = _as_int(payload["id"])
+            result = _membership(conn, crate_id, asset_id, space, False)
+            _join_warning(result, _sync_drive_crates(conn, crate_id, [asset_id], add=False, overwrite=overwrite))
         elif action == "prepare":
             result = _set_prepare(conn, _as_int(payload["asset"]), bool(payload.get("add", True)))
             if payload.get("add", True):

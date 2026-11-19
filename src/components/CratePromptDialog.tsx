@@ -6,8 +6,10 @@
  */
 
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import TextField from "@mui/material/TextField";
 import { t } from "../lib/i18n";
 import {
@@ -15,6 +17,7 @@ import {
   confirmCratePrompt,
   getCratePrompt,
   isSharedDialogOpen,
+  setCratePromptOverwrite,
   setCratePromptValue,
 } from "../lib/ui/shared-dialog";
 import { tooltipRef } from "./tooltip-ref";
@@ -48,6 +51,19 @@ export function CratePromptDialog() {
           confirmCratePrompt();
         }}
       />
+      {prompt.showOverwrite ? (
+        <FormControlLabel
+          control={
+            <Checkbox
+              id="overwrite-same-name"
+              slotProps={{ input: { ref: tooltipRef(tips.overwriteSameName) } }}
+              checked={prompt.overwrite === true}
+              onChange={(event) => setCratePromptOverwrite(event.target.checked)}
+            />
+          }
+          label={t("crates.overwriteSameName")}
+        />
+      ) : null}
       <DialogActions>
         <Button
           id="crate-prompt-cancel"

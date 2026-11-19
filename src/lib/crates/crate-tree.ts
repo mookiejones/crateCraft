@@ -24,6 +24,8 @@ export type CrateRailRow = {
   expanded: boolean;
   selected: boolean;
   pane: "a" | "b" | "both" | null;
+  offline: boolean;
+  driveName: string;
 };
 
 /**
@@ -174,6 +176,8 @@ function railRow(
     color: number | string | null;
     count: number;
     holds: boolean;
+    offline: boolean;
+    driveName: string;
   },
   panes: { a: CrateId; b: CrateId | null },
 ): CrateRailRow {
@@ -214,6 +218,8 @@ export function crateRailRows(): CrateRailRow[] {
       color: null,
       count: matched ? matched.size : state.tracks.length,
       holds: false,
+      offline: false,
+      driveName: "",
     }, panes),
   ];
   for (const crate of crates) {
@@ -233,6 +239,8 @@ export function crateRailRows(): CrateRailRow[] {
       color: crate.color ?? null,
       count: shown,
       holds: holder === crate.id,
+      offline: crate.drive_status === "not_connected",
+      driveName: crate.drive_name || "",
     }, panes));
   }
   return rows;
