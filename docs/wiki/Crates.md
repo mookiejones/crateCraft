@@ -38,7 +38,7 @@ Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Se
 | **Color** | Type one of `none`, `red`, `orange`, `yellow`, `green`, `blue`, `purple`, `pink`. |
 | **Delete** | Confirm in the dialog. Nested crates go too. The tracks stay in the library. |
 | **Preset** | Choose Mixes with a key, BPM range, Not played lately, or Custom rules. Preview, then Create crate. When the rules fit, this is a live smart crate. Mixed AND/OR, play history, and a crate limit stay a copy crate whose name ends in ⟳. |
-| **Tree** | Choose BPM bands, Keys, or Genres. Preview, then Create tree. Empty subcrates are not made. Optional **Only tracks in** limits to the selected crate. |
+| **Tree** | Choose BPM bands, Keys, Genres, or Genre families. Preview, then Create tree. Empty subcrates are not made. Optional **Only tracks in** limits to the selected crate. |
 | **Sync folder** | Type a folder path. Preview, then confirm. Library tracks whose files sit in that folder are added. Files that are not in the library stay skipped. Optional subcrates map each subfolder to a child crate. Optional full remove takes out members whose files left that crate's folder. |
 
 There is no drag and drop. This app does not move an existing crate to a new parent. **New** does not make a smart crate. **Preset** writes one when the rules fit what Serato stores. You can still make one in Serato, then edit the rules here.

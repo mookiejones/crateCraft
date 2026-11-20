@@ -45,7 +45,7 @@ STORE_NAME = "preset-crates.json"
 SUFFIX = " ⟳"
 MONTH_SECONDS = 30.44 * 24 * 3600
 
-KINDS = ("harmonic", "bpm", "unplayed", "bpm_band", "key", "genre", "rules")
+KINDS = ("harmonic", "bpm", "unplayed", "bpm_band", "key", "genre", "genre_family", "rules")
 MAX_BPM = 400.0
 GENRE_LIMIT = 200
 DEFAULT_BPM_RANGE = 3.0
@@ -149,6 +149,25 @@ def normalize(preset: object) -> dict[str, object]:
         if not isinstance(genre, str) or not genre_key(genre) or len(genre) > GENRE_LIMIT:
             raise LibraryError(BAD_GENRE)
         clean["genre"] = " ".join(genre.split())
+    elif kind == "genre_family":
+        genre = preset.get("genre")
+        genres = preset.get("genres")
+        if not isinstance(genre, str) or not genre_key(genre) or len(genre) > GENRE_LIMIT:
+            raise LibraryError(BAD_GENRE)
+        if (
+            not isinstance(genres, list)
+            or isinstance(genres, str)
+            or not genres
+            or len(genres) > 100
+        ):
+            raise LibraryError(BAD_GENRE)
+        members: list[str] = []
+        for item in genres:
+            if not isinstance(item, str) or not genre_key(item) or len(item) > GENRE_LIMIT:
+                raise LibraryError(BAD_GENRE)
+            members.append(item.strip())
+        clean["genre"] = genre.strip()
+        clean["genres"] = members
     elif kind == "rules":
         tree = smart_rules.normalize_tree(preset)
         clean["conjunction"] = tree["conjunction"]
@@ -207,6 +226,8 @@ def default_name(preset: Mapping[str, object], native: bool = False) -> str:
         label = f"BPM {_trim(preset['bpm'])} ±{_trim(preset['range'])}"
     elif kind == "bpm_band":
         label = f"{_trim(preset['low'])}–{_trim(preset['high'])} BPM"
+    elif kind == "genre_family":
+        label = str(preset["genre"])
     elif kind in ("key", "genre"):
         label = str(preset[kind])
     elif kind == "rules":
@@ -306,6 +327,18 @@ def matching_ids(
     if kind == "genre":
         target = genre_key(str(preset["genre"]))
         return [int(row[0]) for row in rows if isinstance(row[3], str) and genre_key(row[3]) == target]
+    if kind == "genre_family":
+        raw_members = preset.get("genres")
+        wanted = {
+            genre_key(item)
+            for item in raw_members
+            if isinstance(item, str)
+        } if isinstance(raw_members, list) else set()
+        return [
+            int(row[0])
+            for row in rows
+            if isinstance(row[3], str) and genre_key(row[3]) in wanted
+        ]
     if kind == "rules":
         tree_rules = preset.get("rules")
         if not isinstance(tree_rules, list):

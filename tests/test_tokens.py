@@ -983,6 +983,7 @@ class ContrastTests(unittest.TestCase):
             ".operations-alert",
             ".app-bar-lock",
             ".player-cue-pad-lit",
+            '.genre-family[data-drop="on"]',
         } | {selector for selector, _, _ in _CONTROL_EDGE}
         self.assertEqual(bordered - checked_borders, set(), "borders missing from the contrast list")
         self.assertEqual(checked_borders - bordered, set(), "contrast list names a border that is not painted")
@@ -1076,6 +1077,9 @@ class ContrastTests(unittest.TestCase):
         app_bar = "#212121" if self.theme in {"serato-like", "dark-club"} else "#f5f5f5"
         lit_ratio = contrast(self.colors["--color-text"], app_bar)
         self.assertGreaterEqual(lit_ratio, 3, f".player-cue-pad-lit ring on the AppBar is {lit_ratio:.2f}:1")
+        drop_ring = _paint(self._rule('.genre-family[data-drop="on"]')["outline"], self.colors)
+        drop_ratio = contrast(drop_ring, self._surface("--color-card"))
+        self.assertGreaterEqual(drop_ratio, 3, f"genre-family drop ring on the sheet is {drop_ratio:.2f}:1")
         active_mark = _paint(self._rule(".quick-open-option.is-active")["border-left"], self.colors)
         for background_name in ("--color-card", "--color-selection"):
             ratio = contrast(active_mark, self._surface(background_name))

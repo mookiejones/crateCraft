@@ -36,6 +36,7 @@ import file_scan
 import error_codes
 import files
 import folder_access
+import genre_families
 import gig_check
 import help_report
 import history_stats
@@ -2106,6 +2107,10 @@ class Handler(BaseHTTPRequestHandler):
                 field = query_text(query, "field", "genre") or "genre"
                 self.send_json(tag_cleanup.clusters(Path(library.MASTER), space, field))
                 return
+            if parsed.path == "/api/genre-families":
+                space = require_space(query_text(query, "space"))
+                self.send_json(genre_families.report(Path(library.MASTER), space))
+                return
             if parsed.path == "/api/lost-tags":
                 space = require_space(query_text(query, "space"))
                 self.send_json(lost_tags.plan(Path(library.MASTER), space))
@@ -2302,6 +2307,7 @@ class Handler(BaseHTTPRequestHandler):
                     tree = parsed.path == "/api/crate-tree"
                     foldering = parsed.path == "/api/folder-sync"
                     clustering = parsed.path == "/api/tag-clusters"
+                    families = parsed.path == "/api/genre-families"
                     losting = parsed.path == "/api/lost-tags"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
@@ -2322,6 +2328,15 @@ class Handler(BaseHTTPRequestHandler):
                             clustering
                             and payload.get("action")
                             in ("preview", "clean-preview", "refresh-preview", "edit-preview")
+                        )
+                        or (
+                            families
+                            and payload.get("action") in ("save", "reparent", "write-preview")
+                        )
+                        or (
+                            families
+                            and payload.get("action") == "write-apply"
+                            and payload.get("confirm") is not True
                         )
                         or (losting and payload.get("action") == "preview")
                         or (comparing and payload.get("action") == "preview")
@@ -2406,6 +2421,10 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = tag_cleanup.action(request)
+                    elif families:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = genre_families.action(request)
                     elif losting:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

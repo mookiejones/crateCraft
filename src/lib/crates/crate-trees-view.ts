@@ -38,11 +38,12 @@ export interface CrateTreeCreateReply {
  * Name a tree's parent crate in the page language.
  *
  * @param {CrateTreeKind} kind The tree kind.
- * @returns {string} BPM bands, Keys, or Genres.
+ * @returns {string} BPM bands, Keys, Genres, or Genre families.
  */
 export function defaultTreeName(kind: CrateTreeKind): string {
   if (kind === "bpm") return t("crateTree.name.bpm");
   if (kind === "key") return t("crateTree.name.key");
+  if (kind === "family") return t("crateTree.name.family");
   return t("crateTree.name.genre");
 }
 
@@ -128,7 +129,7 @@ export function readTreeForm(): CrateTreeSpec | null {
     }
     return { kind, low, high, width, step, ...crate };
   }
-  if (kind === "genre") {
+  if (kind === "genre" || kind === "family") {
     const minTracks = integerOrDefault(el("crate-tree-min-tracks"), 2);
     const limit = integerOrDefault(el("crate-tree-limit"), 40);
     if (minTracks == null || limit == null || minTracks < 1 || limit < 1 || limit > MAX_GENRES) {
@@ -146,8 +147,9 @@ export function readTreeForm(): CrateTreeSpec | null {
  */
 export function syncTreeFields(): void {
   const kind = el("crate-tree-kind").value;
+  const shown = kind === "family" ? "genre" : kind;
   for (const field of document.querySelectorAll<HTMLElement>("#crate-tree-dialog [data-tree-kind]")) {
-    field.hidden = field.dataset.treeKind !== kind;
+    field.hidden = field.dataset.treeKind !== shown;
   }
 }
 
