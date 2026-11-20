@@ -1144,6 +1144,39 @@ export interface AlbumArtMissing {
   code?: string;
 }
 
+export interface PathFormEntry {
+  id: number;
+  path: string;
+  keep: boolean;
+}
+
+export interface PathFormGroup {
+  keep_id: number;
+  keep_path: string;
+  ids: number[];
+  paths: PathFormEntry[];
+}
+
+export interface PathFormsSection {
+  count: number;
+  groups: PathFormGroup[];
+}
+
+export interface PathFormPlan {
+  preview: boolean;
+  written: boolean;
+  space: string;
+  crate: number | null;
+  count: number;
+  dropped: number;
+  groups: PathFormGroup[];
+  warnings: string[];
+  snapshot_id: string | null;
+  error?: string;
+  code?: string;
+  touched?: string[];
+}
+
 export interface LibraryHealthReport {
   space: string;
   crate: number | null;
@@ -1158,6 +1191,7 @@ export interface LibraryHealthReport {
   no_crate: LibraryHealthSection;
   unused: LibraryHealthFiles;
   duplicates: { count: number; groups: LibraryHealthDuplicateGroup[] };
+  path_forms?: PathFormsSection;
   quality: LibraryHealthQualitySection;
   error?: string;
   code?: string;

@@ -2,6 +2,8 @@
 
 **Library health** is a one-page count of problems in the library database and in audio files on disk. The counts are read-only, so you can run the report while Serato DJ Pro is open. **Remove duplicate cues** is a separate confirmed write. It needs Serato quit. It does not change crates or the library database.
 
+**Keep one path** is another confirmed write. Review lists the extra spelling first. It runs only after you confirm, and only while Serato is quit. A snapshot can undo it. The audio file stays. The extra library row is removed.
+
 The report is **Health** in the drawer, then **Overview**. It is not the same as [Ready](gig-check.md), which scores drives, streaming tracks, empty crates, and snapshots.
 
 ![The Overview report. Accordion sections list counts and sample tracks. Check again is above the sections.](../media/health-overview.png)
@@ -39,6 +41,7 @@ python3 library_health.py
 | **Not in a crate** | The track is in the space and not in any crate. Hidden when a crate is selected. | The track in Crates |
 | **Unused files** | Audio files in the same music folders as library tracks that are not in the library. Hidden when a crate is selected. | [Organize files](files.md) |
 | **Duplicate groups** | Same title, artist, and length within 4 seconds. A crate that holds one copy still lists the group. | [Duplicates](duplicates.md) |
+| **Same file, two spellings** | The library has both a composed and a decomposed spelling of one path. | **Review path spellings**, then **Keep one path** |
 | **Quality** | Format, bitrate, and peak read from the file for tracks in this scope. A missing or unreadable file stays blank. **Not a problem** hides that line until the file size, the time, the bitrate, or the peak changes. **Show dismissed** brings those lines back. Neither one changes the audio, the cues, or the library. | This report |
 | **Suspect quality** | Fake 320s and lossless files that look lossy-sourced. The count lives on that view because it decodes audio. | [Suspect quality](bitrate-check.md) |
 

@@ -21322,6 +21322,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "error.artwork_lookup": "Cover lookup failed.",
     "error.artwork_needs_confirm": "Confirm the cover before it is saved.",
     "error.cues_needs_confirm": "Confirm before duplicate cues are removed.",
+    "error.path_forms_needs_confirm": "Confirm the path cleanup before it runs.",
     "error.stick_cues_needs_confirm": "Confirm before stick cues are copied into the library.",
     "error.stick_needs_drive": "Choose a drive.",
     "error.artwork_needs_release": "Choose a cover before it is saved.",
@@ -21701,6 +21702,20 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "health.cuesRemoved": {
       one: "{count} duplicate cue removed.",
       other: "{count} duplicate cues removed."
+    },
+    "health.pathForms": "Same file, two spellings",
+    "health.pathFormRow": "{path}",
+    "health.pathFormsReview": "Review path spellings",
+    "health.pathFormsConfirm": "Keep one path",
+    "health.pathFormsNote": "Review lists the extra spelling. Keep one path runs only after you confirm, and only while Serato is quit. A snapshot can undo it. The audio file stays.",
+    "health.pathFormsClear": "No extra path spellings.",
+    "health.pathFormsReady": {
+      one: "{count} extra path spelling to remove.",
+      other: "{count} extra path spellings to remove."
+    },
+    "health.pathFormsDone": {
+      one: "{count} extra path spelling removed.",
+      other: "{count} extra path spellings removed."
     },
     "health.heading": "Library health",
     "health.intro": "Counts from the library and from audio files on disk. Each row opens the place that can fix it.",
@@ -22825,6 +22840,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.healthArtPick": "Choose this Cover Art Archive image to embed.",
     "tooltip.healthFindArt": "Look up a cover on Cover Art Archive and preview it before embedding.",
     "tooltip.suspiciousCues": "Review cues that share a start time, then remove the extras. Cues at different times stay. Quit Serato first.",
+    "tooltip.healthPathForms": "Same file stored as two spellings. Review, then keep one library row. The audio file stays.",
+    "tooltip.healthPathFormsReview": "List the extra path spellings. Nothing is written.",
+    "tooltip.healthPathFormsConfirm": "Keep one library row for this file. Quit Serato first. A snapshot can undo it. The audio file stays.",
     "tooltip.healthOpenBitrate": "Open the bitrate check for this crate.",
     "tooltip.healthOpenDuplicates": "Open the Duplicates view.",
     "tooltip.healthOpenFiles": "Open the Files view.",
@@ -23534,6 +23552,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "error.artwork_lookup": "No se pudo buscar la carátula.",
     "error.artwork_needs_confirm": "Confirma la carátula antes de guardarla.",
     "error.cues_needs_confirm": "Confirma antes de quitar los cues duplicados.",
+    "error.path_forms_needs_confirm": "Confirma la limpieza de rutas antes de ejecutarla.",
     "error.stick_cues_needs_confirm": "Confirma antes de copiar los cues del pendrive a la biblioteca.",
     "error.stick_needs_drive": "Elige una unidad.",
     "error.artwork_needs_release": "Elige una carátula antes de guardarla.",
@@ -23913,6 +23932,20 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "health.cuesRemoved": {
       one: "{count} cue duplicado quitado.",
       other: "{count} cues duplicados quitados."
+    },
+    "health.pathForms": "Mismo archivo, dos escrituras",
+    "health.pathFormRow": "{path}",
+    "health.pathFormsReview": "Revisar escrituras de ruta",
+    "health.pathFormsConfirm": "Quedar con una ruta",
+    "health.pathFormsNote": "Revisar lista la escritura extra. Quedar con una ruta solo corre después de confirmar, y solo con Serato cerrado. Una instantánea puede deshacerlo. El archivo de audio se queda.",
+    "health.pathFormsClear": "No hay escrituras de ruta extra.",
+    "health.pathFormsReady": {
+      one: "{count} escritura de ruta extra que quitar.",
+      other: "{count} escrituras de ruta extra que quitar."
+    },
+    "health.pathFormsDone": {
+      one: "{count} escritura de ruta extra quitada.",
+      other: "{count} escrituras de ruta extra quitadas."
     },
     "health.heading": "Salud de la biblioteca",
     "health.intro": "Cifras de la biblioteca y de los archivos de audio en el disco. Cada fila abre el sitio que puede corregirlo.",
@@ -25037,6 +25070,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.healthArtPick": "Elige esta imagen de Cover Art Archive para incrustarla.",
     "tooltip.healthFindArt": "Busca una carátula en Cover Art Archive y previsualízala antes de incrustarla.",
     "tooltip.suspiciousCues": "Revisa los cues que comparten un instante y quita los extras. Los cues en otros instantes se quedan. Cierra Serato antes.",
+    "tooltip.healthPathForms": "El mismo archivo guardado con dos escrituras. Revisa y quédate con una fila. El archivo de audio se queda.",
+    "tooltip.healthPathFormsReview": "Lista las escrituras de ruta extra. No se escribe nada.",
+    "tooltip.healthPathFormsConfirm": "Quédate con una fila de la biblioteca para este archivo. Cierra Serato primero. Una instantánea puede deshacerlo. El archivo de audio se queda.",
     "tooltip.healthOpenBitrate": "Abre la comprobación de tasa de bits de esta caja.",
     "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
     "tooltip.healthOpenFiles": "Abre la vista Archivos.",
@@ -26069,6 +26105,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     showDismissed: spec("tooltip.showDismissed"),
     healthFindArt: spec("tooltip.healthFindArt"),
     suspiciousCues: spec("tooltip.suspiciousCues"),
+    healthPathForms: spec("tooltip.healthPathForms"),
+    healthPathFormsReview: spec("tooltip.healthPathFormsReview"),
+    healthPathFormsConfirm: spec("tooltip.healthPathFormsConfirm"),
     healthArtCancel: spec("tooltip.healthArtCancel"),
     healthArtEmbed: spec("tooltip.healthArtEmbed"),
     healthArtPick: spec("tooltip.healthArtPick"),

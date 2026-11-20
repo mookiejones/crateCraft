@@ -16,8 +16,10 @@ import type {
   LibraryHealthReport,
   LibraryHealthSection,
   LibraryHealthTrack,
+  PathFormsSection,
 } from "../lib/api-types";
 import { openAlbumArt } from "../lib/health/album-art";
+import { applyPathForms, previewPathForms } from "../lib/health/path-forms";
 import { clearQualityDismissals, dismissQuality } from "../lib/health/quality";
 import { qualityLine } from "../lib/health/quality-view";
 import { applySuspiciousCues, previewSuspiciousCues } from "../lib/health/suspicious-cues";
@@ -390,6 +392,107 @@ function Unused({
   );
 }
 
+function PathForms({
+  section,
+  onReload,
+}: {
+  section: PathFormsSection | undefined;
+  onReload: () => Promise<void>;
+}) {
+  const count = section?.count ?? 0;
+  const groups = section?.groups ?? [];
+  const accordion = useSectionOpen(count > 0);
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [canApply, setCanApply] = useState(false);
+
+  async function review(): Promise<void> {
+    setBusy(true);
+    setCanApply(false);
+    try {
+      const plan = await previewPathForms();
+      setCanApply(plan.dropped > 0);
+      setNote(
+        plan.dropped > 0
+          ? t("health.pathFormsReady", { count: plan.dropped })
+          : t("health.pathFormsClear"),
+      );
+    } catch (error) {
+      setNote(error instanceof Error ? error.message : t("health.unreadable"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function keepOne(): Promise<void> {
+    setBusy(true);
+    try {
+      const plan = await applyPathForms();
+      setCanApply(false);
+      setNote(plan.written ? t("health.pathFormsDone", { count: plan.dropped }) : t("health.pathFormsClear"));
+      await onReload();
+    } catch (error) {
+      setNote(error instanceof Error ? error.message : t("health.unreadable"));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Accordion
+      className="health-accordion"
+      expanded={accordion.expanded}
+      onChange={accordion.onChange}
+      {...ACCORDION_SX}
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} ref={tooltipRef(tips.healthPathForms)}>
+        {t("gig.groupCount", { label: t("health.pathForms"), count })}
+      </AccordionSummary>
+      <AccordionDetails>
+        <Button
+          type="button"
+          size="small"
+          variant="outlined"
+          sx={BUTTON_SX}
+          ref={tooltipRef(tips.healthPathFormsReview)}
+          data-health-action="path-forms-preview"
+          disabled={busy}
+          onClick={() => {
+            void review();
+          }}
+        >
+          {t("health.pathFormsReview")}
+        </Button>
+        <Button
+          type="button"
+          size="small"
+          variant="outlined"
+          sx={BUTTON_SX}
+          ref={tooltipRef(tips.healthPathFormsConfirm)}
+          data-health-action="path-forms-apply"
+          disabled={busy || !canApply}
+          onClick={() => {
+            void keepOne();
+          }}
+        >
+          {t("health.pathFormsConfirm")}
+        </Button>
+        <p className="gig-note">{t("health.pathFormsNote")}</p>
+        {note ? <p className="gig-note">{note}</p> : null}
+        <ul>
+          {groups.flatMap((group) =>
+            group.paths
+              .filter((entry) => !entry.keep)
+              .map((entry) => (
+                <li key={`${group.keep_id}-${entry.id}`}>{t("health.pathFormRow", { path: entry.path })}</li>
+              )),
+          )}
+        </ul>
+      </AccordionDetails>
+    </Accordion>
+  );
+}
+
 function Duplicates({
   section,
   onNavigate,
@@ -456,6 +559,7 @@ export function HealthPanel() {
     listed += payload.no_crate.count;
     listed += payload.unused.count;
     listed += payload.duplicates.count;
+    listed += payload.path_forms?.count ?? 0;
     listed += payload.quality.count;
     listed += payload.quality.dismissed;
   }
@@ -502,6 +606,7 @@ export function HealthPanel() {
               </Fragment>
             ))}
             <Unused section={payload.unused} onNavigate={health.navigate} />
+            <PathForms section={payload.path_forms} onReload={health.loadHealth} />
             <Duplicates section={payload.duplicates} onNavigate={health.navigate} />
             <Quality section={payload.quality} onNavigate={health.navigate} />
             <Bitrate onNavigate={health.navigate} />
