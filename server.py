@@ -48,6 +48,7 @@ import library_health
 import music_mirror
 import quality_line
 import music_roots
+import portable_smart
 import rekordbox
 import related
 import relink
@@ -2312,6 +2313,7 @@ class Handler(BaseHTTPRequestHandler):
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     cueing = parsed.path == "/api/suspicious-cues"
+                    porting = parsed.path == "/api/portable-smart"
                     sticking = parsed.path == "/api/stick-cues"
                     history = parsed.path == "/api/history-stats"
                     comparing = parsed.path == "/api/crate-compare"
@@ -2345,6 +2347,7 @@ class Handler(BaseHTTPRequestHandler):
                         or (bitrate_crate and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
+                        or (porting and payload.get("action") == "preview")
                         or (sticking and payload.get("action") == "preview")
                         or (sticking and payload.get("action") == "apply" and payload.get("confirm") is not True)
                         or (
@@ -2460,6 +2463,8 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = suspicious_cues.action(request)
+                    elif porting:
+                        result = portable_smart.action(payload)
                     elif sticking:
                         result = stick_cues.action(dict(payload))
                     elif mirroring:

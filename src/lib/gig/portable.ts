@@ -1,10 +1,11 @@
 /**
- * Read-only check for a portable Serato drive.
+ * Check for a portable Serato drive, plus smart-crate copy and restore.
  *
  * Organize files shows Check drive on a removable Serato root. Before a
  * gig shows the same check: pick a connected drive with a `_Serato_`
- * folder. The request is GET /api/drive-check for the volume that
- * contains that folder. Nothing on the drive is written. A later reply
+ * folder. The check is GET /api/drive-check for the volume that contains
+ * that folder. Nothing on the drive is written by that check. Copy smart
+ * crates and Restore smart crates POST /api/portable-smart. A later reply
  * is ignored when a newer check has started.
  */
 
@@ -20,6 +21,7 @@ import type { StickCueReport } from "./stick-cues";
 import { serverMessage, t } from "../i18n";
 import { buttonEl } from "../ui/tooltip";
 import { portableCheck } from "../ui/tooltip-strings";
+import { postPortableSmart, type PortableSmartResult } from "./portable-smart";
 
 /** Findings painted before the rest are counted as "and more". */
 export const FINDING_CAP = 100;
@@ -62,6 +64,10 @@ let lastRoots: LibraryRoot[] = [];
 let opener: HTMLElement | null = null;
 let hasConnected = false;
 let statusText = "";
+let lastDrive = "";
+let busy = false;
+let showConfirm = false;
+let showOverwrite = false;
 
 export type PortableSnapshot = {
   report: DriveReport | null;
@@ -69,6 +75,9 @@ export type PortableSnapshot = {
   stickReport?: StickCueReport | null;
   stickStatus?: string;
   stickDrive?: string;
+  smartConfirm: boolean;
+  smartOverwrite: boolean;
+  smartBusy: boolean;
 };
 
 type PortableListener = (next: PortableSnapshot) => void;
@@ -80,6 +89,9 @@ let snapshot: PortableSnapshot = {
   stickReport: null,
   stickStatus: "",
   stickDrive: "",
+  smartConfirm: false,
+  smartOverwrite: false,
+  smartBusy: false,
 };
 
 function emitPortable(): void {
@@ -89,6 +101,9 @@ function emitPortable(): void {
     stickReport,
     stickStatus,
     stickDrive,
+    smartConfirm: showConfirm,
+    smartOverwrite: showOverwrite,
+    smartBusy: busy,
   };
   for (const listener of listeners) listener(snapshot);
   emitFiles();
@@ -116,7 +131,7 @@ export function subscribePortable(listener: PortableListener): () => void {
  * The same object is returned until the next change, so React can
  * subscribe without treating every read as a new snapshot.
  *
- * @returns Report, status line, and the stick-cue snapshot.
+ * @returns Report, status line, stick-cue state, and whether Restore or Replace on drive is offered.
  */
 export function portableSnapshot(): PortableSnapshot {
   return snapshot;
@@ -374,6 +389,18 @@ export function wirePortable(): void {
   el("portable-drive").addEventListener("change", () => {
     void runPortableCheck(el("portable-drive").value);
   });
+  el("portable-smart-copy").addEventListener("click", () => {
+    void copyPortableSmart(false);
+  });
+  el("portable-smart-restore").addEventListener("click", () => {
+    void previewPortableRestore();
+  });
+  el("portable-smart-confirm").addEventListener("click", () => {
+    void confirmPortableRestore();
+  });
+  el("portable-smart-overwrite").addEventListener("click", () => {
+    void overwritePortableSmart();
+  });
   islandRoot = mountIsland(el("portable-view-findings"), createElement(PortableFindings));
 }
 
@@ -431,11 +458,15 @@ export async function runPortableCheck(path: string): Promise<void> {
   const drive = portableDriveRoot(path);
   const mine = ++token;
   latest = null;
+  lastDrive = drive;
+  showConfirm = false;
+  showOverwrite = false;
   stickDrive = drive;
   stickReport = null;
   stickStatus = "";
   clearReport();
   paintStatus(t("portable.checking"));
+  paintSmartButtons();
   if (!drive) {
     fail(t("portable.unreadable"));
     return;
@@ -482,6 +513,7 @@ function paintDrivePicker(roots: readonly LibraryRoot[]): void {
   select.value = keep;
   select.disabled = !hasConnected;
   el("portable-check").disabled = !hasConnected;
+  paintSmartButtons();
   const note = el("portable-offline");
   if (!missing.length) {
     note.textContent = "";
@@ -508,17 +540,155 @@ function paintStatus(message: string): void {
 }
 
 function beginBusy(): void {
+  busy = true;
   const button = el("portable-check");
   button.disabled = true;
   button.setAttribute("aria-busy", "true");
   el("portable-panel").setAttribute("aria-busy", "true");
+  paintSmartButtons();
+  emitPortable();
 }
 
 function endBusy(): void {
+  busy = false;
   const button = el("portable-check");
   button.disabled = !hasConnected;
   button.setAttribute("aria-busy", "false");
   el("portable-panel").setAttribute("aria-busy", "false");
+  paintSmartButtons();
+  emitPortable();
+}
+
+/** Where the click came from. The dialog keeps the drive that was checked. */
+export type SmartSource = "panel" | "dialog";
+
+/**
+ * Copy smart crates onto the selected drive.
+ *
+ * @param overwrite True replaces a drive file that already uses the name.
+ * @param source Panel uses the picker. Dialog uses the drive that was checked.
+ * @returns {Promise<void>}
+ */
+export async function copyPortableSmart(
+  overwrite: boolean,
+  source: SmartSource = "panel",
+): Promise<void> {
+  await runSmart("copy", overwrite ? { overwrite: true } : {}, source);
+}
+
+/**
+ * Preview a restore. Nothing is written.
+ *
+ * @param source Panel uses the picker. Dialog uses the drive that was checked.
+ * @returns {Promise<void>}
+ */
+export async function previewPortableRestore(source: SmartSource = "panel"): Promise<void> {
+  await runSmart("preview", {}, source);
+}
+
+/**
+ * Write the previewed restore. Quit Serato first.
+ *
+ * @param source Panel uses the picker. Dialog uses the drive that was checked.
+ * @returns {Promise<void>}
+ */
+export async function confirmPortableRestore(source: SmartSource = "panel"): Promise<void> {
+  await runSmart("restore", { confirm: true }, source);
+}
+
+/**
+ * Replace smart-crate files already on the drive.
+ *
+ * @param source Panel uses the picker. Dialog uses the drive that was checked.
+ * @returns {Promise<void>}
+ */
+export async function overwritePortableSmart(source: SmartSource = "panel"): Promise<void> {
+  await runSmart("copy", { overwrite: true }, source);
+}
+
+function selectedDrive(source: SmartSource): string {
+  if (source === "panel") {
+    const node = document.getElementById("portable-drive");
+    if (node instanceof HTMLSelectElement && node.value) {
+      const root = portableDriveRoot(node.value);
+      if (root) return root;
+    }
+  }
+  return lastDrive;
+}
+
+async function runSmart(
+  action: "preview" | "copy" | "restore",
+  extra: { overwrite?: boolean; confirm?: boolean },
+  source: SmartSource,
+): Promise<void> {
+  const drive = selectedDrive(source);
+  if (!drive) {
+    paintStatus(t("portable.unreadable"));
+    return;
+  }
+  lastDrive = drive;
+  beginBusy();
+  paintStatus(t("portable.smartBusy"));
+  try {
+    const result = await postPortableSmart(drive, action, extra);
+    showConfirm = false;
+    showOverwrite = false;
+    const crates = result.crates ?? [];
+    if (result.action === "copy") {
+      showOverwrite = result.needs_overwrite === true;
+    } else if (result.action === "preview" || (result.needs_confirm === true && result.written !== true)) {
+      showConfirm = crates.some((crate) => (
+        crate.status === "create" || crate.status === "update" || crate.status === "needs_confirm"
+      ));
+    }
+    paintStatus(smartStatus(result));
+  } catch (error) {
+    showConfirm = false;
+    showOverwrite = false;
+    paintStatus(error instanceof Error && error.message ? error.message : t("portable.unreadable"));
+  } finally {
+    endBusy();
+  }
+}
+
+function smartStatus(result: PortableSmartResult): string {
+  if (result.ok === false) return result.detail || t("portable.unreadable");
+  const crates = result.crates ?? [];
+  const fallback = crates.filter((crate) => (
+    crate.mode === "fallback"
+    && crate.status !== "skip"
+    && crate.status !== "nothing"
+    && crate.name
+  ));
+  const bits: string[] = [];
+  if (result.action === "copy") {
+    if (result.written) bits.push(t("portable.smartCopied"));
+    if (result.needs_overwrite) bits.push(t("portable.smartKept"));
+    if (!bits.length) bits.push(t("portable.smartNothing"));
+  } else if (result.action === "preview") {
+    bits.push(result.needs_confirm ? t("portable.smartNeedsConfirm") : t("portable.smartPreview"));
+  } else if (result.written) {
+    bits.push(t("portable.smartRestored"));
+  } else if (result.needs_confirm) {
+    bits.push(t("portable.smartNeedsConfirm"));
+  } else {
+    bits.push(t("portable.smartNothing"));
+  }
+  if (fallback.length) {
+    bits.push(`${fallback.map((crate) => crate.name).join(", ")}. ${t("portable.smartFallback")}`);
+  }
+  return bits.join(" ");
+}
+
+function paintSmartButtons(): void {
+  const locked = busy || !hasConnected;
+  el("portable-smart-copy").disabled = locked;
+  el("portable-smart-restore").disabled = locked;
+  el("portable-smart-confirm").disabled = locked;
+  el("portable-smart-overwrite").disabled = locked;
+  el("portable-smart-confirm").hidden = !showConfirm;
+  el("portable-smart-overwrite").hidden = !showOverwrite;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

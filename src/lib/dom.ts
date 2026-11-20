@@ -134,6 +134,10 @@ export interface ElementIds {
   "portable-panel": HTMLElement;
   "portable-drive": HTMLSelectElement;
   "portable-check": HTMLButtonElement;
+  "portable-smart-copy": HTMLButtonElement;
+  "portable-smart-restore": HTMLButtonElement;
+  "portable-smart-confirm": HTMLButtonElement;
+  "portable-smart-overwrite": HTMLButtonElement;
   "portable-offline": HTMLParagraphElement;
   "portable-view-status": HTMLParagraphElement;
   "portable-view-verdict": HTMLParagraphElement;

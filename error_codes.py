@@ -76,6 +76,8 @@ ERROR_CODES: dict[str, str] = {
     "Confirm the cover before it is saved.": "artwork_needs_confirm",
     "Choose a cover before it is saved.": "artwork_needs_release",
     "The artwork could not be written.": "artwork_write_failed",
+    "The drive file could not be written.": "drive_file_not_written",
+    "The drive file could not be put back.": "drive_file_not_restored",
     "Track is not in this space.": "track_not_in_space",
     "That track is not in this space.": "track_not_in_space_alt",
     "That track is not in the library.": "track_not_in_library",
