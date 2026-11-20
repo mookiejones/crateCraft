@@ -118,16 +118,16 @@ The audio file stays where it is.
 
 ## Build a crate tree
 
-**Tree** makes a parent crate with a ⟳ subcrate per BPM band, key, or genre. Empty subcrates are not made. Quit Serato first. Audio files stay as they are.
+**Tree** makes a parent crate with a ⟳ subcrate per BPM band, key, genre, or genre family. Empty subcrates are not made. Quit Serato first. Audio files stay as they are.
 
 1. Click **More**, then **Tree**.
-2. Choose **BPM bands**, **Keys**, or **Genres**.
-3. For BPM, set low, high, band width, and step. For genres, set fewest tracks per genre and most genres. Keys has no extra fields.
+2. Choose **BPM bands**, **Keys**, **Genres**, or **Genre families**.
+3. For BPM, set low, high, band width, and step. For genres and genre families, set fewest tracks and the cap. Keys has no extra fields.
 4. Optional: tick **Only tracks in** the selected crate and its subcrates when a normal crate is selected.
 5. Read the preview. Create tree stays off when no subcrate would be made.
 6. Click **Create tree**.
 
-The default name is **BPM bands**, **Keys**, or **Genres**. The subcrates refresh like any preset crate. [Crate trees](crate-trees.md) covers the dialog.
+The default name is **BPM bands**, **Keys**, **Genres**, or **Genre families**. The subcrates refresh like any preset crate. [Crate trees](crate-trees.md) covers the dialog.
 
 ## Sync with a folder
 

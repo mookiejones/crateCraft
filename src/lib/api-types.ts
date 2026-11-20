@@ -227,13 +227,14 @@ export type PresetSpec =
   | { kind: "rules"; conjunction: "AND" | "OR"; rules: Array<RuleLeaf | RuleGroup>; crate?: number };
 
 /** Kind of crate tree POST /api/crate-tree builds. */
-export type CrateTreeKind = "bpm" | "key" | "genre";
+export type CrateTreeKind = "bpm" | "key" | "genre" | "family";
 
 /** A crate tree as POST /api/crate-tree stores it. */
 export type CrateTreeSpec =
   | { kind: "bpm"; low: number; high: number; width: number; step: number; crate?: number }
   | { kind: "key"; crate?: number }
-  | { kind: "genre"; min_tracks: number; limit: number; crate?: number };
+  | { kind: "genre"; min_tracks: number; limit: number; crate?: number }
+  | { kind: "family"; min_tracks: number; limit: number; crate?: number };
 
 /** One remembered preset crate in GET /api/library. */
 export interface PresetRecord {
