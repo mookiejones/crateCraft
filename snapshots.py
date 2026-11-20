@@ -1128,23 +1128,29 @@ class SnapshotStore:
         return _info(manifest)
 
     def prune(self, snapshot_id: str, confirm: bool = False) -> dict[str, object]:
-        """Remove one snapshot directory when enough verified copies remain.
+        """Hold one snapshot directory when enough verified copies remain.
 
         Live ``master.sqlite`` plus other complete snapshots must meet
         ``min_copies``. A hash-failed remaining snapshot does not count.
-        Confirm false returns a preview and does not delete.
+        Confirm false returns a preview and does not move the directory.
+        Confirm moves that directory into the crateCraft trash for seven
+        days. It does not write ``master.sqlite``. The move is not inside
+        ``safe_write``, because that session always opens the database.
+        Content-addressed objects stay in the snapshot store.
 
         Args:
-            snapshot_id: Manifest directory name to drop.
-            confirm: True deletes after the copy check. False previews.
+            snapshot_id: Manifest directory name to hold.
+            confirm: True holds the directory after the copy check.
+                False previews.
 
         Returns:
-            ``ok`` true when the directory is gone, or a preview dict
-            when confirm is false. A refused preview has ``ok`` false
-            and ``code``.
+            ``ok`` true and ``trash_id`` when the directory was held, or
+            a preview dict when confirm is false. A refused preview has
+            ``ok`` false and ``code``.
 
         Raises:
             SnapshotError: If the id is not a snapshot directory.
+            SnapshotBlocked: If confirm is true and Serato DJ is running.
             library.LibraryError: If confirm is true and remaining
                 copies would drop below ``min_copies``.
         """
@@ -1171,8 +1177,16 @@ class SnapshotStore:
             return body
         if not confirm:
             return {"ok": True, "preview": True}
-        shutil.rmtree(folder)
-        return {"ok": True}
+        if self.serato_running():
+            raise SnapshotBlocked(SERATO_RUNNING_MESSAGE)
+        import app_trash
+
+        held = app_trash.hold_tree(
+            folder,
+            name=snapshot_id,
+            library_dir=self.master.resolve().parent,
+        )
+        return {"ok": True, "trash_id": held["id"]}
 
     def plan(self, snapshot_id: str) -> dict[str, object]:
         """Describe a restore and change nothing.

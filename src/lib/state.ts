@@ -21,6 +21,7 @@ import type {
   SeratoStatus,
   DriveBackup,
   SnapshotInfo,
+  TrashItem,
   Track,
 } from "./api-types";
 import type { MessageKey } from "./i18n";
@@ -111,6 +112,7 @@ export interface PageState {
   filesQuery: string;
   filesSearching: boolean;
   snapshots: SnapshotInfo[];
+  trash: TrashItem[];
   driveBackup: DriveBackup | null;
   operations: OperationEntry[];
   operationsLoading: boolean;
@@ -191,6 +193,7 @@ export const state: PageState = {
   filesQuery: "",
   filesSearching: false,
   snapshots: [],
+  trash: [],
   driveBackup: null,
   operations: [],
   operationsLoading: false,

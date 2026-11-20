@@ -18,7 +18,7 @@ vi.mock("../lib/ui/shared-dialog", async () => {
 import { applyStatic, setLocale, t } from "../lib/i18n";
 import { el } from "../lib/dom";
 import { crateContentsText } from "../lib/snapshots/restore-view";
-import { backupDriveCrates, closePlan, confirmSnapshotRestore, openSnapshotPlan, pruneSnapshot, renderOperations, renderSnapshots, repaintSnapshotPlan, unmountSnapshots } from "../lib/snapshots/restore";
+import { backupDriveCrates, cancelTrash, closePlan, confirmSnapshotRestore, openSnapshotPlan, pruneSnapshot, purgeTrash, renderOperations, renderSnapshots, repaintSnapshotPlan, restoreTrash, unmountSnapshots } from "../lib/snapshots/restore";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import type { Job, RestorePlan } from "../lib/api-types";
 import { state } from "../lib/state";
@@ -84,6 +84,7 @@ describe("restore", () => {
   beforeEach(() => {
     installPage();
     state.snapshotPlanId = "snap-9";
+    state.trash = [];
     state.snapshotUndo = null;
     state.snapshotMessage = "";
     state.driveBackup = null;
@@ -134,6 +135,71 @@ describe("restore", () => {
     expect(document.getElementById("snapshots-status")?.textContent).toBe(
       t("error.copies_need_more", { n: 2 }),
     );
+  });
+
+  it("previews a trash restore then writes after confirm", async () => {
+    postJSON.mockResolvedValueOnce({ ok: true, preview: true }).mockResolvedValueOnce({ ok: true });
+    await restoreTrash("item-1");
+    expect(postJSON).toHaveBeenNthCalledWith(1, "/api/snapshots", { action: "trash-restore", id: "item-1" });
+    expect(openConfirm).toHaveBeenCalledWith({
+      title: t("snapshots.trashRestore"),
+      message: t("snapshots.trashRestoreConfirm"),
+      confirmLabel: t("snapshots.trashRestore"),
+    });
+    expect(postJSON).toHaveBeenNthCalledWith(2, "/api/snapshots", {
+      action: "trash-restore",
+      id: "item-1",
+      confirm: true,
+    });
+    expect(state.snapshotMessage).toBe("snapshots.trashRestored");
+  });
+
+  it("leaves a refused trash restore on the status line", async () => {
+    postJSON.mockResolvedValue({
+      ok: false,
+      preview: true,
+      error: "That trash item could not be read.",
+      code: "trash_missing",
+    });
+    await restoreTrash("item-1");
+    expect(openConfirm).not.toHaveBeenCalled();
+    expect(document.getElementById("snapshots-status")?.textContent).toBe(t("error.trash_missing"));
+  });
+
+  it("cancels timed removal without a confirm dialog", async () => {
+    postJSON.mockResolvedValue({ ok: true });
+    await cancelTrash("item-1");
+    expect(openConfirm).not.toHaveBeenCalled();
+    expect(postJSON).toHaveBeenCalledWith("/api/snapshots", { action: "trash-cancel", id: "item-1" });
+    expect(state.snapshotMessage).toBe("snapshots.trashPurgeCancelled");
+  });
+
+  it("previews a permanent remove then deletes after confirm", async () => {
+    postJSON.mockResolvedValueOnce({ ok: true, preview: true }).mockResolvedValueOnce({ ok: true });
+    await purgeTrash("item-1");
+    expect(openConfirm).toHaveBeenCalledWith({
+      title: t("snapshots.trashPurge"),
+      message: t("snapshots.trashDue"),
+      confirmLabel: t("snapshots.trashPurge"),
+    });
+    expect(postJSON).toHaveBeenNthCalledWith(2, "/api/snapshots", {
+      action: "trash-purge",
+      id: "item-1",
+      confirm: true,
+    });
+    expect(state.snapshotMessage).toBe("snapshots.trashPurged");
+  });
+
+  it("leaves a refused permanent remove on the status line", async () => {
+    postJSON.mockResolvedValue({
+      ok: false,
+      preview: true,
+      error: "Another DJ app still uses this file. It was not removed.",
+      code: "trash_other_dj",
+    });
+    await purgeTrash("item-1");
+    expect(openConfirm).not.toHaveBeenCalled();
+    expect(document.getElementById("snapshots-status")?.textContent).toBe(t("error.trash_other_dj"));
   });
 
   it("unmounts snapshot islands so the Data Grid scheduler does not outlive the document", () => {

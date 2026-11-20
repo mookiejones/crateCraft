@@ -8,7 +8,7 @@
 
 import { createElement } from "react";
 import { failureOf, postJSON, readJSON } from "../api";
-import type { DriveBackup, DriveCopy, Job, OperationList, RestorePlan, SnapshotList } from "../api-types";
+import type { DriveBackup, DriveCopy, Job, OperationList, RestorePlan, SnapshotList, TrashItem } from "../api-types";
 import { isQueuedWrite } from "../crates/queue-notice";
 import { startJob } from "../jobs/job-store";
 import { toastText } from "../jobs/job-view";
@@ -39,6 +39,20 @@ let driveNoteError = "";
 let statusOverride = "";
 
 export type SnapshotsListener = () => void;
+
+function isTrashItem(value: unknown): value is TrashItem {
+  if (!value || typeof value !== "object") return false;
+  const row = value as TrashItem;
+  return typeof row.id === "string"
+    && (row.kind === "snapshot" || row.kind === "audio")
+    && typeof row.name === "string"
+    && typeof row.held_at === "string"
+    && typeof row.purge_at === "string"
+    && typeof row.purge_cancelled === "boolean"
+    && (row.status === "held" || row.status === "restored" || row.status === "purged")
+    && typeof row.days_left === "number"
+    && (row.label === "held" || row.label === "due" || row.label === "cancelled");
+}
 
 function isDriveCopy(value: unknown): value is DriveCopy {
   if (!value || typeof value !== "object") return false;
@@ -72,6 +86,7 @@ export function driveBackupFrom(value: unknown): DriveBackup | null {
 export function getSnapshotsState(): SnapshotsSnapshot {
   return {
     snapshots: state.snapshots,
+    trash: state.trash,
     driveBackup: state.driveBackup,
     operations: state.operations,
     operationsLoading: state.operationsLoading,
@@ -190,6 +205,7 @@ export async function loadSnapshots() {
     const payload = await readJSON<SnapshotList>(response);
     if (!response.ok) throw new Error(serverMessage(payload, t("snapshots.unreadable")));
     state.snapshots = payload.snapshots || [];
+    state.trash = Array.isArray(payload.trash) ? payload.trash.filter(isTrashItem) : [];
     state.snapshotUndo = payload.pending_undo || null;
     state.writeBlock = payload.write_block || "";
     state.writeBlockCode = payload.write_block_code || "";
@@ -384,6 +400,85 @@ export async function pruneSnapshot(snapshotId: string) {
   if (!ok) return;
   await postJSON("/api/snapshots", { action: "prune", id: snapshotId, confirm: true });
   state.snapshotMessage = "snapshots.pruned";
+  await loadSnapshots();
+}
+
+type TrashReply = {
+  ok?: boolean;
+  error?: string;
+  code?: string;
+  params?: Record<string, string | number>;
+};
+
+function trashRefused(preview: TrashReply): boolean {
+  if (preview.ok !== false) return false;
+  statusOverride = serverMessage(preview, preview.error || t("snapshots.unreadable"));
+  paint();
+  return true;
+}
+
+/**
+ * Preview putting one held item back, then write it after confirm.
+ *
+ * A refused preview stays on the status line. Nothing moves until confirm.
+ *
+ * @param itemId Trash id from the held list.
+ * @returns {Promise<void>}
+ */
+export async function restoreTrash(itemId: string) {
+  statusOverride = "";
+  paint();
+  const preview = await postJSON<TrashReply>("/api/snapshots", { action: "trash-restore", id: itemId });
+  if (trashRefused(preview)) return;
+  const ok = await openConfirm({
+    title: t("snapshots.trashRestore"),
+    message: t("snapshots.trashRestoreConfirm"),
+    confirmLabel: t("snapshots.trashRestore"),
+  });
+  if (!ok) return;
+  await postJSON("/api/snapshots", { action: "trash-restore", id: itemId, confirm: true });
+  state.snapshotMessage = "snapshots.trashRestored";
+  await loadSnapshots();
+}
+
+/**
+ * Stop the timed removal of one held item.
+ *
+ * No confirm dialog. The item stays in the trash.
+ *
+ * @param itemId Trash id from the held list.
+ * @returns {Promise<void>}
+ */
+export async function cancelTrash(itemId: string) {
+  statusOverride = "";
+  paint();
+  await postJSON("/api/snapshots", { action: "trash-cancel", id: itemId });
+  state.snapshotMessage = "snapshots.trashPurgeCancelled";
+  await loadSnapshots();
+}
+
+/**
+ * Preview a permanent delete, then delete after confirm.
+ *
+ * The server refuses this before the restore window ends, and when another
+ * DJ app still uses the file. A refused preview stays on the status line.
+ *
+ * @param itemId Trash id from the held list.
+ * @returns {Promise<void>}
+ */
+export async function purgeTrash(itemId: string) {
+  statusOverride = "";
+  paint();
+  const preview = await postJSON<TrashReply>("/api/snapshots", { action: "trash-purge", id: itemId });
+  if (trashRefused(preview)) return;
+  const ok = await openConfirm({
+    title: t("snapshots.trashPurge"),
+    message: t("snapshots.trashDue"),
+    confirmLabel: t("snapshots.trashPurge"),
+  });
+  if (!ok) return;
+  await postJSON("/api/snapshots", { action: "trash-purge", id: itemId, confirm: true });
+  state.snapshotMessage = "snapshots.trashPurged";
   await loadSnapshots();
 }
 

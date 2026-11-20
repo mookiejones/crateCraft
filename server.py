@@ -3049,6 +3049,9 @@ class Handler(BaseHTTPRequestHandler):
         if notice is not None and notice.code:
             body["write_block_code"] = notice.code
             body["write_block_params"] = dict(notice.params or {})
+        import app_trash
+
+        body["trash"] = app_trash.AppTrash().list_public()
         self.send_json(body)
 
     def _post_jobs(self, payload: dict[str, object]) -> None:
@@ -3081,14 +3084,18 @@ class Handler(BaseHTTPRequestHandler):
         self.send_json(jobs.start(payload))
 
     def _post_snapshots(self, payload: dict[str, object]) -> None:
-        """Create a snapshot, plan a restore, restore, prune, or undo.
+        """Create a snapshot, plan a restore, restore, prune, undo, or trash.
 
         Args:
             payload: JSON body with ``action`` of ``create``, ``plan``,
-                ``restore``, ``prune``, ``undo``, or ``backup-drives``.
+                ``restore``, ``prune``, ``undo``, ``backup-drives``,
+                ``trash-restore``, ``trash-cancel``, or ``trash-purge``.
                 ``restore`` also needs ``id`` and ``confirm`` true.
-                ``prune`` needs ``id``; ``confirm`` true deletes after
-                the copy check. ``plan`` changes nothing.
+                ``prune`` needs ``id``; ``confirm`` true holds that
+                snapshot directory in the crateCraft trash after the copy
+                check. ``plan`` changes nothing.
+                ``trash-restore`` and ``trash-purge`` preview unless
+                ``confirm`` is true. ``trash-cancel`` stops a timed purge.
                 ``backup-drives`` copies each present drive's ``_Serato_``
                 folder into ``Library/Backups`` and does not change the library.
         """
@@ -3127,7 +3134,63 @@ class Handler(BaseHTTPRequestHandler):
             snapshot_id = str(payload.get("id") or "")
             self.send_json(store.prune(snapshot_id, confirm=payload.get("confirm") is True))
             return
+        if action in {"trash-restore", "trash-cancel", "trash-purge"}:
+            self._post_trash(store, action, payload)
+            return
         self.send_json({"error": "That action is not available."}, status=404)
+
+    def _post_trash(
+        self,
+        store: snapshots.SnapshotStore,
+        action: str,
+        payload: dict[str, object],
+    ) -> None:
+        """Restore, cancel, or purge one crateCraft trash item.
+
+        Preview does not move or delete bytes and does not check Serato.
+        Confirm refuses while Serato is running. An audio restore journals
+        a no-op library write before the file moves. Responses omit the
+        original filesystem path.
+
+        Args:
+            store: Snapshot store for this library. Its Serato check and
+                library folder are reused.
+            action: ``trash-restore``, ``trash-cancel``, or ``trash-purge``.
+            payload: JSON body with ``id`` and, for restore and purge,
+                ``confirm``.
+
+        Raises:
+            library.LibraryError: If the item cannot be read or the action
+                is refused.
+            snapshots.SnapshotBlocked: If a confirm runs while Serato is open.
+        """
+        import app_trash
+
+        trash = app_trash.AppTrash()
+        raw_id = payload.get("id")
+        item_id = raw_id if isinstance(raw_id, str) else ""
+        library_dir = store.master.resolve().parent
+        if action == "trash-cancel":
+            self.send_json(trash.cancel(item_id))
+            return
+        confirm = payload.get("confirm") is True
+        if action == "trash-restore":
+            item = trash.public_item(item_id)
+            if not confirm:
+                self.send_json({"ok": True, "preview": True, "item": item})
+                return
+            if store.serato_running():
+                raise snapshots.SnapshotBlocked(snapshots.SERATO_RUNNING_MESSAGE)
+            if item["kind"] == "audio":
+                library.gate_trash_restore(str(item["name"]))
+            self.send_json(trash.restore(item_id, confirm=True, library_dir=library_dir))
+            return
+        if not confirm:
+            self.send_json(trash.purge(item_id, confirm=False, library_dir=library_dir))
+            return
+        if store.serato_running():
+            raise snapshots.SnapshotBlocked(snapshots.SERATO_RUNNING_MESSAGE)
+        self.send_json(trash.purge(item_id, confirm=True, library_dir=library_dir))
 
     def _refuse_foreign_host(self) -> bool:
         """Refuse a request whose Host or Origin is not this computer.

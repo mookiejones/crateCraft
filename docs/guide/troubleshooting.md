@@ -150,4 +150,4 @@ The same Settings page has **About**. **Copy version** puts the version on the c
 
 ## Does this upload my music?
 
-No. The window stays on this computer. Audio files stay on disk unless you move them to the Trash from [Duplicates](duplicates.md) or [Files](files.md). Those files go to the Trash or the Recycle Bin, not to a server.
+No. The window stays on this computer. Audio files stay on disk unless you move them from [Duplicates](duplicates.md) or [Files](files.md). A duplicate merge sends files to the crateCraft trash for 7 days. Restore them from Backups. Files sends them to the Trash or the Recycle Bin. Neither path sends a file to a server.
