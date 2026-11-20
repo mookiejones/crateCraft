@@ -45,6 +45,14 @@ Apply rewrites the genre or artist on those library rows, or the title and remix
 
 Apply also remembers that spelling next to the app settings, not in the Serato folder. **Apply saved mappings** rewrites later tracks that still use another form of a saved spelling, including a new import that is no longer in a spelling group.
 
+## Genre families
+
+On **Genre**, **Genre families** lists each family and the genres under it. Drag a genre onto a family, or choose **Genre**, **Move to**, and **Move**. **Top level** makes that genre its own family. Saving a move does not change the library.
+
+**Field** is Grouping or Comment. **Preview write** lists tracks that would change and tracks that already have text. **Replace text that is already there** includes those tracks. **Write family names** writes the family name. Quit Serato DJ Pro first. A field that already has text stays unless Replace is on.
+
+**Tree** can use **Genre families**. One ⟳ subcrate is made per family. A sub-genre rolls up into its parent.
+
 ## Resize the list and the details
 
 This view hides the crate list and the track sheet, so there is no list/details divider here. The width you set in **Crates** is kept for the next time you open a track list.

@@ -129,6 +129,16 @@ describe("readTreeForm", () => {
       el("crate-tree-limit").value = limit;
       expect(readTreeForm()).toBeNull();
     }
+
+    choose("family");
+    el("crate-tree-min-tracks").value = "";
+    el("crate-tree-limit").value = "";
+    expect(readTreeForm()).toEqual({ kind: "family", min_tracks: 2, limit: 40 });
+    el("crate-tree-min-tracks").value = "4";
+    el("crate-tree-limit").value = "8";
+    expect(readTreeForm()).toEqual({ kind: "family", min_tracks: 4, limit: 8 });
+    el("crate-tree-min-tracks").value = "0";
+    expect(readTreeForm()).toBeNull();
   });
 
   it("limits to the selected normal crate only while the box is checked", () => {
@@ -154,6 +164,9 @@ describe("readTreeForm", () => {
     choose("key");
     expect(el("crate-tree-low").closest("label")?.hidden).toBe(true);
     expect(el("crate-tree-min-tracks").closest("label")?.hidden).toBe(true);
+    choose("family");
+    expect(el("crate-tree-low").closest("label")?.hidden).toBe(true);
+    expect(el("crate-tree-min-tracks").closest("label")?.hidden).toBe(false);
   });
 });
 
@@ -162,10 +175,12 @@ describe("defaultTreeName", () => {
     expect(defaultTreeName("bpm")).toBe("BPM bands");
     expect(defaultTreeName("key")).toBe("Keys");
     expect(defaultTreeName("genre")).toBe("Genres");
+    expect(defaultTreeName("family")).toBe("Genre families");
     setLocale("es");
     expect(defaultTreeName("bpm")).toBe("Bandas de BPM");
     expect(defaultTreeName("key")).toBe("Tonalidades");
     expect(defaultTreeName("genre")).toBe("Géneros");
+    expect(defaultTreeName("family")).toBe("Familias de género");
   });
 });
 

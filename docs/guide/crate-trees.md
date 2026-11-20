@@ -1,8 +1,8 @@
 # Crate trees
 
-**Tree** makes a parent crate with a ⟳ subcrate per BPM band, key, or genre. Empty subcrates are not made. Quit Serato first. Audio files stay as they are.
+**Tree** makes a parent crate with a ⟳ subcrate per BPM band, key, genre, or genre family. Empty subcrates are not made. Quit Serato first. Audio files stay as they are.
 
-The dialog says **The app makes a parent crate with a ⟳ subcrate per BPM band, key, or genre. Empty subcrates are not made. Serato plays them like any crate. Subcrates refresh when this app opens while Serato is closed, or when you press Refresh. Quit Serato DJ Pro first.**
+The dialog says **The app makes a parent crate with a ⟳ subcrate per BPM band, key, genre, or genre family. Empty subcrates are not made. Serato plays them like any crate. Subcrates refresh when this app opens while Serato is closed, or when you press Refresh. Quit Serato DJ Pro first.**
 
 This is a crate action on **Crates**, under **More**. It is not its own view.
 
@@ -10,13 +10,13 @@ This is a crate action on **Crates**, under **More**. It is not its own view.
 
 1. Open crateCraft.
 2. Click **Crates**. Click **More**, then **Tree**.
-3. Choose **BPM bands**, **Keys**, or **Genres**.
-4. For BPM, set low, high, band width, and step. For genres, set fewest tracks per genre and most genres. Keys has no extra fields.
+3. Choose **BPM bands**, **Keys**, **Genres**, or **Genre families**.
+4. For BPM, set low, high, band width, and step. For genres and genre families, set fewest tracks and the cap. Keys has no extra fields.
 5. Optional: tick **Only tracks in** the selected crate and its subcrates when a normal crate is selected. The box starts on.
 6. Read the preview. Create tree stays off when no subcrate would be made.
 7. Click **Create tree**.
 
-The default name is **BPM bands**, **Keys**, or **Genres**. Type another name to use that instead. The parent is a normal crate at the top of the space. The subcrates refresh like any preset crate.
+The default name is **BPM bands**, **Keys**, **Genres**, or **Genre families**. Type another name to use that instead. The parent is a normal crate at the top of the space. The subcrates refresh like any preset crate.
 
 While Serato has the library open, Tree stays off.
 

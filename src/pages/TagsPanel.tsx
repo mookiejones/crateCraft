@@ -11,6 +11,7 @@ import type { GridColDef } from "@mui/x-data-grid";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 import type { TagClusterGroup, TagClusterPlan } from "../lib/api-types";
+import { GenreFamilies } from "../components/GenreFamilies";
 import { HealthDataGrid, type HealthGridRow } from "../components/HealthDataGrid";
 import { JobProgress } from "../components/JobProgress";
 import { useHealth } from "../containers/HealthContext";
@@ -330,6 +331,13 @@ export function TagsPanel() {
       </p>
       <p id="tags-status" className="gig-status" role="status" aria-live="polite">{health.tagsStatus}</p>
       <div id="tags-report" className="gig-report" tabIndex={-1}>
+        {field === "genre" ? (
+          <GenreFamilies
+            writable={health.tagsWritable}
+            paused={health.tagsBusy}
+            revision={health.tagsClusters}
+          />
+        ) : null}
         {field === "titles" && health.titlePlan ? (
           <TitlesReport plan={health.titlePlan} canApply={canApplyTitles} onApply={() => void health.applyTitles()} />
         ) : null}
