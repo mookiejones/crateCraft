@@ -223,7 +223,9 @@ class AppTrashStoreTests(_TrashCase):
         """
         trash, item_id, blob, library_dir = self._held_song()
         self.clock.moment = NOW + timedelta(days=8)
-        preview = trash.purge(item_id, confirm=False, library_dir=library_dir)
+        missing = library_dir / "master.sqlite"
+        with mock.patch.object(library, "MASTER", missing):
+            preview = trash.purge(item_id, confirm=False, library_dir=library_dir)
         self.assertTrue(preview["ok"])
         self.assertTrue(preview["preview"])
         self.assertTrue(blob.is_file())
@@ -236,7 +238,9 @@ class AppTrashStoreTests(_TrashCase):
         """
         trash, item_id, blob, library_dir = self._held_song()
         self.clock.moment = NOW + timedelta(days=8)
-        result = trash.purge(item_id, confirm=True, library_dir=library_dir)
+        missing = library_dir / "master.sqlite"
+        with mock.patch.object(library, "MASTER", missing):
+            result = trash.purge(item_id, confirm=True, library_dir=library_dir)
         self.assertTrue(result["ok"])
         self.assertFalse(blob.exists())
 

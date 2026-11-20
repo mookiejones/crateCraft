@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import cast
 from unittest import mock
 
+import app_config
 import library
 import other_dj
 import snapshot_frames
@@ -1164,16 +1165,15 @@ class MergeTests(unittest.TestCase):
                     inside.unlink()
 
     def test_trash_moves_a_sibling_file_and_not_a_prefix_match(self) -> None:
-        """Move the duplicate into the FreeDesktop trash and leave the kept file.
+        """Move the duplicate into the crateCraft trash and leave the kept file.
 
         The audio lives in a directory whose name starts with the library
         folder name and then ``-backup``. A string prefix would treat that
         directory as inside the library and refuse the move. The file must
-        land in the trash files directory with a ``.trashinfo`` record, and
-        the kept file must stay. ``os.unlink`` is not used on the audio.
-        The platform patch is only for the trash layout. Process detection
-        stays clear, because a missing ``ps`` on Windows would otherwise
-        count as Serato DJ still running.
+        land in the app trash beside settings, and the kept file must stay.
+        ``os.unlink`` is not used on the audio. Process detection stays
+        clear, because a missing ``ps`` on Windows would otherwise count
+        as Serato DJ still running.
 
         Returns:
             None. The test fails if the file is unlinked or left in place.
@@ -1182,7 +1182,8 @@ class MergeTests(unittest.TestCase):
             library_dir = temp.db.parent
             sibling = library_dir.parent / f"{library_dir.name}-backup"
             sibling.mkdir()
-            xdg = sibling / "xdg"
+            config = sibling / "config"
+            config.mkdir()
             try:
                 self.assertTrue(str(sibling).startswith(str(library_dir)))
                 kept = sibling / "keep.mp3"
@@ -1207,8 +1208,7 @@ class MergeTests(unittest.TestCase):
                     real_unlink(path, *args, **kwargs)  # type: ignore[arg-type]
 
                 with (
-                    mock.patch("library.sys.platform", "linux"),
-                    mock.patch.dict(os.environ, {"XDG_DATA_HOME": str(xdg)}),
+                    mock.patch.dict(os.environ, {app_config.CONFIG_ENV: str(config)}),
                     mock.patch("os.unlink", guard),
                     mock.patch("snapshots.serato_dj_running", return_value=False),
                 ):
@@ -1220,15 +1220,12 @@ class MergeTests(unittest.TestCase):
                             "confirm_delete_files": True,
                         }
                     )
-                files = xdg / "Trash" / "files"
-                moved = [path for path in files.iterdir() if path.name == "song.mp3" or path.name.startswith("song.mp3_")]
-                info = xdg / "Trash" / "info" / f"{moved[0].name}.trashinfo"
+                blobs = list((config / "trash" / "items").glob("*/blob"))
+                self.assertEqual(len(blobs), 1)
                 self.assertEqual(result["trashed"], ["song.mp3"])
                 self.assertFalse(audio.exists())
                 self.assertEqual(kept.read_bytes(), b"keep")
-                self.assertEqual(moved[0].read_bytes(), b"duplicate")
-                self.assertIn("[Trash Info]", info.read_text(encoding="utf-8"))
-                self.assertIn("song.mp3", info.read_text(encoding="utf-8"))
+                self.assertEqual(blobs[0].read_bytes(), b"duplicate")
                 self.assertEqual(_asset_count(temp.db, 2), 0)
             finally:
                 shutil.rmtree(sibling, ignore_errors=True)

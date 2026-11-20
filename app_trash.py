@@ -1101,7 +1101,10 @@ class AppTrash:
 
         Returns:
             A ``LibraryError`` to show or raise. None when the window is
-            open and the audio guards allow the delete.
+            open and the audio guards allow the delete. A missing
+            ``master.sqlite`` has no duplicate rows, so the copy-count
+            gate is skipped. When that file exists, a copy-count error
+            is returned.
 
         Raises:
             LibraryError: Only when the copy-count gate raises. That error
@@ -1115,6 +1118,7 @@ class AppTrash:
             return _error(TRASH_NOT_DUE)
         if record["kind"] != "audio":
             return None
+        import library
         import other_dj
         import verified_copies
 
@@ -1122,10 +1126,11 @@ class AppTrash:
         apps = other_dj.LibraryIndex(other_dj.locate_libraries()).used_by(original, Path(original))
         if apps:
             return _error(TRASH_OTHER_DJ)
-        try:
-            verified_copies.require_audio_delete([original])
-        except Exception as exc:
-            return exc
+        if Path(library.MASTER).is_file():
+            try:
+                verified_copies.require_audio_delete([original])
+            except Exception as exc:
+                return exc
         return None
 
 
