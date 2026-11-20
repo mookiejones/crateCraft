@@ -13018,6 +13018,8 @@ Error generating stack: ` + x.message + `
     "error.artwork_no_search": "This track has no title or artist to search.",
     "error.artwork_not_image": "That image is not a JPEG or PNG cover.",
     "error.artwork_write_failed": "The artwork could not be written.",
+    "error.drive_file_not_written": "The drive file could not be written.",
+    "error.drive_file_not_restored": "The drive file could not be put back.",
     "error.backup_no_space": "There is not enough disk space to back up the library.",
     "error.backup_serato_running": "Quit Serato DJ Pro before backing up drive crates. Serato DJ is still running, so nothing was copied.",
     "error.batch_empty": "Queue a track or a crate before preview.",
@@ -13726,6 +13728,19 @@ Error generating stack: ` + x.message + `
     "portable.offlineNamed": "{name} is not connected. Nothing was deleted.",
     "portable.readOnly": "This only reads the drive. Nothing is copied or deleted.",
     "portable.ready": "Ready to leave the laptop.",
+    "portable.smartBusy": "Working on smart crates.",
+    "portable.smartConfirm": "Restore",
+    "portable.smartCopied": "Smart crates copied to this drive.",
+    "portable.smartCopy": "Copy smart crates",
+    "portable.smartFallback": "Rules could not be rebuilt. This becomes a normal crate.",
+    "portable.smartKept": "A crate with this name is already on the drive. Replace on drive writes over it.",
+    "portable.smartNeedsConfirm": "A smart crate with this name is already in the library. Restore replaces it.",
+    "portable.smartNote": "Copy smart crates and Restore smart crates write this drive. Check drive still only reads.",
+    "portable.smartNothing": "Nothing to change.",
+    "portable.smartOverwrite": "Replace on drive",
+    "portable.smartPreview": "Preview ready. Restore writes it. Quit Serato first.",
+    "portable.smartRestore": "Restore smart crates",
+    "portable.smartRestored": "Smart crates restored.",
     "portable.title": "Portable drive",
     "portable.unreachable": "This drive could not be checked.",
     "portable.unreadable": "This drive could not be read.",
@@ -14512,6 +14527,10 @@ Error generating stack: ` + x.message + `
     "tooltip.portableClose": "Close the portable drive report.",
     "tooltip.portableDrive": "Choose a connected drive that has a _Serato_ folder. An unplugged drive is named below and is not treated as a missing file.",
     "tooltip.portableRun": "Check the selected drive. Read its crates and list what to fix before the gig. Nothing is written.",
+    "tooltip.portableSmartConfirm": "Write this preview into the library. Quit Serato first. A snapshot is saved first and can be undone.",
+    "tooltip.portableSmartCopy": "Write each smart crate's rules and its current tracks into this drive's _Serato_ folder. An existing file stays until you choose Replace on drive. Quit Serato first.",
+    "tooltip.portableSmartOverwrite": "Replace smart-crate files on this drive that already use these names.",
+    "tooltip.portableSmartRestore": "Preview how these smart crates would land in this library. Nothing is written yet.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
     "tooltip.prepareRemove": "Take this track out of Prepare.",
     "tooltip.presetBpm": "The tempo in the middle of the range.",
@@ -15095,6 +15114,8 @@ Error generating stack: ` + x.message + `
     "error.artwork_no_search": "Esta pista no tiene título ni artista para buscar.",
     "error.artwork_not_image": "Esa imagen no es una carátula JPEG o PNG.",
     "error.artwork_write_failed": "No se pudo escribir la carátula.",
+    "error.drive_file_not_written": "No se pudo escribir el archivo en la unidad.",
+    "error.drive_file_not_restored": "No se pudo restaurar el archivo en la unidad.",
     "error.backup_no_space": "No hay espacio suficiente en el disco para copiar la biblioteca.",
     "error.backup_serato_running": "Cierra Serato DJ Pro antes de copiar las cajas de las unidades. Serato DJ sigue abierto, así que no se copió nada.",
     "error.batch_empty": "Pon una pista o una caja en la cola antes de la vista previa.",
@@ -15803,6 +15824,19 @@ Error generating stack: ` + x.message + `
     "portable.offlineNamed": "{name} no está conectada. No se ha borrado nada.",
     "portable.readOnly": "Esto solo lee la unidad. No se copia ni se borra nada.",
     "portable.ready": "Lista para salir del portátil.",
+    "portable.smartBusy": "Trabajando en las cajas inteligentes.",
+    "portable.smartConfirm": "Restaurar",
+    "portable.smartCopied": "Cajas inteligentes copiadas a esta unidad.",
+    "portable.smartCopy": "Copiar cajas inteligentes",
+    "portable.smartFallback": "No se pudieron reconstruir las reglas. Esto pasa a ser una caja normal.",
+    "portable.smartKept": "Ya hay una caja con este nombre en la unidad. Reemplazar en la unidad la sobrescribe.",
+    "portable.smartNeedsConfirm": "Ya hay una caja inteligente con este nombre en la biblioteca. Restaurar la reemplaza.",
+    "portable.smartNote": "Copiar cajas inteligentes y Restaurar cajas inteligentes escriben en esta unidad. Comprobar unidad sigue solo leyendo.",
+    "portable.smartNothing": "Nada que cambiar.",
+    "portable.smartOverwrite": "Reemplazar en la unidad",
+    "portable.smartPreview": "Vista previa lista. Restaurar la escribe. Cierra Serato primero.",
+    "portable.smartRestore": "Restaurar cajas inteligentes",
+    "portable.smartRestored": "Cajas inteligentes restauradas.",
     "portable.title": "Unidad portátil",
     "portable.unreachable": "No se ha podido comprobar esta unidad.",
     "portable.unreadable": "No se ha podido leer esta unidad.",
@@ -16589,6 +16623,10 @@ Error generating stack: ` + x.message + `
     "tooltip.portableClose": "Cierra el informe de la unidad portátil.",
     "tooltip.portableDrive": "Elige una unidad conectada que tenga una carpeta _Serato_. Una unidad desconectada se nombra debajo y no se trata como un archivo no encontrado.",
     "tooltip.portableRun": "Comprueba la unidad elegida. Lee sus cajas y lista lo que hay que corregir antes del bolo. No se escribe nada.",
+    "tooltip.portableSmartConfirm": "Escribe esta vista previa en la biblioteca. Cierra Serato primero. Se guarda una copia antes y se puede deshacer.",
+    "tooltip.portableSmartCopy": "Escribe las reglas de cada caja inteligente y sus pistas actuales en la carpeta _Serato_ de esta unidad. Un archivo que ya existe se queda hasta que eliges Reemplazar en la unidad. Cierra Serato primero.",
+    "tooltip.portableSmartOverwrite": "Reemplaza en esta unidad los archivos de cajas inteligentes que ya usan estos nombres.",
+    "tooltip.portableSmartRestore": "Muestra cómo quedarían estas cajas inteligentes en esta biblioteca. Todavía no se escribe nada.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
     "tooltip.prepareRemove": "Quita esta pista de Preparar.",
     "tooltip.presetBpm": "El tempo en el centro del rango.",
@@ -17720,6 +17758,10 @@ Error generating stack: ` + x.message + `
     trackList: spec("tooltip.trackList"),
     filesList: spec("tooltip.filesList"),
     portableClose: spec("tooltip.portableClose"),
+    portableSmartCopy: spec("tooltip.portableSmartCopy"),
+    portableSmartRestore: spec("tooltip.portableSmartRestore"),
+    portableSmartConfirm: spec("tooltip.portableSmartConfirm"),
+    portableSmartOverwrite: spec("tooltip.portableSmartOverwrite"),
     snapshotsList: spec("tooltip.snapshotsList"),
     splitter: spec("tooltip.splitter"),
     previous: spec("tooltip.previous"),
@@ -18101,6 +18143,10 @@ Error generating stack: ` + x.message + `
       "portable-close": tips.portableClose,
       "portable-drive": tips.portableDrive,
       "portable-check": tips.portableRun,
+      "portable-smart-copy": tips.portableSmartCopy,
+      "portable-smart-restore": tips.portableSmartRestore,
+      "portable-smart-confirm": tips.portableSmartConfirm,
+      "portable-smart-overwrite": tips.portableSmartOverwrite,
       "quick-open-query": tips.quickOpen,
       "quick-open-retry": tips.quickOpenRetry,
       "quick-open-close": tips.quickOpenClose,
@@ -61617,8 +61663,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function fieldEditFingerprint(request) {
     return `${request.ids.join(",")}|${request.field}|${request.value}|${request.files ? "1" : "0"}`;
   }
-  function fieldEditApplyReady(plan, previewed, current4, writable, busy5) {
-    return !plan || !previewed || !writable || busy5 || plan.changes.length === 0 ? !1 : fieldEditFingerprint(previewed) === fieldEditFingerprint(current4);
+  function fieldEditApplyReady(plan, previewed, current4, writable, busy6) {
+    return !plan || !previewed || !writable || busy6 || plan.changes.length === 0 ? !1 : fieldEditFingerprint(previewed) === fieldEditFingerprint(current4);
   }
   function fieldEditSelectedText(count) {
     return t("fieldEdit.selected", { count });
@@ -62991,7 +63037,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return EDIT_FIELDS.includes(value) ? value : "genre";
   }
   function FieldEditorBar({ selectedIds }) {
-    let list = useTrackList(), [field2, setField] = (0, import_react33.useState)("genre"), [value, setValue] = (0, import_react33.useState)(""), [plan, setPlan] = (0, import_react33.useState)(null), [previewed, setPreviewed] = (0, import_react33.useState)(null), [busy5, setBusy] = (0, import_react33.useState)(!1), [status4, setStatus] = (0, import_react33.useState)(""), [writeFiles, setWriteFiles] = (0, import_react33.useState)(!1), idsKey = selectedIds.join(",");
+    let list = useTrackList(), [field2, setField] = (0, import_react33.useState)("genre"), [value, setValue] = (0, import_react33.useState)(""), [plan, setPlan] = (0, import_react33.useState)(null), [previewed, setPreviewed] = (0, import_react33.useState)(null), [busy6, setBusy] = (0, import_react33.useState)(!1), [status4, setStatus] = (0, import_react33.useState)(""), [writeFiles, setWriteFiles] = (0, import_react33.useState)(!1), idsKey = selectedIds.join(",");
     (0, import_react33.useEffect)(() => {
       let count = idsKey === "" ? 0 : idsKey.split(",").filter(Boolean).length;
       setPlan(null), setPreviewed(null), setBusy(!1), setStatus(fieldEditShows(count) ? fieldEditSelectedText(count) : "");
@@ -62999,7 +63045,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let current4 = (0, import_react33.useMemo)(
       () => ({ ids: [...selectedIds], field: field2, value, files: writeFiles }),
       [selectedIds, field2, value, writeFiles]
-    ), applyReady = fieldEditApplyReady(plan, previewed, current4, list.writable, busy5);
+    ), applyReady = fieldEditApplyReady(plan, previewed, current4, list.writable, busy6);
     if (!fieldEditShows(selectedIds.length)) return null;
     async function onPreview() {
       let fieldNode = document.querySelector("#field-edit-field"), valueNode = document.querySelector("#field-edit-value"), nextField = asEditField(fieldNode?.value ?? field2), nextValue = valueNode?.value ?? value;
@@ -63026,7 +63072,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     }
     async function onApply() {
-      if (fieldEditApplyReady(plan, previewed, current4, list.writable, busy5)) {
+      if (fieldEditApplyReady(plan, previewed, current4, list.writable, busy6)) {
         setBusy(!0);
         try {
           await applyFieldEdit(current4.ids, current4.field, current4.value, writeFiles);
@@ -63045,7 +63091,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "field-edit-field",
             value: field2,
-            disabled: busy5,
+            disabled: busy6,
             ref: tooltipRef5(tips.fieldEditField),
             onChange: (event) => setField(asEditField(event.currentTarget.value)),
             children: EDIT_FIELDS.map((name) => /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("option", { value: name, children: fieldEditLabel(name) }, name))
@@ -63060,7 +63106,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "field-edit-value",
             type: "text",
             value,
-            disabled: busy5,
+            disabled: busy6,
             ref: tooltipRef5(tips.fieldEditValue),
             onChange: (event) => setValue(event.currentTarget.value),
             onInput: (event) => setValue(event.currentTarget.value)
@@ -63074,7 +63120,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "field-edit-write-files",
             type: "checkbox",
             checked: writeFiles,
-            disabled: busy5,
+            disabled: busy6,
             ref: tooltipRef5(tips.fieldEditWriteFiles),
             onChange: (event) => setWriteFiles(event.currentTarget.checked)
           }
@@ -63090,7 +63136,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           variant: "outlined",
           sx: BUTTON_SX,
           ref: tooltipRef5(tips.fieldEditPreview),
-          disabled: busy5,
+          disabled: busy6,
           onClick: () => {
             onPreview();
           },
@@ -63601,8 +63647,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     mountIslands();
   }
 
+  // src/lib/gig/portable-smart.ts
+  function postPortableSmart(drive, action, extra = {}) {
+    let body2 = { action, drive, space: state.space };
+    return extra.overwrite === !0 && (body2.overwrite = !0), extra.confirm === !0 && (body2.confirm = !0), postJSON("/api/portable-smart", body2);
+  }
+
   // src/lib/gig/portable.ts
-  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", listeners12 = /* @__PURE__ */ new Set();
+  var FINDING_CAP = 100, islandRoot3 = null, token2 = 0, latest2 = null, lastRoots = [], opener = null, hasConnected = !1, statusText = "", lastDrive = "", busy = !1, showConfirm = !1, showOverwrite = !1, listeners12 = /* @__PURE__ */ new Set();
   function emitPortable() {
     let snapshot2 = portableSnapshot();
     for (let listener of listeners12) listener(snapshot2);
@@ -63614,7 +63666,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function portableSnapshot() {
-    return { report: latest2, status: statusText };
+    return {
+      report: latest2,
+      status: statusText,
+      smartConfirm: showConfirm,
+      smartOverwrite: showOverwrite,
+      smartBusy: busy
+    };
   }
   function closePortable() {
     let dialog = document.getElementById("portable-dialog");
@@ -63717,6 +63775,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       runPortableCheck(el("portable-drive").value);
     }), el("portable-drive").addEventListener("change", () => {
       runPortableCheck(el("portable-drive").value);
+    }), el("portable-smart-copy").addEventListener("click", () => {
+      copyPortableSmart(!1);
+    }), el("portable-smart-restore").addEventListener("click", () => {
+      previewPortableRestore();
+    }), el("portable-smart-confirm").addEventListener("click", () => {
+      confirmPortableRestore();
+    }), el("portable-smart-overwrite").addEventListener("click", () => {
+      overwritePortableSmart();
     }), islandRoot3 = mountIsland(el("portable-view-findings"), (0, import_react37.createElement)(PortableReport)));
   }
   function renderPortableReport(report) {
@@ -63727,7 +63793,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function runPortableCheck(path) {
     wirePortable();
     let drive = portableDriveRoot(path), mine = ++token2;
-    if (latest2 = null, clearReport(), paintStatus(t("portable.checking")), !drive) {
+    if (latest2 = null, lastDrive = drive, showConfirm = !1, showOverwrite = !1, clearReport(), paintStatus(t("portable.checking")), paintSmartButtons(), !drive) {
       fail(t("portable.unreadable"));
       return;
     }
@@ -63763,7 +63829,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     });
     select.replaceChildren(...options);
     let keep = connected.some((root) => root.path === previous2) ? previous2 : connected[0]?.path ?? "";
-    select.value = keep, select.disabled = !hasConnected, el("portable-check").disabled = !hasConnected;
+    select.value = keep, select.disabled = !hasConnected, el("portable-check").disabled = !hasConnected, paintSmartButtons();
     let note = el("portable-offline");
     if (!missing.length) {
       note.textContent = "";
@@ -63781,12 +63847,63 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     statusText = message, el("portable-view-status").textContent = message, emitPortable();
   }
   function beginBusy2() {
+    busy = !0;
     let button = el("portable-check");
-    button.disabled = !0, button.setAttribute("aria-busy", "true"), el("portable-panel").setAttribute("aria-busy", "true");
+    button.disabled = !0, button.setAttribute("aria-busy", "true"), el("portable-panel").setAttribute("aria-busy", "true"), paintSmartButtons(), emitPortable();
   }
   function endBusy2() {
+    busy = !1;
     let button = el("portable-check");
-    button.disabled = !hasConnected, button.setAttribute("aria-busy", "false"), el("portable-panel").setAttribute("aria-busy", "false");
+    button.disabled = !hasConnected, button.setAttribute("aria-busy", "false"), el("portable-panel").setAttribute("aria-busy", "false"), paintSmartButtons(), emitPortable();
+  }
+  async function copyPortableSmart(overwrite, source = "panel") {
+    await runSmart("copy", overwrite ? { overwrite: !0 } : {}, source);
+  }
+  async function previewPortableRestore(source = "panel") {
+    await runSmart("preview", {}, source);
+  }
+  async function confirmPortableRestore(source = "panel") {
+    await runSmart("restore", { confirm: !0 }, source);
+  }
+  async function overwritePortableSmart(source = "panel") {
+    await runSmart("copy", { overwrite: !0 }, source);
+  }
+  function selectedDrive(source) {
+    if (source === "panel") {
+      let node2 = document.getElementById("portable-drive");
+      if (node2 instanceof HTMLSelectElement && node2.value) {
+        let root = portableDriveRoot(node2.value);
+        if (root) return root;
+      }
+    }
+    return lastDrive;
+  }
+  async function runSmart(action, extra, source) {
+    let drive = selectedDrive(source);
+    if (!drive) {
+      paintStatus(t("portable.unreadable"));
+      return;
+    }
+    lastDrive = drive, beginBusy2(), paintStatus(t("portable.smartBusy"));
+    try {
+      let result = await postPortableSmart(drive, action, extra);
+      showConfirm = !1, showOverwrite = !1;
+      let crates = result.crates ?? [];
+      result.action === "copy" ? showOverwrite = result.needs_overwrite === !0 : (result.action === "preview" || result.needs_confirm === !0 && result.written !== !0) && (showConfirm = crates.some((crate) => crate.status === "create" || crate.status === "update" || crate.status === "needs_confirm")), paintStatus(smartStatus(result));
+    } catch (error2) {
+      showConfirm = !1, showOverwrite = !1, paintStatus(error2 instanceof Error && error2.message ? error2.message : t("portable.unreadable"));
+    } finally {
+      endBusy2();
+    }
+  }
+  function smartStatus(result) {
+    if (result.ok === !1) return result.detail || t("portable.unreadable");
+    let fallback = (result.crates ?? []).filter((crate) => crate.mode === "fallback" && crate.status !== "skip" && crate.status !== "nothing" && crate.name), bits = [];
+    return result.action === "copy" ? (result.written && bits.push(t("portable.smartCopied")), result.needs_overwrite && bits.push(t("portable.smartKept")), bits.length || bits.push(t("portable.smartNothing"))) : result.action === "preview" ? bits.push(result.needs_confirm ? t("portable.smartNeedsConfirm") : t("portable.smartPreview")) : result.written ? bits.push(t("portable.smartRestored")) : result.needs_confirm ? bits.push(t("portable.smartNeedsConfirm")) : bits.push(t("portable.smartNothing")), fallback.length && bits.push(`${fallback.map((crate) => crate.name).join(", ")}. ${t("portable.smartFallback")}`), bits.join(" ");
+  }
+  function paintSmartButtons() {
+    let locked = busy || !hasConnected;
+    el("portable-smart-copy").disabled = locked, el("portable-smart-restore").disabled = locked, el("portable-smart-confirm").disabled = locked, el("portable-smart-overwrite").disabled = locked, el("portable-smart-confirm").hidden = !showConfirm, el("portable-smart-overwrite").hidden = !showOverwrite;
   }
   function isRecord3(value) {
     return typeof value == "object" && value !== null && !Array.isArray(value);
@@ -64653,7 +64770,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   bindSharedDialogMount(mountSharedDialogs);
 
   // src/lib/health/album-art.ts
-  var latest3 = null, trackId2 = null, busy = !1, onWrote = null;
+  var latest3 = null, trackId2 = null, busy2 = !1, onWrote = null;
   function wireAlbumArt(wrote) {
     onWrote = wrote, mountSharedDialogs();
     let dialog = el("album-art-dialog");
@@ -64663,7 +64780,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openAlbumArt(id) {
     if (!(!Number.isInteger(id) || id <= 0) && (mountSharedDialogs(), typeof el("album-art-dialog").showModal == "function")) {
-      trackId2 = id, latest3 = null, busy = !0, paintDialog(), el("album-art-dialog").open || el("album-art-dialog").showModal(), el("album-art-cancel").focus();
+      trackId2 = id, latest3 = null, busy2 = !0, paintDialog(), el("album-art-dialog").open || el("album-art-dialog").showModal(), el("album-art-cancel").focus();
       try {
         let plan = await postJSON("/api/album-art", {
           action: "preview",
@@ -64678,7 +64795,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         if (trackId2 !== id) return;
         failStatus2(failureOf(error2).message), el("album-art-cancel").focus();
       } finally {
-        trackId2 === id && (busy = !1), paintDialog();
+        trackId2 === id && (busy2 = !1), paintDialog();
       }
     }
   }
@@ -64687,8 +64804,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function embedCover() {
     let id = trackId2, chosen = selectedRelease();
-    if (!(id === null || !chosen || !state.writable || busy)) {
-      busy = !0, paintDialog();
+    if (!(id === null || !chosen || !state.writable || busy2)) {
+      busy2 = !0, paintDialog();
       try {
         let written = await postJSON("/api/album-art", {
           action: "embed",
@@ -64701,12 +64818,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           el("album-art-dialog").close(), failStatus2(t("gigLock.queued"));
           return;
         }
-        latest3 = written, busy = !1, el("album-art-dialog").close(), onWrote?.();
+        latest3 = written, busy2 = !1, el("album-art-dialog").close(), onWrote?.();
       } catch (error2) {
         let failed = failureOf(error2);
         failStatus2(failed.message), failed.status === 409 && bridge.lockDown(error2);
       } finally {
-        busy = !1, paintDialog();
+        busy2 = !1, paintDialog();
       }
     }
   }
@@ -64716,7 +64833,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let list = el("album-art-choices"), selected = selectedRelease();
     list.replaceChildren(), (plan?.candidates ?? []).forEach((candidate, index) => {
       list.append(choiceRow(candidate, selected, index === 0));
-    }), busy && !plan && (el("album-art-status").textContent = t("health.artLooking")), syncEmbedEnabled();
+    }), busy2 && !plan && (el("album-art-status").textContent = t("health.artLooking")), syncEmbedEnabled();
   }
   function choiceRow(candidate, selected, fallback) {
     let row = document.createElement("label");
@@ -64735,7 +64852,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function syncEmbedEnabled() {
     let button = el("album-art-embed");
-    button.disabled = busy || !state.writable || selectedRelease() === null;
+    button.disabled = busy2 || !state.writable || selectedRelease() === null;
   }
   function failStatus2(message) {
     el("album-art-status").textContent = message;
@@ -65628,7 +65745,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     section,
     onReload
   }) {
-    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react41.useState)(""), [busy5, setBusy] = (0, import_react41.useState)(!1), [canApply, setCanApply] = (0, import_react41.useState)(!1);
+    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react41.useState)(""), [busy6, setBusy] = (0, import_react41.useState)(!1), [canApply, setCanApply] = (0, import_react41.useState)(!1);
     async function review() {
       setBusy(!0), setCanApply(!1);
       try {
@@ -65670,7 +65787,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX2,
                 ref: tooltipRef5(tips.suspiciousCues),
                 "data-health-action": "cues-preview",
-                disabled: busy5,
+                disabled: busy6,
                 onClick: () => {
                   review();
                 },
@@ -65686,7 +65803,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX2,
                 ref: tooltipRef5(tips.suspiciousCues),
                 "data-health-action": "cues-apply",
-                disabled: busy5 || !canApply,
+                disabled: busy6 || !canApply,
                 onClick: () => {
                   removeDuplicates();
                 },
@@ -65891,12 +66008,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/health.ts
-  var latest4 = null, status = "", busy2 = !1, go = null, panelRoot, panelHost = null, listRoot, listHost = null, albumArtWired = !1;
+  var latest4 = null, status = "", busy3 = !1, go = null, panelRoot, panelHost = null, listRoot, listHost = null, albumArtWired = !1;
   function getHealthSnapshot() {
     return {
       healthReport: latest4,
       healthStatus: status,
-      healthBusy: busy2,
+      healthBusy: busy3,
       healthScope: crateScopeLabel()
     };
   }
@@ -65946,10 +66063,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     emitHealth(), repaintAlbumArt();
   }
   function beginBusy3() {
-    busy2 = !0, status = t("health.checking"), el("health-panel").setAttribute("aria-busy", "true"), emitHealth();
+    busy3 = !0, status = t("health.checking"), el("health-panel").setAttribute("aria-busy", "true"), emitHealth();
   }
   function endBusy3() {
-    busy2 = !1, el("health-panel").setAttribute("aria-busy", "false"), emitHealth();
+    busy3 = !1, el("health-panel").setAttribute("aria-busy", "false"), emitHealth();
   }
   function failStatus3(message) {
     status = message, emitHealth();
@@ -66475,12 +66592,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/scan.ts
-  var latest6 = null, status2 = "", busy3 = !1, lastDepth = "quick", expanded = /* @__PURE__ */ new Set(), panelRoot3, panelHost2 = null;
+  var latest6 = null, status2 = "", busy4 = !1, lastDepth = "quick", expanded = /* @__PURE__ */ new Set(), panelRoot3, panelHost2 = null;
   function getScanSnapshot() {
     return {
       scanReport: latest6,
       scanStatus: status2,
-      scanBusy: busy3,
+      scanBusy: busy4,
       scanScope: crateScopeLabel(),
       scanFullDisabled: state.activeCrate === "all",
       scanExpanded: expanded
@@ -66534,10 +66651,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return depth === "quick" || depth === "full" ? depth : lastDepth === "full" && state.activeCrate === "all" ? "quick" : lastDepth;
   }
   function beginBusy5() {
-    busy3 = !0, status2 = t("scan.checking"), el("scan-panel").setAttribute("aria-busy", "true"), emitHealth();
+    busy4 = !0, status2 = t("scan.checking"), el("scan-panel").setAttribute("aria-busy", "true"), emitHealth();
   }
   function endBusy5() {
-    busy3 = !1, el("scan-panel").setAttribute("aria-busy", "false"), emitHealth();
+    busy4 = !1, el("scan-panel").setAttribute("aria-busy", "false"), emitHealth();
   }
   function failStatus5(message) {
     status2 = message, emitHealth();
@@ -66703,7 +66820,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     group,
     chosen,
     plan,
-    busy: busy5,
+    busy: busy6,
     canApply,
     onPreview,
     onApply,
@@ -66720,7 +66837,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             name: `tags-${group.key}`,
             value: spelling.value,
             checked: spelling.value === chosen,
-            disabled: busy5,
+            disabled: busy6,
             onChange: (event) => onSelect(event.currentTarget.value)
           }
         ),
@@ -66738,7 +66855,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ref: tooltipRef5(tips.tagsPreview),
             "data-tags-action": "preview",
             "data-key": group.key,
-            disabled: busy5 || !chosen,
+            disabled: busy6 || !chosen,
             onClick: onPreview,
             children: t("tags.preview")
           }
@@ -66754,7 +66871,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             "data-tags-action": "apply",
             "data-key": group.key,
             disabled: !canApply || !!(plan && plan.value === chosen && !plan.changes.length),
-            startIcon: busy5 ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CircularProgress_default, { size: 16, color: "inherit" }) : void 0,
+            startIcon: busy6 ? /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(CircularProgress_default, { size: 16, color: "inherit" }) : void 0,
             onClick: onApply,
             children: t("tags.apply")
           }
@@ -67816,7 +67933,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/MusicMirrorPanel.tsx
   var import_jsx_runtime264 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none", minHeight: 44 };
   function MusicMirrorPanel() {
-    let [dest, setDest] = (0, import_react52.useState)(""), [report, setReport] = (0, import_react52.useState)(null), [error2, setError] = (0, import_react52.useState)(""), [busy5, setBusy] = (0, import_react52.useState)(!1), tokenRef = (0, import_react52.useRef)(0), ready = hasMirrorDest(dest) && !busy5;
+    let [dest, setDest] = (0, import_react52.useState)(""), [report, setReport] = (0, import_react52.useState)(null), [error2, setError] = (0, import_react52.useState)(""), [busy6, setBusy] = (0, import_react52.useState)(!1), tokenRef = (0, import_react52.useRef)(0), ready = hasMirrorDest(dest) && !busy6;
     async function run(action, confirm) {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -68037,7 +68154,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/GigLockPanel.tsx
   var import_jsx_runtime266 = __toESM(require_jsx_runtime(), 1), BUTTON_SX8 = { textTransform: "none", minHeight: 44 };
   function GigLockPanel() {
-    let [listing, setListing] = (0, import_react53.useState)(null), [error2, setError] = (0, import_react53.useState)(""), [busy5, setBusy] = (0, import_react53.useState)(!1), tokenRef = (0, import_react53.useRef)(0);
+    let [listing, setListing] = (0, import_react53.useState)(null), [error2, setError] = (0, import_react53.useState)(""), [busy6, setBusy] = (0, import_react53.useState)(!1), tokenRef = (0, import_react53.useRef)(0);
     async function load() {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -68082,7 +68199,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX8,
-            disabled: busy5 || !hasPending,
+            disabled: busy6 || !hasPending,
             ref: tooltipRef5(tips.gigLockPreview),
             onClick: () => {
               run("preview");
@@ -68098,7 +68215,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX8,
-            disabled: busy5 || locked || !hasPending,
+            disabled: busy6 || locked || !hasPending,
             ref: tooltipRef5(tips.gigLockApply),
             onClick: () => {
               run("apply", !0);
@@ -68114,7 +68231,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX8,
-            disabled: busy5 || !hasPending,
+            disabled: busy6 || !hasPending,
             ref: tooltipRef5(tips.gigLockDrop),
             onClick: () => {
               run("drop");
@@ -68136,7 +68253,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: { ...BUTTON_SX8, ml: 1 },
-            disabled: busy5 || locked || !item.id,
+            disabled: busy6 || locked || !item.id,
             ref: tooltipRef5(tips.gigLockUndo),
             onClick: () => {
               item.id && run("undo", !0, item.id);
@@ -68155,7 +68272,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function BatchPanel() {
     let batch = useBatch();
     useCrates();
-    let [error2, setError] = (0, import_react54.useState)(""), [busy5, setBusy] = (0, import_react54.useState)(!1), listing = batch.listing, queued = listing.queue.length > 0, canDest = canQueueActiveCrate();
+    let [error2, setError] = (0, import_react54.useState)(""), [busy6, setBusy] = (0, import_react54.useState)(!1), listing = batch.listing, queued = listing.queue.length > 0, canDest = canQueueActiveCrate();
     (0, import_react54.useEffect)(() => {
       refreshBatch().catch(() => {
       });
@@ -68184,7 +68301,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX9,
-            disabled: busy5 || !canDest,
+            disabled: busy6 || !canDest,
             ref: tooltipRef5(tips.batchDestination),
             onClick: () => {
               let id = activeCrateId();
@@ -68201,7 +68318,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX9,
-            disabled: busy5 || !queued || listing.destination === null,
+            disabled: busy6 || !queued || listing.destination === null,
             ref: tooltipRef5(tips.batchPreview),
             onClick: () => {
               run({ action: "preview" });
@@ -68217,7 +68334,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX9,
-            disabled: busy5 || preview === null,
+            disabled: busy6 || preview === null,
             ref: tooltipRef5(tips.batchApply),
             onClick: () => {
               run({ action: "apply", confirm: !0 });
@@ -68233,7 +68350,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX9,
-            disabled: busy5 || !queued && listing.destination === null && preview === null,
+            disabled: busy6 || !queued && listing.destination === null && preview === null,
             ref: tooltipRef5(tips.batchCancel),
             onClick: () => {
               run({ action: "cancel" });
@@ -68249,7 +68366,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX9,
-            disabled: busy5 || !listing.can_undo,
+            disabled: busy6 || !listing.can_undo,
             ref: tooltipRef5(tips.batchUndo),
             onClick: () => {
               run({ action: "undo", confirm: !0 });
@@ -68785,6 +68902,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       dialogScope: dialog.scope,
       portableReport: portable.report,
       portableStatus: portable.status,
+      portableSmartConfirm: portable.smartConfirm,
+      portableSmartOverwrite: portable.smartOverwrite,
+      portableSmartBusy: portable.smartBusy,
       goUp: goFilesUp,
       refresh: refreshFiles,
       toggleElsewhere: toggleFilesElsewhere,
@@ -69746,7 +69866,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     label,
     tracks,
     writable,
-    busy: busy5
+    busy: busy6
   }) {
     let accordion = useSectionOpen3(tracks.length > 0), columns = (0, import_react64.useMemo)(() => [
       {
@@ -69781,7 +69901,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX11,
                 ref: tooltipRef5(tips.compareSave),
                 "data-compare-set": setKey,
-                disabled: busy5 || !writable || tracks.length === 0,
+                disabled: busy6 || !writable || tracks.length === 0,
                 children: t("compare.save")
               }
             ),
@@ -69794,7 +69914,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function CrateComparePanel({
     payload,
     writable,
-    busy: busy5
+    busy: busy6
   }) {
     let both = payload.both || [], onlyA = payload.only_a || [], onlyB = payload.only_b || [], smart = payload.a.smart || payload.b.smart;
     return /* @__PURE__ */ (0, import_jsx_runtime275.jsxs)(import_jsx_runtime275.Fragment, { children: [
@@ -69806,7 +69926,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.both"),
           tracks: both,
           writable,
-          busy: busy5
+          busy: busy6
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
@@ -69816,7 +69936,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.onlyA", { name: payload.a.name }),
           tracks: onlyA,
           writable,
-          busy: busy5
+          busy: busy6
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime275.jsx)(
@@ -69826,14 +69946,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.onlyB", { name: payload.b.name }),
           tracks: onlyB,
           writable,
-          busy: busy5
+          busy: busy6
         }
       )
     ] });
   }
 
   // src/lib/crates/crate-compare.ts
-  var latest11 = null, busy4 = !1, reportRoot3, reportHost4 = null;
+  var latest11 = null, busy5 = !1, reportRoot3, reportHost4 = null;
   function wireCrateCompare() {
     let panel = el("compare-panel");
     panel.dataset.compareWired !== "true" && (panel.dataset.compareWired = "true", el("compare-refresh").addEventListener("click", () => {
@@ -69885,7 +70005,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       (0, import_react65.createElement)(CrateComparePanel, {
         payload,
         writable: state.writable,
-        busy: busy4
+        busy: busy5
       }),
       reportRoot3
     );
@@ -69935,12 +70055,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
   function beginBusy10(kind2) {
-    busy4 = !0;
+    busy5 = !0;
     let refresh = el("compare-refresh");
     refresh.disabled = !0, refresh.setAttribute("aria-busy", "true"), el("compare-panel").setAttribute("aria-busy", "true"), el("compare-status").textContent = kind2 === "save" ? t("compare.saving") : t("compare.checking"), latest11 && renderCrateCompareReport(latest11);
   }
   function endBusy10() {
-    busy4 = !1;
+    busy5 = !1;
     let refresh = el("compare-refresh");
     refresh.disabled = !1, refresh.setAttribute("aria-busy", "false"), el("compare-panel").setAttribute("aria-busy", "false"), latest11 && renderCrateCompareReport(latest11);
   }
@@ -70653,12 +70773,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/PortableDialog.tsx
   var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
-    let files = useFiles(), report = files.portableReport, verdict = "";
+    let files = useFiles(), report = files.portableReport, busy6 = files.portableSmartBusy, verdict = "";
     report && (report.missing_drive ? verdict = t("portable.missing") : report.ready ? verdict = t("portable.ready") : verdict = t("portable.notReady"));
     let shown = report ? report.findings.slice(0, FINDING_CAP) : [], hidden = report ? report.findings.length - shown.length : 0;
     return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(import_jsx_runtime281.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("h2", { id: "portable-title", children: t("portable.title") }),
       /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { id: "portable-note", className: "dialog-note", children: t("portable.readOnly") }),
+      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { id: "portable-dialog-smart-note", className: "dialog-note", children: t("portable.smartNote") }),
       /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { id: "portable-verdict", children: verdict }),
       /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { id: "portable-summary", children: report?.summary ?? "" }),
       /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("ul", { id: "portable-findings", children: [
@@ -70673,18 +70794,82 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         hidden > 0 ? /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("li", { children: t("files.andMore", { count: hidden }) }) : null
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("p", { id: "portable-status", className: "dialog-status", role: "status", "aria-live": "polite", children: files.portableStatus }),
-      /* @__PURE__ */ (0, import_jsx_runtime281.jsx)("div", { className: "dialog-actions", children: /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
-        "button",
-        {
-          id: "portable-close",
-          type: "button",
-          ref: (element) => {
-            element && setTooltip(element, tips.portableClose);
-          },
-          onClick: () => closePortable(),
-          children: t("common.close")
-        }
-      ) })
+      /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)("div", { className: "dialog-actions", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+          "button",
+          {
+            id: "portable-dialog-smart-copy",
+            type: "button",
+            disabled: busy6,
+            ref: (element) => {
+              element && setTooltip(element, tips.portableSmartCopy);
+            },
+            onClick: () => {
+              copyPortableSmart(!1, "dialog");
+            },
+            children: t("portable.smartCopy")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+          "button",
+          {
+            id: "portable-dialog-smart-restore",
+            type: "button",
+            disabled: busy6,
+            ref: (element) => {
+              element && setTooltip(element, tips.portableSmartRestore);
+            },
+            onClick: () => {
+              previewPortableRestore("dialog");
+            },
+            children: t("portable.smartRestore")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+          "button",
+          {
+            id: "portable-dialog-smart-confirm",
+            type: "button",
+            hidden: !files.portableSmartConfirm,
+            disabled: busy6,
+            ref: (element) => {
+              element && setTooltip(element, tips.portableSmartConfirm);
+            },
+            onClick: () => {
+              confirmPortableRestore("dialog");
+            },
+            children: t("portable.smartConfirm")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+          "button",
+          {
+            id: "portable-dialog-smart-overwrite",
+            type: "button",
+            hidden: !files.portableSmartOverwrite,
+            disabled: busy6,
+            ref: (element) => {
+              element && setTooltip(element, tips.portableSmartOverwrite);
+            },
+            onClick: () => {
+              overwritePortableSmart("dialog");
+            },
+            children: t("portable.smartOverwrite")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
+          "button",
+          {
+            id: "portable-close",
+            type: "button",
+            ref: (element) => {
+              element && setTooltip(element, tips.portableClose);
+            },
+            onClick: () => closePortable(),
+            children: t("common.close")
+          }
+        )
+      ] })
     ] });
   }
 
@@ -71292,7 +71477,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return item.artist ? `${title2} · ${item.artist}` : title2;
   }
   function RelatedTracks({ track, writable }) {
-    let list = useTrackList(), path = relatedPath(track), [busy5, setBusy] = (0, import_react69.useState)(!!path), [loadError, setLoadError] = (0, import_react69.useState)(""), [payload, setPayload] = (0, import_react69.useState)(null), [query, setQuery] = (0, import_react69.useState)(""), [chosen, setChosen] = (0, import_react69.useState)(null), [note, setNote] = (0, import_react69.useState)(""), [rating, setRating] = (0, import_react69.useState)(""), [mutual, setMutual] = (0, import_react69.useState)(!0), [versionOf, setVersionOf] = (0, import_react69.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react69.useState)(null), [versionBusy, setVersionBusy] = (0, import_react69.useState)(!1), [saving2, setSaving] = (0, import_react69.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react69.useState)(!1);
+    let list = useTrackList(), path = relatedPath(track), [busy6, setBusy] = (0, import_react69.useState)(!!path), [loadError, setLoadError] = (0, import_react69.useState)(""), [payload, setPayload] = (0, import_react69.useState)(null), [query, setQuery] = (0, import_react69.useState)(""), [chosen, setChosen] = (0, import_react69.useState)(null), [note, setNote] = (0, import_react69.useState)(""), [rating, setRating] = (0, import_react69.useState)(""), [mutual, setMutual] = (0, import_react69.useState)(!0), [versionOf, setVersionOf] = (0, import_react69.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react69.useState)(null), [versionBusy, setVersionBusy] = (0, import_react69.useState)(!1), [saving2, setSaving] = (0, import_react69.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react69.useState)(!1);
     (0, import_react69.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
@@ -71383,11 +71568,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failureOf(error2).status === 409 ? bridge.lockDown(error2) : (list.setNotice(failureOf(error2).message, "error"), setSaving(!1));
       }
     }
-    let saved = Array.isArray(payload?.saved) ? payload.saved : [], suggested = Array.isArray(payload?.suggested) ? payload.suggested : [], crateName = payload?.crate_name || "Related", headingId = `related-heading-${track.id}`, status4 = path ? loadError || (busy5 ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved")) : t("related.noPath");
+    let saved = Array.isArray(payload?.saved) ? payload.saved : [], suggested = Array.isArray(payload?.suggested) ? payload.suggested : [], crateName = payload?.crate_name || "Related", headingId = `related-heading-${track.id}`, status4 = path ? loadError || (busy6 ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved")) : t("related.noPath");
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime290.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy5, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime290.jsxs)("section", { className: "group", "data-track-id": String(track.id), "aria-labelledby": headingId, "aria-busy": busy6, children: [
       /* @__PURE__ */ (0, import_jsx_runtime290.jsx)("h3", { id: headingId, children: t("related.heading") }),
       /* @__PURE__ */ (0, import_jsx_runtime290.jsx)("p", { className: "detail-kicker", role: "status", children: status4 }),
       payload && saved.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime290.jsx)("ul", { className: "related-list", children: saved.map((link) => {

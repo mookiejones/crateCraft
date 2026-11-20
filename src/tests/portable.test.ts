@@ -174,6 +174,54 @@ describe("portable drive check", () => {
     expect(document.querySelector(".portable-fix")?.textContent).toBe("Copy <b>night.mp3</b> onto this drive.");
     expect(document.querySelector("#portable-findings b")).toBeNull();
     expect(document.querySelector("#portable-note")?.textContent).toBe("This only reads the drive. Nothing is copied or deleted.");
+    expect(document.querySelector("#portable-dialog-smart-note")?.textContent).toBe(
+      "Copy smart crates and Restore smart crates write this drive. Check drive still only reads.",
+    );
+    expect(document.querySelector<HTMLButtonElement>("#portable-dialog-smart-confirm")?.hidden).toBe(true);
+    expect(document.querySelector<HTMLButtonElement>("#portable-dialog-smart-overwrite")?.hidden).toBe(true);
+  });
+
+  it("copies the checked drive from the dialog, not the Gig picker", async () => {
+    renderFiles();
+    const button = document.querySelector<HTMLButtonElement>(".files-portable");
+    fetchMock.mockResolvedValue(jsonResponse(report()));
+    button?.click();
+    await vi.waitFor(() => {
+      expect(document.querySelector("#portable-verdict")?.textContent).toBe(
+        "Not ready. Fix these on the laptop first.",
+      );
+    });
+    const select = document.querySelector<HTMLSelectElement>("#portable-drive")!;
+    const option = document.createElement("option");
+    option.value = "/Volumes/OTHER/Music";
+    select.append(option);
+    select.value = "/Volumes/OTHER/Music";
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(jsonResponse({
+      ok: true,
+      action: "copy",
+      written: true,
+      needs_overwrite: false,
+      crates: [],
+      status: "ok",
+    }));
+    document.getElementById("portable-dialog-smart-copy")!.click();
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledOnce();
+    });
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("/api/portable-smart");
+    expect(JSON.parse(String(init.body))).toEqual({
+      action: "copy",
+      drive: "/Volumes/GIGDRIVE",
+      space: "Serato Library",
+    });
+    expect(document.getElementById("portable-dialog-smart-copy")!.dataset.tooltipKey).toBe(
+      "tooltip.portableSmartCopy",
+    );
+    expect(document.getElementById("portable-dialog-smart-restore")!.dataset.tooltipKey).toBe(
+      "tooltip.portableSmartRestore",
+    );
   });
 
   it("reports a missing drive without deleting it", () => {
@@ -300,6 +348,91 @@ describe("portable drive view", () => {
     expect(fetchMock.mock.calls[0]).toEqual(["/api/drive-check?drive=%2FVolumes%2FGIGDRIVE"]);
   });
 
+  it("previews a restore before it writes and replaces a drive file only after confirm", async () => {
+    fetchMock.mockImplementation((url: string) => {
+      if (String(url).includes("/api/library-roots")) {
+        return Promise.resolve(jsonResponse(libraryRootsFixture));
+      }
+      return Promise.resolve(jsonResponse(report()));
+    });
+    await loadPortableView();
+    fetchMock.mockReset();
+    fetchMock.mockResolvedValue(jsonResponse({
+      ok: true,
+      action: "copy",
+      written: false,
+      needs_overwrite: true,
+      crates: [{ name: "Warmup", status: "kept", mode: "smart" }],
+      status: "ok",
+    }));
+    document.getElementById("portable-smart-copy")!.click();
+    await vi.waitFor(() => {
+      expect(document.querySelector<HTMLButtonElement>("#portable-smart-overwrite")?.hidden).toBe(false);
+    });
+    const copyInit = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(JSON.parse(String(copyInit.body))).toEqual({
+      action: "copy",
+      drive: "/Volumes/GIGDRIVE",
+      space: "Serato Library",
+    });
+    fetchMock.mockResolvedValue(jsonResponse({
+      ok: true,
+      action: "copy",
+      written: true,
+      needs_overwrite: false,
+      crates: [{ name: "Warmup", status: "update", mode: "smart" }],
+      status: "ok",
+    }));
+    document.getElementById("portable-smart-overwrite")!.click();
+    await vi.waitFor(() => {
+      expect(fetchMock.mock.calls).toHaveLength(2);
+    });
+    const overwriteInit = fetchMock.mock.calls[1]?.[1] as RequestInit;
+    expect(JSON.parse(String(overwriteInit.body)).overwrite).toBe(true);
+    await vi.waitFor(() => {
+      expect(document.querySelector("#portable-view-status")?.textContent).toContain(
+        "Smart crates copied to this drive.",
+      );
+    });
+    fetchMock.mockResolvedValue(jsonResponse({
+      ok: true,
+      action: "preview",
+      written: false,
+      needs_confirm: true,
+      preview: true,
+      crates: [{ name: "Warmup", status: "needs_confirm", mode: "fallback" }],
+      status: "ok",
+    }));
+    document.getElementById("portable-smart-restore")!.click();
+    await vi.waitFor(() => {
+      expect(document.querySelector<HTMLButtonElement>("#portable-smart-confirm")?.hidden).toBe(false);
+    });
+    const previewInit = fetchMock.mock.calls[2]?.[1] as RequestInit;
+    expect(JSON.parse(String(previewInit.body)).action).toBe("preview");
+    expect(document.querySelector("#portable-view-status")?.textContent).toContain(
+      "Rules could not be rebuilt. This becomes a normal crate.",
+    );
+    expect(document.querySelector("#portable-view-status")?.textContent).toContain("Warmup");
+    fetchMock.mockResolvedValue(jsonResponse({
+      ok: true,
+      action: "restore",
+      written: true,
+      needs_confirm: false,
+      crates: [{ name: "Warmup", status: "update", mode: "fallback" }],
+      status: "ok",
+    }));
+    document.getElementById("portable-smart-confirm")!.click();
+    await vi.waitFor(() => {
+      expect(fetchMock.mock.calls).toHaveLength(4);
+    });
+    const restoreInit = fetchMock.mock.calls[3]?.[1] as RequestInit;
+    expect(JSON.parse(String(restoreInit.body))).toMatchObject({
+      action: "restore",
+      confirm: true,
+      drive: "/Volumes/GIGDRIVE",
+    });
+  });
+
   it("names an unplugged drive when none are connected", async () => {
     fetchMock.mockResolvedValue(jsonResponse({
       computed_at: "2026-10-29T13:00:00Z",
@@ -308,6 +441,10 @@ describe("portable drive view", () => {
     await loadPortableView();
     expect(document.querySelector("#portable-drive")?.querySelectorAll("option")).toHaveLength(0);
     expect(document.querySelector<HTMLButtonElement>("#portable-check")?.disabled).toBe(true);
+    expect(document.querySelector<HTMLButtonElement>("#portable-smart-copy")?.disabled).toBe(true);
+    expect(document.querySelector<HTMLButtonElement>("#portable-smart-restore")?.disabled).toBe(true);
+    expect(document.querySelector<HTMLButtonElement>("#portable-smart-confirm")?.hidden).toBe(true);
+    expect(document.querySelector<HTMLButtonElement>("#portable-smart-overwrite")?.hidden).toBe(true);
     expect(document.querySelector("#portable-offline")?.textContent).toBe(
       "Music (OLDDRIVE) is not connected. Nothing was deleted.",
     );

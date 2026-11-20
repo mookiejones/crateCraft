@@ -253,8 +253,13 @@
             <select id="portable-drive"></select>
           </label>
           <button id="portable-check" type="button" data-i18n="portable.check">Check drive</button>
+          <button id="portable-smart-copy" type="button" data-i18n="portable.smartCopy">Copy smart crates</button>
+          <button id="portable-smart-restore" type="button" data-i18n="portable.smartRestore">Restore smart crates</button>
+          <button id="portable-smart-confirm" type="button" data-i18n="portable.smartConfirm" hidden>Restore</button>
+          <button id="portable-smart-overwrite" type="button" data-i18n="portable.smartOverwrite" hidden>Replace on drive</button>
         </div>
         <p id="portable-hint" class="gig-note" data-i18n="portable.readOnly">This only reads the drive. Nothing is copied or deleted.</p>
+        <p id="portable-smart-hint" class="gig-note" data-i18n="portable.smartNote">Copy smart crates and Restore smart crates write this drive. Check drive still only reads.</p>
         <p id="portable-offline"></p>
         <p id="portable-view-status" class="gig-status" role="status" aria-live="polite"></p>
         <p id="portable-view-verdict" tabindex="-1"></p>

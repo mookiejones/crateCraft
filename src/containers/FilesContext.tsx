@@ -44,6 +44,9 @@ export type FilesContextValue = {
   dialogScope: "paths" | "crate";
   portableReport: DriveReport | null;
   portableStatus: string;
+  portableSmartConfirm: boolean;
+  portableSmartOverwrite: boolean;
+  portableSmartBusy: boolean;
   goUp: () => void;
   refresh: () => void;
   toggleElsewhere: () => void;

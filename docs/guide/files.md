@@ -53,10 +53,26 @@ The list under that line names each problem. Fix it on the laptop. The check doe
 | --- | --- |
 | **Not on this drive** | The track is on the laptop. Copy it onto the drive. |
 | **Missing** | The file was not on the drive and was not found on this computer. Restore it on the laptop, then copy it. |
-| **Smart Crate** | Serato does not copy a Smart Crate to a portable library. On the laptop, make a normal crate and copy that. |
+| **Smart Crate** | The check names a smart crate because its rules do not resolve on the drive. **Copy smart crates** writes the rules and the current tracks. On the other computer, click **Restore smart crates**, then **Restore**. |
 | **Unsafe name** | The name is not safe on a Windows drive. Rename it on the laptop, then copy it. |
 | **Path too long** | Shorten the name on the laptop, then copy it. |
 | **File too large** | The file is over 4 GB on a FAT drive. Shorten it on the laptop, or use an exFAT drive, then copy it again. |
+
+## Copy smart crates to the drive
+
+Quit Serato DJ Pro first.
+
+1. Click **Gig**, then **Check drive**, and pick the drive.
+2. Click **Copy smart crates**.
+3. A file that already uses that name stays. **Replace on drive** writes over it.
+
+On the other computer:
+
+1. Click **Gig**, then **Check drive**, and pick the same drive.
+2. Click **Restore smart crates**.
+3. Read the preview. Click **Restore**.
+
+A rule that cannot be rebuilt becomes a normal crate. The preview names it. An existing smart crate in this library stays until you confirm. **Check drive** itself still only reads. The same buttons are in the Portable drive dialog on Organize files.
 
 ## Read the review first
 

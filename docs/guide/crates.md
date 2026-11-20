@@ -108,6 +108,10 @@ The page says **Rules saved.** If the text is not JSON, the page says **Smart cr
 
 You cannot tick a smart crate in the track's crate list. The page names those crates and leaves them out of the checkboxes. Putting another crate inside a smart crate is refused. The message is **A smart crate cannot contain another crate.** Adding a track by hand is refused. The message is **Smart crates choose their tracks from rules.**
 
+## Copy smart crates to a drive
+
+**Copy smart crates** on **Check drive** writes each smart crate's rules and its current tracks into that drive's `_Serato_` folder. On another computer, **Restore smart crates** shows a preview. **Restore** writes it. Quit Serato first. A rule that cannot be rebuilt becomes a normal crate named in the preview. An existing smart crate stays until you confirm. **Replace on drive** is the only way an existing file on the drive is replaced.
+
 ## Put a track in a crate
 
 1. Open the track.
