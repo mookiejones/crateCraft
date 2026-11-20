@@ -48,6 +48,7 @@ const VIEWS: Record<string, string> = {
   "view-bitrate": "bitrate",
   "view-tags": "tags",
   "view-lost": "lost",
+  "view-audio": "audio",
   "view-snapshots": "snapshots",
   "view-gig": "gig",
   "view-portable": "portable",

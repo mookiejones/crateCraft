@@ -17,6 +17,7 @@
 [Export to Rekordbox](Export-to-Rekordbox)
 [Organizing files](Organizing-Files)
 [Related tracks](Related-Tracks)
+[Audio changed](Audio-Changed)
 
 **The app**
 

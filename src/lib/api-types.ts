@@ -1224,6 +1224,46 @@ export interface LostTagsPlan {
   code?: string;
 }
 
+export interface AudioChangedTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  path: string;
+  reasons: string[];
+  size: number;
+  duration_ms: number | null;
+  hash: string;
+}
+
+export interface AudioChangedReport {
+  checked: number;
+  offline: number;
+  not_found: number;
+  unreadable: number;
+  changed: AudioChangedTrack[];
+  warning: string;
+  error?: string;
+  code?: string;
+}
+
+export interface AudioChangedPlan extends AudioChangedReport {
+  preview?: boolean;
+  written?: boolean;
+  name?: string;
+  added?: number;
+  saved?: { id: number; name: string } | null;
+}
+
+export interface AudioReanalyzePlan extends AudioChangedReport {
+  preview: boolean;
+  written: boolean;
+  rewrites_cues: boolean;
+  rewrites_grid: boolean;
+  note: string;
+  count: number;
+}
+
 export interface CrateCompareTrack {
   id: number;
   name: string;

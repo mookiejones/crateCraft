@@ -778,6 +778,50 @@
   "logs.empty": "No log entries yet.",
   "logs.openFailed": "Couldn't open the logs folder.",
   "logs.opened": "Opened the logs folder.",
+  "audio.checking": "Checking…",
+  "audio.column.changed": "What changed",
+  "audio.confirmCrate": "Confirm crate",
+  "audio.confirming": "Saving the crate…",
+  "audio.empty": "No file changed under the same name.",
+  "audio.field.duration": "duration",
+  "audio.field.hash": "quick hash",
+  "audio.field.size": "size",
+  "audio.heading": "Audio changed",
+  "audio.intro": "A file replaced under the same name. Cues and the beatgrid may not fit. Saving a crate writes the library. Quit Serato first.",
+  "audio.loadFailed": "The audio-changed report could not be read.",
+  "audio.offline": {
+    "one": "An unplugged drive is not a swap. {count} file is on an unplugged drive.",
+    "other": "An unplugged drive is not a swap. {count} files are on unplugged drives."
+  },
+  "audio.preview": {
+    "one": "Save {count} track in {name}. Nothing is written until you confirm.",
+    "other": "Save {count} tracks in {name}. Nothing is written until you confirm."
+  },
+  "audio.previewEmpty": "Nothing to save. No crate is written.",
+  "audio.reanalyze": "Re-analyze",
+  "audio.reanalyzeNote": "Cues stay put. crateCraft does not rewrite cues or the beatgrid to fit the new audio.",
+  "audio.reanalyzePreview": {
+    "one": "Cues and the beatgrid stay. {count} file was checked and not rewritten.",
+    "other": "Cues and the beatgrid stay. {count} files were checked and not rewritten."
+  },
+  "audio.reanalyzing": "Checking whether cues can move…",
+  "audio.saveCrate": "Save crate",
+  "audio.saving": "Preparing the crate…",
+  "audio.summary": {
+    "one": "{checked} files checked. {count} file changed under the same name.",
+    "other": "{checked} files checked. {count} files changed under the same name."
+  },
+  "audio.summaryClear": "{checked} files checked. None changed under the same name.",
+  "audio.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+  "audio.unreadableFiles": {
+    "one": "{count} file could not be read.",
+    "other": "{count} files could not be read."
+  },
+  "audio.warning": "Cues and the beatgrid may not fit this audio.",
+  "audio.written": {
+    "one": "Saved {count} track in {name}.",
+    "other": "Saved {count} tracks in {name}."
+  },
   "lost.apply": "Apply",
   "lost.applying": "Applying…",
   "lost.checking": "Checking…",
@@ -881,6 +925,7 @@
   "merge.trashFiles": "Move {files} to the Trash.",
   "merge.trashLabel": "Move the other audio files to the Trash",
   "merge.trashNote": "Off by default. Files go to the crateCraft trash for 7 days. Restore them from Backups. They are not permanently deleted until that window ends.",
+  "mode.audio": "Notices a replaced file. Creating a crate writes the library. Cues and the beatgrid stay put. Quit Serato first.",
   "mode.bitrate": "Needs a crate. Saving a crate writes the library. Quit Serato first.",
   "mode.compare": "Pick two crates. Saving a crate writes the library. Quit Serato first.",
   "mode.drift": "Read-only. This check does not change the library.",
@@ -1753,6 +1798,10 @@
   "tooltip.linkRating": "Rate this link from 1 to 5.",
   "tooltip.logFallback": "Log text, when it could not be copied.",
   "tooltip.lostApply": "Fill blank titles and artists from the file. Quit Serato first. Audio files do not change.",
+  "tooltip.audioConfirm": "Save the Audio changed crate. Quit Serato first. Cues stay put.",
+  "tooltip.audioReanalyze": "Preview only. Cues and the beatgrid stay put. crateCraft does not rewrite them.",
+  "tooltip.audioRefresh": "Check again for a file replaced under the same name.",
+  "tooltip.audioSave": "Preview a crate of files whose audio changed. Nothing is written until you confirm.",
   "tooltip.lostRefresh": "Check again for blank titles and artists.",
   "tooltip.membership": "Add this track to {name}, or take it out.",
   "tooltip.memoryCues": "Include memory cues in the Rekordbox file.",
@@ -1937,6 +1986,7 @@
   "tooltip.viewGig": "Check the library before a gig. Read-only.",
   "tooltip.viewHealth": "One-page counts of missing files, missing BPM or key, empty genre, tracks in no crate, and duplicates. Read-only.",
   "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
+  "tooltip.viewAudio": "Notice a file replaced under the same name. Cues and the beatgrid may not fit. Saving a crate writes the library.",
   "tooltip.viewLost": "Fill a blank title or artist from the file. Writes the library, not the audio.",
   "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
   "tooltip.viewPortable": "Check a portable Serato drive before a gig. Pick a connected drive. Read-only.",
@@ -1985,6 +2035,7 @@
   "version.copied": "Copied",
   "version.copyFailed": "Couldn't copy the version.",
   "version.unavailable": "Version unavailable",
+  "view.audio": "Audio changed",
   "view.bitrate": "Suspect quality",
   "view.compare": "Compare crates",
   "view.crates": "Crates",

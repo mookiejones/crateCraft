@@ -1,5 +1,5 @@
 /**
- * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, tempo drift, and the portable drive check.
+ * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, audio changed, tempo drift, and the portable drive check.
  *
  * Files is React on FilesContext. This module re-exports that store so
  * existing callers keep one import. Play stats fetch is history-stats.ts;
@@ -36,6 +36,7 @@ import { loadScan, showScanFailure } from "../health/scan";
 import { loadBitrate, showBitrateFailure } from "../health/bitrate";
 import { loadTags, showTagsFailure } from "../health/tags";
 import { loadLostTags, showLostTagsFailure } from "../health/lost-tags";
+import { loadAudioChanged, showAudioChangedFailure } from "../health/audio-changed";
 import { loadCrateCompare, showCrateCompareFailure } from "../crates/crate-compare";
 import { loadPortableView, showPortableFailure } from "../gig/portable";
 import { mountFilesIslands } from "../files/files-mount";
@@ -519,6 +520,7 @@ export function renderShell() {
   const bitrateMode = state.mode === "bitrate";
   const tagsMode = state.mode === "tags";
   const lostMode = state.mode === "lost";
+  const audioMode = state.mode === "audio";
   const historyMode = state.mode === "history";
   const showCrates = cratesMode || gigMode || driftMode || healthMode || scanMode || bitrateMode;
   el("crate-tools").hidden = !showCrates;
@@ -531,7 +533,7 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || audioMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
@@ -547,6 +549,7 @@ export function renderShell() {
   el("bitrate-panel").hidden = !bitrateMode;
   el("tags-panel").hidden = !tagsMode;
   el("lost-panel").hidden = !lostMode;
+  el("audio-panel").hidden = !audioMode;
   const listNote = healthListNote();
   if (listNote) el("mode-note").textContent = listNote;
   if (filesMode) el("mode-note").textContent = t("mode.files");
@@ -588,6 +591,10 @@ export function renderShell() {
   }
   if (lostMode) {
     el("mode-note").textContent = t("mode.lost");
+    document.querySelector(".rules")?.remove();
+  }
+  if (audioMode) {
+    el("mode-note").textContent = t("mode.audio");
     document.querySelector(".rules")?.remove();
   }
   if (snapshotsMode) {
@@ -633,7 +640,7 @@ export function renderShell() {
     el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
     return;
   }
-  if (tagsMode || lostMode || statsMode || compareMode) {
+  if (tagsMode || lostMode || audioMode || statsMode || compareMode) {
     el("crate-foot").textContent = t("gig.wholeSpace");
     return;
   }
@@ -715,6 +722,10 @@ export function renderList() {
     return;
   }
   if (state.mode === "lost") {
+    paintDualChrome();
+    return;
+  }
+  if (state.mode === "audio") {
     paintDualChrome();
     return;
   }
@@ -2576,6 +2587,7 @@ export function setMode(mode: string) {
   if (mode === "bitrate") loadBitrate().catch(showBitrateFailure);
   if (mode === "tags") loadTags().catch(showTagsFailure);
   if (mode === "lost") loadLostTags().catch(showLostTagsFailure);
+  if (mode === "audio") loadAudioChanged().catch(showAudioChangedFailure);
   if (mode === "compare") loadCrateCompare().catch(showCrateCompareFailure);
   renderList();
   syncHash();
@@ -2773,6 +2785,7 @@ export function wireLibrary(): void {
     if (state.mode === "bitrate") jobs.push(loadBitrate().catch(showBitrateFailure));
     if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
     if (state.mode === "lost") jobs.push(loadLostTags().catch(showLostTagsFailure));
+    if (state.mode === "audio") jobs.push(loadAudioChanged().catch(showAudioChangedFailure));
     if (state.mode === "compare") jobs.push(loadCrateCompare().catch(showCrateCompareFailure));
     Promise.all(jobs).catch(showFailure);
   });
@@ -2811,6 +2824,7 @@ export function wireLibrary(): void {
       if (state.mode === "bitrate") return loadBitrate().catch(showBitrateFailure);
       if (state.mode === "tags") return loadTags().catch(showTagsFailure);
       if (state.mode === "lost") return loadLostTags().catch(showLostTagsFailure);
+      if (state.mode === "audio") return loadAudioChanged().catch(showAudioChangedFailure);
       if (state.mode === "compare") return loadCrateCompare().catch(showCrateCompareFailure);
       return null;
     }).catch(showFailure);
