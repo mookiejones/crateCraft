@@ -31,6 +31,7 @@ import legacy_library
 import music_mirror
 import other_dj
 import smart_presets
+import stick_cues
 import suspicious_cues
 import tag_cleanup
 import write_queue
@@ -58,6 +59,8 @@ ERROR_CODES: dict[str, str] = {
     "No older Serato library was found.": "no_legacy_library",
     "Choose a crate for a bitrate check.": "bitrate_needs_crate",
     suspicious_cues.NEEDS_CONFIRM: "cues_needs_confirm",
+    stick_cues.NEEDS_CONFIRM: "stick_cues_needs_confirm",
+    stick_cues.NEEDS_DRIVE: "stick_needs_drive",
     "Choose a crate for a tempo check.": "tempo_needs_crate",
     "Choose a quick or full check.": "scan_depth",
     "Choose a crate for a full decode check.": "scan_full_needs_crate",

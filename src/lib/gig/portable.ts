@@ -12,10 +12,11 @@ import { createElement } from "react";
 import { fetchLibraryRoots, readJSON } from "../api";
 import type { LibraryRoot } from "../api-types";
 import { mountIsland, type IslandRoot } from "../../app/mount";
-import { PortableReport } from "../../pages/PortableReport";
+import { PortableFindings } from "../../components/StickCuePanel";
 import { el } from "../dom";
 import { emitFiles } from "../files/files-store";
 import { runPortableMount } from "./portable-bind";
+import type { StickCueReport } from "./stick-cues";
 import { serverMessage, t } from "../i18n";
 import { buttonEl } from "../ui/tooltip";
 import { portableCheck } from "../ui/tooltip-strings";
@@ -54,16 +55,41 @@ export type { PortableViewRow } from "./portable-view";
 
 let token = 0;
 let latest: DriveReport | null = null;
+let stickReport: StickCueReport | null = null;
+let stickStatus = "";
+let stickDrive = "";
 let lastRoots: LibraryRoot[] = [];
 let opener: HTMLElement | null = null;
 let hasConnected = false;
 let statusText = "";
 
-type PortableListener = (snapshot: PortableSnapshot) => void;
+export type PortableSnapshot = {
+  report: DriveReport | null;
+  status: string;
+  stickReport?: StickCueReport | null;
+  stickStatus?: string;
+  stickDrive?: string;
+};
+
+type PortableListener = (next: PortableSnapshot) => void;
 const listeners = new Set<PortableListener>();
 
+let snapshot: PortableSnapshot = {
+  report: null,
+  status: "",
+  stickReport: null,
+  stickStatus: "",
+  stickDrive: "",
+};
+
 function emitPortable(): void {
-  const snapshot = portableSnapshot();
+  snapshot = {
+    report: latest,
+    status: statusText,
+    stickReport,
+    stickStatus,
+    stickDrive,
+  };
   for (const listener of listeners) listener(snapshot);
   emitFiles();
 }
@@ -84,18 +110,29 @@ export function subscribePortable(listener: PortableListener): () => void {
   };
 }
 
-export type PortableSnapshot = {
-  report: DriveReport | null;
-  status: string;
-};
-
 /**
  * Latest drive-check report for the Files dialog.
  *
- * @returns Report and status line.
+ * The same object is returned until the next change, so React can
+ * subscribe without treating every read as a new snapshot.
+ *
+ * @returns Report, status line, and the stick-cue snapshot.
  */
 export function portableSnapshot(): PortableSnapshot {
-  return { report: latest, status: statusText };
+  return snapshot;
+}
+
+/**
+ * Store a stick-cue preview or the line under the buttons.
+ *
+ * @param report Parsed POST /api/stick-cues body, or null.
+ * @param status Reviewing line, or an error sentence.
+ * @returns {void}
+ */
+export function setStickCueState(report: StickCueReport | null, status: string): void {
+  stickReport = report;
+  stickStatus = status;
+  emitPortable();
 }
 
 /**
@@ -337,7 +374,7 @@ export function wirePortable(): void {
   el("portable-drive").addEventListener("change", () => {
     void runPortableCheck(el("portable-drive").value);
   });
-  islandRoot = mountIsland(el("portable-view-findings"), createElement(PortableReport));
+  islandRoot = mountIsland(el("portable-view-findings"), createElement(PortableFindings));
 }
 
 /**
@@ -394,6 +431,9 @@ export async function runPortableCheck(path: string): Promise<void> {
   const drive = portableDriveRoot(path);
   const mine = ++token;
   latest = null;
+  stickDrive = drive;
+  stickReport = null;
+  stickStatus = "";
   clearReport();
   paintStatus(t("portable.checking"));
   if (!drive) {

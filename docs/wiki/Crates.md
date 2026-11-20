@@ -33,7 +33,7 @@ Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Se
 
 | Button | What you do |
 | --- | --- |
-| **New** | Type **New crate name**. The crate is created inside the one you had selected. **All tracks** puts it at the top. |
+| **New** | Type **New crate name**. The crate is created inside the one you had selected. **All tracks** puts it at the top. **This stick is from another library** starts off. Leave it clear and a stick from another library is left as it was. Check it, then confirm, and the app saves a copy of that stick's crates before it writes. |
 | **Rename** | Type **Rename crate**. The tracks stay. |
 | **Color** | Type one of `none`, `red`, `orange`, `yellow`, `green`, `blue`, `purple`, `pink`. |
 | **Delete** | Confirm in the dialog. Nested crates go too. The tracks stay in the library. |
