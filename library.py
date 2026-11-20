@@ -4214,6 +4214,123 @@ def _sync_drive_crates(
     )
 
 
+def _quiet_member_ids(payload: Mapping[str, object], action: str) -> list[int] | None:
+    """Return asset ids for a drive snapshot, or None when the body is not valid yet.
+
+    Invalid ids stay None so the Serato gate inside the write still runs
+    before the request is refused. bool is not an id.
+
+    Args:
+        payload: The crate_action JSON.
+        action: ``create``, ``add``, or ``remove``.
+
+    Returns:
+        Unique ids, an empty list when this action has no tracks, or None
+        when the field is present and not a list of integers.
+    """
+    if action == "create":
+        if "assets" not in payload:
+            return []
+        raw = payload["assets"]
+        if not isinstance(raw, list):
+            return None
+        ids: list[int] = []
+        seen: set[int] = set()
+        for item in raw:
+            if isinstance(item, bool) or not isinstance(item, int):
+                return None
+            if item in seen:
+                continue
+            seen.add(item)
+            ids.append(item)
+        return ids
+    raw_asset = payload.get("asset")
+    if isinstance(raw_asset, bool) or not isinstance(raw_asset, int):
+        return None
+    return [raw_asset]
+
+
+def _drive_plan(payload: Mapping[str, object], action: str, asset_ids: list[int]) -> tuple[str, list[str]]:
+    """Read the crate name and track paths a drive snapshot needs.
+
+    The read uses a copy of the database. It does not open the live file
+    and it does not write.
+
+    Args:
+        payload: The crate_action JSON.
+        action: ``create``, ``add``, or ``remove``.
+        asset_ids: Track ids already checked as integers.
+
+    Returns:
+        The visible crate name and the stored paths. The name is empty
+        when this edit will not touch a normal crate. A SQLite error while
+        reading the copy also returns an empty name and no paths, so nothing
+        is snapshotted and the write gate still runs.
+
+    Raises:
+        LibraryError: If the library file is missing or a shortcut.
+    """
+    try:
+        with copied_read_conn(Path(MASTER)) as conn:
+            paths: list[str] = []
+            for asset_id in asset_ids:
+                row = conn.execute(
+                    "SELECT portable_id FROM asset WHERE id = ?", (asset_id,)
+                ).fetchone()
+                if row is None or not isinstance(row["portable_id"], str) or not row["portable_id"]:
+                    continue
+                paths.append(row["portable_id"])
+            if action == "create":
+                raw_name = payload.get("name")
+                name = raw_name if isinstance(raw_name, str) else ""
+                return name, paths
+            raw_id = payload.get("id")
+            if isinstance(raw_id, bool) or not isinstance(raw_id, int):
+                return "", []
+            found = conn.execute(
+                "SELECT name, type FROM container WHERE id = ?", (raw_id,)
+            ).fetchone()
+            if found is None or int(found["type"] or 0) != 1:
+                return "", []
+            stored = found["name"] if isinstance(found["name"], str) else ""
+            return display_name(stored), paths
+    except sqlite3.Error:
+        return "", []
+
+
+def _planned_crate_files(payload: Mapping[str, object]) -> list[Path]:
+    """Name the external crate files a create, add, or remove will change.
+
+    Other actions, a smart crate, and a body that is not valid yet return
+    an empty list. The Serato gate still runs inside the write.
+
+    Args:
+        payload: The crate_action JSON.
+
+    Returns:
+        Drive files to store in the same preimage as the database.
+    """
+    action = payload.get("action")
+    if action not in {"create", "add", "remove"}:
+        return []
+    if action == "create" and payload.get("smart"):
+        return []
+    ids = _quiet_member_ids(payload, action)
+    if not ids:
+        return []
+    name, paths = _drive_plan(payload, action, ids)
+    if not name or not paths:
+        return []
+    import drive_crates
+
+    return drive_crates.planned_files(
+        paths,
+        name,
+        add=action != "remove",
+        overwrite=payload.get("overwrite") is True,
+    )
+
+
 def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
     """Run one crate edit.
 
@@ -4225,7 +4342,8 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
 
     Returns:
         The action result dict. Create includes added, the number of tracks
-        stored on the new crate.
+        stored on the new crate. Create, add, and remove snapshot the external
+        ``.crate`` and an existing ``database V2`` in that same preimage.
 
     Raises:
         LibraryError: If the action is unknown or its fields are invalid.
@@ -4313,8 +4431,9 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
         return result
 
     force = payload.get("force") is True
+    extra_files = _planned_crate_files(payload)
     with snapshots.allow_force(force):
-        return safe_write.run(f"crate_{action}", target, apply)
+        return safe_write.run(f"crate_{action}", target, apply, extra_files)
 
 
 def _library_crate(conn: sqlite3.Connection, crate_id: int) -> bool:

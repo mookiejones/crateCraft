@@ -52,7 +52,7 @@ Protect Library is read from the Mac preferences key `library_protect`. On means
 
 ## Automatic backups
 
-A library edit does not add a `Backups` folder beside `master.sqlite`. The app keeps the pre-write copy in its own data folder, checks the edit, and puts that copy back when the check fails.
+A library edit does not add a `Backups` folder beside `master.sqlite`. The app keeps the pre-write copy in its own data folder, checks the edit, and puts that copy back when the check fails. When a crate edit also updates a drive's crate file, that file is in the same pre-write copy. If the library check fails, the drive file is put back too. If only the drive file fails, the library save stays and a notice names that drive.
 
 After the save is committed, the app reads a copy of the database, including a `-wal` file when one is present. It does not open the live database for that check. If the rows or the file hashes are not the change you asked for, the app puts the pre-write copy back and checks those hashes. That copy, the write journal, and the operation note are kept in this app's data folder, not in Serato's library folder. Serato 5 uses that same rollback when Protect Library is off. If the copy cannot be saved because the disk is full, the save does not run. The Snapshots page lists each of these notes.
 
