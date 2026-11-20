@@ -507,6 +507,7 @@ class LiveApiShapeTests(unittest.TestCase):
             conn.close()
         self.assert_shape("/api/crate-compare?space=Serato%20Library&a=10&b=11", "CrateCompareReport")
         self.assert_shape("/api/write-queue", "WriteQueueListing")
+        self.assert_shape("/api/batch", "BatchListing")
         self.assert_shape("/api/jobs", "JobList")
 
     def test_version_without_opening_the_library(self) -> None:

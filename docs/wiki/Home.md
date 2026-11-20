@@ -39,7 +39,7 @@ The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**.
 
 Cue points live in the audio file. A normal save does not rewrite them.
 
-**Backups** keeps hash-checked copies of the library, the crates on each drive, and the Cue point frames stored in the audio files. The music itself is not copied. **Music files** on that page copies the audio to a second drive. **Gig Lock** in Settings queues crate and track edits while you gig; Preview then Apply from Backups after Serato is closed.
+**Backups** keeps hash-checked copies of the library, the crates on each drive, and the Cue point frames stored in the audio files. The music itself is not copied. **Music files** on that page copies the audio to a second drive. **Gig Lock** in Settings queues crate and track edits while you gig; Preview then Apply from Backups after Serato is closed. **Batch** on Backups queues tracks and crates from more than one view. Preview shows the first item and writes nothing. Apply adds them to one crate under one snapshot. Undo puts that whole batch back. Quit Serato first.
 
 Open **Backups**, choose **Review restore**, then **Restore**. Restore can rewrite the Serato tags (cue points, beatgrid, autotags) inside each audio file, and removes Serato tags the snapshot didn't have. The audio stream is hash-checked before and after; if it would change, the file is left as it was.
 

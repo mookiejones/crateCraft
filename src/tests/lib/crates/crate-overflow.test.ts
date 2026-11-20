@@ -27,6 +27,7 @@ describe("crate overflow membership", () => {
       "crate-folder-sync",
       "crate-rename-from-tags",
       "crate-refresh",
+      "crate-queue-batch",
     ]);
     expect([...CRATE_SHEET_OVERFLOW_IDS]).toEqual(["crate-split", "crate-save-view", "export-m3u"]);
     expect([...CRATE_OVERFLOW_ACTION_IDS]).toEqual([

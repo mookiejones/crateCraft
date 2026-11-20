@@ -1,7 +1,8 @@
 /**
  * React providers for the page.
  *
- * The action-flash notice is one domain. Write jobs are the next. Player is the next. The crate
+ * The action-flash notice is one domain. The batch queue is the next.
+ * Write jobs follow the batch queue. Player is the next. The crate
  * rail is the next. Waveform zoom and overview are another. Before a
  * gig is a fourth. Files is a fifth. History is a sixth. Play stats is
  * a seventh. Settings is an eighth. Track list selection and detail
@@ -32,6 +33,17 @@ import {
   HealthProvider as HealthContextProvider,
   type HealthContextValue,
 } from "../containers/HealthContext";
+import {
+  BatchProvider as BatchContextProvider,
+  type BatchContextValue,
+} from "../containers/BatchContext";
+import {
+  getBatch,
+  postBatch,
+  queueCrate,
+  queueTrack,
+  subscribeBatch,
+} from "../lib/batch/batch-store";
 import {
   JobProvider as JobContextProvider,
   type JobContextValue,
@@ -683,6 +695,33 @@ export function NoticeProvider({ children }: { children: ReactNode }) {
   return <NoticeContextProvider value={current}>{children}</NoticeContextProvider>;
 }
 
+function readBatchValue(): BatchContextValue {
+  return {
+    listing: getBatch(),
+    queueCrate,
+    queueTrack,
+    postBatch,
+  };
+}
+
+/**
+ * Mount the batch queue at the root of one React island.
+ *
+ * @param children Island that calls `useBatch`.
+ */
+export function BatchProvider({ children }: { children: ReactNode }) {
+  const [value, setValue] = useState(readBatchValue);
+  useLayoutEffect(() => {
+    return subscribeBatch(() => {
+      flushSync(() => {
+        setValue(readBatchValue());
+      });
+    });
+  }, []);
+  const current = useMemo(() => value, [value]);
+  return <BatchContextProvider value={current}>{children}</BatchContextProvider>;
+}
+
 function readJobValue(): JobContextValue {
   return {
     jobs: getJobs(),
@@ -720,8 +759,8 @@ export function JobProvider({ children }: { children: ReactNode }) {
  * Nest every domain provider.
  *
  * MUI ThemeProvider is the outer wrap, mapped to the saved colorway.
- * The action-flash notice wraps inside it. Write jobs wrap inside the
- * notice. Player is the next domain.
+ * The action-flash notice wraps inside it. The batch queue wraps inside
+ * the notice. Write jobs wrap inside the batch queue. Player is the next domain.
  * Crates wrap inside it. Waveform wraps inside crates. Before a gig
  * wraps inside waveform. Files wraps inside Before a gig. History
  * wraps inside Files. Play stats wraps inside History. Settings wraps
@@ -735,6 +774,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <MuiThemeRoot>
       <NoticeProvider>
+        <BatchProvider>
         <JobProvider>
           <PlayerProvider>
             <CrateProvider>
@@ -760,6 +800,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
             </CrateProvider>
           </PlayerProvider>
         </JobProvider>
+        </BatchProvider>
       </NoticeProvider>
     </MuiThemeRoot>
   );

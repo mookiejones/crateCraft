@@ -6,6 +6,7 @@
  */
 
 import { useHistory } from "../containers/HistoryContext";
+import { queueTrack } from "../lib/batch/batch-store";
 import { clockLabel } from "../lib/format";
 import { t } from "../lib/i18n";
 import { setTooltip } from "../lib/ui/tooltip";
@@ -50,16 +51,28 @@ export function HistoryDetail() {
         <Field key={label} label={label} value={value} />
       ))}
       {entry.asset_id ? (
-        <button
-          type="button"
-          ref={tooltipRef(tips.openInLibrary)}
-          className="text-button"
-          onClick={() => {
-            void history.openInLibrary(entry.asset_id as number);
-          }}
-        >
-          {t("history.openInLibrary")}
-        </button>
+        <>
+          <button
+            type="button"
+            ref={tooltipRef(tips.openInLibrary)}
+            className="text-button"
+            onClick={() => {
+              void history.openInLibrary(entry.asset_id as number);
+            }}
+          >
+            {t("history.openInLibrary")}
+          </button>
+          <button
+            type="button"
+            ref={tooltipRef(tips.batchQueueTrack)}
+            className="text-button"
+            onClick={() => {
+              void queueTrack(entry.asset_id as number);
+            }}
+          >
+            {t("batch.queueTrack")}
+          </button>
+        </>
       ) : null}
     </div>
   );

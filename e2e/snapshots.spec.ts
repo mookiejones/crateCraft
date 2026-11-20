@@ -49,6 +49,11 @@ test("the snapshots list renders from context", async ({ page }) => {
   await expect(page.locator("#gig-lock-apply")).toBeVisible();
   await expect(page.locator("#gig-lock-drop")).toBeVisible();
   await page.locator("#gig-lock-queue").scrollIntoViewIfNeeded();
+  await expect(page.locator("#batch-heading")).toHaveText("Batch");
+  await expect(page.locator("#batch-preview")).toBeDisabled();
+  await expect(page.locator("#batch-preview")).toHaveAttribute("data-tooltip", /.+/);
+  await expect(page.locator("#batch-apply")).toBeDisabled();
+  await page.locator("#batch-queue").scrollIntoViewIfNeeded();
   await saveShot(page, "snapshots_list");
 });
 

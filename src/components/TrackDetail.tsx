@@ -8,6 +8,7 @@
 
 import { useState, type FormEvent } from "react";
 import type { CopyRow, Marker, Track } from "../lib/api-types";
+import { queueTrack } from "../lib/batch/batch-store";
 import { bridge } from "../lib/bridge";
 import { useTrackList } from "../containers/TrackListContext";
 import { formatCueTime } from "../lib/ui/cue-view";
@@ -408,6 +409,15 @@ function TrackBody({ track }: { track: Track }) {
           onClick={() => void list.removeTrack(track.id)}
         >
           {t("detail.removeFromLibrary")}
+        </button>
+        <button
+          type="button"
+          ref={tooltipRef(tips.batchQueueTrack)}
+          onClick={() => {
+            void queueTrack(track.id);
+          }}
+        >
+          {t("batch.queueTrack")}
         </button>
         <button
           type="button"
