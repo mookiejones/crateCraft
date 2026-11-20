@@ -20,6 +20,7 @@ from unittest import mock
 import library
 import safe_write
 import snapshots
+import stick_export
 import volumes
 from drive_crates import planned_files, sync_volume
 from library import LibraryError
@@ -32,6 +33,17 @@ def _volume(root: Path, name: str = "GIG") -> volumes.Volume:
 
 class DriveCrateTests(unittest.TestCase):
     """A track on an external drive is written only into that drive."""
+
+    def setUp(self) -> None:
+        """Point stick memory at a throwaway directory. The stick is not the config folder."""
+        self._config = tempfile.TemporaryDirectory()
+        self._env = mock.patch.dict(os.environ, {"CRATECRAFT_CONFIG_DIR": self._config.name})
+        self._env.start()
+
+    def tearDown(self) -> None:
+        """Drop the throwaway settings directory."""
+        self._env.stop()
+        self._config.cleanup()
 
     def test_track_is_written_into_the_drive_serato_folder(self) -> None:
         """A crate file under Subcrates lists the path relative to the drive.
@@ -99,6 +111,7 @@ class DriveCrateTests(unittest.TestCase):
             original = snapshots.parse_serato_bytes  # keep the reader
             crate.write_bytes(b"vrsn\x00\x00\x00\x02ok")
             before = crate.read_bytes()
+            stick_export.remember_library(_volume(root))
             kept = sync_volume(
                 _volume(root),
                 [str(root / "Music" / "new.mp3")],
@@ -169,6 +182,7 @@ class DriveCrateTests(unittest.TestCase):
                 crate = serato / "Subcrates" / "House.crate"
                 crate.parent.mkdir()
                 crate.write_bytes(b"keep")
+                stick_export.remember_library(_volume(root))
                 kept = planned_files([track], "House", add=True, overwrite=False)
                 self.assertEqual(kept, [])
                 removed = planned_files([track], "House", add=False, overwrite=True)

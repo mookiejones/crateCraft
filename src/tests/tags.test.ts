@@ -397,7 +397,7 @@ describe("tags", () => {
   });
 
   it("applies the preview, reloads the library, and shows the written sentence", async () => {
-    const fetchMock = vi.fn(async () => reply(groups));
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL) => reply(groups));
     vi.stubGlobal("fetch", fetchMock);
     stubPosts({
       preview,
@@ -415,7 +415,9 @@ describe("tags", () => {
       field: "genre",
       value: "Hip Hop",
     });
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    const urls = fetchMock.mock.calls.map((call) => String(call[0]));
+    expect(urls.filter((url) => url.includes("/api/tag-clusters"))).toHaveLength(2);
+    expect(urls.filter((url) => url.includes("/api/genre-families"))).toHaveLength(2);
     expect(document.getElementById("tags-status")!.textContent).toContain("Fixing spellings finished.");
   });
 
@@ -508,12 +510,14 @@ describe("tags", () => {
   });
 
   it("repaints the last report on a language change without asking the server again", async () => {
-    const fetchMock = vi.fn(() => Promise.resolve(reply(groups)));
+    const fetchMock = vi.fn((_input: RequestInfo | URL) => Promise.resolve(reply(groups)));
     vi.stubGlobal("fetch", fetchMock);
     await loadTags();
     setLocale("es");
     repaintTags();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const urls = fetchMock.mock.calls.map((call) => String(call[0]));
+    expect(urls.filter((url) => url.includes("/api/tag-clusters"))).toHaveLength(1);
+    expect(urls.filter((url) => url.includes("/api/genre-families"))).toHaveLength(1);
     expect(reportText()).toContain("grafías de género");
     expect(reportText()).not.toContain("genre spellings");
     expect(document.getElementById("tags-scope")!.textContent).toBe("Todo el espacio");

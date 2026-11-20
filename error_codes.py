@@ -31,6 +31,7 @@ import legacy_library
 import music_mirror
 import other_dj
 import smart_presets
+import stick_cues
 import suspicious_cues
 import tag_cleanup
 import write_queue
@@ -58,6 +59,8 @@ ERROR_CODES: dict[str, str] = {
     "No older Serato library was found.": "no_legacy_library",
     "Choose a crate for a bitrate check.": "bitrate_needs_crate",
     suspicious_cues.NEEDS_CONFIRM: "cues_needs_confirm",
+    stick_cues.NEEDS_CONFIRM: "stick_cues_needs_confirm",
+    stick_cues.NEEDS_DRIVE: "stick_needs_drive",
     "Choose a crate for a tempo check.": "tempo_needs_crate",
     "Choose a quick or full check.": "scan_depth",
     "Choose a crate for a full decode check.": "scan_full_needs_crate",
@@ -122,6 +125,11 @@ ERROR_CODES: dict[str, str] = {
     tag_cleanup.CHOOSE_SPELLING: "choose_spelling",
     tag_cleanup.CHOOSE_TRACKS: "choose_tracks",
     tag_cleanup.NOT_IN_GROUP: "spelling_not_in_group",
+    "That genre is not in this library.": "genre_not_in_library",
+    "A genre cannot sit under itself.": "genre_cycle",
+    "Choose Grouping or Comment.": "genre_family_field",
+    "That genre map is not valid.": "genre_map_invalid",
+    "Confirm the genre family write before it is saved.": "genre_family_needs_confirm",
     "Choose fewer files at once.": "too_many_files",
     "Choose tracks to relink.": "relink_needs_tracks",
     "Two of those tracks are the same.": "relink_duplicate_tracks",

@@ -6,6 +6,7 @@
 
 import { useFiles } from "../containers/FilesContext";
 import { t } from "../lib/i18n";
+import { StickCuePanel } from "./StickCuePanel";
 import { FINDING_CAP, closePortable, portableKindLabel } from "../lib/gig/portable";
 import { setTooltip } from "../lib/ui/tooltip";
 import { tips } from "../lib/ui/tooltip-strings";
@@ -53,6 +54,7 @@ export function PortableDialog() {
       <p id="portable-status" className="dialog-status" role="status" aria-live="polite">
         {files.portableStatus}
       </p>
+      <StickCuePanel surface="files" />
       <div className="dialog-actions">
         <button
           id="portable-close"

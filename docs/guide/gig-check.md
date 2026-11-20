@@ -37,7 +37,7 @@ A missing drive, or a missing file in the crate you selected, is **Not ready** e
 
 ## What changed
 
-**Check drive** sits beside this check in the same rail group. Pick a connected drive that has a `_Serato_` folder. The report is read-only. An unplugged drive is named and is not treated as a missing file. See [Check a portable drive](files.md#check-a-portable-drive).
+**Check drive** sits beside this check in the same rail group. Pick a connected drive that has a `_Serato_` folder. The report is read-only. An unplugged drive is named and is not treated as a missing file. **Review stick cues** and **Import empty pads** sit under the report. Review writes nothing. Import copies cues into empty pads and does not replace a cue you already have. See [Check a portable drive](files.md#check-a-portable-drive).
 
 **Tempo drift** sits beside this check in the same rail group. It lists tracks whose tempo wanders or that look live, so you can give them a flexible beatgrid. It needs a crate. See [Tempo drift](tempo-drift.md).
 

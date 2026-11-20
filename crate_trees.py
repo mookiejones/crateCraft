@@ -1,6 +1,6 @@
-"""Build a crate tree by BPM band, key, or genre (part 1 of #31).
+"""Build a crate tree by BPM band, key, genre, or genre family (part 1 of #31).
 
-A tree is one normal parent crate with a subcrate per band, key, or genre.
+A tree is one normal parent crate with a subcrate per band, key, genre, or genre family.
 Each subcrate is a preset crate from ``smart_presets`` (its name ends in
 ``⟳``), so the page's refresh on open keeps every subcrate current. The
 parent is a plain folder and is not refreshed itself.
@@ -16,6 +16,10 @@ Trees:
 - ``genre``: one subcrate per genre with at least ``min_tracks`` tracks,
   largest first, at most ``limit``. Spellings that differ only in case or
   spacing are one genre, named by the most common spelling.
+- ``family``: one subcrate per genre family with at least ``min_tracks``
+  tracks, largest first, at most ``limit``. Members roll up through the
+  saved parent map, or through the spelling-group seed when no map is
+  saved. Preview does not save that seed.
 
 Any tree can take ``crate`` to look only at that crate and its subcrates.
 Empty subcrates are not made. ``preview`` only reads. ``create`` writes the
@@ -35,11 +39,11 @@ import library
 import smart_presets
 from library import LibraryError
 
-KINDS = ("bpm", "key", "genre")
+KINDS = ("bpm", "key", "genre", "family")
 MAX_BANDS = 60
 MAX_WIDTH = 50.0
 MAX_GENRES = 100
-DEFAULT_NAMES = {"bpm": "BPM bands", "key": "Keys", "genre": "Genres"}
+DEFAULT_NAMES = {"bpm": "BPM bands", "key": "Keys", "genre": "Genres", "family": "Genre families"}
 CAMELOT_ORDER = tuple(f"{number}{letter}" for number in range(1, 13) for letter in "AB")
 
 # Fixed sentences. error_codes maps the same text to a stable code.
@@ -101,7 +105,7 @@ def normalize(tree: object) -> dict[str, object]:
         ):
             raise LibraryError(BAD_BANDS)
         clean.update({"low": low, "high": high, "width": width, "step": step})
-    elif kind == "genre":
+    elif kind in ("genre", "family"):
         minimum = tree.get("min_tracks", 2)
         limit = tree.get("limit", 40)
         if (
@@ -243,9 +247,15 @@ def _children(conn: sqlite3.Connection, space: str, tree: Mapping[str, object]) 
             presets.append({"kind": "bpm_band", "low": low, "high": high, **extra})
     elif kind == "key":
         presets = [{"kind": "key", "key": key, **extra} for key in CAMELOT_ORDER]
-    else:
+    elif kind == "genre":
         names = _genres(conn, space, scope, int(tree["min_tracks"]), int(tree["limit"]))  # type: ignore[arg-type]
         presets = [{"kind": "genre", "genre": name, **extra} for name in names]
+    else:
+        import genre_families
+
+        presets = genre_families.family_presets(
+            conn, space, scope, int(tree["min_tracks"]), int(tree["limit"])  # type: ignore[arg-type]
+        )
     children: list[dict[str, object]] = []
     for raw in presets:
         preset = smart_presets.normalize(raw)
