@@ -290,11 +290,16 @@ class AppTrashStoreTests(_TrashCase):
     def test_copy_count_refusal_leaves_the_blob(self) -> None:
         """A verified-copy refusal on purge does not delete the audio.
 
+        The gate runs only when ``master.sqlite`` exists, so this case
+        points ``library.MASTER`` at a file. A missing library skips the gate.
+
         Returns:
             None. The test fails if the blob is removed.
         """
         trash, item_id, blob, library_dir = self._held_song()
         self.clock.moment = NOW + timedelta(days=8)
+        master = library_dir / "master.sqlite"
+        master.write_bytes(b"")
 
         def refuse(paths: list[str]) -> None:
             """Raise the copy-count error the gate would raise.
@@ -308,11 +313,16 @@ class AppTrashStoreTests(_TrashCase):
             del paths
             raise LibraryError("Need another verified copy before this file can go.")
 
-        with mock.patch.object(verified_copies, "require_audio_delete", side_effect=refuse):
+        with (
+            mock.patch.object(library, "MASTER", master),
+            mock.patch.object(verified_copies, "require_audio_delete", side_effect=refuse),
+        ):
             preview = trash.purge(item_id, confirm=False, library_dir=library_dir)
             self.assertFalse(preview["ok"])
-            with self.assertRaises(LibraryError):
+            self.assertEqual(str(preview["error"]), "Need another verified copy before this file can go.")
+            with self.assertRaises(LibraryError) as ctx:
                 trash.purge(item_id, confirm=True, library_dir=library_dir)
+            self.assertEqual(str(ctx.exception), "Need another verified copy before this file can go.")
         self.assertTrue(blob.is_file())
 
     def test_snapshot_purge_does_not_call_the_copy_gate(self) -> None:
