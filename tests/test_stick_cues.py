@@ -15,6 +15,7 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
+from contextlib import closing
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from unittest import mock
@@ -115,7 +116,7 @@ class StickCueTests(unittest.TestCase):
             _id3(stick_file, _payload([(0, 9000, "Deck"), (1, 5000, "Deck")]))
             library_before = library_file.read_bytes()
             stick_before = stick_file.read_bytes()
-            with sqlite3.connect(temp.db) as conn:
+            with closing(sqlite3.connect(temp.db)) as conn:
                 _track(conn, 80, library_file)
                 conn.commit()
             plan = stick_cues.preview(str(stick))
@@ -174,7 +175,7 @@ class StickCueTests(unittest.TestCase):
             stick = temp.root / "stick"
             _id3(library_file, _payload([(0, 1000, "Lib")]))
             _id3(stick / "track.mp3", _payload([(1, 5000, "Deck")]))
-            with sqlite3.connect(temp.db) as conn:
+            with closing(sqlite3.connect(temp.db)) as conn:
                 _track(conn, 81, library_file)
                 conn.commit()
             calls = {"n": 0}
@@ -249,7 +250,7 @@ class RouteTests(unittest.TestCase):
             _id3(library_file, _payload([(0, 1000, "Lib")]))
             _id3(stick / "track.mp3", _payload([(1, 4000, "Only")]))
             before = library_file.read_bytes()
-            with sqlite3.connect(temp.db) as conn:
+            with closing(sqlite3.connect(temp.db)) as conn:
                 _track(conn, 82, library_file)
                 conn.commit()
             status, plan = self._post({"action": "preview", "drive": str(stick)})
