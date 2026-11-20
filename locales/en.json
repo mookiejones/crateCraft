@@ -355,6 +355,7 @@
   "error.batch_stale": "The library changed since this preview. Nothing was written.",
   "error.batch_undo_stale": "The library changed since this batch. Nothing was restored.",
   "error.bitrate_needs_crate": "Choose a crate for a bitrate check.",
+  "error.energy_needs_crate": "Choose a crate for an energy check.",
   "error.tempo_needs_crate": "Choose a crate for a tempo check.",
   "error.body_not_json": "The request body is not JSON.",
   "error.body_not_object": "The request body is not an object.",
@@ -903,6 +904,33 @@
     "one": "Filled {count} track.",
     "other": "Filled {count} tracks."
   },
+  "energy.apply": "Apply",
+  "energy.applying": "Applying…",
+  "energy.checking": "Checking…",
+  "energy.column.energy": "Energy",
+  "energy.column.grouping": "Grouping",
+  "energy.column.path": "File",
+  "energy.column.source": "Source",
+  "energy.empty": "No blank Grouping field can take an energy level.",
+  "energy.heading": "Energy",
+  "energy.intro": "Needs a crate. Writes Energy 1–10 into a blank Grouping field. Audio files stay. Quit Serato first.",
+  "energy.source.audio": "From the audio",
+  "energy.source.tag": "From the file",
+  "energy.summary": {
+    "one": "{checked} tracks checked. {count} can take an energy level.",
+    "other": "{checked} tracks checked. {count} can take an energy level."
+  },
+  "energy.summaryClear": "{checked} tracks checked. None can take an energy level.",
+  "energy.unreadable": "The energy report could not be read.",
+  "energy.unreadableFiles": {
+    "one": "{count} file could not be read.",
+    "other": "{count} files could not be read."
+  },
+  "energy.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+  "energy.written": {
+    "one": "Wrote energy on {count} track.",
+    "other": "Wrote energy on {count} tracks."
+  },
   "markers.beats": {
     "one": "{count} beat",
     "other": "{count} beats"
@@ -989,6 +1017,7 @@
   "mode.gig": "Read-only. This check does not change the library.",
   "mode.health": "Read-only. This report does not change the library.",
   "mode.lost": "Writes the library, not the audio files. Quit Serato first.",
+  "mode.energy": "Needs a crate. Writes the library, not the audio files. Quit Serato first.",
   "mode.missing": "Tracks whose files are missing on a connected drive.",
   "mode.missingOffline": {
     "one": "Tracks whose files are missing on a connected drive. {count} track on an unplugged drive is marked offline in crates.",
@@ -1898,6 +1927,8 @@
   "tooltip.audioRefresh": "Check again for a file replaced under the same name.",
   "tooltip.audioSave": "Preview a crate of files whose audio changed. Nothing is written until you confirm.",
   "tooltip.lostRefresh": "Check again for blank titles and artists.",
+  "tooltip.energyApply": "Write Energy 1–10 into a blank Grouping field. Quit Serato first. Audio files do not change.",
+  "tooltip.energyRefresh": "Check energy again for the selected crate.",
   "tooltip.membership": "Add this track to {name}, or take it out.",
   "tooltip.memoryCues": "Include memory cues in the Rekordbox file.",
   "tooltip.mergeCancel": "Cancel. Nothing is merged. Esc.",
@@ -2027,7 +2058,7 @@
   "tooltip.sortCrateName": "Sort crates by name.",
   "tooltip.sortDateAdded": "Sort tracks by the date they were added.",
   "tooltip.sortDeck": "Sort history by deck.",
-  "tooltip.sortEnergy": "Sort tracks by energy (the star rating as 1 to 5).",
+  "tooltip.sortEnergy": "Sort tracks by energy. Uses Grouping Energy N (1 to 10) when set, otherwise the star rating (1 to 5).",
   "tooltip.sortGenre": "Sort tracks by genre.",
   "tooltip.sortKey": "Sort tracks by key.",
   "tooltip.sortLastPlayed": "Sort tracks by the last time they were played.",
@@ -2087,6 +2118,7 @@
   "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
   "tooltip.viewAudio": "Notice a file replaced under the same name. Cues and the beatgrid may not fit. Saving a crate writes the library.",
   "tooltip.viewLost": "Fill a blank title or artist from the file. Writes the library, not the audio.",
+  "tooltip.viewEnergy": "Write Energy 1–10 into a blank Grouping field. Needs a crate. Writes the library, not the audio.",
   "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
   "tooltip.viewPortable": "Check a portable Serato drive before a gig. Pick a connected drive. Read-only.",
   "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
@@ -2149,6 +2181,7 @@
   "view.history": "History",
   "view.label": "Views",
   "view.lost": "Lost tags",
+  "view.energy": "Energy",
   "view.missing": "Missing files",
   "view.portable": "Check drive",
   "view.scan": "Damaged files",

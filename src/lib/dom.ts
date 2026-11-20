@@ -201,6 +201,14 @@ export interface ElementIds {
   "lost-status": HTMLParagraphElement;
   "lost-report": HTMLDivElement;
   "lost-heading": HTMLHeadingElement;
+  "energy-panel": HTMLElement;
+  "energy-scope": HTMLParagraphElement;
+  "energy-hint": HTMLParagraphElement;
+  "energy-refresh": HTMLButtonElement;
+  "energy-apply": HTMLButtonElement;
+  "energy-status": HTMLParagraphElement;
+  "energy-report": HTMLDivElement;
+  "energy-heading": HTMLHeadingElement;
   "audio-panel": HTMLElement;
   "audio-scope": HTMLParagraphElement;
   "audio-hint": HTMLParagraphElement;

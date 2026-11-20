@@ -122,7 +122,7 @@ export interface Track {
   file_on_disk?: boolean;
   in_prepare?: boolean;
   play_count?: number | null;
-  /** Serato star rating 0–1. The Energy column maps this to 1–5. */
+  /** Serato star rating 0–1. The Energy column uses Grouping `Energy N` when set, otherwise this 1–5 map. */
   rating?: number | null;
   /** Unix seconds when the library row was added. */
   time_added?: number | string | null;
@@ -1253,6 +1253,25 @@ export interface LostTagsPlan {
   checked: number;
   unreadable: number;
   fixes: LostTagFix[];
+  written?: boolean;
+  preview?: boolean;
+  error?: string;
+  code?: string;
+}
+
+export interface EnergyFix {
+  asset_id: number;
+  path: string;
+  grouping: string;
+  energy: number;
+  source: "tag" | "audio";
+  proposed: string;
+}
+
+export interface EnergyPlan {
+  checked: number;
+  unreadable: number;
+  fixes: EnergyFix[];
   written?: boolean;
   preview?: boolean;
   error?: string;

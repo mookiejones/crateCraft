@@ -62,8 +62,8 @@ export function dateLabel(stamp: number | string | null | undefined) {
 /**
  * Map Serato's 0–1 rating to an Energy value 1–5.
  *
- * Unrated and a rounded zero stay empty. This is the star-rating
- * workaround; the database has no energy column.
+ * Unrated and a rounded zero stay empty. Grouping `Energy N` is the
+ * 1–10 value when it is set. This map is the fallback.
  *
  * @param {number|string|null|undefined} rating Stored rating from 0 to 1.
  * @returns {number | null} 1 through 5, or null.
@@ -88,6 +88,35 @@ export function energyLabel(rating: number | string | null | undefined) {
   return value == null ? "" : formatNumber(value);
 }
 
+/** Grouping text that a smart crate can match: `Energy N`, N from 1 to 10. */
+const STORED_ENERGY = /^Energy ([1-9]|10)$/;
+
+/**
+ * Read a stored Grouping energy token.
+ *
+ * The match is case-sensitive and ignores surrounding spaces. Other
+ * Grouping text, including a lowercase copy, is not an energy level.
+ *
+ * @param grouping Stored Grouping field.
+ * @returns {number | null} 1 through 10, or null.
+ */
+export function groupingEnergy(grouping: string | null | undefined): number | null {
+  const match = STORED_ENERGY.exec((grouping ?? "").trim());
+  return match ? Number(match[1]) : null;
+}
+
+/**
+ * Energy number for a track row.
+ *
+ * Grouping `Energy N` wins. Otherwise the star rating maps to 1–5.
+ *
+ * @param track Row with optional grouping and rating.
+ * @returns {number | null} 1 through 10, or null when neither is set.
+ */
+export function trackEnergy(track: { grouping?: string | null; rating?: number | string | null }): number | null {
+  return groupingEnergy(track.grouping) ?? energyValue(track.rating);
+}
+
 /** Sort keys that compare as numbers, empty last. */
 const NUMERIC_SORT = new Set([
   "bpm",
@@ -110,7 +139,7 @@ export function isNumericSort(key: string): boolean {
 }
 
 function sortNumber(track: Track, key: string): number | null {
-  if (key === "energy") return energyValue(track.rating);
+  if (key === "energy") return trackEnergy(track);
   const raw = track[key];
   if (raw == null || raw === "") return null;
   const value = Number(raw);

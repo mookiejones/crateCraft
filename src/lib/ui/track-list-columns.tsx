@@ -9,7 +9,7 @@
 import type { MouseEvent } from "react";
 import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import type { Track } from "../api-types";
-import { clockLabel, colorHex, dateLabel, energyLabel, lengthLabel } from "../format";
+import { clockLabel, colorHex, dateLabel, lengthLabel, trackEnergy } from "../format";
 import { formatNumber, t, type MessageKey } from "../i18n";
 import { playerStrings } from "../player/player-strings";
 import { PlayButton } from "../../components/PlayButton";
@@ -148,8 +148,10 @@ function textOf(track: Track, field: TrackColumnField): string {
         : formatNumber(Math.round(Number(track.bpm) * 100) / 100, { maximumFractionDigits: 2 });
     case "key":
       return track.key ?? "";
-    case "energy":
-      return energyLabel(track.rating);
+    case "energy": {
+      const value = trackEnergy(track);
+      return value == null ? "" : formatNumber(value);
+    }
     case "genre":
       return track.genre ?? "";
     case "time_added":

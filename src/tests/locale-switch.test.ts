@@ -144,6 +144,22 @@ describe("switching the language", () => {
     expect(el("crate-foot").textContent).toBe("Todo el espacio");
   });
 
+  it("translates the Energy crate footer", () => {
+    wireLocale();
+    state.mode = "energy";
+    state.activeCrate = "all";
+    renderShell();
+    expect(el("crate-foot").textContent).toBe("All tracks");
+    setLocale("es");
+    expect(el("crate-foot").textContent).toBe("Todas las pistas");
+    state.activeCrate = 99;
+    state.crates = [];
+    setLocale("en");
+    expect(el("crate-foot").textContent).toBe("Selected crate");
+    setLocale("es");
+    expect(el("crate-foot").textContent).toBe("Caja seleccionada");
+  });
+
   it("translates the Compare crates crate footer", () => {
     wireLocale();
     state.mode = "compare";

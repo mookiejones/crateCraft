@@ -35,6 +35,7 @@ RAIL_KEYS = (
     "view.bitrate",
     "view.tags",
     "view.lost",
+    "view.energy",
     "view.audio",
     "view.snapshots",
     "view.group.gig",
@@ -298,6 +299,7 @@ class DesktopMenuTests(unittest.TestCase):
                     catalog["view.bitrate"],
                     catalog["view.tags"],
                     catalog["view.lost"],
+                    catalog["view.energy"],
                     catalog["view.audio"],
                 ],
             )
