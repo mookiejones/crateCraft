@@ -58,6 +58,8 @@ The list under that line names each problem. Fix it on the laptop. The check doe
 | **Path too long** | Shorten the name on the laptop, then copy it. |
 | **File too large** | The file is over 4 GB on a FAT drive. Shorten it on the laptop, or use an exFAT drive, then copy it again. |
 
+**Review stick cues** and **Import empty pads** sit under that report, on Organize files and under Gig. Review lists cues that are on the stick and not in the library. It writes nothing. Import copies those cues into empty pads only. A cue you already have stays. The stick file is not changed. An unplugged drive stays named. It is not a missing file. The check above still only reads the drive.
+
 ## Copy smart crates to the drive
 
 Quit Serato DJ Pro first.

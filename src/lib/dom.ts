@@ -60,6 +60,7 @@ export interface ElementIds {
   "crate-prompt-cancel": HTMLButtonElement;
   "crate-prompt-confirm": HTMLButtonElement;
   "overwrite-same-name": HTMLInputElement;
+  "stick-confirm": HTMLInputElement;
   "confirm-dialog": HTMLDialogElement;
   "confirm-title": HTMLHeadingElement;
   "confirm-message": HTMLParagraphElement;

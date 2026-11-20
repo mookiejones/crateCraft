@@ -7,6 +7,7 @@
 
 import { useFiles } from "../containers/FilesContext";
 import { t } from "../lib/i18n";
+import { StickCuePanel } from "./StickCuePanel";
 import {
   FINDING_CAP,
   closePortable,
@@ -64,6 +65,7 @@ export function PortableDialog() {
       <p id="portable-status" className="dialog-status" role="status" aria-live="polite">
         {files.portableStatus}
       </p>
+      <StickCuePanel surface="files" />
       <div className="dialog-actions">
         <button
           id="portable-dialog-smart-copy"
