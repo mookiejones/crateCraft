@@ -83,6 +83,7 @@ describe("crate prompt dialog", () => {
           parent: 1,
           space: "Serato Library",
           overwrite: false,
+          stick_confirm: false,
         },
       },
     ]);
@@ -98,6 +99,18 @@ describe("crate prompt dialog", () => {
     el("crate-prompt-confirm").click();
     await pending;
     expect(calls[0]?.body).toMatchObject({ action: "create", name: "Warmup", overwrite: true });
+  });
+
+  it("posts stick_confirm true only after that box is checked", async () => {
+    answer();
+    const pending = createCrate();
+    await vi.waitFor(() => expect(el("crate-prompt-dialog").open).toBe(true));
+    expect((el("stick-confirm") as HTMLInputElement).checked).toBe(false);
+    (el("stick-confirm") as HTMLInputElement).click();
+    setCratePromptValue("Warmup");
+    el("crate-prompt-confirm").click();
+    await pending;
+    expect(calls[0]?.body).toMatchObject({ action: "create", name: "Warmup", stick_confirm: true });
   });
 
   it("posts nothing on cancel", async () => {
@@ -132,6 +145,7 @@ describe("crate prompt dialog", () => {
     expect(el("crate-prompt-title").textContent).toBe("Rename crate");
     expect(el("crate-prompt-input").value).toBe("House");
     expect(document.getElementById("overwrite-same-name")).toBeNull();
+    expect(document.getElementById("stick-confirm")).toBeNull();
     el("crate-prompt-confirm").click();
     await pending;
     expect(calls).toEqual([]);

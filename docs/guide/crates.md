@@ -68,6 +68,8 @@ Quit Serato first. [Safety and backups](safety.md) explains the status line. The
 3. Type a name in **New crate name**.
 4. Confirm.
 
+**This stick is from another library** sits under the name. It starts off. Leave it clear and a stick that already has crates from another library is left as it was. Check it, then confirm. The app saves a copy of that stick's crates, then writes.
+
 The page says **Crate created.** There is no drag and drop. A new crate is created inside the crate you had selected. This app does not move an existing crate to a new parent.
 
 **New** creates a normal crate. It does not create a smart crate.

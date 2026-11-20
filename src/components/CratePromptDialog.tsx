@@ -18,6 +18,7 @@ import {
   getCratePrompt,
   isSharedDialogOpen,
   setCratePromptOverwrite,
+  setCratePromptStickConfirm,
   setCratePromptValue,
 } from "../lib/ui/shared-dialog";
 import { tooltipRef } from "./tooltip-ref";
@@ -62,6 +63,19 @@ export function CratePromptDialog() {
             />
           }
           label={t("crates.overwriteSameName")}
+        />
+      ) : null}
+      {prompt.showOverwrite ? (
+        <FormControlLabel
+          control={
+            <Checkbox
+              id="stick-confirm"
+              slotProps={{ input: { ref: tooltipRef(tips.stickConfirm) } }}
+              checked={prompt.stickConfirm === true}
+              onChange={(event) => setCratePromptStickConfirm(event.target.checked)}
+            />
+          }
+          label={t("crates.stickConfirm")}
         />
       ) : null}
       <DialogActions>

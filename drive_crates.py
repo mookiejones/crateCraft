@@ -4,9 +4,11 @@ The master library stays the list Serato 4 and 5 display. Tracks that live
 on another drive also belong in that drive's ``Subcrates`` crate and, when
 Serato has already created it, in ``database V2``. This module does not
 create a ``_Serato_`` folder, does not follow a shortcut to one, and does
-not replace a same-named crate unless ``overwrite`` is true. A filesystem
-error while writing one drive puts that drive's files back and returns a
-warning. It does not raise, so the library save can stay.
+not replace a same-named crate unless ``overwrite`` is true. A stick that
+already has crates from another library is refused until confirm, and those
+crate files are copied into the app data folder before the first replace.
+A filesystem error while writing one drive puts that drive's files back and
+returns a warning. It does not raise, so the library save can stay.
 """
 
 from __future__ import annotations
@@ -41,7 +43,14 @@ class DriveWrite:
     detail: str
 
 
-def sync_tracks(paths: list[str], crate_name: str, *, add: bool, overwrite: bool) -> list[DriveWrite]:
+def sync_tracks(
+    paths: list[str],
+    crate_name: str,
+    *,
+    add: bool,
+    overwrite: bool,
+    confirm: bool = False,
+) -> list[DriveWrite]:
     """Group tracks by external volume and write each drive once.
 
     Args:
@@ -49,6 +58,7 @@ def sync_tracks(paths: list[str], crate_name: str, *, add: bool, overwrite: bool
         crate_name: Visible crate name.
         add: True adds the paths. False removes them.
         overwrite: True may change a crate file that already exists.
+        confirm: True may snapshot and write a stick from another library.
 
     Returns:
         One result per external volume. Boot-drive paths are left out.
@@ -64,24 +74,33 @@ def sync_tracks(paths: list[str], crate_name: str, *, add: bool, overwrite: bool
         else:
             found[1].append(path)
     return [
-        sync_volume(volume, grouped, crate_name, add=add, overwrite=overwrite)
+        sync_volume(volume, grouped, crate_name, add=add, overwrite=overwrite, confirm=confirm)
         for volume, grouped in groups.values()
     ]
 
 
-def planned_files(paths: list[str], crate_name: str, *, add: bool, overwrite: bool) -> list[Path]:
+def planned_files(
+    paths: list[str],
+    crate_name: str,
+    *,
+    add: bool,
+    overwrite: bool,
+    confirm: bool = False,
+) -> list[Path]:
     """Return the drive files :func:`sync_tracks` will change.
 
     The list is read-only. A missing crate is included so a rollback can
     delete it. A missing ``database V2`` is left out, because this write
-    does not create that file. A crate that will be kept is left out.
-    A shortcut is left out so the snapshot does not refuse the library save.
+    does not create that file. A crate that will be kept or refused is
+    left out. A shortcut is left out so the snapshot does not refuse the
+    library save.
 
     Args:
         paths: Stored track paths.
         crate_name: Visible crate name.
         add: True adds the paths. False removes them.
         overwrite: True may change a crate file that already exists.
+        confirm: True may write a stick from another library.
 
     Returns:
         Crate files and existing ``database V2`` files, one of each per
@@ -95,7 +114,9 @@ def planned_files(paths: list[str], crate_name: str, *, add: bool, overwrite: bo
             continue
         groups.setdefault(volume.root, volume)
     for volume in groups.values():
-        for item in _planned_volume(volume, crate_name, add=add, overwrite=overwrite):
+        for item in _planned_volume(
+            volume, crate_name, add=add, overwrite=overwrite, confirm=confirm
+        ):
             if item not in seen:
                 seen.append(item)
     return seen
@@ -108,8 +129,13 @@ def sync_volume(
     *,
     add: bool,
     overwrite: bool,
+    confirm: bool = False,
 ) -> DriveWrite:
     """Write one drive's crate file, or explain why it was left alone.
+
+    A stick that already has crate files is copied into ``stick-snapshots``
+    before the first replace. A different remembered library is refused
+    until ``confirm`` is true. That refusal still does not write.
 
     Args:
         volume: Drive root. Tests pass a temporary root. Production uses
@@ -118,10 +144,13 @@ def sync_volume(
         crate_name: Visible crate name. Slashes are refused.
         add: True adds paths. False removes them.
         overwrite: True may change an existing crate file.
+        confirm: True may snapshot and write a stick from another library.
 
     Returns:
         The drive result. A missing root is ``not_connected``. A root
-        with no real ``_Serato_`` directory is ``no_library``.
+        with no real ``_Serato_`` directory is ``no_library``. ``failed``
+        when the stick snapshot cannot be saved. The stick is unchanged
+        in that case.
     """
     root = Path(volume.root)
     if not root.is_dir():
@@ -151,13 +180,6 @@ def sync_volume(
     folder = serato / "Subcrates"
     crate = folder / filename
     relatives = [item for item in (_relative(path, volume) for path in paths) if item]
-    if crate.is_file() and not overwrite:
-        return DriveWrite(
-            "kept",
-            volume.name,
-            str(crate),
-            f"{volume.name} already has a crate named {crate_name}, and overwrite is off, so that crate was left as it was.",
-        )
     if crate.is_symlink():
         return DriveWrite(
             "no_library",
@@ -165,6 +187,24 @@ def sync_volume(
             None,
             f"{volume.name} has no Serato library yet, so nothing was written there.",
         )
+    import stick_export
+
+    facts = stick_export.facts_for(
+        volume, crate_name, overwrite=overwrite, confirm=confirm
+    )
+    blocked = _from_skip(volume, crate_name, crate, stick_export.skip_reason(facts))
+    if blocked is not None:
+        return blocked
+    if facts.has_crates:
+        try:
+            stick_export.snapshot_volume(volume)
+        except OSError:
+            return DriveWrite(
+                "failed",
+                volume.name,
+                str(crate) if crate.exists() else None,
+                stick_export.SNAPSHOT_FAILED.format(name=volume.name),
+            )
     existing: list[str] = []
     if crate.is_file():
         import snapshots
@@ -216,7 +256,76 @@ def sync_volume(
             f"{volume.name} could not be updated. The Serato library was saved, "
             "and that drive was left as it was.",
         )
+    try:
+        stick_export.remember_library(volume)
+    except OSError:
+        pass
     return DriveWrite("written", volume.name, str(crate), "")
+
+
+def _from_skip(
+    volume: volumes.Volume,
+    crate_name: str,
+    crate: Path,
+    reason: str | None,
+) -> DriveWrite | None:
+    """Turn one skip code into a drive result that does not write.
+
+    Args:
+        volume: Drive being checked.
+        crate_name: Visible crate name.
+        crate: Crate path that would have been written.
+        reason: Code from :func:`stick_export.skip_reason`. None means write.
+
+    Returns:
+        A result that leaves the stick as it was, or None when the write
+        may continue. ``not_connected`` is never reported as a missing file.
+    """
+    import stick_export
+
+    if reason is None:
+        return None
+    if reason == "kept":
+        return DriveWrite(
+            "kept",
+            volume.name,
+            str(crate),
+            f"{volume.name} already has a crate named {crate_name}, and overwrite is off, so that crate was left as it was.",
+        )
+    if reason == "not_connected":
+        return DriveWrite(
+            "not_connected",
+            volume.name,
+            None,
+            f"{volume.name} is not connected. That drive's crate was not changed.",
+        )
+    if reason == "no_library":
+        return DriveWrite(
+            "no_library",
+            volume.name,
+            None,
+            f"{volume.name} has no Serato library yet, so nothing was written there.",
+        )
+    if reason == "bad_name":
+        return DriveWrite(
+            "refused",
+            volume.name,
+            None,
+            "That crate name cannot be a file on the drive.",
+        )
+    if reason == "different_library":
+        return DriveWrite(
+            "refused",
+            volume.name,
+            str(crate) if crate.exists() else None,
+            stick_export.REFUSED_DETAIL.format(name=volume.name),
+        )
+    return DriveWrite(
+        "refused",
+        volume.name,
+        None,
+        stick_export.REFUSED_DETAIL.format(name=volume.name),
+    )
 
 
 def warning(results: list[DriveWrite]) -> str | None:
@@ -235,7 +344,14 @@ def warning(results: list[DriveWrite]) -> str | None:
     return " ".join(lines)
 
 
-def _planned_volume(volume: volumes.Volume, crate_name: str, *, add: bool, overwrite: bool) -> list[Path]:
+def _planned_volume(
+    volume: volumes.Volume,
+    crate_name: str,
+    *,
+    add: bool,
+    overwrite: bool,
+    confirm: bool = False,
+) -> list[Path]:
     """Return the files :func:`sync_volume` will change on one drive.
 
     Args:
@@ -243,24 +359,26 @@ def _planned_volume(volume: volumes.Volume, crate_name: str, *, add: bool, overw
         crate_name: Visible crate name.
         add: True adds paths. False removes them.
         overwrite: True may change an existing crate file.
+        confirm: True may write a stick from another library.
 
     Returns:
         The crate path, and ``database V2`` when this write will append it.
-        An empty list when the drive would be skipped.
+        An empty list when :func:`stick_export.skip_reason` skips the write.
     """
+    import stick_export
+
+    facts = stick_export.facts_for(
+        volume, crate_name, overwrite=overwrite, confirm=confirm
+    )
+    if stick_export.skip_reason(facts) is not None:
+        return []
     root = Path(volume.root)
-    if not root.is_dir():
-        return []
     serato = root / "_Serato_"
-    if serato.is_symlink() or not serato.is_dir():
-        return []
     try:
         filename = _crate_filename(crate_name)
     except ValueError:
         return []
     crate = serato / "Subcrates" / filename
-    if crate.is_file() and not overwrite:
-        return []
     if crate.is_symlink():
         return []
     planned = [crate]

@@ -19,6 +19,8 @@ Cue points, loops, and the beatgrid live in the audio file. Open a track from **
 
 **Save track** writes the library. It does not rewrite the audio file. A missing file says **The file is not on disk, so cues cannot be read.** and does not invent pads. A file with no Serato markers still shows the eight empty pads and says **No Serato cues in this file.**
 
+**Check drive** can copy a cue that exists only on a stick into an empty pad. **Review stick cues** lists those cues and writes nothing. **Import empty pads** copies them into empty pads. A pad that already has a cue stays. The line under **Cues, loops, and beatgrid** still reads **These are not written back.**
+
 **Hot loops** sits beside **Memory cues** in the Rekordbox dialog. **Memory cues** starts on. **Hot loops** starts off. The help line reads **Uses a free hot-cue pad.** The app remembers Memory cues, Hot loops, and the key notation (**Key as stored**, **Camelot key**, or **Classical key**) in `settings.json`.
 
 Those boxes change the Rekordbox file only. They do not move pads inside Serato. With **Hot loops** on, a saved loop takes its own pad when that pad is free and it is one of the first eight. A loop whose pad is already taken stays a memory loop. A loop past those eight pads stays a memory loop too. With the box clear, every saved loop stays a memory loop.
