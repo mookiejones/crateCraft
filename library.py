@@ -6492,29 +6492,106 @@ def _trash_windows(path: Path) -> None:
         raise LibraryError("The file could not be moved to the Recycle Bin.")
 
 
-def _move_to_trash(path: Path) -> None:
-    """Move one duplicate audio file to the operating-system trash.
+def gate_trash_restore(name: str) -> None:
+    """Journal a no-op library write before a trashed audio file moves back.
 
-    macOS uses Finder, Windows uses the Recycle Bin, and other systems use
-    the FreeDesktop trash specification. The file is not unlinked.
+    The asset count must stay the same. The file move happens after this
+    returns, so a failed verify cannot leave a moved file beside a
+    rolled-back database. The name is a display name, not a path.
+
+    Args:
+        name: File name shown for the restore. ``.``, ``..``, and any name
+            that contains a slash are refused.
+
+    Raises:
+        LibraryError: If the name is not a display name, or the write is refused.
+        SeratoOpen: If Serato still has the library open.
+    """
+    import safe_write
+
+    label = _trash_restore_label(name)
+
+    def apply(conn: sqlite3.Connection, write: safe_write.Session) -> None:
+        """Register an unchanged asset count.
+
+        Args:
+            conn: Write connection.
+            write: Session that verifies the temporary copy.
+
+        Returns:
+            None.
+        """
+        row = conn.execute("SELECT COUNT(*) FROM asset").fetchone()
+        expected = 0 if row is None else int(row[0])
+
+        def check(copied: sqlite3.Connection, expected: int = expected) -> None:
+            """Fail when the asset count changed.
+
+            Args:
+                copied: Read-only connection to the temporary copy.
+                expected: Count taken before the write.
+
+            Raises:
+                VerifyMismatch: If the count changed.
+            """
+            seen = copied.execute("SELECT COUNT(*) FROM asset").fetchone()
+            count = 0 if seen is None else int(seen[0])
+            if count != expected:
+                raise safe_write.VerifyMismatch("The library changed during restore.")
+
+        write.check(check)
+        write.set_target(label)
+
+    safe_write.run("trash_restore", label, apply)
+
+
+def _trash_restore_label(name: str) -> str:
+    """Return a display name safe to store on a write journal.
+
+    Args:
+        name: Caller text.
+
+    Returns:
+        The name, truncated to 200 characters.
+
+    Raises:
+        LibraryError: If the name is empty, ``.``, ``..``, or a path.
+    """
+    import app_trash
+
+    if (
+        not isinstance(name, str)
+        or not name
+        or name in {".", ".."}
+        or "/" in name
+        or "\\" in name
+        or "\x00" in name
+    ):
+        raise LibraryError(app_trash.TRASH_MISSING)
+    return name[:200]
+
+
+def _move_to_trash(path: Path) -> None:
+    """Move one duplicate audio file into the crateCraft trash.
+
+    The file is held for seven days beside settings. It is not sent to
+    the operating-system trash. Restore from Backups puts the bytes back.
+    The library row is already gone. This does not check whether Serato
+    is running; the merge gate did that before the commit.
 
     Args:
         path: File chosen from a duplicate's stored path.
 
     Raises:
         LibraryError: If the path is a symlink, a directory, a library
-            database file, or the trash move fails. The original file is
-            left in place when the move fails.
+            database file, or the hold fails. The original file is left
+            in place when the hold fails before the move.
     """
     if path.is_symlink() or path.is_dir() or not path.is_file() or _protected_library_path(path):
         raise LibraryError("The file could not be moved to the Trash.")
-    if sys.platform == "win32":
-        _trash_windows(path)
-        return
-    if sys.platform == "darwin":
-        _trash_macos(path)
-        return
-    _trash_freedesktop(path)
+    import app_trash
+
+    app_trash.hold_file(path, name=path.name, library_dir=Path(MASTER).resolve().parent)
 
 
 def _trash_plan_files(plan: Mapping[str, object]) -> tuple[list[str], str | None]:
@@ -6619,7 +6696,8 @@ def merge_duplicates(payload: Mapping[str, object]) -> dict[str, object]:
     ``confirm_delete_files`` true, and it is refused before any write when a
     duplicate path is a symlink, a directory, the same file as the kept copy,
     or anything inside the library database folder. Files that do move go to
-    the operating-system trash after the database commit. The master changes
+    the crateCraft trash for seven days after the database commit. A file
+    another DJ app still uses is not moved. The master changes
     are one transaction. Each location database is mirrored in its own
     transaction, the same way other writes are.
 

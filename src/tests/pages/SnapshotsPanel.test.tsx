@@ -53,6 +53,7 @@ describe("SnapshotsPanel context", () => {
     state.operations = [];
     state.operationsLoading = false;
     state.operationsError = "";
+    state.trash = [];
     state.snapshots = [
       {
         id: "snap-1",
@@ -103,6 +104,66 @@ describe("SnapshotsPanel context", () => {
       host.querySelector("#snapshots-drives")?.getAttribute("aria-label"),
     );
     expect(host.querySelector("#operations-list")?.textContent).toContain(t("operations.empty"));
+    expect(host.querySelector("#trash-held-heading")?.textContent).toBe(t("snapshots.trashHeading"));
+    expect(host.querySelector("#trash-held")?.textContent).toContain(t("snapshots.trashEmpty"));
+  });
+
+  it("enables permanent remove only after the window and keeps tooltips on disabled buttons", () => {
+    state.trash = [
+      {
+        id: "held-1",
+        kind: "audio",
+        name: "song.mp3",
+        held_at: "2026-01-15T12:00:00+00:00",
+        purge_at: "2026-01-22T12:00:00+00:00",
+        purge_cancelled: false,
+        status: "held",
+        days_left: 7,
+        label: "held",
+      },
+      {
+        id: "due-1",
+        kind: "snapshot",
+        name: "snap-old",
+        held_at: "2026-01-01T12:00:00+00:00",
+        purge_at: "2026-01-08T12:00:00+00:00",
+        purge_cancelled: false,
+        status: "held",
+        days_left: 0,
+        label: "due",
+      },
+      {
+        id: "stop-1",
+        kind: "audio",
+        name: "kept.mp3",
+        held_at: "2026-01-15T12:00:00+00:00",
+        purge_at: "2026-01-22T12:00:00+00:00",
+        purge_cancelled: true,
+        status: "held",
+        days_left: 0,
+        label: "cancelled",
+      },
+    ];
+    const host = document.createElement("div");
+    document.body.append(host);
+    panelRoot = createRoot(host);
+    flushSync(() => {
+      panelRoot!.render(createElement(AppProviders, { children: createElement(SnapshotsPanel) }));
+    });
+    const restore = host.querySelector<HTMLButtonElement>("#trash-restore-held-1");
+    const cancel = host.querySelector<HTMLButtonElement>("#trash-cancel-stop-1");
+    const early = host.querySelector<HTMLButtonElement>("#trash-purge-held-1");
+    const due = host.querySelector<HTMLButtonElement>("#trash-purge-due-1");
+    expect(restore?.disabled).toBe(false);
+    expect(cancel?.disabled).toBe(true);
+    expect(early?.disabled).toBe(true);
+    expect(due?.disabled).toBe(false);
+    expect(restore?.parentElement?.getAttribute("data-tooltip")).toBe(t("tooltip.trashRestore"));
+    expect(cancel?.parentElement?.getAttribute("data-tooltip")).toBe(t("tooltip.trashCancel"));
+    expect(early?.parentElement?.getAttribute("data-tooltip")).toBe(t("tooltip.trashPurge"));
+    expect(host.querySelector("#trash-held")?.textContent).toContain(t("snapshots.trashHeld", { days: 7 }));
+    expect(host.querySelector("#trash-held")?.textContent).toContain(t("snapshots.trashDue"));
+    expect(host.querySelector("#trash-held")?.textContent).toContain(t("snapshots.trashCancelled"));
   });
 
   it("posts create when Take a backup is pressed", async () => {

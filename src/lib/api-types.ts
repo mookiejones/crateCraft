@@ -771,8 +771,22 @@ export interface OperationList {
   code?: string;
 }
 
+export interface TrashItem {
+  id: string;
+  kind: "snapshot" | "audio";
+  name: string;
+  held_at: string;
+  purge_at: string;
+  purge_cancelled: boolean;
+  status: "held" | "restored" | "purged";
+  days_left: number;
+  label: "held" | "due" | "cancelled";
+}
+
 export interface SnapshotList {
   snapshots?: SnapshotInfo[];
+  /** Held trash rows. Paths stay on the server. */
+  trash?: TrashItem[];
   pending_undo?: PendingUndo | null;
   write_block?: string;
   /** Catalog code for `write_block` when that sentence can be translated. */

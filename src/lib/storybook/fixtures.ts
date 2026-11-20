@@ -627,6 +627,7 @@ export const restorePlan: RestorePlan = {
 export function snapshotsValue(partial: Partial<SnapshotsContextValue> = {}): SnapshotsContextValue {
   return {
     snapshots: [snapshotInfo],
+    trash: [],
     driveBackup: null,
     operations: [],
     operationsLoading: false,
@@ -652,6 +653,9 @@ export function snapshotsValue(partial: Partial<SnapshotsContextValue> = {}): Sn
     loadOperations: noopAsync,
     takeSnapshot: noopAsync,
     pruneSnapshot: noopAsync,
+    restoreTrash: noopAsync,
+    cancelTrash: noopAsync,
+    purgeTrash: noopAsync,
     backupDriveCrates: noopAsync,
     openSnapshotPlan: noopAsync,
     confirmSnapshotRestore: noopAsync,

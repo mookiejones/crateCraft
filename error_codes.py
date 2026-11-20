@@ -22,6 +22,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
+import app_trash
 import crate_trees
 import folder_sync
 import version_family
@@ -98,6 +99,14 @@ ERROR_CODES: dict[str, str] = {
     "That file is not on disk.": "file_not_on_disk",
     "The file could not be moved to the Trash.": "trash_failed",
     "The file could not be moved to the Recycle Bin.": "recycle_failed",
+    app_trash.TRASH_CANCELLED: "trash_cancelled",
+    app_trash.TRASH_IN_PLACE: "trash_in_place",
+    app_trash.TRASH_INSIDE: "trash_inside",
+    app_trash.TRASH_MISSING: "trash_missing",
+    app_trash.TRASH_NOT_DUE: "trash_not_due",
+    app_trash.TRASH_OTHER_DJ: "trash_other_dj",
+    app_trash.TRASH_PROTECTED: "trash_protected",
+    app_trash.TRASH_SHORTCUT: "trash_shortcut",
     REGISTRATION_NO_SPACE: "registration_no_space",
     "The file could not be moved. Nothing was changed.": "move_failed",
     "That track is not in a duplicate group.": "not_duplicate",

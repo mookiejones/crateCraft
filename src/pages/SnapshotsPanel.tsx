@@ -23,6 +23,7 @@ import { snapshotColumns } from "../lib/snapshots/snapshot-columns";
 import { ensureGridDom } from "../lib/ui/grid-dom-stubs";
 import { tips } from "../lib/ui/tooltip-strings";
 import { MusicMirrorPanel } from "../components/MusicMirrorPanel";
+import { TrashHeldList } from "../components/TrashHeldList";
 import { GigLockPanel } from "../components/GigLockPanel";
 
 function gridLocaleText(locale: string) {
@@ -165,7 +166,8 @@ export function SnapshotsPanel() {
           listRef.current = element;
           tooltipRef(tips.snapshotsList)(element);
         }}
-        style={{ height: 320, width: "100%", minWidth: 640 }}
+        // .files-list is flex:1 and min-height:0. flex:none keeps row actions above Removed items.
+        style={{ flex: "none", height: 320, width: "100%", minWidth: 640 }}
       >
         {snapshots.snapshotError ? (
           <Button
@@ -206,6 +208,7 @@ export function SnapshotsPanel() {
           />
         )}
       </div>
+      <TrashHeldList />
       <MusicMirrorPanel />
       <GigLockPanel />
       <section id="operations" className="operations" aria-labelledby="operations-heading">

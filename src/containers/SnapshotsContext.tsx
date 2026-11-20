@@ -13,11 +13,13 @@ import type {
   PendingUndo,
   RestorePlan,
   SnapshotInfo,
+  TrashItem,
 } from "../lib/api-types";
 import type { MessageKey } from "../lib/i18n";
 
 export type SnapshotsSnapshot = {
   snapshots: readonly SnapshotInfo[];
+  trash: readonly TrashItem[];
   driveBackup: DriveBackup | null;
   operations: readonly OperationEntry[];
   operationsLoading: boolean;
@@ -46,6 +48,9 @@ export type SnapshotsContextValue = SnapshotsSnapshot & {
   loadOperations: () => Promise<void>;
   takeSnapshot: () => Promise<void>;
   pruneSnapshot: (snapshotId: string) => Promise<void>;
+  restoreTrash: (itemId: string) => Promise<void>;
+  cancelTrash: (itemId: string) => Promise<void>;
+  purgeTrash: (itemId: string) => Promise<void>;
   backupDriveCrates: () => Promise<void>;
   openSnapshotPlan: (snapshotId: string) => Promise<void>;
   confirmSnapshotRestore: () => Promise<void>;

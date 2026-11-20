@@ -50,6 +50,8 @@ This app's own files use a different folder, **crateCraft**. Installs from befor
 | Mac | `~/Library/Application Support/crateCraft/` (`settings.json`, `library.json`, `related.sqlite`) |
 | Windows | `%APPDATA%\crateCraft\` |
 
+The crateCraft trash sits in `trash/` under that folder, beside `settings.json`. It is not inside the Serato folder.
+
 Hash-checked Backups are `Library/Backups/snapshots` next to `master.sqlite`. The first save in a session also writes `Library/Backups/serato-web-` plus the date and time. That folder holds `master.sqlite`, `root.sqlite`, and each connected drive's `_Serato_` folder under `drives`. An unplugged drive is listed and skipped.
 
 Logs are `~/Library/Logs/crateCraft/` on a Mac and `%LOCALAPPDATA%\crateCraft\Logs\` on Windows. [Settings](Settings) opens that folder.

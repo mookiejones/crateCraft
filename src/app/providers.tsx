@@ -184,6 +184,9 @@ import {
   subscribe as subscribeSnapshots,
   takeSnapshot,
   pruneSnapshot,
+  restoreTrash,
+  cancelTrash,
+  purgeTrash,
 } from "../lib/snapshots/restore";
 import {
   closeSettings,
@@ -572,6 +575,9 @@ function readSnapshotsValue(): SnapshotsContextValue {
     loadOperations,
     takeSnapshot,
     pruneSnapshot,
+    restoreTrash,
+    cancelTrash,
+    purgeTrash,
     backupDriveCrates,
     openSnapshotPlan,
     confirmSnapshotRestore,

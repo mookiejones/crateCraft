@@ -73,8 +73,8 @@ When the frames cannot be copied, the plan warns you. That happens when the file
 
 ## Trash
 
-**Move the other audio files to the Trash** is off by default. The note says **Off by default. Files go to the Trash, where you can restore them. They are not permanently deleted.** The merge is refused when the remaining verified copies would drop below **Verified copies before delete** in Settings. Unplugged or untrusted drives, and a snapshot whose hash check failed, do not count.
+**Move the other audio files to the Trash** is off by default. The note says **Off by default. Files go to the crateCraft trash for 7 days. Restore them from Backups. They are not permanently deleted until that window ends.** The merge is refused when the remaining verified copies would drop below **Verified copies before delete** in Settings. Unplugged or untrusted drives, and a snapshot whose hash check failed, do not count.
 
 The box stays off, and stays disabled, when a duplicate file is missing, is the same file as the one you are keeping, or cannot be moved safely. The line **Audio files stay on disk.** means the merge will not touch the files.
 
-On a Mac, a file that is moved goes to the Trash. On Windows, it goes to the Recycle Bin. The button still says Trash. Put the file back from there if you need it. The library row for that copy is already gone.
+A moved file goes to the crateCraft trash for 7 days. **Removed items** on **Backups** has **Restore**, **Cancel removal**, and **Remove permanently**. Remove permanently waits until the window ends. A file another DJ app still uses is not purged. The library row for that copy is already gone.

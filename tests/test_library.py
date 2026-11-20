@@ -1623,7 +1623,7 @@ class MergeTests(unittest.TestCase):
                     "library.subprocess.run",
                     return_value=mock.Mock(returncode=0),
                 ) as run, mock.patch.object(Path, "exists", return_value=False):
-                    library._move_to_trash(audio)
+                    library._trash_windows(audio)
                 script = run.call_args.args[0][-1]
                 self.assertIn("SendToRecycleBin", script)
                 self.assertNotIn(str(audio), script)
