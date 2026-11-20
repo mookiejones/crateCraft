@@ -818,6 +818,50 @@
   "logs.empty": "Todavía no hay entradas en el registro.",
   "logs.openFailed": "No se pudo abrir la carpeta de registros.",
   "logs.opened": "Se abrió la carpeta de registros.",
+  "audio.checking": "Comprobando…",
+  "audio.column.changed": "Qué cambió",
+  "audio.confirmCrate": "Confirmar caja",
+  "audio.confirming": "Guardando la caja…",
+  "audio.empty": "Ningún archivo cambió con el mismo nombre.",
+  "audio.field.duration": "duración",
+  "audio.field.hash": "hash rápido",
+  "audio.field.size": "tamaño",
+  "audio.heading": "Audio cambiado",
+  "audio.intro": "Un archivo reemplazado con el mismo nombre. Los cues y la rejilla pueden no encajar. Guardar una caja escribe en la biblioteca. Cierra Serato primero.",
+  "audio.loadFailed": "No se pudo leer el informe de audio cambiado.",
+  "audio.offline": {
+    "one": "Una unidad desconectada no cuenta como un cambio. {count} archivo está en una unidad desenchufada.",
+    "other": "Una unidad desconectada no cuenta como un cambio. {count} archivos están en una unidad desenchufada."
+  },
+  "audio.preview": {
+    "one": "Guarda {count} pista en {name}. No se escribe nada hasta que confirmes.",
+    "other": "Guarda {count} pistas en {name}. No se escribe nada hasta que confirmes."
+  },
+  "audio.previewEmpty": "Nada que guardar. No se escribe ninguna caja.",
+  "audio.reanalyze": "Reanalizar",
+  "audio.reanalyzeNote": "Los cues se quedan. crateCraft no reescribe los cues ni la rejilla para encajar con el audio nuevo.",
+  "audio.reanalyzePreview": {
+    "one": "Los cues y la rejilla se quedan. {count} archivo se revisó y no se reescribió.",
+    "other": "Los cues y la rejilla se quedan. {count} archivos se revisaron y no se reescribieron."
+  },
+  "audio.reanalyzing": "Comprobando si los cues pueden moverse…",
+  "audio.saveCrate": "Guardar caja",
+  "audio.saving": "Preparando la caja…",
+  "audio.summary": {
+    "one": "{checked} archivos comprobados. {count} archivo cambió con el mismo nombre.",
+    "other": "{checked} archivos comprobados. {count} archivos cambiaron con el mismo nombre."
+  },
+  "audio.summaryClear": "{checked} archivos comprobados. Ninguno cambió con el mismo nombre.",
+  "audio.unreachable": "No se alcanzó el servidor de la biblioteca. Comprueba que esté en marcha y pulsa Comprobar de nuevo",
+  "audio.unreadableFiles": {
+    "one": "{count} archivo no se pudo leer.",
+    "other": "{count} archivos no se pudieron leer."
+  },
+  "audio.warning": "Los cues y la rejilla pueden no encajar con este audio.",
+  "audio.written": {
+    "one": "Se guardó {count} pista en {name}.",
+    "other": "Se guardaron {count} pistas en {name}."
+  },
   "lost.apply": "Aplicar",
   "lost.applying": "Aplicando…",
   "lost.checking": "Comprobando…",
@@ -921,6 +965,7 @@
   "merge.trashFiles": "Mover {files} a la Papelera.",
   "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
   "merge.trashNote": "Desactivado por defecto. Los archivos van a la papelera de crateCraft durante 7 días. Restáuralos desde Copias de seguridad. No se eliminan para siempre hasta que termine ese plazo.",
+  "mode.audio": "Avisa de un archivo reemplazado. Crear una caja escribe en la biblioteca. Los cues y la rejilla se quedan. Cierra Serato primero.",
   "mode.bitrate": "Necesita una caja. Guardar una caja escribe en la biblioteca. Cierra Serato primero.",
   "mode.compare": "Elige dos crates. Guardar una crate escribe en la biblioteca. Cierra Serato primero.",
   "mode.drift": "Solo lectura. Esta comprobación no cambia la biblioteca.",
@@ -1830,6 +1875,10 @@
   "tooltip.linkRating": "Valora este enlace de 1 a 5.",
   "tooltip.logFallback": "Texto del registro, cuando no se pudo copiar.",
   "tooltip.lostApply": "Rellena los títulos y artistas en blanco desde el archivo. Cierra Serato primero. Los archivos de audio no cambian.",
+  "tooltip.audioConfirm": "Guarda la caja Audio cambiado. Cierra Serato primero. Los cues se quedan.",
+  "tooltip.audioReanalyze": "Solo una vista previa. Los cues y la rejilla se quedan. crateCraft no los reescribe.",
+  "tooltip.audioRefresh": "Vuelve a buscar un archivo reemplazado con el mismo nombre.",
+  "tooltip.audioSave": "Previsualiza una caja de archivos cuyo audio cambió. No se escribe nada hasta que confirmes.",
   "tooltip.lostRefresh": "Vuelve a buscar títulos y artistas en blanco.",
   "tooltip.membership": "Añade esta pista a {name}, o quítala.",
   "tooltip.memoryCues": "Incluye los cues de memoria en el archivo de Rekordbox.",
@@ -2018,6 +2067,7 @@
   "tooltip.viewGig": "Comprueba la biblioteca antes del bolo. Solo lectura. No cambia nada.",
   "tooltip.viewHealth": "Cifras en una página de archivos no encontrados, BPM o tonalidad faltantes, género vacío, pistas en ninguna caja y duplicados. Solo lectura.",
   "tooltip.viewHistory": "Muestra el historial. Ctrl/Cmd+4.",
+  "tooltip.viewAudio": "Avisa de un archivo reemplazado con el mismo nombre. Los cues y la rejilla pueden no encajar. Guardar una caja escribe en la biblioteca.",
   "tooltip.viewLost": "Rellena título o artista en blanco desde el archivo. Escribe en la biblioteca, no en el audio.",
   "tooltip.viewMissing": "Muestra las pistas cuyo archivo falta en una unidad conectada. Las pistas en una unidad desconectada se quedan en las cajas como desconectadas.",
   "tooltip.viewPortable": "Comprueba una unidad Serato portátil antes del bolo. Elige una unidad conectada. Solo lectura.",
@@ -2066,6 +2116,7 @@
   "version.copied": "Copiada",
   "version.copyFailed": "No se pudo copiar la versión.",
   "version.unavailable": "Versión no disponible",
+  "view.audio": "Audio cambiado",
   "view.bitrate": "Calidad dudosa",
   "view.compare": "Comparar crates",
   "view.crates": "Cajas",

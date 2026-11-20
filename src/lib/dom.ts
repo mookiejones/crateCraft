@@ -201,6 +201,15 @@ export interface ElementIds {
   "lost-status": HTMLParagraphElement;
   "lost-report": HTMLDivElement;
   "lost-heading": HTMLHeadingElement;
+  "audio-panel": HTMLElement;
+  "audio-scope": HTMLParagraphElement;
+  "audio-hint": HTMLParagraphElement;
+  "audio-refresh": HTMLButtonElement;
+  "audio-save": HTMLButtonElement;
+  "audio-reanalyze": HTMLButtonElement;
+  "audio-status": HTMLParagraphElement;
+  "audio-report": HTMLDivElement;
+  "audio-heading": HTMLHeadingElement;
   "crate-search": HTMLInputElement;
   reload: HTMLButtonElement;
   "export-m3u": HTMLButtonElement;

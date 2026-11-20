@@ -66,6 +66,7 @@
           <button type="button" id="bitrate-tab" data-view="bitrate" role="tab" hidden aria-controls="bitrate-panel" data-i18n="view.bitrate">Suspect quality</button>
           <button type="button" id="tags-tab" data-view="tags" role="tab" hidden aria-controls="tags-panel" data-i18n="view.tags">Tag spellings</button>
           <button type="button" id="lost-tab" data-view="lost" role="tab" hidden aria-controls="lost-panel" data-i18n="view.lost">Lost tags</button>
+          <button type="button" id="audio-tab" data-view="audio" role="tab" hidden aria-controls="audio-panel" data-i18n="view.audio">Audio changed</button>
           <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
           <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
           <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
@@ -393,6 +394,19 @@
         <p id="lost-hint" class="gig-note" data-i18n="lost.intro">Fill a blank title or artist from the file. Writes the library, not the audio. Quit Serato first.</p>
         <p id="lost-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="lost-report" class="gig-report" tabindex="-1"></div>
+      </section>
+
+      <section id="audio-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="audio-heading" aria-busy="false">
+        <h2 id="audio-heading" class="visually-hidden" data-i18n="audio.heading">Audio changed</h2>
+        <div class="browser-bar">
+          <p id="audio-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="audio-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+          <button id="audio-save" type="button" data-i18n="audio.saveCrate">Save crate</button>
+          <button id="audio-reanalyze" type="button" data-i18n="audio.reanalyze">Re-analyze</button>
+        </div>
+        <p id="audio-hint" class="gig-note" data-i18n="audio.intro">A file replaced under the same name. Cues and the beatgrid may not fit. Saving a crate writes the library. Quit Serato first.</p>
+        <p id="audio-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="audio-report" class="gig-report" tabindex="-1"></div>
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>

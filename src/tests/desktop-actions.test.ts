@@ -77,6 +77,8 @@ describe("desktop menu actions", () => {
     expect(state.mode).toBe("tags");
     runDesktopAction("view-lost");
     expect(state.mode).toBe("lost");
+    runDesktopAction("view-audio");
+    expect(state.mode).toBe("audio");
     runDesktopAction("view-compare");
     expect(state.mode).toBe("compare");
     runDesktopAction("view-all");

@@ -42,6 +42,7 @@ import help_report
 import history_stats
 import jobs
 import legacy_library
+import audio_changed
 import lost_tags
 import library
 import library_health
@@ -2116,6 +2117,10 @@ class Handler(BaseHTTPRequestHandler):
                 space = require_space(query_text(query, "space"))
                 self.send_json(lost_tags.plan(Path(library.MASTER), space))
                 return
+            if parsed.path == "/api/audio-changed":
+                space = require_space(query_text(query, "space"))
+                self.send_json(audio_changed.scan(Path(library.MASTER), space))
+                return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
@@ -2310,6 +2315,7 @@ class Handler(BaseHTTPRequestHandler):
                     clustering = parsed.path == "/api/tag-clusters"
                     families = parsed.path == "/api/genre-families"
                     losting = parsed.path == "/api/lost-tags"
+                    swapping = parsed.path == "/api/audio-changed"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     cueing = parsed.path == "/api/suspicious-cues"
@@ -2341,6 +2347,16 @@ class Handler(BaseHTTPRequestHandler):
                             and payload.get("confirm") is not True
                         )
                         or (losting and payload.get("action") == "preview")
+                        or (
+                            swapping
+                            and (
+                                payload.get("action") in ("preview", "reanalyze")
+                                or (
+                                    payload.get("action") == "create"
+                                    and payload.get("confirm") is not True
+                                )
+                            )
+                        )
                         or (comparing and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
@@ -2432,6 +2448,16 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = lost_tags.action(request)
+                    elif swapping:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = audio_changed.action(request)
+                        if (
+                            request.get("action") == "create"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif comparing:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

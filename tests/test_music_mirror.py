@@ -167,6 +167,38 @@ class MusicMirrorTests(unittest.TestCase):
                 second = music_mirror.copy_files(str(dest), library.LIBRARY_SPACE)
                 self.assertEqual((second["copied"], second["skip_count"], second["copy_count"]), (0, 1, 0))
 
+    def test_same_name_different_size_is_copied_again(self) -> None:
+        """A longer dest file with the same name is not treated as already copied."""
+        with TempLibrary() as temp:
+            source = temp.root / "tunes" / "a.mp3"
+            _touch(source, b"AAAA")
+            _point(temp, 1, source)
+            with tempfile.TemporaryDirectory() as raw:
+                dest = Path(raw)
+                first = music_mirror.copy_files(str(dest), library.LIBRARY_SPACE)
+                self.assertEqual(first["copied"], 1)
+                mapped = dest / "a.mp3"
+                mapped.write_bytes(b"BBBBBBBB")
+                source.write_bytes(b"CCCC")
+                again = music_mirror.copy_files(str(dest), library.LIBRARY_SPACE)
+                self.assertGreaterEqual(int(again["copied"]), 1)
+                self.assertEqual(mapped.read_bytes(), b"CCCC")
+
+    def test_same_name_same_size_different_hash_is_copied_again(self) -> None:
+        """Equal length is not enough. A different hash is copied again."""
+        with TempLibrary() as temp:
+            source = temp.root / "tunes" / "a.mp3"
+            _touch(source, b"AAAA")
+            _point(temp, 1, source)
+            with tempfile.TemporaryDirectory() as raw:
+                dest = Path(raw)
+                music_mirror.copy_files(str(dest), library.LIBRARY_SPACE)
+                mapped = dest / "a.mp3"
+                mapped.write_bytes(b"BBBB")
+                again = music_mirror.copy_files(str(dest), library.LIBRARY_SPACE)
+                self.assertGreaterEqual(int(again["copied"]), 1)
+                self.assertEqual(mapped.read_bytes(), b"AAAA")
+
     def test_hash_mismatch_is_not_backed_up(self) -> None:
         with TempLibrary() as temp:
             source = temp.root / "tunes" / "a.mp3"

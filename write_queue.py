@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 import album_art
+import audio_changed
 import app_config
 import bitrate_check
 import crate_compare
@@ -73,6 +74,7 @@ QUEUEABLE = frozenset(
         "/api/history-stats",
         "/api/tag-clusters",
         "/api/lost-tags",
+        "/api/audio-changed",
         "/api/crate-compare",
         "/api/album-art",
         "/api/bitrate-check",
@@ -513,6 +515,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return tag_cleanup.action(request)
     if path == "/api/lost-tags":
         return lost_tags.action(request)
+    if path == "/api/audio-changed":
+        return audio_changed.action(request)
     if path == "/api/crate-compare":
         return crate_compare.action(request)
     if path == "/api/album-art":

@@ -164,6 +164,7 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
                         item("view.bitrate", "view-bitrate"),
                         item("view.tags", "view-tags"),
                         item("view.lost", "view-lost"),
+                        item("view.audio", "view-audio"),
                     ],
                 ),
                 item("view.snapshots", "view-snapshots"),

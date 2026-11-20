@@ -50,6 +50,7 @@ describe("rail groups", () => {
       "bitrate",
       "tags",
       "lost",
+      "audio",
       "snapshots",
       "gig",
       "portable",
@@ -63,6 +64,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='bitrate']")?.textContent).toBe("Suspect quality");
     expect(document.querySelector("[data-view='tags']")?.textContent).toBe("Tag spellings");
     expect(document.querySelector("[data-view='lost']")?.textContent).toBe("Lost tags");
+    expect(document.querySelector("[data-view='audio']")?.textContent).toBe("Audio changed");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Ready");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");

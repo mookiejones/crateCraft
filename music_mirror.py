@@ -3,8 +3,9 @@
 
 ``preview`` only reads. ``copy`` writes audio onto the backup folder with
 ``shutil.copy2`` so GEOB cue frames stay identical. Dest hashes are
-checked after each copy. A dest file that already matches is skipped.
-``restore`` copies dest files back onto this computer and skips a laptop
+checked after each copy. A dest file is skipped only when its size and
+hash both match. A same-name file with a different size or hash is copied
+again. ``restore`` copies dest files back onto this computer and skips a laptop
 file that is newer or already the same hash. ``crate`` saves tracks that
 exist only on this laptop. ``relink`` points missing laptop rows at dest
 files through ``files.execute``. Dest cannot be the Serato library, a
@@ -103,6 +104,14 @@ def _hash_file(path: Path) -> str | None:
     except OSError:
         return None
     return digest.hexdigest()
+
+
+def _size(path: Path) -> int | None:
+    """File size in bytes, or None when stat fails."""
+    try:
+        return path.stat().st_size
+    except OSError:
+        return None
 
 
 def _mtime(path: Path) -> float | None:
@@ -281,15 +290,17 @@ def _scan(dest: Path, space: str) -> dict[str, object]:
             item = _row(int(raw["id"]), raw["name"], raw["artist"], raw["file_name"], laptop, mapped)
             if present:
                 source_hash = _hash_file(laptop)
-                if source_hash is None:
+                source_size = _size(laptop)
+                if source_hash is None or source_size is None:
                     mismatch.append(item)
                     continue
                 if dest_present:
                     dest_hash = _hash_file(mapped)
-                    if dest_hash is None:
+                    dest_size = _size(mapped)
+                    if dest_hash is None or dest_size is None:
                         mismatch.append(item)
                         continue
-                    if dest_hash == source_hash:
+                    if dest_hash == source_hash and dest_size == source_size:
                         skip_count += 1
                         continue
                     copy.append(item)
@@ -392,13 +403,15 @@ def _copy_one(source: Path, dest_path: Path) -> str:
         ``copied``, ``skip``, or ``mismatch``.
     """
     before = _hash_file(source)
-    if before is None:
+    source_size = _size(source)
+    if before is None or source_size is None:
         return "mismatch"
     if _is_file(dest_path):
         existing = _hash_file(dest_path)
-        if existing == before:
+        dest_size = _size(dest_path)
+        if existing == before and dest_size == source_size:
             return "skip"
-        if existing is None:
+        if existing is None or dest_size is None:
             return "mismatch"
     try:
         dest_path.parent.mkdir(parents=True, exist_ok=True)
@@ -415,8 +428,10 @@ def _copy_one(source: Path, dest_path: Path) -> str:
 def copy_files(dest: object, space: str) -> dict[str, object]:
     """Copy laptop files onto dest. Serato may stay open.
 
-    Dest is created when missing. A dest file that already matches is
-    skipped. A hash mismatch is reported and not treated as backed up.
+    Dest is created when missing. A dest file is skipped only when its size
+    and hash match the source. A same-name file with a different size or
+    hash is copied again. A copy whose hash does not match afterwards is
+    reported and not treated as backed up.
 
     Args:
         dest: Backup folder.
