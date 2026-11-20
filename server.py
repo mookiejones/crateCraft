@@ -36,6 +36,7 @@ import file_scan
 import error_codes
 import files
 import folder_access
+import genre_families
 import gig_check
 import help_report
 import history_stats
@@ -48,6 +49,7 @@ import library_health
 import music_mirror
 import quality_line
 import music_roots
+import portable_smart
 import rekordbox
 import related
 import relink
@@ -56,6 +58,7 @@ import setup_flow
 import smart_presets
 import smart_rules
 import snapshots
+import stick_cues
 import suspicious_cues
 import tag_cleanup
 import tempo_drift
@@ -2106,6 +2109,10 @@ class Handler(BaseHTTPRequestHandler):
                 field = query_text(query, "field", "genre") or "genre"
                 self.send_json(tag_cleanup.clusters(Path(library.MASTER), space, field))
                 return
+            if parsed.path == "/api/genre-families":
+                space = require_space(query_text(query, "space"))
+                self.send_json(genre_families.report(Path(library.MASTER), space))
+                return
             if parsed.path == "/api/lost-tags":
                 space = require_space(query_text(query, "space"))
                 self.send_json(lost_tags.plan(Path(library.MASTER), space))
@@ -2306,11 +2313,14 @@ class Handler(BaseHTTPRequestHandler):
                     tree = parsed.path == "/api/crate-tree"
                     foldering = parsed.path == "/api/folder-sync"
                     clustering = parsed.path == "/api/tag-clusters"
+                    families = parsed.path == "/api/genre-families"
                     losting = parsed.path == "/api/lost-tags"
                     swapping = parsed.path == "/api/audio-changed"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     cueing = parsed.path == "/api/suspicious-cues"
+                    porting = parsed.path == "/api/portable-smart"
+                    sticking = parsed.path == "/api/stick-cues"
                     history = parsed.path == "/api/history-stats"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
@@ -2326,6 +2336,15 @@ class Handler(BaseHTTPRequestHandler):
                             clustering
                             and payload.get("action")
                             in ("preview", "clean-preview", "refresh-preview", "edit-preview")
+                        )
+                        or (
+                            families
+                            and payload.get("action") in ("save", "reparent", "write-preview")
+                        )
+                        or (
+                            families
+                            and payload.get("action") == "write-apply"
+                            and payload.get("confirm") is not True
                         )
                         or (losting and payload.get("action") == "preview")
                         or (
@@ -2344,6 +2363,9 @@ class Handler(BaseHTTPRequestHandler):
                         or (bitrate_crate and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
+                        or (porting and payload.get("action") == "preview")
+                        or (sticking and payload.get("action") == "preview")
+                        or (sticking and payload.get("action") == "apply" and payload.get("confirm") is not True)
                         or (
                             versioning
                             and (
@@ -2418,6 +2440,10 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = tag_cleanup.action(request)
+                    elif families:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = genre_families.action(request)
                     elif losting:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
@@ -2463,6 +2489,10 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = suspicious_cues.action(request)
+                    elif porting:
+                        result = portable_smart.action(payload)
+                    elif sticking:
+                        result = stick_cues.action(dict(payload))
                     elif mirroring:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

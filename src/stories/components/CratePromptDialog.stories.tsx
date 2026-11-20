@@ -15,6 +15,9 @@ function Opened({ children }: { children: ReactNode }) {
       title: "New crate",
       value: "House",
       confirmLabel: "Create",
+      showOverwrite: true,
+      overwrite: false,
+      stickConfirm: false,
     });
     return () => {
       unsub();

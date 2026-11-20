@@ -68,6 +68,8 @@ Quit Serato first. [Safety and backups](safety.md) explains the status line. The
 3. Type a name in **New crate name**.
 4. Confirm.
 
+**This stick is from another library** sits under the name. It starts off. Leave it clear and a stick that already has crates from another library is left as it was. Check it, then confirm. The app saves a copy of that stick's crates, then writes.
+
 The page says **Crate created.** There is no drag and drop. A new crate is created inside the crate you had selected. This app does not move an existing crate to a new parent.
 
 **New** creates a normal crate. It does not create a smart crate.
@@ -108,6 +110,10 @@ The page says **Rules saved.** If the text is not JSON, the page says **Smart cr
 
 You cannot tick a smart crate in the track's crate list. The page names those crates and leaves them out of the checkboxes. Putting another crate inside a smart crate is refused. The message is **A smart crate cannot contain another crate.** Adding a track by hand is refused. The message is **Smart crates choose their tracks from rules.**
 
+## Copy smart crates to a drive
+
+**Copy smart crates** on **Check drive** writes each smart crate's rules and its current tracks into that drive's `_Serato_` folder. On another computer, **Restore smart crates** shows a preview. **Restore** writes it. Quit Serato first. A rule that cannot be rebuilt becomes a normal crate named in the preview. An existing smart crate stays until you confirm. **Replace on drive** is the only way an existing file on the drive is replaced.
+
 ## Put a track in a crate
 
 1. Open the track.
@@ -118,16 +124,16 @@ The audio file stays where it is.
 
 ## Build a crate tree
 
-**Tree** makes a parent crate with a ⟳ subcrate per BPM band, key, or genre. Empty subcrates are not made. Quit Serato first. Audio files stay as they are.
+**Tree** makes a parent crate with a ⟳ subcrate per BPM band, key, genre, or genre family. Empty subcrates are not made. Quit Serato first. Audio files stay as they are.
 
 1. Click **More**, then **Tree**.
-2. Choose **BPM bands**, **Keys**, or **Genres**.
-3. For BPM, set low, high, band width, and step. For genres, set fewest tracks per genre and most genres. Keys has no extra fields.
+2. Choose **BPM bands**, **Keys**, **Genres**, or **Genre families**.
+3. For BPM, set low, high, band width, and step. For genres and genre families, set fewest tracks and the cap. Keys has no extra fields.
 4. Optional: tick **Only tracks in** the selected crate and its subcrates when a normal crate is selected.
 5. Read the preview. Create tree stays off when no subcrate would be made.
 6. Click **Create tree**.
 
-The default name is **BPM bands**, **Keys**, or **Genres**. The subcrates refresh like any preset crate. [Crate trees](crate-trees.md) covers the dialog.
+The default name is **BPM bands**, **Keys**, **Genres**, or **Genre families**. The subcrates refresh like any preset crate. [Crate trees](crate-trees.md) covers the dialog.
 
 ## Sync with a folder
 

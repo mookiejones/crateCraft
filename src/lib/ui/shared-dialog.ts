@@ -36,6 +36,7 @@ export type CratePromptState = {
   fieldLabel?: string;
   showOverwrite?: boolean;
   overwrite?: boolean;
+  stickConfirm?: boolean;
 };
 
 export type ConfirmState = {
@@ -220,6 +221,20 @@ export function setCratePromptOverwrite(overwrite: boolean): void {
   emit();
 }
 
+/**
+ * Turn the foreign-stick confirm on or off.
+ *
+ * The choice starts off. Confirm snapshots that stick, then the crate
+ * write may replace its crates.
+ *
+ * @param stickConfirm True when a stick from another library may be written.
+ * @returns {void}
+ */
+export function setCratePromptStickConfirm(stickConfirm: boolean): void {
+  cratePrompt = { ...cratePrompt, stickConfirm };
+  emit();
+}
+
 function settleCratePrompt(value: string | null): void {
   const resolve = cratePromptResolve;
   cratePromptResolve = null;
@@ -261,7 +276,7 @@ export function openCratePrompt(next: CratePromptState): Promise<string | null> 
     cratePromptResolve = null;
     previous(null);
   }
-  cratePrompt = next;
+  cratePrompt = { ...next, stickConfirm: next.stickConfirm === true };
   emit();
   setSharedDialogOpen("crate-prompt-dialog", true);
   return new Promise((resolve) => {

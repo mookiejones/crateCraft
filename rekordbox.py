@@ -4,9 +4,13 @@ The file is the DJ_PLAYLISTS document Rekordbox imports from Preferences,
 Advanced, rekordbox xml. Crates become playlist folders. Subcrates stay
 nested. Hot cues, loops, and the beatgrid are read from the audio file
 with the Markers2 and BeatGrid parsers in tags.py. The database and the
-audio files are not modified.
+audio files are not modified. Cues at the same millisecond are kept
+once. A beatgrid marker with under half a beat of room is written one
+beat earlier when that still lands in the track, and is named when it
+does not. Emoji and non-Latin crate names are kept and named.
 
-Device Library Plus and OneLibrary USB drives are not written.
+Device Library Plus and OneLibrary USB drives are not written. A
+synthetic export.pdb page is parsed by export_pdb.py, not by this module.
 """
 
 from __future__ import annotations
@@ -42,6 +46,14 @@ _ILLEGAL_XML = re.compile(r"[\x00-\x08\x0B\x0C\x0E-\x1F\uD800-\uDFFF\uFFFE\uFFFF
 # sits this far later than the time Rekordbox uses for the same MP3.
 # Cases A and D, and every file that is not an MP3, stay put.
 _MP3_SHIFT_MS = 26
+# Rekordbox hot cues are pads A–H. Memory cues past this cap are named
+# and left out. The export still finishes.
+HOT_CUE_CAP = 8
+MEMORY_CUE_CAP = 32
+# Serato stores cue times as whole milliseconds. Two cues at that same
+# millisecond are one position. Pads one millisecond apart stay, so a
+# hot cue at 1.000 s and another at 1.005 s are both written.
+CUE_DEDUPE_MS = 0
 _KEY_NOTATIONS = ("asis", "camelot", "classical")
 _CAMELOT_CLASSICAL = {
     "1A": "Abm",
@@ -164,13 +176,25 @@ def position_marks(
     memory_cues: bool = True,
     hot_loops: bool = False,
     stats: MutableMapping[str, int] | None = None,
+    deduped_names: list[str] | None = None,
+    trimmed_names: list[str] | None = None,
 ) -> list[dict[str, str]]:
     """Turn Serato cues and loops into rekordbox POSITION_MARK attributes.
 
-    A hot cue is Type 0 with Num equal to its Serato index when that index
-    is 0 through 7. Each of those cues is also written again as a memory
-    cue (Num -1) when ``memory_cues`` is true, which is what CDJs show in
-    memory-cue mode. An index outside 0 through 7 is only a memory cue.
+    Cues whose start times, after ``shift_ms``, are the same millisecond
+    (``CUE_DEDUPE_MS`` is 0) are kept once. A hot cue is preferred over a
+    memory cue, and a lower pad index is preferred when both are hot. The
+    dropped cue's name is appended to ``deduped_names`` when that list is
+    set. Cues on different pads a few milliseconds apart are different
+    positions and are both written. At most
+    ``HOT_CUE_CAP`` hot cues are written, on pads 0 through 7 (Rekordbox
+    A–H). A repeated pad index is a memory cue. Each hot cue is also written
+    again as a memory cue (Num -1) when ``memory_cues`` is true, which is
+    what CDJs show in memory-cue mode. An index outside 0 through 7 is only
+    a memory cue. Memory cues, including those copies, stop at
+    ``MEMORY_CUE_CAP``. Further memory cues are left out, named in
+    ``trimmed_names``, and do not fail the export.
+
     A saved loop is Type 4 and carries End. Its Num is -1 so it does not
     take the hot cue pad of the same number. ``hot_loops`` true uses the
     loop index when that pad is free. Start and End are seconds with three
@@ -184,28 +208,67 @@ def position_marks(
         memory_cues: True also writes each hot cue as a memory cue.
         hot_loops: True puts a loop on a free hot cue pad.
         stats: Counts named clamped, flips, memory_cues, memory_only,
-            loops_memory, loops_hot, and loops_blocked. None ignores them.
+            loops_memory, loops_hot, loops_blocked, cues_deduped, and
+            memory_cues_trimmed. None ignores them.
+        deduped_names: Names of cues dropped because another cue is at the
+            same millisecond. None does not record them.
+        trimmed_names: Names of memory cues left out by the cap. None does
+            not record them.
 
     Returns:
-        Attribute dicts. Hot cues come first, each followed by its memory
-        copy when that copy is written, then loops.
+        Attribute dicts. Cues stay in the order they were kept. A hot cue
+        is followed by its memory copy when that copy fits. Loops follow.
     """
     marks: list[dict[str, str]] = []
-    hot_slots = {cue["index"] for cue in parsed["cues"] if 0 <= cue["index"] <= 7}
     _note(stats, "flips", len(parsed["flips"]))
+    kept: list[tuple[int, tags.Cue]] = []
     for cue in parsed["cues"]:
+        start, _clamped = _shift_time(cue["start_ms"], shift_ms)
+        match = next(
+            (index for index, (prev, _prev_cue) in enumerate(kept) if abs(start - prev) <= CUE_DEDUPE_MS),
+            None,
+        )
+        if match is not None:
+            _note(stats, "cues_deduped")
+            _prev_start, previous = kept[match]
+            if _prefer_cue(cue, previous):
+                _remember(deduped_names, _cue_label(previous["name"]))
+                kept[match] = (start, cue)
+            else:
+                _remember(deduped_names, _cue_label(cue["name"]))
+            continue
+        kept.append((start, cue))
+    used_pads: set[int] = set()
+    hot_ids: set[int] = set()
+    for _start, cue in kept:
+        index = cue["index"]
+        if 0 <= index <= 7 and index not in used_pads and len(hot_ids) < HOT_CUE_CAP:
+            used_pads.add(index)
+            hot_ids.add(id(cue))
+    memory_written = 0
+    for start, cue in kept:
         if len(cue["name"]) > 20:
             _note(stats, "long_cue_names")
-        start, clamped = _shift_time(cue["start_ms"], shift_ms)
+        _stored, clamped = _shift_time(cue["start_ms"], shift_ms)
         _note(stats, "clamped", 1 if clamped else 0)
-        if 0 <= cue["index"] <= 7:
+        if id(cue) in hot_ids:
             marks.append(_mark(cue["name"], "0", start, None, cue["index"], cue["color"]))
             if memory_cues:
-                marks.append(_mark(cue["name"], "0", start, None, -1, cue["color"]))
-                _note(stats, "memory_cues")
-        else:
+                if memory_written < MEMORY_CUE_CAP:
+                    marks.append(_mark(cue["name"], "0", start, None, -1, cue["color"]))
+                    memory_written += 1
+                    _note(stats, "memory_cues")
+                else:
+                    _note(stats, "memory_cues_trimmed")
+                    _remember(trimmed_names, _cue_label(cue["name"]))
+        elif memory_written < MEMORY_CUE_CAP:
             marks.append(_mark(cue["name"], "0", start, None, -1, cue["color"]))
+            memory_written += 1
             _note(stats, "memory_only")
+        else:
+            _note(stats, "memory_cues_trimmed")
+            _remember(trimmed_names, _cue_label(cue["name"]))
+    hot_slots = set(used_pads)
     for loop in parsed["loops"]:
         if len(loop["name"]) > 20:
             _note(stats, "long_cue_names")
@@ -229,29 +292,48 @@ def tempo_entries(
     beatgrid: Sequence[tags.BeatMarker],
     shift_ms: int = 0,
     stats: MutableMapping[str, int] | None = None,
+    *,
+    duration_s: float | None = None,
+    grid_notes: list[str] | None = None,
 ) -> list[dict[str, str]]:
     """Turn a Serato beatgrid into rekordbox TEMPO attributes.
 
     Each marker becomes one TEMPO, including a Serato 5.0 grid with a
-    marker at every tempo change. Inizio is the marker position in
-    seconds. An earlier marker stores a beat count; its BPM is that count
-    times 60, divided by the seconds until the next marker. The last
-    marker stores BPM directly. Metro is 4/4. Battito is the beat in the
-    bar, counting from the first marker as a downbeat, so a marker every
-    beat walks 1, 2, 3, 4. ``shift_ms`` is subtracted from Inizio only.
-    The BPM still uses the stored positions. Those positions are not
-    rounded for display before the division. A time before 0 is written
-    at 0. A BPM that is not positive is left out. A marker whose position
-    is not a finite number is left out, and the markers around it are
-    still written. A last marker whose BPM is ``NaN`` or infinite is left
-    out and counted with those markers.
+    marker at every tempo change, except a marker that cannot be given a
+    full beat of room. Inizio is the marker position in seconds. An
+    earlier marker stores a beat count; its BPM is that count times 60,
+    divided by the seconds until the next marker. The last marker stores
+    BPM directly. Metro is 4/4. Battito is the beat in the bar, counting
+    from the first marker as a downbeat, so a marker every beat walks
+    1, 2, 3, 4. ``shift_ms`` is subtracted from Inizio only. The BPM still
+    uses the stored positions. Those positions are not rounded for display
+    before the division. A time before 0 is written at 0. A BPM that is
+    not positive is left out. A marker whose position is not a finite
+    number is left out, and the markers around it are still written. A
+    last marker whose BPM is ``NaN`` or infinite is left out and counted
+    with those markers.
+
+    A marker whose written BPM leaves less than half a beat before the
+    next written marker, or before ``duration_s`` when that length is
+    known, is not dropped on its own. It is written one beat earlier when
+    that time is still at or after 0 and still before the next event.
+    Otherwise it is left out and, when ``grid_notes`` is set, named there
+    with its time and BPM. Markers that already have half a beat of room
+    stay where they are. BPM values are the ones computed from the stored
+    positions, so a marker written earlier still carries its own BPM.
 
     Args:
         beatgrid: Markers from tags.read_serato_tags. An empty list writes nothing.
         shift_ms: Milliseconds to subtract from each Inizio.
         stats: When set, ``clamped`` counts times written at 0,
-            ``grid_markers`` counts TEMPO entries, and ``grid_nonfinite``
-            counts markers that were left out.
+            ``grid_markers`` counts TEMPO entries, ``grid_nonfinite``
+            counts markers left out for a bad time or BPM, ``grid_shifted``
+            counts markers written earlier, and ``grid_unplaced`` counts
+            markers left out because one beat would fall outside the track.
+        duration_s: Track length in seconds. None does not check the end
+            of the track. Zero or a negative length is treated as unknown.
+        grid_notes: Sentences for markers that were moved or left out.
+            None does not record them.
 
     Returns:
         Attribute dicts with Inizio, Bpm, Metro, and Battito.
@@ -269,9 +351,8 @@ def tempo_entries(
     if not kept:
         return []
     terminal = _terminal_bpm(kept)
-    entries: list[dict[str, str]] = []
+    bpms: list[float | None] = []
     last = len(kept) - 1
-    beats_before = 0
     for index, marker in enumerate(kept):
         if index == last and "bpm" in marker:
             bpm = _stored_bpm(marker.get("bpm"))
@@ -283,7 +364,17 @@ def tempo_entries(
         else:
             bpm = terminal
         if bpm is not None and math.isfinite(bpm) and bpm > 0:
-            inizio_ms, clamped = _shift_time(int(round(float(marker["position"]) * 1000)), shift_ms)
+            bpms.append(bpm)
+        else:
+            bpms.append(None)
+    write_at = _place_tempo_markers(kept, bpms, duration_s, stats, grid_notes)
+    entries: list[dict[str, str]] = []
+    beats_before = 0
+    for index, marker in enumerate(kept):
+        placed = write_at[index]
+        bpm = bpms[index]
+        if placed is not None and bpm is not None:
+            inizio_ms, clamped = _shift_time(placed, shift_ms)
             _note(stats, "clamped", 1 if clamped else 0)
             shown = f"{bpm:.2f}"
             if abs(bpm - float(shown)) > 0.0001:
@@ -302,6 +393,76 @@ def tempo_entries(
                 beats_before += beats
     _note(stats, "grid_markers", len(entries))
     return entries
+
+
+def _place_tempo_markers(
+    kept: Sequence[tags.BeatMarker],
+    bpms: Sequence[float | None],
+    duration_s: float | None,
+    stats: MutableMapping[str, int] | None,
+    grid_notes: list[str] | None,
+) -> list[int | None]:
+    """Choose a millisecond position for each marker that has a BPM.
+
+    Walks from the end. A marker with less than half a beat before the
+    next kept event is moved one beat earlier when that time still lands
+    inside the track. Otherwise the marker is omitted and named.
+
+    Args:
+        kept: Markers with a finite position, in order.
+        bpms: Written BPM for each marker, or None when that marker is omitted.
+        duration_s: Track length in seconds, or None when the end is unknown.
+        stats: Receives ``grid_shifted`` and ``grid_unplaced``.
+        grid_notes: Receives one sentence per moved or omitted marker.
+
+    Returns:
+        Milliseconds for each marker, or None when that marker is not written.
+        The list is the same length as ``kept``.
+    """
+    write_at: list[int | None] = [None] * len(kept)
+    limit_ms: int | None = None
+    if isinstance(duration_s, (int, float)) and not isinstance(duration_s, bool) and duration_s > 0:
+        limit_ms = int(round(float(duration_s) * 1000))
+    playable = [index for index, bpm in enumerate(bpms) if bpm is not None]
+    for index in reversed(playable):
+        bpm = bpms[index]
+        assert bpm is not None
+        pos_ms = int(round(float(kept[index]["position"]) * 1000))
+        beat_ms = max(1, int(round(60000.0 / bpm)))
+        if limit_ms is None:
+            write_at[index] = pos_ms
+            limit_ms = pos_ms
+            continue
+        gap_ms = limit_ms - pos_ms
+        if gap_ms * 2 >= beat_ms:
+            write_at[index] = pos_ms
+            limit_ms = pos_ms
+            continue
+        candidate_ms = limit_ms - beat_ms
+        inside = candidate_ms >= 0 and candidate_ms < limit_ms
+        if inside:
+            write_at[index] = candidate_ms
+            limit_ms = candidate_ms
+            _note(stats, "grid_shifted")
+            _remember(
+                grid_notes,
+                (
+                    f"Beatgrid marker at {pos_ms / 1000:.3f} s ({bpm:.2f} BPM) was under half a beat "
+                    f"from the next marker or the end and was written at {candidate_ms / 1000:.3f} s "
+                    "so one beat remains."
+                ),
+            )
+            continue
+        _note(stats, "grid_unplaced")
+        _remember(
+            grid_notes,
+            (
+                f"Beatgrid marker at {pos_ms / 1000:.3f} s ({bpm:.2f} BPM) was under half a beat "
+                "from the next marker or the end, and one beat of separation would fall outside "
+                "the track, so it was left out."
+            ),
+        )
+    return write_at
 
 
 def export_rekordbox(
@@ -361,6 +522,10 @@ def export_rekordbox(
     unicode_names: list[str] = []
     unreadable_names: list[str] = []
     invalid_names: list[str] = []
+    display_names: list[str] = []
+    grid_notes: list[str] = []
+    deduped_names: list[str] = []
+    trimmed_names: list[str] = []
     folder_cache: dict[str, dict[str, str]] = {}
     for row in tracks:
         element = _track_element(
@@ -373,6 +538,9 @@ def export_rekordbox(
             unreadable_names=unreadable_names,
             invalid_names=invalid_names,
             folder_cache=folder_cache,
+            grid_notes=grid_notes,
+            deduped_names=deduped_names,
+            trimmed_names=trimmed_names,
         )
         if element is None:
             continue
@@ -384,7 +552,7 @@ def export_rekordbox(
     for crate in roots:
         if crate["id"] not in selected:
             continue
-        root_node.append(_crate_node(crate, crates, selected, membership, present))
+        root_node.append(_crate_node(crate, crates, selected, membership, present, display_names))
     root_node.set("Count", str(len(list(root_node))))
     playlists = ElementTree.Element("PLAYLISTS")
     playlists.append(root_node)
@@ -409,6 +577,10 @@ def export_rekordbox(
         unicode_names,
         unreadable_names,
         invalid_names,
+        display_names,
+        grid_notes,
+        deduped_names,
+        trimmed_names,
     )
 
 
@@ -867,6 +1039,116 @@ def _as_camelot(text: str) -> str | None:
     return _CLASSICAL_CAMELOT.get(base)
 
 
+def name_may_not_display(text: str) -> bool:
+    """Return whether a crate name uses a character a player may not show.
+
+    Latin letters, including accented Latin, are treated as displayable.
+    An emoji, a symbol in the emoji blocks, or a letter outside the Latin
+    blocks is not. The name itself is not changed.
+
+    Args:
+        text: Crate name after XML-illegal characters have been removed.
+
+    Returns:
+        True when the export should name this crate in the loss report.
+    """
+    for char in text:
+        code = ord(char)
+        category = unicodedata.category(char)
+        if category.startswith("L") and not _latin_letter(code):
+            return True
+        if code > 0xFFFF and category == "So":
+            return True
+        if category == "So" and (
+            0x2300 <= code <= 0x23FF or 0x2600 <= code <= 0x27BF or 0x2B00 <= code <= 0x2BFF
+        ):
+            return True
+        if code in {0x200D, 0x20E3, 0xFE0F}:
+            return True
+    return False
+
+
+def _latin_letter(code: int) -> bool:
+    """Return whether a code point is a Latin letter.
+
+    Args:
+        code: Unicode code point.
+
+    Returns:
+        True for Basic Latin, Latin-1, and the Latin Extended blocks.
+    """
+    return (
+        0x0041 <= code <= 0x005A
+        or 0x0061 <= code <= 0x007A
+        or 0x00C0 <= code <= 0x00D6
+        or 0x00D8 <= code <= 0x00F6
+        or 0x00F8 <= code <= 0x024F
+        or 0x1E00 <= code <= 0x1EFF
+        or 0x2C60 <= code <= 0x2C7F
+        or 0xA720 <= code <= 0xA7FF
+        or 0xAB30 <= code <= 0xAB6F
+    )
+
+
+def _cue_label(name: str) -> str:
+    """Return the cue name to print in the loss report.
+
+    Args:
+        name: Cue name from Markers2.
+
+    Returns:
+        The name without XML-illegal characters, or ``unnamed cue``.
+    """
+    text = _xml_text(name).strip()
+    return text or "unnamed cue"
+
+
+def _prefer_cue(candidate: tags.Cue, current: tags.Cue) -> bool:
+    """Return whether a duplicate cue should replace the one already kept.
+
+    Args:
+        candidate: Cue at the same position that was seen later.
+        current: Cue already kept at that position.
+
+    Returns:
+        True when the candidate is a hot cue and the current cue is not,
+        or when both are hot cues and the candidate's pad index is lower.
+    """
+    candidate_hot = 0 <= candidate["index"] <= 7
+    current_hot = 0 <= current["index"] <= 7
+    if candidate_hot != current_hot:
+        return candidate_hot
+    return candidate["index"] < current["index"]
+
+
+def _remember(bucket: list[str] | None, text: str) -> None:
+    """Append one loss-report name when the caller asked for the list.
+
+    Args:
+        bucket: Destination list. None discards the name.
+        text: Name or sentence to keep.
+
+    Returns:
+        None.
+    """
+    if bucket is not None:
+        bucket.append(text)
+
+
+def _name_list(names: Sequence[str]) -> tuple[str, str]:
+    """Format up to 20 names for one loss-report sentence.
+
+    Args:
+        names: Names already collected for this export.
+
+    Returns:
+        The joined names, and a suffix when more than 20 were collected.
+    """
+    shown = ", ".join(names[:20])
+    extra = f" and {len(names) - 20} more" if len(names) > 20 else ""
+    return shown, extra
+
+
 def _note(stats: MutableMapping[str, int] | None, key: str, amount: int = 1) -> None:
     """Add a count to a loss-report map.
 
@@ -1024,6 +1306,10 @@ def _loss_report(
     unicode_names: Sequence[str] = (),
     unreadable_names: Sequence[str] = (),
     invalid_names: Sequence[str] = (),
+    display_names: Sequence[str] = (),
+    grid_notes: Sequence[str] = (),
+    deduped_names: Sequence[str] = (),
+    trimmed_names: Sequence[str] = (),
 ) -> list[str]:
     """Build the lines that say what this export cannot carry into Rekordbox.
 
@@ -1035,6 +1321,11 @@ def _loss_report(
         unicode_names: File names whose paths could not be encoded.
         unreadable_names: File names that were on disk but could not be opened.
         invalid_names: File names whose paths contain a null character.
+        display_names: Crate names kept as written that a player may not display.
+        grid_notes: Tempo markers that were moved or left out.
+        deduped_names: Cues kept once because another cue was at the same
+            millisecond.
+        trimmed_names: Memory cues left out by the memory-cue cap.
 
     Returns:
         One sentence per line. The import warning is always first.
@@ -1062,6 +1353,17 @@ def _loss_report(
         )
     else:
         lines.append("A CDJ shows only about the first 20 characters of a cue name.")
+    if deduped_names:
+        shown, extra = _name_list(deduped_names)
+        lines.append(
+            f"{len(deduped_names)} cues at the same time as another cue were kept once: {shown}{extra}."
+        )
+    if trimmed_names:
+        shown, extra = _name_list(trimmed_names)
+        lines.append(
+            f"{len(trimmed_names)} memory cues were left out. "
+            f"Rekordbox keeps {MEMORY_CUE_CAP} memory cues: {shown}{extra}."
+        )
     if memory_cues and stats.get("memory_cues"):
         lines.append(f"{stats['memory_cues']} hot cues were also written as memory cues.")
     elif not memory_cues:
@@ -1103,6 +1405,13 @@ def _loss_report(
             "Each marker is a TEMPO entry. The first marker is treated as a downbeat. "
             "If it is not a downbeat, the bars in Rekordbox are shifted."
         )
+    if grid_notes:
+        lines.extend(grid_notes[:20])
+        if len(grid_notes) > 20:
+            lines.append(
+                f"{len(grid_notes) - 20} more beatgrid markers were under half a beat "
+                "from the next marker or the end."
+            )
     if stats.get("bpm_rounded") or stats.get("grid_dynamic"):
         lines.append("TEMPO BPM values are written to two decimal places, so a grid can drift.")
     if unicode_names:
@@ -1123,6 +1432,12 @@ def _loss_report(
         lines.append(
             f"{len(invalid_names)} tracks had a path containing a null character "
             f"and were exported as missing files, without cue points: {shown}{extra}."
+        )
+    if display_names:
+        shown, extra = _name_list(display_names)
+        lines.append(
+            f"{len(display_names)} crate names were kept, and use an emoji, a symbol, "
+            f"or a non-Latin script a player may not display: {shown}{extra}."
         )
     lines.append(
         "Track color is written as Colour in the form 0xRRGGBB. "
@@ -1630,6 +1945,9 @@ def _track_element(
     unreadable_names: list[str],
     invalid_names: list[str],
     folder_cache: dict[str, dict[str, str]],
+    grid_notes: list[str] | None = None,
+    deduped_names: list[str] | None = None,
+    trimmed_names: list[str] | None = None,
 ) -> ElementTree.Element | None:
     """Build one TRACK element, including tempo and position marks.
 
@@ -1643,12 +1961,24 @@ def _track_element(
         unreadable_names: File names that were on disk but could not be opened.
         invalid_names: File names whose paths contain a null character.
         folder_cache: Directory listings shared by every track in this export.
+        grid_notes: Tempo markers moved or left out on this export. None
+            discards those notes.
+        deduped_names: Cues kept once because another cue was at the same
+            millisecond. None discards those names.
+        trimmed_names: Memory cues left out by the memory-cue cap. None
+            discards those names.
 
     Returns:
         The element, or None when the track has no path or the path cannot be encoded.
         A file that cannot be opened is still exported, without cue points.
         A path containing a null character is exported as a missing file.
     """
+    if grid_notes is None:
+        grid_notes = []
+    if deduped_names is None:
+        deduped_names = []
+    if trimmed_names is None:
+        trimmed_names = []
     portable = _cell(row, "portable_id")
     if not isinstance(portable, str) or not portable.strip():
         _note(stats, "omitted")
@@ -1751,7 +2081,17 @@ def _track_element(
         Label=_text(row, "label"),
         Mix="",
     )
-    for tempo in tempo_entries(parsed["beatgrid"], shift, stats):
+    length_ms = _cell(row, "length_ms")
+    duration_s = None
+    if isinstance(length_ms, (int, float)) and not isinstance(length_ms, bool) and length_ms > 0:
+        duration_s = float(length_ms) / 1000.0
+    for tempo in tempo_entries(
+        parsed["beatgrid"],
+        shift,
+        stats,
+        duration_s=duration_s,
+        grid_notes=grid_notes,
+    ):
         element.append(ElementTree.Element("TEMPO", tempo))
     marks = position_marks(
         parsed,
@@ -1759,6 +2099,8 @@ def _track_element(
         memory_cues=memory_cues,
         hot_loops=hot_loops,
         stats=stats,
+        deduped_names=deduped_names,
+        trimmed_names=trimmed_names,
     )
     if marks:
         _note(stats, "marks_written", len(marks))
@@ -1823,8 +2165,13 @@ def _crate_node(
     selected: set[int],
     membership: Mapping[int, Sequence[int]],
     present: set[int],
+    display_names: list[str],
 ) -> ElementTree.Element:
     """Build the playlist node for one crate and its selected subcrates.
+
+    The visible name is kept, including emoji and non-Latin letters. Those
+    names are added to ``display_names`` so the loss report can name them.
+    They are not rewritten as ASCII.
 
     Args:
         crate: Crate dict.
@@ -1832,6 +2179,8 @@ def _crate_node(
         selected: Crate ids included in this export.
         membership: Crate id to asset ids.
         present: Asset ids included in COLLECTION.
+        display_names: Crate names a player may not display. This crate is
+            appended when its written name qualifies.
 
     Returns:
         A folder NODE when the crate has subcrates, otherwise a playlist NODE.
@@ -1840,6 +2189,8 @@ def _crate_node(
     """
     raw_name = library.display_name(str(crate["name"] or ""))
     name = _xml_text(raw_name).strip() or "Crate"
+    if name_may_not_display(name):
+        display_names.append(name)
     crate_id = int(cast(int, crate["id"]))
     children = [
         child
@@ -1853,7 +2204,7 @@ def _crate_node(
     if tracks:
         folder.append(_playlist(name, tracks))
     for child in children:
-        folder.append(_crate_node(child, crates, selected, membership, present))
+        folder.append(_crate_node(child, crates, selected, membership, present, display_names))
     folder.set("Count", str(len(list(folder))))
     return folder
 

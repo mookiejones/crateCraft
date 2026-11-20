@@ -449,8 +449,14 @@ export function gigValueFromArgs(args: GigStoryArgs): GigContextValue {
       checkedAt: new Date("2026-01-01T12:00:00Z"),
     },
     portable: args.emptyPortable
-      ? { report: null, status: "" }
-      : { report: driveReport, status: driveReport.summary },
+      ? { report: null, status: "", smartConfirm: false, smartOverwrite: false, smartBusy: false }
+      : {
+        report: driveReport,
+        status: driveReport.summary,
+        smartConfirm: false,
+        smartOverwrite: false,
+        smartBusy: false,
+      },
     drift: args.emptyDrift ? { report: null, scope: "" } : { report: driftReport, scope: "Friday" },
   });
 }

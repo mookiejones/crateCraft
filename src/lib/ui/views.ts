@@ -2229,9 +2229,11 @@ export async function createCrate() {
     confirmLabel: t("crates.new"),
     showOverwrite: true,
     overwrite: false,
+    stickConfirm: false,
   });
   if (!name || !name.trim()) return;
   const overwrite = getCratePrompt().overwrite === true;
+  const stickConfirm = getCratePrompt().stickConfirm === true;
   const parent = state.activeCrate === "all" ? state.rootId : state.activeCrate;
   try {
     const result = await postJSON("/api/crate", {
@@ -2240,6 +2242,7 @@ export async function createCrate() {
       parent,
       space: state.space,
       overwrite,
+      stick_confirm: stickConfirm,
     });
     if (isQueuedWrite(result)) {
       setNotice(t("gigLock.queued"));

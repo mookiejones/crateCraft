@@ -4181,6 +4181,7 @@ def _sync_drive_crates(
     *,
     add: bool,
     overwrite: bool,
+    confirm: bool = False,
 ) -> str | None:
     """Write this crate's external tracks into each drive's ``_Serato_`` folder.
 
@@ -4190,6 +4191,7 @@ def _sync_drive_crates(
         asset_ids: Tracks this action added or removed.
         add: True adds the paths. False removes them.
         overwrite: True may change a crate file that already exists.
+        confirm: True may snapshot and write a stick from another library.
 
     Returns:
         A warning when a drive was skipped, or None when there was nothing
@@ -4210,7 +4212,13 @@ def _sync_drive_crates(
     import drive_crates
 
     return drive_crates.warning(
-        drive_crates.sync_tracks(paths, display_name(stored), add=add, overwrite=overwrite)
+        drive_crates.sync_tracks(
+            paths,
+            display_name(stored),
+            add=add,
+            overwrite=overwrite,
+            confirm=confirm,
+        )
     )
 
 
@@ -4328,6 +4336,7 @@ def _planned_crate_files(payload: Mapping[str, object]) -> list[Path]:
         name,
         add=action != "remove",
         overwrite=payload.get("overwrite") is True,
+        confirm=payload.get("stick_confirm") is True,
     )
 
 
@@ -4373,6 +4382,7 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
             KeyError: If a required id is missing.
         """
         overwrite = payload.get("overwrite") is True
+        stick_confirm = payload.get("stick_confirm") is True
         if action == "create":
             assets = _create_asset_ids(payload)
             smart = bool(payload.get("smart"))
@@ -4393,7 +4403,12 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
                 _membership(conn, crate_id, asset_id, space, True)
             result["added"] = len(assets)
             if not smart:
-                _join_warning(result, _sync_drive_crates(conn, crate_id, assets, add=True, overwrite=overwrite))
+                _join_warning(
+                    result,
+                    _sync_drive_crates(
+                        conn, crate_id, assets, add=True, overwrite=overwrite, confirm=stick_confirm
+                    ),
+                )
         elif action == "rename":
             result = _rename_crate(conn, space, _as_int(payload["id"]), cast(str, payload.get("name") or ""))
         elif action == "delete":
@@ -4408,12 +4423,22 @@ def crate_action(payload: Mapping[str, object]) -> dict[str, object]:
             asset_id = _as_int(payload["asset"])
             crate_id = _as_int(payload["id"])
             result = _membership(conn, crate_id, asset_id, space, True)
-            _join_warning(result, _sync_drive_crates(conn, crate_id, [asset_id], add=True, overwrite=overwrite))
+            _join_warning(
+                result,
+                _sync_drive_crates(
+                    conn, crate_id, [asset_id], add=True, overwrite=overwrite, confirm=stick_confirm
+                ),
+            )
         elif action == "remove":
             asset_id = _as_int(payload["asset"])
             crate_id = _as_int(payload["id"])
             result = _membership(conn, crate_id, asset_id, space, False)
-            _join_warning(result, _sync_drive_crates(conn, crate_id, [asset_id], add=False, overwrite=overwrite))
+            _join_warning(
+                result,
+                _sync_drive_crates(
+                    conn, crate_id, [asset_id], add=False, overwrite=overwrite, confirm=stick_confirm
+                ),
+            )
         elif action == "prepare":
             result = _set_prepare(conn, _as_int(payload["asset"]), bool(payload.get("add", True)))
             if payload.get("add", True):
