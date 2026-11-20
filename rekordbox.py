@@ -506,6 +506,9 @@ def export_rekordbox(
         root_id = _root_id(conn, space)
         tracks = _load_tracks(conn, space)
         membership = _membership(conn, space)
+        import path_forms
+
+        tracks, membership = path_forms.collapse_export(tracks, membership)
         if crate_id is None:
             selected = {crate["id"] for crate in crates}
             roots = [crate for crate in crates if _is_top(crate, root_id, selected)]

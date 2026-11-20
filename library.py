@@ -7393,33 +7393,39 @@ def export_m3u(space: str, crate_id: int | None) -> str:
     if space not in ALLOWED_SPACES:
         raise LibraryError("That space is not available here.")
     with closing(read_conn()) as conn:
+        rows = conn.execute(
+            """
+            SELECT a.id, a.name, a.artist, a.length_ms, a.portable_id, a.is_missing
+            FROM asset a
+            JOIN space_asset sa ON sa.asset_id = a.id
+            JOIN space s ON s.id = sa.space_id
+            WHERE s.name = ?
+            ORDER BY a.name COLLATE NOCASE, a.id
+            """,
+            (space,),
+        ).fetchall()
+        member_ids: list[int] | None = None
         if crate_id is None:
-            rows = conn.execute(
-                """
-                SELECT a.name, a.artist, a.length_ms, a.portable_id
-                FROM asset a
-                JOIN space_asset sa ON sa.asset_id = a.id
-                JOIN space s ON s.id = sa.space_id
-                WHERE s.name = ?
-                ORDER BY a.name COLLATE NOCASE, a.id
-                """,
-                (space,),
-            ).fetchall()
             title = space
         else:
             crate = _container(conn, crate_id, space)
             title = display_name(crate["name"])
-            rows = conn.execute(
-                """
-                SELECT a.name, a.artist, a.length_ms, a.portable_id
-                FROM container_asset ca
-                JOIN location_container lc ON lc.id = ca.location_container_id
-                JOIN asset a ON a.id = ca.asset_id
-                WHERE lc.container_id = ?
-                ORDER BY ca.list_order, ca.id
-                """,
-                (crate_id,),
-            ).fetchall()
+            member_ids = [
+                int(row[0])
+                for row in conn.execute(
+                    """
+                    SELECT ca.asset_id
+                    FROM container_asset ca
+                    JOIN location_container lc ON lc.id = ca.location_container_id
+                    WHERE lc.container_id = ?
+                    ORDER BY ca.list_order, ca.id
+                    """,
+                    (crate_id,),
+                )
+            ]
+    import path_forms
+
+    rows = path_forms.rows_for_m3u(rows, member_ids)
     lines = ["#EXTM3U", f"#PLAYLIST:{title}"]
     for row in rows:
         artist = row["artist"] or ""

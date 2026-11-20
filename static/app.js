@@ -13048,6 +13048,7 @@ Error generating stack: ` + x.message + `
     "error.artwork_lookup": "Cover lookup failed.",
     "error.artwork_needs_confirm": "Confirm the cover before it is saved.",
     "error.cues_needs_confirm": "Confirm before duplicate cues are removed.",
+    "error.path_forms_needs_confirm": "Confirm the path cleanup before it runs.",
     "error.stick_cues_needs_confirm": "Confirm before stick cues are copied into the library.",
     "error.stick_needs_drive": "Choose a drive.",
     "error.artwork_needs_release": "Choose a cover before it is saved.",
@@ -13427,6 +13428,20 @@ Error generating stack: ` + x.message + `
     "health.cuesRemoved": {
       one: "{count} duplicate cue removed.",
       other: "{count} duplicate cues removed."
+    },
+    "health.pathForms": "Same file, two spellings",
+    "health.pathFormRow": "{path}",
+    "health.pathFormsReview": "Review path spellings",
+    "health.pathFormsConfirm": "Keep one path",
+    "health.pathFormsNote": "Review lists the extra spelling. Keep one path runs only after you confirm, and only while Serato is quit. A snapshot can undo it. The audio file stays.",
+    "health.pathFormsClear": "No extra path spellings.",
+    "health.pathFormsReady": {
+      one: "{count} extra path spelling to remove.",
+      other: "{count} extra path spellings to remove."
+    },
+    "health.pathFormsDone": {
+      one: "{count} extra path spelling removed.",
+      other: "{count} extra path spellings removed."
     },
     "health.heading": "Library health",
     "health.intro": "Counts from the library and from audio files on disk. Each row opens the place that can fix it.",
@@ -14551,6 +14566,9 @@ Error generating stack: ` + x.message + `
     "tooltip.healthArtPick": "Choose this Cover Art Archive image to embed.",
     "tooltip.healthFindArt": "Look up a cover on Cover Art Archive and preview it before embedding.",
     "tooltip.suspiciousCues": "Review cues that share a start time, then remove the extras. Cues at different times stay. Quit Serato first.",
+    "tooltip.healthPathForms": "Same file stored as two spellings. Review, then keep one library row. The audio file stays.",
+    "tooltip.healthPathFormsReview": "List the extra path spellings. Nothing is written.",
+    "tooltip.healthPathFormsConfirm": "Keep one library row for this file. Quit Serato first. A snapshot can undo it. The audio file stays.",
     "tooltip.healthOpenBitrate": "Open the bitrate check for this crate.",
     "tooltip.healthOpenDuplicates": "Open the Duplicates view.",
     "tooltip.healthOpenFiles": "Open the Files view.",
@@ -15260,6 +15278,7 @@ Error generating stack: ` + x.message + `
     "error.artwork_lookup": "No se pudo buscar la carátula.",
     "error.artwork_needs_confirm": "Confirma la carátula antes de guardarla.",
     "error.cues_needs_confirm": "Confirma antes de quitar los cues duplicados.",
+    "error.path_forms_needs_confirm": "Confirma la limpieza de rutas antes de ejecutarla.",
     "error.stick_cues_needs_confirm": "Confirma antes de copiar los cues del pendrive a la biblioteca.",
     "error.stick_needs_drive": "Elige una unidad.",
     "error.artwork_needs_release": "Elige una carátula antes de guardarla.",
@@ -15639,6 +15658,20 @@ Error generating stack: ` + x.message + `
     "health.cuesRemoved": {
       one: "{count} cue duplicado quitado.",
       other: "{count} cues duplicados quitados."
+    },
+    "health.pathForms": "Mismo archivo, dos escrituras",
+    "health.pathFormRow": "{path}",
+    "health.pathFormsReview": "Revisar escrituras de ruta",
+    "health.pathFormsConfirm": "Quedar con una ruta",
+    "health.pathFormsNote": "Revisar lista la escritura extra. Quedar con una ruta solo corre después de confirmar, y solo con Serato cerrado. Una instantánea puede deshacerlo. El archivo de audio se queda.",
+    "health.pathFormsClear": "No hay escrituras de ruta extra.",
+    "health.pathFormsReady": {
+      one: "{count} escritura de ruta extra que quitar.",
+      other: "{count} escrituras de ruta extra que quitar."
+    },
+    "health.pathFormsDone": {
+      one: "{count} escritura de ruta extra quitada.",
+      other: "{count} escrituras de ruta extra quitadas."
     },
     "health.heading": "Salud de la biblioteca",
     "health.intro": "Cifras de la biblioteca y de los archivos de audio en el disco. Cada fila abre el sitio que puede corregirlo.",
@@ -16763,6 +16796,9 @@ Error generating stack: ` + x.message + `
     "tooltip.healthArtPick": "Elige esta imagen de Cover Art Archive para incrustarla.",
     "tooltip.healthFindArt": "Busca una carátula en Cover Art Archive y previsualízala antes de incrustarla.",
     "tooltip.suspiciousCues": "Revisa los cues que comparten un instante y quita los extras. Los cues en otros instantes se quedan. Cierra Serato antes.",
+    "tooltip.healthPathForms": "El mismo archivo guardado con dos escrituras. Revisa y quédate con una fila. El archivo de audio se queda.",
+    "tooltip.healthPathFormsReview": "Lista las escrituras de ruta extra. No se escribe nada.",
+    "tooltip.healthPathFormsConfirm": "Quédate con una fila de la biblioteca para este archivo. Cierra Serato primero. Una instantánea puede deshacerlo. El archivo de audio se queda.",
     "tooltip.healthOpenBitrate": "Abre la comprobación de tasa de bits de esta caja.",
     "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
     "tooltip.healthOpenFiles": "Abre la vista Archivos.",
@@ -18129,6 +18165,9 @@ Error generating stack: ` + x.message + `
     showDismissed: spec("tooltip.showDismissed"),
     healthFindArt: spec("tooltip.healthFindArt"),
     suspiciousCues: spec("tooltip.suspiciousCues"),
+    healthPathForms: spec("tooltip.healthPathForms"),
+    healthPathFormsReview: spec("tooltip.healthPathFormsReview"),
+    healthPathFormsConfirm: spec("tooltip.healthPathFormsConfirm"),
     healthArtCancel: spec("tooltip.healthArtCancel"),
     healthArtEmbed: spec("tooltip.healthArtEmbed"),
     healthArtPick: spec("tooltip.healthArtPick"),
@@ -65960,6 +65999,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     d: "M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
   }), "ExpandMore");
 
+  // src/lib/health/path-forms.ts
+  function requestBody(action, confirm) {
+    return {
+      action,
+      space: state.space,
+      crate: state.activeCrate,
+      ...confirm ? { confirm: !0 } : {}
+    };
+  }
+  function previewPathForms() {
+    return postJSON("/api/path-forms", requestBody("preview", !1));
+  }
+  function applyPathForms() {
+    return postJSON("/api/path-forms", requestBody("apply", !0));
+  }
+
   // src/lib/health/quality.ts
   async function dismissQuality(id) {
     try {
@@ -65988,7 +66043,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/suspicious-cues.ts
-  function requestBody(action, confirm) {
+  function requestBody2(action, confirm) {
     return {
       action,
       space: state.space,
@@ -65997,10 +66052,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function previewSuspiciousCues() {
-    return postJSON("/api/suspicious-cues", requestBody("preview", !1));
+    return postJSON("/api/suspicious-cues", requestBody2("preview", !1));
   }
   function applySuspiciousCues() {
-    return postJSON("/api/suspicious-cues", requestBody("apply", !0));
+    return postJSON("/api/suspicious-cues", requestBody2("apply", !0));
   }
 
   // src/pages/HealthPanel.tsx
@@ -66318,6 +66373,87 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     );
   }
+  function PathForms({
+    section,
+    onReload
+  }) {
+    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react42.useState)(""), [busy6, setBusy] = (0, import_react42.useState)(!1), [canApply, setCanApply] = (0, import_react42.useState)(!1);
+    async function review() {
+      setBusy(!0), setCanApply(!1);
+      try {
+        let plan = await previewPathForms();
+        setCanApply(plan.dropped > 0), setNote(
+          plan.dropped > 0 ? t("health.pathFormsReady", { count: plan.dropped }) : t("health.pathFormsClear")
+        );
+      } catch (error2) {
+        setNote(error2 instanceof Error ? error2.message : t("health.unreadable"));
+      } finally {
+        setBusy(!1);
+      }
+    }
+    async function keepOne() {
+      setBusy(!0);
+      try {
+        let plan = await applyPathForms();
+        setCanApply(!1), setNote(plan.written ? t("health.pathFormsDone", { count: plan.dropped }) : t("health.pathFormsClear")), await onReload();
+      } catch (error2) {
+        setNote(error2 instanceof Error ? error2.message : t("health.unreadable"));
+      } finally {
+        setBusy(!1);
+      }
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(
+      Accordion_default,
+      {
+        className: "health-accordion",
+        expanded: accordion.expanded,
+        onChange: accordion.onChange,
+        ...ACCORDION_SX,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(AccordionSummary_default, { expandIcon: /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(ExpandMore_default, {}), ref: tooltipRef5(tips.healthPathForms), children: t("gig.groupCount", { label: t("health.pathForms"), count }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(AccordionDetails_default, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX3,
+                ref: tooltipRef5(tips.healthPathFormsReview),
+                "data-health-action": "path-forms-preview",
+                disabled: busy6,
+                onClick: () => {
+                  review();
+                },
+                children: t("health.pathFormsReview")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(
+              Button_default,
+              {
+                type: "button",
+                size: "small",
+                variant: "outlined",
+                sx: BUTTON_SX3,
+                ref: tooltipRef5(tips.healthPathFormsConfirm),
+                "data-health-action": "path-forms-apply",
+                disabled: busy6 || !canApply,
+                onClick: () => {
+                  keepOne();
+                },
+                children: t("health.pathFormsConfirm")
+              }
+            ),
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("p", { className: "gig-note", children: t("health.pathFormsNote") }),
+            note ? /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("p", { className: "gig-note", children: note }) : null,
+            /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("ul", { children: groups.flatMap(
+              (group) => group.paths.filter((entry2) => !entry2.keep).map((entry2) => /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("li", { children: t("health.pathFormRow", { path: entry2.path }) }, `${group.keep_id}-${entry2.id}`))
+            ) })
+          ] })
+        ]
+      }
+    );
+  }
   function Duplicates({
     section,
     onNavigate
@@ -66358,7 +66494,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function HealthPanel() {
     let health = useHealth(), payload = health.healthReport, listed = 0;
-    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.suspicious_cues.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count, listed += payload.quality.count, listed += payload.quality.dismissed), /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
+    return payload && (listed += payload.missing.count, listed += payload.no_bpm.count, listed += payload.no_key.count, listed += payload.no_beatgrid.count, listed += payload.no_artwork.count, listed += payload.suspicious_cues.count, listed += payload.empty_genre.count, listed += payload.no_crate.count, listed += payload.unused.count, listed += payload.duplicates.count, listed += payload.path_forms?.count ?? 0, listed += payload.quality.count, listed += payload.quality.dismissed), /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)(import_jsx_runtime252.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("h2", { id: "health-heading", className: "visually-hidden", children: t("health.heading") }),
       /* @__PURE__ */ (0, import_jsx_runtime252.jsxs)("div", { className: "browser-bar", children: [
         /* @__PURE__ */ (0, import_jsx_runtime252.jsx)("p", { id: "health-scope", className: "files-path", children: health.healthScope }),
@@ -66398,6 +66534,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           spec2.key === "no_artwork" ? /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(SuspiciousCues, { section: payload.suspicious_cues, onReload: health.loadHealth }) : null
         ] }, spec2.key)),
         /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(Unused, { section: payload.unused, onNavigate: health.navigate }),
+        /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(PathForms, { section: payload.path_forms, onReload: health.loadHealth }),
         /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(Duplicates, { section: payload.duplicates, onNavigate: health.navigate }),
         /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(Quality, { section: payload.quality, onNavigate: health.navigate }),
         /* @__PURE__ */ (0, import_jsx_runtime252.jsx)(Bitrate, { onNavigate: health.navigate }),

@@ -332,6 +332,7 @@
   "error.artwork_lookup": "No se pudo buscar la carátula.",
   "error.artwork_needs_confirm": "Confirma la carátula antes de guardarla.",
   "error.cues_needs_confirm": "Confirma antes de quitar los cues duplicados.",
+  "error.path_forms_needs_confirm": "Confirma la limpieza de rutas antes de ejecutarla.",
   "error.stick_cues_needs_confirm": "Confirma antes de copiar los cues del pendrive a la biblioteca.",
   "error.stick_needs_drive": "Elige una unidad.",
   "error.artwork_needs_release": "Elige una carátula antes de guardarla.",
@@ -711,6 +712,20 @@
   "health.cuesRemoved": {
     "one": "{count} cue duplicado quitado.",
     "other": "{count} cues duplicados quitados."
+  },
+  "health.pathForms": "Mismo archivo, dos escrituras",
+  "health.pathFormRow": "{path}",
+  "health.pathFormsReview": "Revisar escrituras de ruta",
+  "health.pathFormsConfirm": "Quedar con una ruta",
+  "health.pathFormsNote": "Revisar lista la escritura extra. Quedar con una ruta solo corre después de confirmar, y solo con Serato cerrado. Una instantánea puede deshacerlo. El archivo de audio se queda.",
+  "health.pathFormsClear": "No hay escrituras de ruta extra.",
+  "health.pathFormsReady": {
+    "one": "{count} escritura de ruta extra que quitar.",
+    "other": "{count} escrituras de ruta extra que quitar."
+  },
+  "health.pathFormsDone": {
+    "one": "{count} escritura de ruta extra quitada.",
+    "other": "{count} escrituras de ruta extra quitadas."
   },
   "health.heading": "Salud de la biblioteca",
   "health.intro": "Cifras de la biblioteca y de los archivos de audio en el disco. Cada fila abre el sitio que puede corregirlo.",
@@ -1835,6 +1850,9 @@
   "tooltip.healthArtPick": "Elige esta imagen de Cover Art Archive para incrustarla.",
   "tooltip.healthFindArt": "Busca una carátula en Cover Art Archive y previsualízala antes de incrustarla.",
   "tooltip.suspiciousCues": "Revisa los cues que comparten un instante y quita los extras. Los cues en otros instantes se quedan. Cierra Serato antes.",
+  "tooltip.healthPathForms": "El mismo archivo guardado con dos escrituras. Revisa y quédate con una fila. El archivo de audio se queda.",
+  "tooltip.healthPathFormsReview": "Lista las escrituras de ruta extra. No se escribe nada.",
+  "tooltip.healthPathFormsConfirm": "Quédate con una fila de la biblioteca para este archivo. Cierra Serato primero. Una instantánea puede deshacerlo. El archivo de audio se queda.",
   "tooltip.healthOpenBitrate": "Abre la comprobación de tasa de bits de esta caja.",
   "tooltip.healthOpenDuplicates": "Abre la vista Duplicados.",
   "tooltip.healthOpenFiles": "Abre la vista Archivos.",

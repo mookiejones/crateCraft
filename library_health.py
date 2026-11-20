@@ -6,8 +6,9 @@ missing files, tracks with no BPM or key, empty genre, tracks in no crate,
 duplicate groups, present files with no artwork or beatgrid, present
 files with a crowded cue list, and unused
 audio files under the collapsed folders of those present files. Sample
-rows are capped. Nothing is written, so the report is safe while Serato
-DJ is open.
+rows are capped. NFC and NFD spellings of one path count as one track.
+``path_forms`` lists the extra spelling. Nothing is written, so the
+report is safe while Serato DJ is open. Cleanup is ``POST /api/path-forms``.
 
 ``python3 library_health.py`` prints the JSON. ``GET /api/library-health``
 returns the same object. ``quality`` is the per-track line from
@@ -31,6 +32,7 @@ import files
 import gig_check
 import library
 import music_roots
+import path_forms
 import quality_line
 import suspicious_cues
 import tags
@@ -167,13 +169,17 @@ def _crate_ids_in_space(conn: sqlite3.Connection, space_id: int) -> list[int]:
 
 
 def _duplicate_groups(
-    conn: sqlite3.Connection, space: str, members: set[int] | None
+    conn: sqlite3.Connection,
+    space: str,
+    members: set[int] | None,
+    mapping: dict[int, int] | None = None,
 ) -> list[dict[str, object]]:
     """Group tracks that share title, artist, and length within 4 seconds.
 
     Uses the same clusters as ``library.duplicate_groups``. A crate filter
     keeps a group when any member is in the crate, and keeps the full id
-    list so the other copy is visible.
+    list so the other copy is visible. Extra spellings of one path fold
+    onto the kept id. A group that shrinks to one id is dropped.
     """
     rows = conn.execute(
         """
@@ -198,6 +204,18 @@ def _duplicate_groups(
             continue
         ids = [item for item in raw_ids if isinstance(item, int) and not isinstance(item, bool)]
         if members is not None and not any(asset_id in members for asset_id in ids):
+            continue
+        if mapping:
+            folded: list[int] = []
+            seen: set[int] = set()
+            for asset_id in ids:
+                keep_id = mapping.get(asset_id, asset_id)
+                if keep_id in seen:
+                    continue
+                seen.add(keep_id)
+                folded.append(keep_id)
+            ids = folded
+        if len(ids) < 2:
             continue
         groups.append(
             {
@@ -225,7 +243,8 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         ``duplicates``, and ``quality``. Each track section is
         ``{ count, tracks }`` with at most ``ROW_CAP`` sample rows.
         ``unused`` is ``{ count, files }``. ``duplicates`` is
-        ``{ count, groups }``. ``quality`` is
+        ``{ count, groups }``. ``path_forms`` is ``{ count, groups }``
+        for NFC and NFD spellings of one path. ``quality`` is
         ``{ count, dismissed, tracks }``. A quality track adds
         ``quality`` (``format``, ``bitrate_kbps``, ``peak_db``). A missing
         file is left out of that section. An unreadable file stays, with
@@ -264,8 +283,13 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         if crate_id is not None:
             library.container_in_space(conn, crate_id, space)
             members = file_scan._crate_assets(conn, library.descendant_ids(conn, crate_id))
-            rows = [row for row in rows if int(row["id"]) in members]
         in_crate = file_scan._crate_assets(conn, _crate_ids_in_space(conn, space_id))
+        _, space_groups = path_forms.collapse_rows(rows)
+        mapping = path_forms.mapping_from(space_groups)
+        covered = path_forms.covered_from(rows, space_groups, in_crate)
+        if members is not None:
+            rows = [row for row in rows if int(row["id"]) in members]
+        rows, form_groups = path_forms.collapse_rows(rows)
         missing: list[dict[str, object]] = []
         no_bpm: list[dict[str, object]] = []
         no_key: list[dict[str, object]] = []
@@ -286,7 +310,7 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
                 no_key.append(item)
             if _blank_text(row["genre"]):
                 empty_genre.append(item)
-            if crate_id is None and int(row["id"]) not in in_crate:
+            if crate_id is None and int(row["id"]) not in covered:
                 no_crate.append(item)
             path = _present_path(row["portable_id"])
             quality_inputs.append({**item, "path": path})
@@ -300,7 +324,7 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
                 no_artwork.append(item)
             if suspicious_cues.is_suspicious(tags.read_serato_tags(path)["cues"]):
                 suspicious.append(item)
-        groups = _duplicate_groups(conn, space, members)
+        groups = _duplicate_groups(conn, space, members, mapping)
         unused = _unused_files(present, crate_id)
     finally:
         conn.close()
@@ -319,6 +343,7 @@ def report(database: Path, space: str, crate_id: int | None = None) -> dict[str,
         "no_crate": _section(no_crate),
         "unused": _file_section(unused),
         "duplicates": {"count": len(groups), "groups": groups[:ROW_CAP]},
+        "path_forms": {"count": len(form_groups), "groups": form_groups[:ROW_CAP]},
         "quality": quality,
     }
 

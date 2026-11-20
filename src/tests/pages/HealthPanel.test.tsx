@@ -6,12 +6,18 @@ import { createElement } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { LibraryHealthReport } from "../../lib/api-types";
+import type { LibraryHealthReport, PathFormPlan } from "../../lib/api-types";
 import { HealthProvider, type HealthContextValue } from "../../containers/HealthContext";
+import { previewPathForms } from "../../lib/health/path-forms";
 import { setLocale } from "../../lib/i18n";
 import { installPage } from "../test-page";
 import { HealthListChrome } from "../../pages/HealthListChrome";
 import { HealthPanel } from "../../pages/HealthPanel";
+
+vi.mock("../../lib/health/path-forms", () => ({
+  previewPathForms: vi.fn(),
+  applyPathForms: vi.fn(),
+}));
 
 const report: LibraryHealthReport = {
   space: "Serato Library",
@@ -225,6 +231,92 @@ describe("HealthPanel context", () => {
     const apply = host.querySelector<HTMLButtonElement>("[data-health-action='cues-apply']");
     expect(apply?.textContent).toBe("Remove duplicate cues");
     expect(apply?.disabled).toBe(true);
+    root.unmount();
+  });
+
+  it("lists an extra path spelling and enables Keep one path after review", async () => {
+    const plan: PathFormPlan = {
+      preview: true,
+      written: false,
+      space: "Serato Library",
+      crate: 5,
+      count: 1,
+      dropped: 1,
+      groups: [],
+      warnings: [],
+      snapshot_id: null,
+    };
+    vi.mocked(previewPathForms).mockResolvedValue(plan);
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const spelled: LibraryHealthReport = {
+      ...report,
+      path_forms: {
+        count: 1,
+        groups: [
+          {
+            keep_id: 1,
+            keep_path: "Music/naïve.mp3",
+            ids: [1, 2],
+            paths: [
+              { id: 1, path: "Music/naïve.mp3", keep: true },
+              { id: 2, path: "Music/naïve.mp3", keep: false },
+            ],
+          },
+        ],
+      },
+    };
+    flushSync(() => {
+      root.render(
+        createElement(HealthProvider, {
+          value: fakeHealth({ healthReport: spelled }),
+          children: createElement(HealthPanel),
+        }),
+      );
+    });
+    expect(host.textContent).toContain("Same file, two spellings (1)");
+    expect(host.textContent).toContain("Music/naïve.mp3");
+    const summary = [...host.querySelectorAll<HTMLElement>(".MuiAccordionSummary-root")].find((node) =>
+      node.textContent?.includes("Same file, two spellings"),
+    );
+    expect(summary?.dataset.tooltipKey).toBe("tooltip.healthPathForms");
+    const review = host.querySelector<HTMLButtonElement>("[data-health-action='path-forms-preview']");
+    const apply = host.querySelector<HTMLButtonElement>("[data-health-action='path-forms-apply']");
+    expect(review?.textContent).toBe("Review path spellings");
+    expect(review?.dataset.tooltipKey).toBe("tooltip.healthPathFormsReview");
+    expect(apply?.textContent).toBe("Keep one path");
+    expect(apply?.dataset.tooltipKey).toBe("tooltip.healthPathFormsConfirm");
+    expect(apply?.disabled).toBe(true);
+    review?.click();
+    await vi.waitFor(() => {
+      expect(apply?.disabled).toBe(false);
+    });
+    expect(host.textContent).toContain("1 extra path spelling to remove.");
+    root.unmount();
+  });
+
+  it("hides the clear sentence when a path spelling is the only count", () => {
+    const quiet: LibraryHealthReport = {
+      ...report,
+      missing: { count: 0, tracks: [] },
+      suspicious_cues: { count: 0, tracks: [] },
+      quality: { count: 0, dismissed: 0, tracks: [] },
+      path_forms: { count: 1, groups: [] },
+    };
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    flushSync(() => {
+      root.render(
+        createElement(HealthProvider, {
+          value: fakeHealth({ healthReport: quiet }),
+          children: createElement(HealthPanel),
+        }),
+      );
+    });
+    expect(host.textContent).toContain("Same file, two spellings (1)");
+    expect(host.textContent).not.toContain("Nothing to fix in this check.");
     root.unmount();
   });
 });

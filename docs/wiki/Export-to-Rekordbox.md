@@ -17,7 +17,7 @@ flowchart TD
   rb --> usb["Export the USB in Rekordbox"]
 ```
 
-**Rekordbox** reads the library and the Cue points in the audio files. It writes `rekordbox.xml`. It does not change the library or the audio files. It does not write a USB, Device Library Plus, or OneLibrary.
+**Rekordbox** reads the library and the Cue points in the audio files. It writes `rekordbox.xml`. It does not change the library or the audio files. It does not write a USB, Device Library Plus, or OneLibrary. A composed spelling and a decomposed spelling of the same path are one track in the XML.
 
 The dialog names a crate that uses an emoji or a non-Latin script, a beatgrid marker that was moved or could not fit, a cue kept once because another cue was at the same millisecond, and memory cues past 32. Those names stay in the file when they were kept. The check does not write the library. The file downloads after you confirm.
 
