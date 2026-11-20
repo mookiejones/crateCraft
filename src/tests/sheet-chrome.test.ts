@@ -33,12 +33,13 @@ describe("sheet chrome", () => {
     expect(sheetTitle("files", "")).toBe("Organize files");
   });
 
-  it("scopes Overview, Ready, Tempo drift, Damaged files, and Suspect quality", () => {
+  it("scopes Overview, Ready, Tempo drift, Damaged files, Suspect quality, and Energy", () => {
     expect(isCrateScopedMode("health")).toBe(true);
     expect(isCrateScopedMode("gig")).toBe(true);
     expect(isCrateScopedMode("drift")).toBe(true);
     expect(isCrateScopedMode("scan")).toBe(true);
     expect(isCrateScopedMode("bitrate")).toBe(true);
+    expect(isCrateScopedMode("energy")).toBe(true);
     expect(isCrateScopedMode("crates")).toBe(false);
     expect(isCrateScopedMode("missing")).toBe(false);
     expect(isCrateScopedMode("tags")).toBe(false);

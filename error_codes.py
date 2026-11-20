@@ -59,6 +59,7 @@ ERROR_CODES: dict[str, str] = {
     "No Serato library was found on this computer.": "no_library",
     "No older Serato library was found.": "no_legacy_library",
     "Choose a crate for a bitrate check.": "bitrate_needs_crate",
+    "Choose a crate for an energy check.": "energy_needs_crate",
     suspicious_cues.NEEDS_CONFIRM: "cues_needs_confirm",
     path_forms.NEEDS_CONFIRM: "path_forms_needs_confirm",
     stick_cues.NEEDS_CONFIRM: "stick_cues_needs_confirm",

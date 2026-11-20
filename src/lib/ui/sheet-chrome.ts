@@ -2,8 +2,8 @@
  * Sheet heading and crate-scope chip.
  *
  * The heading repeats the open view and space. Overview, Ready, Tempo
- * drift, Damaged files, and Suspect quality also show which crate the
- * report uses, with a control that selects All tracks.
+ * drift, Damaged files, Suspect quality, and Energy also show which crate
+ * the report uses, with a control that selects All tracks.
  */
 
 import { t, type MessageKey } from "../i18n";
@@ -23,6 +23,7 @@ export const VIEW_LABEL_KEYS: Record<ViewMode, MessageKey> = {
   bitrate: "view.bitrate",
   tags: "view.tags",
   lost: "view.lost",
+  energy: "view.energy",
   audio: "view.audio",
   snapshots: "view.snapshots",
   gig: "view.gig",
@@ -37,6 +38,7 @@ export const CRATE_SCOPED_MODES: readonly ViewMode[] = [
   "drift",
   "scan",
   "bitrate",
+  "energy",
 ];
 
 /**

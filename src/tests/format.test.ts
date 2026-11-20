@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Track } from "../lib/api-types";
-import { clockLabel, compare, dateLabel, durationLabel, energyLabel, energyValue, isNumericSort, lengthLabel, sizeLabel } from "../lib/format";
+import { clockLabel, compare, dateLabel, durationLabel, energyLabel, energyValue, groupingEnergy, isNumericSort, lengthLabel, sizeLabel, trackEnergy } from "../lib/format";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
 
@@ -44,6 +44,9 @@ describe("compare", () => {
     expect(compare(empty, mid)).toBe(1);
     expect(compare(mid, high)).toBeLessThan(0);
     expect(compare(high, mid)).toBeGreaterThan(0);
+    const storedLow = { id: 2, grouping: "Energy 9", rating: 0.2 } as Track;
+    const storedHigh = { id: 1, grouping: "Energy 3", rating: 1 } as Track;
+    expect(compare(storedLow, storedHigh)).toBeGreaterThan(0);
   });
 });
 
@@ -56,6 +59,13 @@ describe("energy and dates", () => {
     expect(energyValue(null)).toBeNull();
     expect(energyLabel(0.8)).toBe("4");
     expect(energyLabel(0)).toBe("");
+    expect(groupingEnergy("Energy 10")).toBe(10);
+    expect(groupingEnergy("Energy 1")).toBe(1);
+    expect(groupingEnergy(" energy 10 ")).toBeNull();
+    expect(groupingEnergy("Energy 0")).toBeNull();
+    expect(groupingEnergy("warmup")).toBeNull();
+    expect(trackEnergy({ grouping: "Energy 7", rating: 1 })).toBe(7);
+    expect(trackEnergy({ grouping: "warmup", rating: 0.8 })).toBe(4);
   });
 
   it("names numeric sort keys so those columns open high-to-low", () => {

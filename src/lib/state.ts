@@ -134,6 +134,7 @@ export interface PageState {
   bitrateToken: number;
   tagsToken: number;
   lostToken: number;
+  energyToken: number;
   audioToken: number;
   compareToken: number;
   view: Track[];
@@ -216,6 +217,7 @@ export const state: PageState = {
   bitrateToken: 0,
   tagsToken: 0,
   lostToken: 0,
+  energyToken: 0,
   audioToken: 0,
   compareToken: 0,
   view: [],

@@ -34,6 +34,7 @@ import folder_sync
 import drive_check
 import file_scan
 import error_codes
+import energy_level
 import files
 import folder_access
 import genre_families
@@ -2118,6 +2119,12 @@ class Handler(BaseHTTPRequestHandler):
                 space = require_space(query_text(query, "space"))
                 self.send_json(lost_tags.plan(Path(library.MASTER), space))
                 return
+            if parsed.path == "/api/energy":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                energy_level.require_crate(crate_id)
+                self.send_json(energy_level.plan(Path(library.MASTER), space, crate_id))
+                return
             if parsed.path == "/api/audio-changed":
                 space = require_space(query_text(query, "space"))
                 self.send_json(audio_changed.scan(Path(library.MASTER), space))
@@ -2316,6 +2323,7 @@ class Handler(BaseHTTPRequestHandler):
                     clustering = parsed.path == "/api/tag-clusters"
                     families = parsed.path == "/api/genre-families"
                     losting = parsed.path == "/api/lost-tags"
+                    energizing = parsed.path == "/api/energy"
                     swapping = parsed.path == "/api/audio-changed"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
@@ -2349,6 +2357,7 @@ class Handler(BaseHTTPRequestHandler):
                             and payload.get("confirm") is not True
                         )
                         or (losting and payload.get("action") == "preview")
+                        or (energizing and payload.get("action") == "preview")
                         or (
                             swapping
                             and (
@@ -2452,6 +2461,10 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = lost_tags.action(request)
+                    elif energizing:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = energy_level.action(request)
                     elif swapping:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
