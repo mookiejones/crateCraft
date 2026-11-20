@@ -967,6 +967,30 @@ export interface WriteQueueListing {
   code?: string;
 }
 
+export interface BatchItem {
+  kind: "track" | "crate";
+  id: number;
+  name: string;
+}
+
+export interface BatchDestination {
+  id: number;
+  name: string;
+}
+
+export interface BatchPreview {
+  first: BatchItem;
+  would_add: number;
+}
+
+export interface BatchListing {
+  queue: BatchItem[];
+  destination: BatchDestination | null;
+  preview: BatchPreview | null;
+  can_undo: boolean;
+  added?: number;
+}
+
 export type JobKind = "tag_spelling" | "snapshot_restore";
 
 export type JobState =

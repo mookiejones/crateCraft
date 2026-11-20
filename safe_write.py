@@ -19,6 +19,7 @@ in the app data folder (``app_config.config_dir() / "write-checks"``), not
 under the Serato library. A write does not add a ``Backups`` directory, a
 snapshot directory, a journal, or a log beside ``master.sqlite``. The only
 change in that folder is the library edit itself.
+``undo_preimage`` puts one kept preimage back and does not take another.
 """
 
 from __future__ import annotations
@@ -555,6 +556,18 @@ class Session:
         """
         self.target = target
 
+    @property
+    def snapshot_id(self) -> str | None:
+        """Return the preimage id captured for this write.
+
+        Returns:
+            The id, or None before the snapshot exists.
+        """
+        preimage = self._preimage
+        if preimage is None:
+            return None
+        return preimage.snapshot_id
+
     def check(self, fn: Check) -> None:
         """Register a row check that runs on the temporary copy.
 
@@ -974,6 +987,73 @@ def _image_dir(snapshot_id: str) -> Path | None:
     except OSError:
         return None
     return path
+
+
+def undo_preimage(snapshot_id: str, *, operation: str, target: str) -> dict[str, object]:
+    """Put one kept preimage back without taking another snapshot.
+
+    The Serato gate runs before any file is replaced.
+
+    Args:
+        snapshot_id: Id from the write that captured the preimage.
+        operation: Short machine name stored in the operation log.
+        target: Human-readable name. Not a path.
+
+    Returns:
+        The operation record that was appended.
+
+    Raises:
+        LibraryError: If Serato or the version gate refuses, the preimage
+            is missing, or the restored files do not match.
+    """
+    import library
+
+    _refuse_rollback()
+    if not isinstance(snapshot_id, str):
+        raise library.LibraryError("The pre-write snapshot is missing.", 409)
+    directory = _image_dir(snapshot_id)
+    if directory is None or directory.is_symlink() or not directory.is_dir():
+        raise library.LibraryError("The pre-write snapshot is missing.", 409)
+    preimage = _load_preimage(directory, snapshot_id)
+    try:
+        _restore_preimage(preimage)
+        _verify_preimage(preimage)
+    except library.LibraryError:
+        append_entry(
+            operation,
+            target,
+            snapshot_before=snapshot_id,
+            snapshot_after=None,
+            verified=False,
+            rolled_back=False,
+            result="rollback_failed",
+            rollback="failed",
+        )
+        raise
+    except (OSError, VerifyMismatch) as exc:
+        append_entry(
+            operation,
+            target,
+            snapshot_before=snapshot_id,
+            snapshot_after=None,
+            verified=False,
+            rolled_back=False,
+            result="rollback_failed",
+            rollback="failed",
+        )
+        raise library.LibraryError(
+            "The write did not match, and putting the library back failed."
+        ) from exc
+    return append_entry(
+        operation,
+        target,
+        snapshot_before=snapshot_id,
+        snapshot_after=None,
+        verified=True,
+        rolled_back=True,
+        result="verified",
+        rollback="verified",
+    )
 
 
 def _refuse_rollback() -> None:

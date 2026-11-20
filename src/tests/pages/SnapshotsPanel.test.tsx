@@ -104,6 +104,7 @@ describe("SnapshotsPanel context", () => {
       host.querySelector("#snapshots-drives")?.getAttribute("aria-label"),
     );
     expect(host.querySelector("#operations-list")?.textContent).toContain(t("operations.empty"));
+    expect(host.querySelector("#batch-heading")?.textContent).toBe(t("batch.heading"));
     expect(host.querySelector("#trash-held-heading")?.textContent).toBe(t("snapshots.trashHeading"));
     expect(host.querySelector("#trash-held")?.textContent).toContain(t("snapshots.trashEmpty"));
   });

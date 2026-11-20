@@ -26,6 +26,7 @@ import album_art
 import app_config
 import app_log
 import audio_stream
+import batch_run
 import bitrate_check
 import crate_compare
 import crate_trees
@@ -1909,6 +1910,9 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/write-queue":
                 self.send_json(write_queue.listing())
                 return
+            if parsed.path == "/api/batch":
+                self.send_json(batch_run.listing())
+                return
             if parsed.path == "/api/jobs":
                 job_id = query_text(query, "id")
                 if job_id:
@@ -2279,6 +2283,15 @@ class Handler(BaseHTTPRequestHandler):
                 with _lock:
                     with snapshots.own_writes(), snapshots.allow_force(payload.get("force") is True):
                         self.send_json(write_queue.action(payload))
+                return
+            if parsed.path == "/api/batch":
+                act = payload.get("action")
+                with _lock:
+                    if act in ("apply", "undo"):
+                        with snapshots.own_writes(), snapshots.allow_force(payload.get("force") is True):
+                            self.send_json(batch_run.action(payload))
+                    else:
+                        self.send_json(batch_run.action(payload))
                 return
             with _lock:
                 with snapshots.own_writes(), snapshots.allow_force(payload.get("force") is True):

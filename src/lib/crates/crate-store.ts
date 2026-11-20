@@ -92,6 +92,29 @@ function folderSyncBlocked(): boolean {
   return !state.writable || id === "all" || Boolean(crate?.smart);
 }
 
+/**
+ * Id of the open crate, or null when All tracks is open.
+ *
+ * @returns The numeric crate id.
+ */
+export function activeCrateId(): number | null {
+  return typeof state.activeCrate === "number" ? state.activeCrate : null;
+}
+
+/**
+ * Whether the open crate can join a batch.
+ *
+ * A smart crate and All tracks cannot. Writes may still be off.
+ *
+ * @returns True for a normal crate that is in the loaded list.
+ */
+export function canQueueActiveCrate(): boolean {
+  const id = activeCrateId();
+  if (id === null) return false;
+  const crate = state.crates.find((row) => row.id === id);
+  return crate !== undefined && crate.smart !== true;
+}
+
 export type CrateSnapshot = {
   rows: CrateRailRow[];
   writable: boolean;

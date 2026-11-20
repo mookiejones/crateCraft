@@ -14,6 +14,7 @@ export const CRATE_RAIL_OVERFLOW_IDS = [
   "crate-folder-sync",
   "crate-rename-from-tags",
   "crate-refresh",
+  "crate-queue-batch",
 ] as const;
 
 export const CRATE_SHEET_OVERFLOW_IDS = ["crate-split", "crate-save-view", "export-m3u"] as const;

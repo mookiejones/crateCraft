@@ -23,6 +23,7 @@ from __future__ import annotations
 from collections.abc import Mapping
 
 import app_trash
+import batch_run
 import crate_trees
 import folder_sync
 import version_family
@@ -160,6 +161,16 @@ ERROR_CODES: dict[str, str] = {
     write_queue.QUEUE_LOCKED: "queue_locked",
     write_queue.UNKNOWN_ITEM: "queue_unknown",
     write_queue.GIG_LOCK_NOT_SAVED: "gig_lock_not_saved",
+    batch_run.BATCH_EMPTY: "batch_empty",
+    batch_run.BATCH_NEEDS_DEST: "batch_needs_dest",
+    batch_run.BATCH_STALE: "batch_stale",
+    batch_run.BATCH_NO_PREVIEW: "batch_no_preview",
+    batch_run.BATCH_NEEDS_CONFIRM: "batch_needs_confirm",
+    batch_run.BATCH_NOTHING: "batch_nothing",
+    batch_run.BATCH_NO_UNDO: "batch_no_undo",
+    batch_run.BATCH_UNDO_STALE: "batch_undo_stale",
+    batch_run.BATCH_SAME: "batch_same",
+    batch_run.BATCH_MISSING: "batch_missing",
     "That job is not in the list.": "job_unknown",
     "That write cannot be undone.": "job_cannot_undo",
     "Confirm the restore before it is saved.": "job_restore_confirm",

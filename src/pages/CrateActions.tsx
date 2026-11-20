@@ -2,7 +2,7 @@
  * Crate action buttons painted by React.
  *
  * New, Rename, and Delete stay on the row. Color, Preset, Tree, Sync folder,
- * Rename from tags, and Refresh sit under More. Ids stay the ones the
+ * Rename from tags, Refresh, and Queue crate sit under More. Ids stay the ones the
  * desktop menu and tests click. Tooltips use `tooltip.*` through
  * `setTooltip`. Outlined MUI Buttons, size small.
  */
@@ -11,6 +11,8 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { CrateOverflowMenu } from "../components/CrateOverflowMenu";
 import { useCrates } from "../containers/CrateContext";
+import { queueCrate } from "../lib/batch/batch-store";
+import { activeCrateId, canQueueActiveCrate } from "../lib/crates/crate-store";
 import { t } from "../lib/i18n";
 import { copiesChipText } from "../lib/snapshots/copies-view";
 import { tips } from "../lib/ui/tooltip-strings";
@@ -123,6 +125,16 @@ export function CrateActions() {
             hidden: crates.refreshHidden,
             disabled: !crates.canRefresh,
             onClick: () => crates.refresh(),
+          },
+          {
+            id: "crate-queue-batch",
+            label: t("batch.queueCrate"),
+            tip: tips.batchQueueCrate,
+            disabled: !canQueueActiveCrate(),
+            onClick: () => {
+              const id = activeCrateId();
+              if (id !== null) void queueCrate(id);
+            },
           },
         ]}
       />
