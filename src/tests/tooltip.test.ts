@@ -14,10 +14,12 @@ import { drainReactScheduler, installPage } from "./test-page";
 import en from "../../locales/en.json";
 import es from "../../locales/es.json";
 import { PSEUDO, setLocale, t } from "../lib/i18n";
+import { readFileSync } from "node:fs";
 import {
   applyStaticTooltips,
   installTooltips,
   missingTooltipLabels,
+  positionTooltip,
   refreshTooltips,
   resetTooltipState,
   setTooltip,
@@ -411,5 +413,141 @@ describe("tooltip languages", () => {
     expect(pseudo).toContain("~");
     expect(pseudo).not.toContain("Search tracks");
     expect(tip().textContent).toBe(pseudo);
+  });
+});
+
+function box(
+  node: HTMLElement,
+  frame: { left: number; top: number; width: number; height: number },
+): void {
+  const right = frame.left + frame.width;
+  const bottom = frame.top + frame.height;
+  vi.spyOn(node, "getBoundingClientRect").mockReturnValue({
+    x: frame.left,
+    y: frame.top,
+    left: frame.left,
+    top: frame.top,
+    right,
+    bottom,
+    width: frame.width,
+    height: frame.height,
+    toJSON() {
+      return {};
+    },
+  });
+}
+
+describe("positionTooltip", () => {
+  const previous = { width: window.innerWidth, height: window.innerHeight };
+
+  afterEach(() => {
+    window.innerWidth = previous.width;
+    window.innerHeight = previous.height;
+    document.body.replaceChildren();
+    vi.restoreAllMocks();
+  });
+
+  function pair(inDrawer: boolean, placement?: string): { target: HTMLElement; tip: HTMLElement } {
+    const target = document.createElement("button");
+    if (placement) target.dataset.tooltipPlacement = placement;
+    if (inDrawer) {
+      const drawer = document.createElement("div");
+      drawer.id = "app-drawer";
+      drawer.append(target);
+      document.body.append(drawer);
+    } else {
+      document.body.append(target);
+    }
+    const tip = document.createElement("div");
+    document.body.append(tip);
+    return { target, tip };
+  }
+
+  it("places a drawer tooltip to the right and centers it on the control", () => {
+    window.innerWidth = 800;
+    window.innerHeight = 600;
+    const { target, tip } = pair(true);
+    box(target, { left: 16, top: 80, width: 40, height: 40 });
+    box(tip, { left: 0, top: 0, width: 120, height: 24 });
+    positionTooltip(target, tip);
+    expect(tip.style.left).toBe("64px");
+    expect(tip.style.top).toBe("88px");
+  });
+
+  it("places a marked control to the right even outside the drawer", () => {
+    window.innerWidth = 800;
+    window.innerHeight = 600;
+    const { target, tip } = pair(false, "right");
+    box(target, { left: 16, top: 80, width: 40, height: 40 });
+    box(tip, { left: 0, top: 0, width: 120, height: 24 });
+    positionTooltip(target, tip);
+    expect(tip.style.left).toBe("64px");
+    expect(tip.style.top).toBe("88px");
+  });
+
+  it("flips a side tooltip left when the right edge would leave the window", () => {
+    window.innerWidth = 300;
+    window.innerHeight = 600;
+    const { target, tip } = pair(true);
+    box(target, { left: 220, top: 80, width: 40, height: 40 });
+    box(tip, { left: 0, top: 0, width: 80, height: 24 });
+    positionTooltip(target, tip);
+    expect(tip.style.left).toBe("132px");
+    expect(tip.style.top).toBe("88px");
+  });
+
+  it("clamps a side tooltip inside the window", () => {
+    window.innerWidth = 200;
+    window.innerHeight = 120;
+    const { target, tip } = pair(true);
+    box(target, { left: 10, top: 90, width: 30, height: 20 });
+    box(tip, { left: 0, top: 0, width: 180, height: 40 });
+    positionTooltip(target, tip);
+    expect(tip.style.left).toBe("8px");
+    expect(tip.style.top).toBe("72px");
+  });
+
+  it("keeps every other tooltip below the control, or above when the window is short", () => {
+    window.innerWidth = 800;
+    window.innerHeight = 600;
+    const below = pair(false);
+    box(below.target, { left: 30, top: 50, width: 40, height: 20 });
+    box(below.tip, { left: 0, top: 0, width: 40, height: 16 });
+    positionTooltip(below.target, below.tip);
+    expect(below.tip.style.left).toBe("30px");
+    expect(below.tip.style.top).toBe("78px");
+
+    window.innerHeight = 200;
+    const above = pair(false);
+    box(above.target, { left: 30, top: 160, width: 40, height: 30 });
+    box(above.tip, { left: 0, top: 0, width: 40, height: 40 });
+    positionTooltip(above.target, above.tip);
+    expect(above.tip.style.top).toBe("112px");
+  });
+
+  it("shows the fallback tooltip when popover cannot open", () => {
+    const proto = HTMLElement.prototype as { showPopover?: () => void };
+    const saved = proto.showPopover;
+    delete proto.showPopover;
+    try {
+      installTooltips();
+      const target = document.createElement("button");
+      target.dataset.tooltip = "Beside";
+      document.body.append(target);
+      target.focus();
+      const node = document.getElementById(TOOLTIP_ID);
+      if (!(node instanceof HTMLElement)) throw new Error("missing tooltip");
+      expect(node.hidden).toBe(false);
+      expect(node.hasAttribute("popover")).toBe(false);
+      expect(node.textContent).toBe("Beside");
+    } finally {
+      if (saved) proto.showPopover = saved;
+    }
+  });
+
+  it("stacks the fallback tooltip above the drawer", () => {
+    const css = readFileSync("static/app.css", "utf8");
+    const block = css.match(/\.app-tooltip \{[^}]+\}/);
+    expect(block?.[0]).toMatch(/z-index:\s*1500/);
   });
 });
