@@ -89,6 +89,74 @@ test("every control has a tooltip, and focus shows it", async ({ page }) => {
   await saveShot(page, "tooltip_play");
 });
 
+function overlaps(a: { left: number; top: number; right: number; bottom: number }, b: { left: number; top: number; right: number; bottom: number }): boolean {
+  return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+}
+
+async function expectDrawerTipBesideNext(page: Page): Promise<void> {
+  const buttons = page.locator("#app-drawer .drawer-nav button");
+  const current = buttons.nth(0);
+  const next = buttons.nth(1);
+  await current.hover();
+  const tip = page.locator("#app-tooltip");
+  await expect(tip).toBeVisible();
+  const hit = await page.evaluate(() => {
+    const tipNode = document.getElementById("app-tooltip");
+    const nodes = [...document.querySelectorAll("#app-drawer .drawer-nav button")].filter(
+      (node) => node instanceof HTMLElement && node.getClientRects().length > 0,
+    );
+    const first = nodes[0];
+    const second = nodes[1];
+    if (!(tipNode instanceof HTMLElement) || !(first instanceof HTMLElement) || !(second instanceof HTMLElement)) {
+      return { ok: false, reason: "missing" };
+    }
+    const tipBox = tipNode.getBoundingClientRect();
+    const firstBox = first.getBoundingClientRect();
+    const nextBox = second.getBoundingClientRect();
+    const x = tipBox.left + tipBox.width / 2;
+    const y = tipBox.top + tipBox.height / 2;
+    const previous = tipNode.style.pointerEvents;
+    tipNode.style.pointerEvents = "auto";
+    const top = document.elementFromPoint(x, y);
+    tipNode.style.pointerEvents = previous;
+    return {
+      ok: top === tipNode || tipNode.contains(top),
+      tip: { left: tipBox.left, top: tipBox.top, right: tipBox.right, bottom: tipBox.bottom },
+      first: { left: firstBox.left, top: firstBox.top, right: firstBox.right, bottom: firstBox.bottom },
+      next: { left: nextBox.left, top: nextBox.top, right: nextBox.right, bottom: nextBox.bottom },
+    };
+  });
+  expect(hit.ok).toBe(true);
+  if (!hit.tip || !hit.next || !hit.first) throw new Error("missing tooltip boxes");
+  expect(overlaps(hit.tip, hit.next)).toBe(false);
+  expect(hit.tip.left).toBeGreaterThanOrEqual(hit.first.right - 1);
+}
+
+test("drawer tooltips sit to the right of the icon in both drawer widths", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator("#app-drawer")).toBeVisible();
+  await expect(page.locator("#app-drawer")).not.toHaveAttribute("data-mini");
+  await expectDrawerTipBesideNext(page);
+  await saveShot(page, "tooltip_drawer_expanded");
+
+  await page.locator("#drawer-toggle").click();
+  await expect(page.locator("#app-drawer")).toHaveAttribute("data-mini");
+  await page.mouse.move(0, 0);
+  await expect(page.locator("#app-tooltip")).toBeHidden();
+  await expectDrawerTipBesideNext(page);
+  await saveShot(page, "tooltip_drawer_mini");
+});
+
+test("a drawer tooltip stays on top when popover is missing", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.evaluate(() => {
+    delete (HTMLElement.prototype as { showPopover?: () => void }).showPopover;
+  });
+  await expectDrawerTipBesideNext(page);
+  const z = await page.locator("#app-tooltip").evaluate((node) => getComputedStyle(node).zIndex);
+  expect(z).toBe("1500");
+});
+
 test("reduced motion shows the tooltip as soon as the pointer arrives", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.locator("#reload").hover();

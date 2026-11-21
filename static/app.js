@@ -18742,7 +18742,7 @@ Error generating stack: ` + x.message + `
     if (!text2) return;
     current && current !== target && restoreDescribedBy(current), current = target;
     let tip = ensureTip();
-    tip.textContent = text2, openTip(tip), place(target, tip), addDescribedBy(target);
+    tip.textContent = text2, openTip(tip), positionTooltip(target, tip), addDescribedBy(target);
   }
   function hide() {
     window.clearTimeout(timer), timer = 0, current && restoreDescribedBy(current), current = null;
@@ -18769,11 +18769,14 @@ Error generating stack: ` + x.message + `
     return tip.id = TOOLTIP_ID, tip.className = "app-tooltip", tip.setAttribute("role", "tooltip"), tip.hidden = !0, tip.setAttribute("popover", "manual"), document.body.append(tip), tip;
   }
   function openTip(tip) {
-    if (tip.hidden = !1, typeof tip.showPopover == "function")
-      try {
-        tip.matches(":popover-open") || tip.showPopover();
-      } catch {
-      }
+    if (tip.hidden = !1, typeof tip.showPopover != "function") {
+      tip.removeAttribute("popover");
+      return;
+    }
+    try {
+      tip.matches(":popover-open") || tip.showPopover();
+    } catch {
+    }
   }
   function closeTip(tip) {
     if (typeof tip.hidePopover == "function")
@@ -18783,11 +18786,12 @@ Error generating stack: ` + x.message + `
       }
     tip.hidden = !0;
   }
-  function place(target, tip) {
-    let rect = target.getBoundingClientRect(), gap2 = 8, margin2 = 8;
+  var TIP_GAP = 8, TIP_MARGIN = 8;
+  function positionTooltip(target, tip) {
+    let rect = target.getBoundingClientRect();
     tip.style.position = "fixed", tip.style.margin = "0", tip.style.left = "0px", tip.style.top = "0px";
-    let tipRect = tip.getBoundingClientRect(), top2 = rect.bottom + gap2, left2 = rect.left;
-    top2 + tipRect.height > window.innerHeight - margin2 && (top2 = Math.max(margin2, rect.top - gap2 - tipRect.height)), left2 + tipRect.width > window.innerWidth - margin2 && (left2 = window.innerWidth - margin2 - tipRect.width), tip.style.left = `${Math.round(Math.max(margin2, left2))}px`, tip.style.top = `${Math.round(Math.max(margin2, top2))}px`;
+    let tipRect = tip.getBoundingClientRect(), side = target.dataset.tooltipPlacement === "right" || target.closest("#app-drawer") !== null, top2, left2;
+    side ? (left2 = rect.right + TIP_GAP, top2 = rect.top + rect.height / 2 - tipRect.height / 2, left2 + tipRect.width > window.innerWidth - TIP_MARGIN && (left2 = rect.left - TIP_GAP - tipRect.width), top2 + tipRect.height > window.innerHeight - TIP_MARGIN && (top2 = window.innerHeight - TIP_MARGIN - tipRect.height)) : (top2 = rect.bottom + TIP_GAP, left2 = rect.left, top2 + tipRect.height > window.innerHeight - TIP_MARGIN && (top2 = rect.top - TIP_GAP - tipRect.height), left2 + tipRect.width > window.innerWidth - TIP_MARGIN && (left2 = window.innerWidth - TIP_MARGIN - tipRect.width)), tip.style.left = `${Math.round(Math.max(TIP_MARGIN, left2))}px`, tip.style.top = `${Math.round(Math.max(TIP_MARGIN, top2))}px`;
   }
   function addDescribedBy(target) {
     if (target.dataset.tooltipLive === "1") return;

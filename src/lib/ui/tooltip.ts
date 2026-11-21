@@ -7,7 +7,9 @@
  * cancel the key, so dialogs and search still receive Esc. A hover waits
  * briefly. prefers-reduced-motion shows it at once and the CSS does not
  * animate it. The node uses the Popover API when the browser has it, so
- * it sits above a modal dialog.
+ * it sits above a modal dialog. Without popover, z-index 1500 stays above
+ * the drawer and the app bar. A control in the drawer places the tip to
+ * the right of that control so it does not cover the icon below.
  */
 
 import { hasKey, t } from "../i18n";
@@ -320,7 +322,7 @@ function show(target: HTMLElement): void {
   const tip = ensureTip();
   tip.textContent = text;
   openTip(tip);
-  place(target, tip);
+  positionTooltip(target, tip);
   addDescribedBy(target);
 }
 
@@ -365,7 +367,12 @@ function ensureTip(): HTMLElement {
 
 function openTip(tip: HTMLElement): void {
   tip.hidden = false;
-  if (typeof tip.showPopover !== "function") return;
+  if (typeof tip.showPopover !== "function") {
+    // A browser that cannot open a popover still hides an element that
+    // carries the attribute. Drop it so the fixed tip can paint.
+    tip.removeAttribute("popover");
+    return;
+  }
   try {
     if (!tip.matches(":popover-open")) tip.showPopover();
   } catch {
@@ -384,21 +391,40 @@ function closeTip(tip: HTMLElement): void {
   tip.hidden = true;
 }
 
-function place(target: HTMLElement, tip: HTMLElement): void {
+const TIP_GAP = 8;
+const TIP_MARGIN = 8;
+
+/**
+ * Place the shared tooltip.
+ *
+ * A control inside `#app-drawer`, or one marked `data-tooltip-placement="right"`,
+ * sits to the right of the control and is centered on it. It flips left when
+ * that would leave the window, then stays inside the window. Every other
+ * control sits below, or above when the window is short.
+ */
+export function positionTooltip(target: HTMLElement, tip: HTMLElement): void {
   const rect = target.getBoundingClientRect();
-  const gap = 8;
-  const margin = 8;
   tip.style.position = "fixed";
   tip.style.margin = "0";
   tip.style.left = "0px";
   tip.style.top = "0px";
   const tipRect = tip.getBoundingClientRect();
-  let top = rect.bottom + gap;
-  let left = rect.left;
-  if (top + tipRect.height > window.innerHeight - margin) top = Math.max(margin, rect.top - gap - tipRect.height);
-  if (left + tipRect.width > window.innerWidth - margin) left = window.innerWidth - margin - tipRect.width;
-  tip.style.left = `${Math.round(Math.max(margin, left))}px`;
-  tip.style.top = `${Math.round(Math.max(margin, top))}px`;
+  const side = target.dataset.tooltipPlacement === "right" || target.closest("#app-drawer") !== null;
+  let top: number;
+  let left: number;
+  if (side) {
+    left = rect.right + TIP_GAP;
+    top = rect.top + rect.height / 2 - tipRect.height / 2;
+    if (left + tipRect.width > window.innerWidth - TIP_MARGIN) left = rect.left - TIP_GAP - tipRect.width;
+    if (top + tipRect.height > window.innerHeight - TIP_MARGIN) top = window.innerHeight - TIP_MARGIN - tipRect.height;
+  } else {
+    top = rect.bottom + TIP_GAP;
+    left = rect.left;
+    if (top + tipRect.height > window.innerHeight - TIP_MARGIN) top = rect.top - TIP_GAP - tipRect.height;
+    if (left + tipRect.width > window.innerWidth - TIP_MARGIN) left = window.innerWidth - TIP_MARGIN - tipRect.width;
+  }
+  tip.style.left = `${Math.round(Math.max(TIP_MARGIN, left))}px`;
+  tip.style.top = `${Math.round(Math.max(TIP_MARGIN, top))}px`;
 }
 
 function addDescribedBy(target: HTMLElement): void {

@@ -3135,12 +3135,13 @@ dialog .settings-field select {
 /*
   One tooltip for every control. Walnut with manila text is the rail pair,
   so the sentence stays readable on the light sheet and inside a dialog.
-  Popover puts it above a modal. It does not move, and reduced motion
-  keeps even a future transition off.
+  Popover puts it above a modal. Without popover, z-index 1500 matches
+  the MUI tooltip layer so the drawer (1200) and app bar cannot cover it.
+  It does not move, and reduced motion keeps even a future transition off.
 */
 .app-tooltip {
   position: fixed;
-  z-index: 40;
+  z-index: 1500;
   max-width: 16rem;
   margin: 0;
   padding: var(--space-2) var(--space-3);
