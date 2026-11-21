@@ -1270,6 +1270,9 @@ button:disabled { cursor: default; }
   background: var(--color-primary);
   border-color: transparent;
   color: var(--color-on-primary);
+  /* 20px at 700 is large text, so the Classic primary pair clears 3:1. */
+  font-size: var(--font-title);
+  font-weight: 700;
 }
 
 .detail-chip:focus-visible,
@@ -1282,7 +1285,8 @@ button:disabled { cursor: default; }
   scroll-margin-top: 9rem;
   margin-top: var(--space-3);
   padding: var(--space-3);
-  background: var(--color-panel);
+  /* Sheet color, not panel. Classic panel is dark wood, and section text is written for the card. */
+  background: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
 }
