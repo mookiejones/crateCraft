@@ -589,7 +589,11 @@ export interface SettingsPayload {
   telemetry_configured?: boolean;
   needs_consent_prompt?: boolean;
   wizard_complete?: boolean;
-  layout?: { track_list_width: number | null; drawer_open?: boolean | null };
+  layout?: {
+    track_list_width: number | null;
+    drawer_open?: boolean | null;
+    detail_sections?: Record<string, boolean>;
+  };
   app_version?: string;
   rekordbox?: RekordboxSettings;
   /** Saved page language, or null to follow the OS. */

@@ -388,6 +388,50 @@ class SetupApiTests(unittest.TestCase):
         stored = json.loads(path.read_text(encoding="utf-8"))
         self.assertIs(stored["layout"]["drawer_open"], True)
 
+    def test_detail_sections_round_trip_rejects_bad_maps_and_clears(self) -> None:
+        """Save closed cards over HTTP, refuse a bad map, and clear without dropping width.
+
+        Returns:
+            None. The test fails if an unknown id or an integer is stored,
+            or if an empty map drops the track list width.
+        """
+        path = self.config / "settings.json"
+        status, saved = _request(
+            self.base,
+            "/api/settings",
+            {"layout": {"detail_sections": {"markers": True, "fields": False}}},
+        )
+        self.assertEqual(status, 200)
+        assert isinstance(saved, dict)
+        sections = saved["layout"]["detail_sections"]
+        self.assertIs(sections["markers"], True)
+        self.assertIs(sections["fields"], False)
+        status, unknown = _request(
+            self.base,
+            "/api/settings",
+            {"layout": {"detail_sections": {"nope": False}, "track_list_width": 400}},
+        )
+        self.assertEqual(status, 400)
+        status, integer = _request(
+            self.base,
+            "/api/settings",
+            {"layout": {"detail_sections": {"markers": 1}}},
+        )
+        self.assertEqual(status, 400)
+        stored = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(stored["layout"]["detail_sections"], {"markers": True, "fields": False})
+        self.assertNotIn("track_list_width", stored["layout"])
+        status, width = _request(self.base, "/api/settings", {"layout": {"track_list_width": 520}})
+        self.assertEqual(status, 200)
+        status, cleared = _request(self.base, "/api/settings", {"layout": {"detail_sections": {}}})
+        self.assertEqual(status, 200)
+        assert isinstance(cleared, dict)
+        self.assertNotIn("detail_sections", cleared["layout"])
+        self.assertEqual(cleared["layout"]["track_list_width"], 520)
+        stored = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(stored["layout"], {"track_list_width": 520})
+        self.assertNotIn("detail_sections", stored["layout"])
+
     def test_wizard_complete_keeps_the_window_and_a_rerun_keeps_settings(self) -> None:
         """Keep the desktop frame, the install id, and the sharing choice.
 

@@ -912,6 +912,68 @@ class LayoutSettingsTests(unittest.TestCase):
             loaded = app_config.load_settings()
         self.assertIsNone(loaded.drawer_open)
 
+    def test_detail_sections_round_trip_and_clear_keeps_the_width(self) -> None:
+        """Save closed cards, keep both booleans, then clear without dropping width.
+
+        Returns:
+            None. The test fails if False becomes open, or a clear drops the width.
+        """
+        app_config.set_detail_sections({"markers": False, "fields": True})
+        stored = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
+        self.assertEqual(stored["layout"]["detail_sections"], {"markers": False, "fields": True})
+        loaded = app_config.load_settings()
+        self.assertIs(loaded.detail_sections["markers"], False)
+        self.assertIs(loaded.detail_sections["fields"], True)
+        app_config.set_track_list_width(520)
+        app_config.set_drawer_open(False)
+        app_config.set_detail_sections({})
+        loaded = app_config.load_settings()
+        self.assertEqual(loaded.detail_sections, {})
+        self.assertEqual(loaded.track_list_width, 520)
+        self.assertIs(loaded.drawer_open, False)
+        stored = json.loads((self.config / "settings.json").read_text(encoding="utf-8"))
+        self.assertEqual(stored["layout"], {"track_list_width": 520, "drawer_open": False})
+
+    def test_bad_detail_sections_rejected(self) -> None:
+        """Refuse an unknown id and an integer, including on the settings object.
+
+        Returns:
+            None. The test fails if 1 is stored as closed.
+        """
+        with self.assertRaises(ValueError):
+            app_config.set_detail_sections({"nope": False})
+        with self.assertRaises(ValueError):
+            app_config.set_detail_sections({"markers": 1})  # type: ignore[dict-item]
+        with self.assertRaises(ValueError):
+            app_config.Settings(
+                install_id=None,
+                telemetry_consent=None,
+                detail_sections={"nope": True},
+            )
+
+    def test_bad_stored_detail_sections_are_dropped(self) -> None:
+        """Drop an unknown id and a non-boolean, and keep a real closed card.
+
+        Returns:
+            None. The test fails if the loader keeps ``nope`` or treats 1 as closed.
+        """
+        path = self.config / "settings.json"
+        path.write_text(
+            json.dumps({
+                "layout": {
+                    "detail_sections": {"nope": False, "markers": 1, "copies": False},
+                },
+            }),
+            encoding="utf-8",
+        )
+        with self.assertLogs("serato.library.config", level="WARNING") as caught:
+            loaded = app_config.load_settings()
+        self.assertEqual(loaded.detail_sections, {"copies": False})
+        self.assertIs(loaded.detail_sections["copies"], False)
+        text = "\n".join(caught.output)
+        self.assertIn("layout.detail_sections.nope", text)
+        self.assertIn("layout.detail_sections.markers", text)
+
 
 class SettingsIntegrityTests(unittest.TestCase):
     """Gaps that let a settings save drop or tear another field.

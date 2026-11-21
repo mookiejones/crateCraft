@@ -48,7 +48,19 @@ function relatedLabel(item: { title?: string; name?: string; artist?: string }):
  *
  * @param props Open track and whether writes are allowed.
  */
-export function RelatedTracks({ track, writable }: { track: Track; writable: boolean }) {
+export function RelatedTracks({
+  track,
+  writable,
+  embedded = false,
+  onSavedCount,
+}: {
+  track: Track;
+  writable: boolean;
+  /** Parent card supplies the heading. Skip the outer section and h3. */
+  embedded?: boolean;
+  /** Saved-link count. Null while the request is in flight. */
+  onSavedCount?: (count: number | null) => void;
+}) {
   const list = useTrackList();
   const path = relatedPath(track);
   const [busy, setBusy] = useState(Boolean(path));
@@ -94,6 +106,20 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
       cancelled = true;
     };
   }, [path, list.space, list.activeCrate, crateOnly, track.id]);
+
+  useEffect(() => {
+    if (!onSavedCount) return;
+    if (!path) {
+      onSavedCount(0);
+      return;
+    }
+    if (busy) {
+      onSavedCount(null);
+      return;
+    }
+    const savedNow = Array.isArray(payload?.saved) ? payload.saved.length : 0;
+    onSavedCount(savedNow);
+  }, [onSavedCount, path, busy, payload]);
 
   useEffect(() => {
     setVersionGroups(null);
@@ -223,9 +249,15 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
     setChosen(null);
   }
 
+  const Tag = embedded ? "div" : "section";
   return (
-    <section className="group" data-track-id={String(track.id)} aria-labelledby={headingId} aria-busy={busy}>
-      <h3 id={headingId}>{t("related.heading")}</h3>
+    <Tag
+      className="group"
+      data-track-id={String(track.id)}
+      aria-busy={busy}
+      aria-labelledby={embedded ? undefined : headingId}
+    >
+      {embedded ? null : <h3 id={headingId}>{t("related.heading")}</h3>}
       <p className="detail-kicker" role="status">{status}</p>
       {payload && saved.length > 0 && (
         <ul className="related-list">
@@ -505,6 +537,6 @@ export function RelatedTracks({ track, writable }: { track: Track; writable: boo
           </p>
         </>
       )}
-    </section>
+    </Tag>
   );
 }

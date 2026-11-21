@@ -22,6 +22,9 @@ export const tips = {
   space: spec("tooltip.space"),
   crateSearch: spec("tooltip.crateSearch"),
   mergeDuplicates: spec("tooltip.mergeDuplicates"),
+  detailCollapse: spec("tooltip.detailCollapse"),
+  detailExpand: spec("tooltip.detailExpand"),
+  detailActions: spec("tooltip.detailActions"),
   useInCrates: spec("tooltip.useInCrates"),
   cratesReplaceSearch: spec("tooltip.cratesReplaceSearch"),
   cratesReplaceKeep: spec("tooltip.cratesReplaceKeep"),
@@ -739,6 +742,10 @@ export function editField(label: string): TipSpec {
 
 export function revealTip(manager: string): TipSpec {
   return spec("tooltip.reveal", { name: manager });
+}
+
+export function detailSectionTip(section: string): TipSpec {
+  return spec("tooltip.detailSection", { section });
 }
 
 export function openCopy(name: string): TipSpec {

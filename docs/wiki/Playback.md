@@ -6,7 +6,7 @@ Double-click a row, press **Enter**, or click **Play**. **Enter** on the list pl
 
 After a track loads, the top bar is the deck. In a wide window it shows a zoomed waveform, a whole-track overview, pads 1–8, and **Play**, the title, and the time in the blank next to the pads, between the Serato chip and Help. Click a pad that has a cue to jump there. Empty pads do nothing. Zoom sits on the wave. A window narrower than 980px keeps **Play**, the title, a 32px wave, and the time. Pause keeps that bar. It hides again when there is no current track. When a track ends, the next row in the list starts.
 
-The detail pane still lists cue times and names. A track with no cues has empty pads.
+The detail pane lists cue times under **Cue points**. Chips jump to each section. A track with no cues, loops, or beatgrid says **No cue points**. **Hide** keeps that section closed on the next track.
 
 The waveform in the top bar is the same SWF1 view. Lows are red, mids are green, and highs are blue. Click or drag it to move through the track.
 

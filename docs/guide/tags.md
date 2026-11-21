@@ -10,9 +10,9 @@ The lock line repeats the status under **Library**. When it says Serato is quit,
 
 ## What Save track writes
 
-**Save track** writes the library database. It does not rewrite the audio file. Finder, File Explorer, and other tag editors are separate. Cue points stay in the file. The section **Cues, loops, and beatgrid** says **Read from the audio file. These are not written back.** Pads **1–8** always show when the file could be read, in Serato's pad colors. A cue that already has a color keeps it. An unused pad still shows its number and color, and reads **Empty**. **Beatgrid** says **View only. This app does not rewrite the beatgrid.** A grid this parser cannot read is flagged **Suspect beatgrid** with the reason. An MP3 is read from its ID3 tag. A FLAC is read from its Vorbis comment. An M4A or MP4 is read from its Serato atom. Cue colors and the beatgrid come from that same read.
+**Save track** writes the library database. It does not rewrite the audio file. Finder, File Explorer, and other tag editors are separate. Cue points stay in the file. The section **Cue points** says **Read from the audio file. These are not written back.** Pads show when the file has a cue, in Serato's pad colors. A cue that already has a color keeps it. An unused pad among those still shows its number and color, and reads **Empty**. A track with no cues, loops, or beatgrid says **No cue points**. A beatgrid still shows when there are no cues. **Beatgrid** says **View only. This app does not rewrite the beatgrid.** A grid this parser cannot read is flagged **Suspect beatgrid** with the reason. An MP3 is read from its ID3 tag. A FLAC is read from its Vorbis comment. An M4A or MP4 is read from its Serato atom. Cue colors and the beatgrid come from that same read.
 
-If the file is missing, that section says **The file is not on disk, so cues cannot be read.** and does not invent pads. If the file has no Serato markers, it still shows the eight empty pads and says **No Serato cues in this file.**
+If the file is missing, that section says **The file is not on disk, so cues cannot be read.** and does not invent pads. If the file has no Serato markers and no beatgrid, it says **No cue points**.
 
 ## Fields you can edit
 

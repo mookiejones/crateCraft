@@ -179,7 +179,9 @@ SHORTCUT_IDS = _catalog_shortcut_ids()
 # Page languages a person can pick in Settings. None follows the OS.
 # Keep in sync with LANGUAGES in src/lib/i18n.ts.
 LANGUAGES = ("en", "es")
-LAYOUT_FIELDS = ("track_list_width", "drawer_open")
+LAYOUT_FIELDS = ("track_list_width", "drawer_open", "detail_sections")
+# Cards in the track detail pane. A missing id is open. False is closed.
+DETAIL_SECTION_IDS = ("related", "markers", "crates", "copies", "fields")
 # The page clamps the track list to the sheet it sits in. These bounds only
 # keep a hand-edited file from storing a width no screen could show.
 TRACK_LIST_MIN_WIDTH = 240
@@ -310,6 +312,9 @@ class Settings:
             in CSS pixels. None is the default split.
         drawer_open: True is the labelled 200px rail. False is the 56px
             mini rail. None means the person has not chosen yet.
+        detail_sections: Closed detail cards, keyed by ``DETAIL_SECTION_IDS``.
+            False is closed. A missing id is open. An empty map means every
+            card is open.
         language: Page language code from ``LANGUAGES``. None follows the
             operating system language.
         colorway: Theme id from ``COLORWAYS``. Missing means Serato-like.
@@ -333,6 +338,7 @@ class Settings:
     wizard_complete: bool = False
     track_list_width: int | None = None
     drawer_open: bool | None = None
+    detail_sections: dict[str, bool] = field(default_factory=dict)
     language: str | None = None
     colorway: str = DEFAULT_COLORWAY
     icon_follows_theme: bool = True
@@ -366,6 +372,14 @@ class Settings:
             raise ValueError("untrusted_volumes must be a list of volume names.")
         if self.drawer_open is not None and not isinstance(self.drawer_open, bool):
             raise ValueError("layout.drawer_open must be a boolean.")
+        if not isinstance(self.detail_sections, dict):
+            raise ValueError("layout.detail_sections must be a mapping.")
+        for section_id, section_open in self.detail_sections.items():
+            dotted = f"layout.detail_sections.{section_id}"
+            if section_id not in DETAIL_SECTION_IDS:
+                raise ValueError(f"Unknown config key '{dotted}'.")
+            if not isinstance(section_open, bool):
+                raise ValueError(f"Config key '{dotted}' must be a boolean.")
 
     def as_json(self) -> dict[str, object]:
         """Return the settings object for the file.
@@ -407,6 +421,8 @@ class Settings:
             layout["track_list_width"] = self.track_list_width
         if self.drawer_open is not None:
             layout["drawer_open"] = self.drawer_open
+        if self.detail_sections:
+            layout["detail_sections"] = dict(self.detail_sections)
         if layout:
             body["layout"] = layout
         if self.language is not None:
@@ -697,21 +713,76 @@ def _parse_window(value: object) -> WindowGeometry | None:
     return WindowGeometry(parsed["x"], parsed["y"], parsed["width"], parsed["height"])
 
 
-def _parse_layout(value: object) -> tuple[int | None, bool | None]:
+def _parse_detail_sections(value: object, *, strict: bool = False) -> dict[str, bool]:
+    """Validate ``layout.detail_sections``.
+
+    Args:
+        value: The stored map, or a POST body.
+        strict: True raises ``ValueError`` on a bad id or a non-boolean.
+            False warns and drops that entry. An integer is not a boolean.
+
+    Returns:
+        Known ids mapped to booleans. An empty map means every card is open.
+
+    Raises:
+        ValueError: If ``strict`` is True and ``value`` is not a mapping,
+            an id is unknown, or a value is not a boolean.
+    """
+    if not isinstance(value, dict):
+        if strict:
+            raise ValueError("layout.detail_sections must be a mapping.")
+        logger.warning("Config key 'layout.detail_sections' must be a mapping — ignored")
+        return {}
+    parsed: dict[str, bool] = {}
+    for key, raw in value.items():
+        dotted = f"layout.detail_sections.{key}"
+        if key not in DETAIL_SECTION_IDS:
+            if strict:
+                raise ValueError(f"Unknown config key '{dotted}'.")
+            logger.warning("Unknown config key '%s' — ignored", dotted)
+            continue
+        if not isinstance(raw, bool):
+            if strict:
+                raise ValueError(f"Config key '{dotted}' must be a boolean.")
+            logger.warning("Config key '%s' has wrong type — ignored", dotted)
+            continue
+        parsed[key] = raw
+    return parsed
+
+
+def checked_detail_sections(value: object) -> dict[str, bool]:
+    """Return a detail-section map, or raise when the POST body is wrong.
+
+    Args:
+        value: The ``detail_sections`` member of a settings POST.
+
+    Returns:
+        Known ids mapped to booleans. An empty map clears stored collapses.
+
+    Raises:
+        ValueError: If ``value`` is not a mapping, an id is unknown, or a
+            value is not a boolean. An integer is refused.
+    """
+    return _parse_detail_sections(value, strict=True)
+
+
+def _parse_layout(value: object) -> tuple[int | None, bool | None, dict[str, bool]]:
     """Validate the ``layout`` object.
 
     Args:
         value: The ``layout`` member of the settings file.
 
     Returns:
-        The saved track list width and the rail open flag. Each is None
-        when the object is not a mapping, that key is missing, or its
-        type is wrong. A missing width draws the default split. A missing
-        rail flag means the person has not chosen yet.
+        The saved track list width, the rail open flag, and closed detail
+        cards. Width and the rail flag are None when the object is not a
+        mapping, that key is missing, or its type is wrong. A missing width
+        draws the default split. A missing rail flag means the person has
+        not chosen yet. A missing or empty section map means every card is
+        open.
     """
     if not isinstance(value, dict):
         logger.warning("Config key 'layout' must be a mapping — ignored")
-        return None, None
+        return None, None, {}
     for key in value:
         if key not in LAYOUT_FIELDS:
             logger.warning("Unknown config key '%s' — ignored", f"layout.{key}")
@@ -730,7 +801,10 @@ def _parse_layout(value: object) -> tuple[int | None, bool | None]:
             drawer_open = raw_open
         else:
             logger.warning("Config key 'layout.drawer_open' has wrong type — ignored")
-    return width, drawer_open
+    sections: dict[str, bool] = {}
+    if "detail_sections" in value:
+        sections = _parse_detail_sections(value["detail_sections"])
+    return width, drawer_open, sections
 
 
 def _parse_shortcuts(value: object, *, strict: bool = False) -> dict[str, list[dict[str, object]]]:
@@ -887,9 +961,9 @@ def _parse(payload: object) -> Settings:
             consent = None
     window = _parse_window(payload["window"]) if "window" in payload else None
     if "layout" in payload:
-        track_list_width, drawer_open = _parse_layout(payload["layout"])
+        track_list_width, drawer_open, detail_sections = _parse_layout(payload["layout"])
     else:
-        track_list_width, drawer_open = None, None
+        track_list_width, drawer_open, detail_sections = None, None, {}
     wizard_complete = False
     if "wizard_complete" in payload:
         raw_wizard = payload.get("wizard_complete")
@@ -944,6 +1018,7 @@ def _parse(payload: object) -> Settings:
         rekordbox=rekordbox,
         track_list_width=track_list_width,
         drawer_open=drawer_open,
+        detail_sections=detail_sections,
         language=language,
         colorway=colorway,
         icon_follows_theme=icon_follows_theme,
@@ -1382,6 +1457,44 @@ def set_drawer_open(value: bool) -> Settings:
             telemetry_consent=consent,
             wizard_complete=current.wizard_complete is True,
             drawer_open=value,
+        )
+        save_settings(updated)
+        return updated
+
+
+def set_detail_sections(value: dict[str, bool]) -> Settings:
+    """Store which detail cards are closed.
+
+    Args:
+        value: Known section ids mapped to booleans. False is closed.
+            An empty map means every card is open. The file omits an
+            empty map.
+
+    Returns:
+        The settings that were written.
+
+    Raises:
+        ValueError: If an id is unknown or a value is not a boolean.
+            An integer is refused.
+        OSError: If the settings file cannot be written.
+
+    The track list width, the rail flag, and every other field are kept.
+    A partial sharing pair is dropped, as in :func:`set_drawer_open`.
+    """
+    checked = dict(_parse_detail_sections(value, strict=True))
+    with _settings_lock:
+        current = load_settings()
+        install_id = current.install_id
+        consent = current.telemetry_consent
+        if not isinstance(consent, bool) or install_id is None:
+            install_id = None
+            consent = None
+        updated = replace(
+            current,
+            install_id=install_id,
+            telemetry_consent=consent,
+            wizard_complete=current.wizard_complete is True,
+            detail_sections=checked,
         )
         save_settings(updated)
         return updated

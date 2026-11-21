@@ -261,7 +261,7 @@ class TokenSheetTests(unittest.TestCase):
         is no longer empty of hex. Quoted #rrggbb in ``src/`` still
         belongs in the stylesheet, except the theme map (a copy of
         those tokens) and Serato cue/loop marker data. The detail
-        swatch size and the BPM color are classes.
+        swatch is a class. BPM in the sticky header is text, not a paint.
 
         Returns:
             None. The test fails if a paint hex, marginTop, or inline BPM color remains.
@@ -284,8 +284,12 @@ class TokenSheetTests(unittest.TestCase):
         self.assertEqual(paints, [])
         self.assertNotIn("marginTop", source)
         self.assertNotIn("style.color", source)
-        self.assertIn('className: key === "column.bpm" ? "bpm"', text)
-        self.assertIn('"swatch swatch-lg"', text)
+        self.assertIn(
+            'className={color ? "detail-swatch" : "detail-swatch detail-swatch-empty"}',
+            source,
+        )
+        self.assertIn('["column.bpm", bpm]', source)
+        self.assertIn('"detail-swatch detail-swatch-empty"', text)
         self.assertIn("track-grid", text)
         self.assertIn("rowHeight: 36", text)
         self.assertIn("paddingLeft", source)
@@ -744,6 +748,10 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".player-time", ("--color-card",), 13, 400),
     (".player-volume", ("--color-card",), 11, 400),
     (".detail-play", ("--color-card",), 13, 600),
+    (".detail .detail-head .artist", ("--color-card",), 13, 400),
+    (".detail-album", ("--color-card",), 13, 400),
+    ('.detail-chip[aria-current="true"]', ("--color-primary",), 20, 700),
+    (".detail-empty-line", ("--color-card",), 13, 400),
 )
 
 # Large or inherited text whose color comes from an ancestor rule.
@@ -814,6 +822,9 @@ _DECORATIVE = {
     ".operations",
     ".view-children",
     ".sheet-chrome",
+    ".detail-card",
+    ".detail-chip",
+    ".detail-swatch-empty",
 }
 
 # The only visible edge of these fields. Card surfaces use the sheet.
@@ -980,6 +991,8 @@ class ContrastTests(unittest.TestCase):
             ".waveform-overview:focus-visible",
             "#portable-view-verdict:focus-visible",
             ".detail-play",
+            ".detail-chip:focus-visible",
+            ".detail-card-toggle:focus-visible",
             ".operations-alert",
             ".app-bar-lock",
             ".player-cue-pad-lit",

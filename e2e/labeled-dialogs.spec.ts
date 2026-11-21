@@ -40,7 +40,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("crate delete and relocate open labeled dialogs", async ({ page }) => {
-  await page.getByRole("button", { name: "Relocate" }).click();
+  await page.getByRole("button", { name: "Track actions" }).click();
+  await page.locator("#detail-relocate").click();
   const prompt = page.locator("#crate-prompt-dialog [role='dialog']");
   await expect(prompt).toBeVisible();
   await expect(page.locator("#crate-prompt-title")).toHaveText("Relocate");
@@ -69,7 +70,8 @@ test("crate delete and relocate open labeled dialogs", async ({ page }) => {
 });
 
 test("remove from library and related-link remove open labeled confirms", async ({ page }) => {
-  await page.getByRole("button", { name: "Remove from library" }).click();
+  await page.getByRole("button", { name: "Track actions" }).click();
+  await page.locator("#detail-remove").click();
   await expect(page.locator("#confirm-dialog [role='dialog']")).toBeVisible();
   await expect(page.locator("#confirm-title")).toHaveText("Remove from library");
   await expect(page.locator("#confirm-message")).toContainText("audio file stays on disk");
