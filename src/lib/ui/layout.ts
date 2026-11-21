@@ -10,6 +10,7 @@
 import { postJSON } from "../api";
 import type { SettingsPayload } from "../api-types";
 import { el } from "../dom";
+import { applyDetailSections } from "./detail-sections";
 import { clampWidth, mountSplitter, type Splitter } from "./splitter";
 import { setNotice } from "./views";
 import { t } from "../i18n";
@@ -185,6 +186,9 @@ export function applyLayout(payload: SettingsPayload): void {
     const raw = layout.drawer_open;
     const saved = raw === true ? true : raw === false ? false : null;
     for (const listener of drawerOpenListeners) listener(saved);
+  }
+  if (layout && Object.prototype.hasOwnProperty.call(layout, "detail_sections")) {
+    applyDetailSections(layout.detail_sections);
   }
   if (!splitter || changedHere) return;
   const width = layout?.track_list_width;

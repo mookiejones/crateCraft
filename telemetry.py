@@ -832,6 +832,25 @@ def note_app_opened() -> None:
             _app_opened = True
 
 
+def _public_layout(settings: app_config.Settings) -> dict[str, object]:
+    """Return the layout object the page reads.
+
+    Args:
+        settings: The loaded settings.
+
+    Returns:
+        The track list width, the rail flag when one is saved, and closed
+        detail cards when any are saved. An empty section map is omitted
+        so a cleared collapse stays "every card open".
+    """
+    layout: dict[str, object] = {"track_list_width": settings.track_list_width}
+    if settings.drawer_open is not None:
+        layout["drawer_open"] = settings.drawer_open
+    if settings.detail_sections:
+        layout["detail_sections"] = dict(settings.detail_sections)
+    return layout
+
+
 def public_settings() -> dict[str, object]:
     """Return the sharing state the page is allowed to see.
 
@@ -855,11 +874,7 @@ def public_settings() -> dict[str, object]:
         "telemetry_consent": settings.telemetry_consent,
         "needs_consent_prompt": settings.telemetry_consent is None,
         "wizard_complete": settings.wizard_complete is True,
-        "layout": (
-            {"track_list_width": settings.track_list_width, "drawer_open": settings.drawer_open}
-            if settings.drawer_open is not None
-            else {"track_list_width": settings.track_list_width}
-        ),
+        "layout": _public_layout(settings),
         "telemetry_configured": telemetry_configured(),
         "app_version": app_config.APP_VERSION,
         "rekordbox": settings.rekordbox.as_json(),

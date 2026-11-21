@@ -2625,6 +2625,10 @@ class Handler(BaseHTTPRequestHandler):
                 ``{"layout": {"track_list_width": int | None}}`` and
                 ``{"layout": {"drawer_open": bool}}`` are accepted alone
                 or together. A null width resets the default split.
+                ``{"layout": {"detail_sections": {id: bool}}}`` is accepted
+                alone or with those fields. An empty object clears closed
+                cards. Unknown ids and non-booleans, including integers,
+                are a 400, and nothing in that request is saved.
                 Unknown layout keys are a 400. Otherwise
                 ``telemetry_consent`` must be a boolean when it is present,
                 and ``rekordbox`` must be an object whose fields are
@@ -2684,6 +2688,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
             width_present = "track_list_width" in layout
             open_present = "drawer_open" in layout
+            sections_present = "detail_sections" in layout
             width = layout.get("track_list_width")
             drawer_open = layout.get("drawer_open")
             width_ok = width is None or (isinstance(width, int) and not isinstance(width, bool))
@@ -2693,12 +2698,21 @@ class Handler(BaseHTTPRequestHandler):
             if open_present and not isinstance(drawer_open, bool):
                 self.send_json({"error": "That request is not valid."}, status=400)
                 return
+            sections: dict[str, bool] = {}
+            if sections_present:
+                try:
+                    sections = app_config.checked_detail_sections(layout.get("detail_sections"))
+                except ValueError:
+                    self.send_json({"error": "That request is not valid."}, status=400)
+                    return
             try:
                 if width_present:
                     app_config.set_track_list_width(width if isinstance(width, int) else None)
                 if open_present:
                     assert isinstance(drawer_open, bool)
                     app_config.set_drawer_open(drawer_open)
+                if sections_present:
+                    app_config.set_detail_sections(sections)
             except ValueError:
                 self.send_json({"error": "That request is not valid."}, status=400)
                 return
