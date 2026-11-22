@@ -11,11 +11,12 @@ A change Lexicon makes to the Serato files outside that folder is an outside
 change: the snapshot is taken after the write, the log names Lexicon when
 that can be inferred, and undo restores the previous snapshot.
 
-Probed Serato 5.0.0 writes and restores run when Protect Library is off.
-Protect Library is the plist key ``library_protect`` (1 on, 0 off). A missing
-or unreadable value is unknown and blocks. Serato 5.1.0 is listed and stays
-read-only until a schema probe is recorded. An unlisted dotted version is
-unknown and blocks. Lucid and Flexible beatgrid storage has no confirmed
+Probed Serato 5.0.0 and 5.1.0 writes and restores run when Protect Library
+is off. Protect Library is the plist key ``library_protect`` (1 on, 0 off).
+A missing or unreadable value is unknown and blocks. 5.1.0 also stays
+read-only when ``master.sqlite`` ``user_version`` is not 203, the value
+recorded from a copied 5.1.0 library. An unlisted dotted version is unknown
+and blocks. A listed version with no recorded probe stays read-only. Lucid and Flexible beatgrid storage has no confirmed
 layout, so it is not parsed or written. Pioneer ``export.pdb`` is not a
 Serato file and is not parsed. Crate and database writes do not
 touch those bytes. Snapshots stay available. A restore also refuses while
@@ -71,6 +72,7 @@ import app_env
 import app_log
 import error_codes
 import serato_logs
+import serato_schema
 import snapshot_frames
 from serato_web.completeness import (
     LEGACY_STATUS,
@@ -326,19 +328,21 @@ def write_block_notice(install: SeratoInstall | None = None) -> CodedNotice | No
     that is stored as unknown. That notice carries ``serato_version_unknown``
     and the build, so the page can translate it. A session log that does not
     name a dotted version uses that same notice. A listed version whose
-    schema has not been probed, including 5.1.0, blocks with
-    ``serato_version_unprobed``. Probed Serato 5.0.0 blocks when Protect
-    Library is on or unknown. Protect Library off allows crate and database
-    writes through the same verify-and-rollback path as Serato 4. Those
-    sentences stay English. An explicit ``install`` is judged on its own and
-    does not read the session logs.
+    schema has not been probed blocks with ``serato_version_unprobed``.
+    Probed Serato 5.0.0 and 5.1.0 block when Protect Library is on or
+    unknown. 5.1.0 also blocks when the library header ``user_version`` is
+    not 203. Protect Library off allows crate and database writes through
+    the same verify-and-rollback path as Serato 4. Those sentences stay
+    English. An explicit ``install`` is judged on its own. It does not read
+    the session logs or the library header.
 
     Args:
         install: Version to judge. None reads the install and the session logs.
 
     Returns:
-        The refusal, or None when a probed Serato 4, or probed 5.0.0 with
-        Protect Library off, may be written.
+        The refusal, or None when a probed Serato 4, or probed 5.0.0 or
+        5.1.0 with Protect Library off and a matching ``user_version``, may
+        be written. An explicit install does not read ``user_version``.
     """
     notice, _generation = library_gate(install)
     return notice
@@ -346,6 +350,8 @@ def write_block_notice(install: SeratoInstall | None = None) -> CodedNotice | No
 
 def library_gate(
     install: SeratoInstall | None = None,
+    *,
+    check_schema: bool | None = None,
 ) -> tuple[CodedNotice | None, dict[str, object]]:
     """Decide the write gate and the generation the page shows.
 
@@ -353,20 +359,27 @@ def library_gate(
     log folder leaves the installed version in place. The log can only make
     the gate stricter. An installed version that is not a dotted number stays
     ``serato_version_unknown`` no matter what the log says. Probed Serato
-    5.0.0, from the log or from the installed app, writes when Protect
-    Library is off. 5.1.0 stays read-only until probed. A log that names a
-    database other than this ``master.sqlite`` refuses a write.
+    5.0.0 and 5.1.0, from the log or from the installed app, write when
+    Protect Library is off. 5.1.0 also needs ``user_version`` 203 when this
+    call reads the library. A log that names a database other than this
+    ``master.sqlite`` refuses a write.
 
     Args:
         install: Version to judge. None reads the install and the logs.
+        check_schema: When True, a probed version with a recorded
+            ``user_version`` must match the library header. None uses True
+            when ``install`` is None, so an explicit install does not read
+            the database.
 
     Returns:
         The refusal, or None, and the ``generation`` object for ``status``.
     """
+    if check_schema is None:
+        check_schema = install is None
     base = install if install is not None else read_install()
     read = serato_logs.LogRead.missing() if install is not None else serato_logs.read_session_log()
     generation = _generation(base, read)
-    return _notice_for(base, generation), generation
+    return _notice_for(base, generation, check_schema=check_schema), generation
 
 
 def _generation(base: SeratoInstall, read: serato_logs.LogRead) -> dict[str, object]:
@@ -531,17 +544,25 @@ def _generation_kind(version: str) -> str:
     return "legacy"
 
 
-def _notice_for(base: SeratoInstall, generation: dict[str, object]) -> CodedNotice | None:
+def _notice_for(
+    base: SeratoInstall,
+    generation: dict[str, object],
+    *,
+    check_schema: bool = False,
+) -> CodedNotice | None:
     """Return the write refusal for one generation.
 
     Args:
         base: Installed version, used for Protect Library on Serato 5.
         generation: Object from :func:`_generation`.
+        check_schema: When True, compare the library header with the probed
+            ``user_version`` for this version.
 
     Returns:
         The refusal, or None when a probed Serato may be written and the log
-        names this library file. Probed Serato 5.0.0 also needs Protect
-        Library off. 5.1.0 stays read-only until a schema probe is recorded.
+        names this library file. Probed Serato 5.0.0 and 5.1.0 also need
+        Protect Library off. 5.1.0 needs ``user_version`` 203 when
+        ``check_schema`` is True.
     """
     version = str(generation.get("version") or "unknown")
     build = str(generation.get("build") or "unknown")
@@ -561,6 +582,10 @@ def _notice_for(base: SeratoInstall, generation: dict[str, object]) -> CodedNoti
             "serato_version_unprobed",
             params,
         )
+    if check_schema:
+        schema = _schema_notice(version, build)
+        if schema is not None:
+            return schema
     if parsed[0] >= 5:
         protect = base.protect if _is_serato_5(base.version) else _read_protect()
         notice = _serato5_notice(SeratoInstall(version, build, protect))
@@ -577,6 +602,54 @@ def _notice_for(base: SeratoInstall, generation: dict[str, object]) -> CodedNoti
             params,
         )
     return None
+
+
+def _schema_notice(version: str, build: str) -> CodedNotice | None:
+    """Return a refusal when the library header is not the probed schema.
+
+    Args:
+        version: Dotted Serato version the write gate is using.
+        build: Build that goes with ``version``.
+
+    Returns:
+        None when this version has no recorded ``user_version``, when the
+        library file is missing, or when the header matches. A file that is
+        not a SQLite database, and a header with a different number, refuse
+        the write. The check reads 64 bytes and does not open the database.
+    """
+    expected = serato_schema.PROBED_USER_VERSIONS.get(version)
+    if expected is None:
+        return None
+    import library
+
+    path = Path(library.MASTER)
+    try:
+        exists = path.is_file()
+    except OSError:
+        exists = True
+    if not exists:
+        return None
+    found = serato_schema.read_user_version(path)
+    if found == expected:
+        return None
+    if found is None:
+        params = {"version": version, "build": build, "expected": str(expected)}
+        return CodedNotice(
+            error_codes.render("serato_schema_unreadable", params),
+            "serato_schema_unreadable",
+            params,
+        )
+    params = {
+        "version": version,
+        "build": build,
+        "expected": str(expected),
+        "found": str(found),
+    }
+    return CodedNotice(
+        error_codes.render("serato_schema_mismatch", params),
+        "serato_schema_mismatch",
+        params,
+    )
 
 
 def _serato5_notice(chosen: SeratoInstall) -> CodedNotice | None:
@@ -5163,9 +5236,11 @@ def _load_plist(path: Path) -> object | None:
 
 
 # 4.x is probed as a family. 5.0.0 was probed on a live install (issue #40).
-PROBED_SERATO_5_VERSIONS: frozenset[str] = frozenset({"5.0.0"})
-# Listed, but no serato5-probe.sh run on a real 5.1.0 library yet (issue #357).
-KNOWN_UNPROBED_VERSIONS: frozenset[str] = frozenset({"5.1.0"})
+# 5.1.0 was probed from a copied master.sqlite, user_version 203 (issue #471).
+PROBED_SERATO_5_VERSIONS: frozenset[str] = frozenset({"5.0.0", "5.1.0"})
+# A dotted version listed here is known and stays read-only until its schema
+# probe is recorded. Empty until the next Serato release.
+KNOWN_UNPROBED_VERSIONS: frozenset[str] = frozenset()
 
 
 def _write_gate_kind(version: str) -> str:
@@ -5175,9 +5250,10 @@ def _write_gate_kind(version: str) -> str:
         version: CFBundleShortVersionString, or ``unknown``.
 
     Returns:
-        ``probed`` when writes may proceed (Serato 4, or 5.0.0 with Protect
-        Library checked later), ``unprobed`` when the version is listed
-        but its schema has not been probed, or ``unknown``.
+        ``probed`` when writes may proceed (Serato 4, or 5.0.0 or 5.1.0
+        with Protect Library and ``user_version`` checked later),
+        ``unprobed`` when the version is listed but its schema has not been
+        probed, or ``unknown``.
     """
     parsed = _parsed_version(version)
     if parsed is None:
