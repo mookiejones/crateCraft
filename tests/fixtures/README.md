@@ -11,8 +11,8 @@ python3 tests/fixtures/build_fixtures.py
 
 Serato 4 entries are `spec-derived` (the Scratch Live compatibility export).
 Serato 5 entries are `spec-derived, unverified`. Lucid/Flexible beatgrids and
-Protect Library are omitted because their storage is unknown until Byte Beat's
-`serato5-probe.sh` runs on a real Serato 5 install.
+Protect Library are omitted because their storage is unknown.
+`scripts/serato5-probe.py` reads a copied master.sqlite and does not locate those bytes.
 
 | Tree | File | Status | Citation |
 | --- | --- | --- | --- |
