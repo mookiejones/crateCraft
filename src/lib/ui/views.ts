@@ -90,6 +90,7 @@ import {
   type TrackSaveFields,
 } from "./track-list-store";
 import { buttonEl, inputEl, selectEl, setTooltip, textareaEl } from "./tooltip";
+import { paintStatusRefresh } from "./status-poll";
 import {
   chooseRelated,
   editField,
@@ -1794,6 +1795,7 @@ function membershipSection(track: Track, writable: boolean) {
 export function repaintViews(): void {
   // The static markup pass resets the status line, so put the server's back.
   if (state.serato) el("status").textContent = statusLine(state.serato);
+  paintStatusRefresh(state.serato);
   paintGeneration(state.serato);
   paintFolderAccess(state.serato);
   renderList();
@@ -1971,6 +1973,7 @@ export function applyStatus(info: SeratoStatus | null | undefined) {
   const status = el("status");
   status.textContent = statusLine(info);
   status.hidden = info?.writable !== false;
+  paintStatusRefresh(info);
   paintGeneration(info);
   paintFolderAccess(info);
   renderShell();

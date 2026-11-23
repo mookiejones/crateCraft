@@ -844,12 +844,12 @@
       });
       var localPerformance, localDate, initialTime, taskQueue = [], timerQueue = [], taskIdCounter = 1, currentTask = null, currentPriorityLevel = 3, isPerformingWork = !1, isHostCallbackScheduled = !1, isHostTimeoutScheduled = !1, needsPaint = !1, localSetTimeout = typeof setTimeout == "function" ? setTimeout : null, localClearTimeout = typeof clearTimeout == "function" ? clearTimeout : null, localSetImmediate = typeof setImmediate < "u" ? setImmediate : null;
       function advanceTimers(currentTime2) {
-        for (var timer3 = peek2(timerQueue); timer3 !== null; ) {
-          if (timer3.callback === null) pop(timerQueue);
-          else if (timer3.startTime <= currentTime2)
-            pop(timerQueue), timer3.sortIndex = timer3.expirationTime, push(taskQueue, timer3);
+        for (var timer4 = peek2(timerQueue); timer4 !== null; ) {
+          if (timer4.callback === null) pop(timerQueue);
+          else if (timer4.startTime <= currentTime2)
+            pop(timerQueue), timer4.sortIndex = timer4.expirationTime, push(taskQueue, timer4);
           else break;
-          timer3 = peek2(timerQueue);
+          timer4 = peek2(timerQueue);
         }
       }
       function handleTimeout(currentTime2) {
@@ -14400,6 +14400,8 @@ Error generating stack: ` + x.message + `
     "space.video": "Video",
     "status.checking": "Checking Serato",
     "status.library": "Library",
+    "status.checkAgain": "Check again",
+    "status.refreshFailed": "The Serato status could not be refreshed.",
     "stats.artistTracks": "Tracks",
     "stats.artists": "Most played artists",
     "stats.checking": "Reading play stats…",
@@ -14581,6 +14583,7 @@ Error generating stack: ` + x.message + `
     "tooltip.familiesDrag": "Drag this genre onto a family. The library rows stay as they are.",
     "tooltip.familiesRoot": "Drop a genre here to make it a top-level family.",
     "tooltip.folderAccessAllow": "Opens Windows Security so you can allow crateCraft. Does not change the setting.",
+    "tooltip.statusRefresh": "Ask whether Serato is still open, and show the real reason edits stay off.",
     "tooltip.folderSyncCancel": "Close without changing the crate.",
     "tooltip.folderSyncFull": "Also remove tracks whose files are not in this folder.",
     "tooltip.folderSyncPath": "Folder on this computer whose files should match this crate.",
@@ -16728,6 +16731,8 @@ Error generating stack: ` + x.message + `
     "space.video": "Vídeo",
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
+    "status.checkAgain": "Comprobar de nuevo",
+    "status.refreshFailed": "No se pudo actualizar el estado de Serato.",
     "stats.artistTracks": "Pistas",
     "stats.artists": "Artistas más reproducidos",
     "stats.checking": "Leyendo estadísticas de reproducción…",
@@ -16909,6 +16914,7 @@ Error generating stack: ` + x.message + `
     "tooltip.familiesDrag": "Arrastra este género a una familia. Las filas de la biblioteca no cambian.",
     "tooltip.familiesRoot": "Suelta un género aquí para dejarlo como familia de nivel superior.",
     "tooltip.folderAccessAllow": "Abre Seguridad de Windows para permitir crateCraft. No cambia el ajuste.",
+    "tooltip.statusRefresh": "Comprueba si Serato sigue abierto y muestra el motivo real por el que las ediciones siguen desactivadas.",
     "tooltip.folderSyncCancel": "Cierra sin cambiar la caja.",
     "tooltip.folderSyncFull": "También quita las pistas cuyos archivos no están en esta carpeta.",
     "tooltip.folderSyncPath": "Carpeta de este ordenador cuyos archivos deben coincidir con esta caja.",
@@ -18300,6 +18306,7 @@ Error generating stack: ` + x.message + `
     batchDestination: spec("tooltip.batchDestination"),
     libraryGeneration: spec("tooltip.libraryGeneration"),
     folderAccessAllow: spec("tooltip.folderAccessAllow"),
+    statusRefresh: spec("tooltip.statusRefresh"),
     linkMutual: spec("tooltip.linkMutual"),
     versionLink: spec("tooltip.versionLink"),
     versionPlay: spec("tooltip.versionPlay"),
@@ -18628,6 +18635,7 @@ Error generating stack: ` + x.message + `
       "untrusted-volumes": tips.untrustedVolumes,
       "library-generation": tips.libraryGeneration,
       "folder-access-allow": tips.folderAccessAllow,
+      "status-refresh": tips.statusRefresh,
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
       "merge-confirm": tips.mergeConfirm,
@@ -22833,15 +22841,15 @@ try {
           }
         }
       }, [colorScheme, colorSchemeSelector, colorSchemeNode, allColorSchemes]), React18.useEffect(() => {
-        let timer3;
+        let timer4;
         if (disableTransitionOnChange && hasMounted.current && documentNode) {
           let css2 = documentNode.createElement("style");
-          css2.appendChild(documentNode.createTextNode(DISABLE_CSS_TRANSITION)), documentNode.head.appendChild(css2), window.getComputedStyle(documentNode.body), timer3 = setTimeout(() => {
+          css2.appendChild(documentNode.createTextNode(DISABLE_CSS_TRANSITION)), documentNode.head.appendChild(css2), window.getComputedStyle(documentNode.body), timer4 = setTimeout(() => {
             documentNode.head.removeChild(css2);
           }, 1);
         }
         return () => {
-          clearTimeout(timer3);
+          clearTimeout(timer4);
         };
       }, [colorScheme, disableTransitionOnChange, documentNode]), React18.useEffect(() => (hasMounted.current = !0, () => {
         hasMounted.current = !1;
@@ -35685,8 +35693,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function delay(ms) {
     return new Promise((resolve) => {
-      let timer3 = setTimeout(resolve, ms);
-      polls.set(String(timer3), timer3);
+      let timer4 = setTimeout(resolve, ms);
+      polls.set(String(timer4), timer4);
     });
   }
 
@@ -61085,20 +61093,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     isActive: isActive2,
     shouldResume = () => !0
   }) => {
-    let pollingIntervalRef = React288.useRef(null), pollingCallbackRef = React288.useRef(null), isPollingAllowed = React288.useRef(!0), stopPolling = React288.useCallback(() => {
+    let pollingIntervalRef = React288.useRef(null), pollingCallbackRef = React288.useRef(null), isPollingAllowed = React288.useRef(!0), stopPolling2 = React288.useCallback(() => {
       pollingIntervalRef.current !== null && (clearInterval(pollingIntervalRef.current), pollingIntervalRef.current = null);
-    }, []), startPolling = useEventCallback_default((callback) => {
-      stopPolling(), pollingCallbackRef.current = callback, !(!isPollingAllowed.current || !isActive2 || revalidateMs <= 0) && (pollingIntervalRef.current = setInterval(callback, revalidateMs));
+    }, []), startPolling2 = useEventCallback_default((callback) => {
+      stopPolling2(), pollingCallbackRef.current = callback, !(!isPollingAllowed.current || !isActive2 || revalidateMs <= 0) && (pollingIntervalRef.current = setInterval(callback, revalidateMs));
     });
     React288.useEffect(() => {
-      (!isActive2 || revalidateMs <= 0) && stopPolling();
-    }, [isActive2, revalidateMs, stopPolling]);
+      (!isActive2 || revalidateMs <= 0) && stopPolling2();
+    }, [isActive2, revalidateMs, stopPolling2]);
     let canResume = useEventCallback_default(shouldResume);
-    return React288.useEffect(() => (isPollingAllowed.current = !0, pollingCallbackRef.current && canResume() && startPolling(pollingCallbackRef.current), () => {
-      isPollingAllowed.current = !1, stopPolling();
-    }), [startPolling, stopPolling, canResume]), {
-      startPolling,
-      stopPolling
+    return React288.useEffect(() => (isPollingAllowed.current = !0, pollingCallbackRef.current && canResume() && startPolling2(pollingCallbackRef.current), () => {
+      isPollingAllowed.current = !1, stopPolling2();
+    }), [startPolling2, stopPolling2, canResume]), {
+      startPolling: startPolling2,
+      stopPolling: stopPolling2
     };
   };
 
@@ -61261,13 +61269,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     }), {
       startPolling: startPollingWith,
-      stopPolling
+      stopPolling: stopPolling2
     } = useGridDataSourcePolling({
       revalidateMs: props.dataSourceRevalidateMs,
       isActive: standardRowsUpdateStrategyActive,
       // Rows that are still loading start the polling when they arrive.
       shouldResume: () => rowsAreUpToDate.current
-    }), startPolling = React289.useCallback(() => startPollingWith(revalidate), [startPollingWith, revalidate]), handleDataUpdate = React289.useCallback((params) => {
+    }), startPolling2 = React289.useCallback(() => startPollingWith(revalidate), [startPollingWith, revalidate]), handleDataUpdate = React289.useCallback((params) => {
       if ("error" in params) {
         apiRef.current.setRows([]);
         return;
@@ -61278,8 +61286,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       response.rowCount !== void 0 && apiRef.current.setRowCount(response.rowCount), apiRef.current.setRows(response.rows), apiRef.current.unstable_applyPipeProcessors("processDataSourceRows", {
         params: params.fetchParams,
         response
-      }, !0), startPolling();
-    }, [apiRef, startPolling]), dataSourceUpdateRow = props.dataSource?.updateRow, handleEditRowOption = options.handleEditRow, editRow = React289.useCallback(async (params) => {
+      }, !0), startPolling2();
+    }, [apiRef, startPolling2]), dataSourceUpdateRow = props.dataSource?.updateRow, handleEditRowOption = options.handleEditRow, editRow = React289.useCallback(async (params) => {
       if (dataSourceUpdateRow)
         try {
           let finalRowUpdate = await dataSourceUpdateRow(params), updatedRow = finalRowUpdate && isReplaceUpdate(finalRowUpdate) ? getReplaceRow(finalRowUpdate) : finalRowUpdate;
@@ -61299,8 +61307,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     }, debouncedFetchRows = React289.useMemo(() => debounce(fetchRows, 0), [fetchRows]), handleFetchRowsOnParamsChange = React289.useCallback(() => {
       let activeStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
-      props.dataSourceKeepPreviousData && activeStrategy === DataSourceRowsUpdateStrategy.Default || apiRef.current.setRows([]), apiRef.current.setLoading(!0), stopPolling(), debouncedFetchRows();
-    }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]), hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef), handleFetchRowsOnFilterModelChange = React289.useCallback((newFilterModel) => {
+      props.dataSourceKeepPreviousData && activeStrategy === DataSourceRowsUpdateStrategy.Default || apiRef.current.setRows([]), apiRef.current.setLoading(!0), stopPolling2(), debouncedFetchRows();
+    }, [apiRef, props.dataSourceKeepPreviousData, stopPolling2, debouncedFetchRows]), hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef), handleFetchRowsOnFilterModelChange = React289.useCallback((newFilterModel) => {
       hasFilterModelChanged(newFilterModel) && handleFetchRowsOnParamsChange();
     }, [hasFilterModelChanged, handleFetchRowsOnParamsChange]), isFirstRender = React289.useRef(!0);
     React289.useEffect(() => {
@@ -61321,8 +61329,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (currentStrategy !== DataSourceRowsUpdateStrategy.Default && currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoading && currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData && currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoadedGroupedData)
         return;
       let dependenciesChanged = lastApiRef.current !== apiRef || lastStrategy.current !== currentStrategy || lastDataSource.current !== props.dataSource;
-      return lastApiRef.current = apiRef, lastStrategy.current = currentStrategy, lastDataSource.current = props.dataSource, !dependenciesChanged && (rowsAreUpToDate.current || pendingRequestCount.current > 0) || props.dataSource && (stopPolling(), (!props.dataSourceKeepPreviousData || currentStrategy !== DataSourceRowsUpdateStrategy.Default) && apiRef.current.setRows([]), apiRef.current.dataSource.cache.clear(), apiRef.current.dataSource.fetchRows()), ignoreInFlightRequest;
-    }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling]), React289.useEffect(() => {
+      return lastApiRef.current = apiRef, lastStrategy.current = currentStrategy, lastDataSource.current = props.dataSource, !dependenciesChanged && (rowsAreUpToDate.current || pendingRequestCount.current > 0) || props.dataSource && (stopPolling2(), (!props.dataSourceKeepPreviousData || currentStrategy !== DataSourceRowsUpdateStrategy.Default) && apiRef.current.setRows([]), apiRef.current.dataSource.cache.clear(), apiRef.current.dataSource.fetchRows()), ignoreInFlightRequest;
+    }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling2]), React289.useEffect(() => {
     }, [props.dataSourceKeepPreviousData, currentStrategy]), {
       api: {
         public: dataSourceApi
@@ -61334,8 +61342,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         processor: handleDataUpdate
       },
       setStrategyAvailability,
-      startPolling,
-      stopPolling,
+      startPolling: startPolling2,
+      stopPolling: stopPolling2,
       cacheChunkManager,
       cache,
       events: {
@@ -74660,6 +74668,61 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/lib/ui/views.ts
   init_shared_dialog();
 
+  // src/lib/ui/status-poll.ts
+  var POLL_MS2 = 5e3, applyStatus = () => {
+  }, setNotice2 = () => {
+  }, timer2 = null, inFlight = null, wired2 = !1;
+  async function refreshStatus() {
+    return inFlight || (inFlight = (async () => {
+      try {
+        let response = await fetch("/api/status"), info = await readJSONOr(response, {});
+        if (!response.ok)
+          throw new Error(t("status.refreshFailed"));
+        applyStatus(info);
+      } catch (error2) {
+        setNotice2(failureOf(error2).message, "error");
+      } finally {
+        inFlight = null;
+      }
+    })(), inFlight);
+  }
+  function pageVisible() {
+    return typeof document < "u" && document.visibilityState !== "hidden";
+  }
+  function stopPolling() {
+    timer2 != null && (clearInterval(timer2), timer2 = null);
+  }
+  function startPolling() {
+    timer2 != null || !pageVisible() || (timer2 = setInterval(() => {
+      if (!pageVisible()) {
+        stopPolling();
+        return;
+      }
+      refreshStatus();
+    }, POLL_MS2));
+  }
+  function onVisibilityOrFocus() {
+    if (!pageVisible()) {
+      stopPolling();
+      return;
+    }
+    refreshStatus(), startPolling();
+  }
+  function paintStatusRefresh(info) {
+    let button = document.getElementById("status-refresh");
+    if (!(button instanceof HTMLButtonElement)) return;
+    let show2 = info?.writable === !1;
+    button.hidden = !show2, button.textContent = t("status.checkAgain"), button.setAttribute("aria-label", t("status.checkAgain")), setTooltip(button, tips.statusRefresh);
+  }
+  function wireStatusPoll(hooks2) {
+    if (applyStatus = hooks2.applyStatus, setNotice2 = hooks2.setNotice, wired2) return;
+    wired2 = !0;
+    let button = document.getElementById("status-refresh");
+    button instanceof HTMLButtonElement && button.addEventListener("click", () => {
+      refreshStatus();
+    }), document.addEventListener("visibilitychange", onVisibilityOrFocus), window.addEventListener("focus", onVisibilityOrFocus), pageVisible() && startPolling();
+  }
+
   // src/lib/ui/virtual-scroll.ts
   var import_react80 = __toESM(require_react(), 1);
   var paneRoots = /* @__PURE__ */ new WeakMap();
@@ -75168,9 +75231,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       expanded: state.expanded.has(id),
       space: state.space
     }).then((result) => {
-      result.warning && setNotice2(result.warning);
+      result.warning && setNotice3(result.warning);
     }).catch((error2) => {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }));
   }
   function selectCrate(id, event) {
@@ -75193,7 +75256,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`), payload = await readJSONOr(response, {});
       if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
       if (token4 !== state.request) return;
-      payload.serato && applyStatus(payload.serato), setTrackDetail({ kind: "track", track: payload }), paintDetailIsland();
+      payload.serato && applyStatus2(payload.serato), setTrackDetail({ kind: "track", track: payload }), paintDetailIsland();
     } catch (error2) {
       if (token4 !== state.request) return;
       setTrackDetail({ kind: "error", message: failureOf(error2).message }), paintDetailIsland();
@@ -75208,13 +75271,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), historyDetailHost = host;
   }
   function repaintViews() {
-    if (state.serato && (el("status").textContent = statusLine(state.serato)), paintGeneration(state.serato), paintFolderAccess(state.serato), renderList(), state.mode === "history") {
+    if (state.serato && (el("status").textContent = statusLine(state.serato)), paintStatusRefresh(state.serato), paintGeneration(state.serato), paintFolderAccess(state.serato), renderList(), state.mode === "history") {
       renderSessions(), state.selectedId != null && selectEntry(state.selectedId);
       return;
     }
     detailRoot && paintDetailIsland();
   }
-  function setNotice2(text2, severity = "info") {
+  function setNotice3(text2, severity = "info") {
     setNotice(text2, severity);
   }
   function statusLine(info) {
@@ -75275,53 +75338,53 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let key = FOLDER_ACCESS_COPY[stateName];
     key && (note.textContent = t(key), button.textContent = t("folderAccess.allow"), setTooltip(button, tips.folderAccessAllow), button.dataset.bound !== "1" && (button.dataset.bound = "1", button.addEventListener("click", () => {
       postJSON("/api/folder-access", { action: "open" }).catch((error2) => {
-        setNotice2(failureOf(error2).message, "error");
+        setNotice3(failureOf(error2).message, "error");
       });
     })));
   }
-  function applyStatus(info) {
+  function applyStatus2(info) {
     state.serato = info, state.writable = !!info?.writable;
     let status4 = el("status");
-    status4.textContent = statusLine(info), status4.hidden = info?.writable !== !1, paintGeneration(info), paintFolderAccess(info), renderShell();
+    status4.textContent = statusLine(info), status4.hidden = info?.writable !== !1, paintStatusRefresh(info), paintGeneration(info), paintFolderAccess(info), renderShell();
   }
   function lockDown(error2) {
     let failed = failureOf(error2);
-    applyStatus(failed.payload?.serato || { writable: !1, message: failed.message }), setNotice2(failed.message, "error");
+    applyStatus2(failed.payload?.serato || { writable: !1, message: failed.message }), setNotice3(failed.message, "error");
   }
   async function saveTrack(id, fields) {
     if (fields.bpm != null && Number.isNaN(fields.bpm)) {
-      setNotice2(t("detail.bpmNumber"), "error");
+      setNotice3(t("detail.bpmNumber"), "error");
       return;
     }
     try {
       let result = await postJSON("/api/track", { id, space: state.space, fields });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let restored = Array.isArray(result.restored) ? result.restored : [];
-      restored.length > 0 ? setNotice2(t("detail.restored", { fields: restored.join(", ") })) : setNotice2(result.warning || t("common.saved")), await loadLibrary(), selectTrack(id);
+      restored.length > 0 ? setNotice3(t("detail.restored", { fields: restored.join(", ") })) : setNotice3(result.warning || t("common.saved")), await loadLibrary(), selectTrack(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function revealTrack(id) {
     try {
       await postJSON("/api/reveal", { id });
     } catch (error2) {
-      setNotice2(failureOf(error2).message, "error");
+      setNotice3(failureOf(error2).message, "error");
     }
   }
   async function prepareTrack(id, add) {
     try {
       let result = await postJSON("/api/crate", { action: "prepare", asset: id, add, space: state.space });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || (add ? t("detail.sentPrepare") : t("detail.removedPrepare"))), await loadLibrary(), selectTrack(id);
+      setNotice3(result.warning || (add ? t("detail.sentPrepare") : t("detail.removedPrepare"))), await loadLibrary(), selectTrack(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function relocateTrack(track) {
@@ -75339,12 +75402,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           fields: { portable_id: path }
         });
         if (isQueuedWrite(result)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        setNotice2(result.warning || t("detail.relocated")), await loadLibrary(), selectTrack(track.id);
+        setNotice3(result.warning || t("detail.relocated")), await loadLibrary(), selectTrack(track.id);
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
       }
   }
   async function removeTrack(id) {
@@ -75356,12 +75419,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         let result = await postJSON("/api/crate", { action: "remove_library", asset: id, space: state.space });
         if (isQueuedWrite(result)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        setNotice2(result.warning || t("detail.removed")), state.selectedId = null, await loadLibrary();
+        setNotice3(result.warning || t("detail.removed")), state.selectedId = null, await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
       }
   }
   async function setMembership(assetId, crateId, add, input) {
@@ -75372,9 +75435,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         asset: assetId,
         space: state.space
       });
-      return isQueuedWrite(result) ? (setNotice2(t("gigLock.queued")), !0) : (result.warning && setNotice2(result.warning), await loadLibrary(), selectTrack(assetId), !0);
+      return isQueuedWrite(result) ? (setNotice3(t("gigLock.queued")), !0) : (result.warning && setNotice3(result.warning), await loadLibrary(), selectTrack(assetId), !0);
     } catch (error2) {
-      return input && (input.checked = !add), failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error"), !1;
+      return input && (input.checked = !add), failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error"), !1;
     }
   }
   async function saveRules(id, text2) {
@@ -75382,18 +75445,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       rules = JSON.parse(text2);
     } catch {
-      setNotice2(t("error.smart_rules_json"), "error");
+      setNotice3(t("error.smart_rules_json"), "error");
       return;
     }
     try {
       let result = await postJSON("/api/crate", { action: "rules", id, rules, space: state.space });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("rules.saved")), await loadLibrary(), selectCrate(id);
+      setNotice3(result.warning || t("rules.saved")), await loadLibrary(), selectCrate(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function createCrate3() {
@@ -75418,12 +75481,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stick_confirm: stickConfirm
       });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("crates.created")), await loadLibrary(), selectCrate(result.id);
+      setNotice3(result.warning || t("crates.created")), await loadLibrary(), selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function renameCrate() {
@@ -75439,12 +75502,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         let result = await postJSON("/api/crate", { action: "rename", id: crate.id, name: name.trim(), space: state.space });
         if (isQueuedWrite(result)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        setNotice2(result.warning || t("crates.renamed")), await loadLibrary(), selectCrate(crate.id);
+        setNotice3(result.warning || t("crates.renamed")), await loadLibrary(), selectCrate(crate.id);
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
       }
   }
   function colorFromName(choice) {
@@ -75463,7 +75526,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (choice == null) return;
     let color2 = colorFromName(choice);
     if (color2 == null) {
-      setNotice2(t("crates.colorUnknown"), "error");
+      setNotice3(t("crates.colorUnknown"), "error");
       return;
     }
     try {
@@ -75474,12 +75537,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         space: state.space
       });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("crates.colorSaved")), await loadLibrary();
+      setNotice3(result.warning || t("crates.colorSaved")), await loadLibrary();
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function deleteCrate() {
@@ -75492,12 +75555,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         let result = await postJSON("/api/crate", { action: "delete", id: crate.id, space: state.space });
         if (isQueuedWrite(result)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        state.activeCrate = "all", setNotice2(result.warning || t("crates.deleted")), await loadLibrary();
+        state.activeCrate = "all", setNotice3(result.warning || t("crates.deleted")), await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
       }
   }
   async function importPlaylist(file) {
@@ -75505,13 +75568,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       let result = await postJSON("/api/import.m3u", { space: state.space, parent, name, text: text2 });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let missed = result.unmatched_count ? ` ${t("import.unmatched", { count: Number(result.unmatched_count) })}` : "";
-      setNotice2(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`), await loadLibrary(), selectCrate(result.id);
+      setNotice3(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`), await loadLibrary(), selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   function renderSessions() {
@@ -75531,7 +75594,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     state.historyId = id, state.selectedId = null, notifyHistory(), renderSessions();
     let response = await fetch(`/api/history?session=${id}`), payload = await readJSONOr(response, {});
     if (!response.ok) {
-      setNotice2(serverMessage(payload, t("history.sessionFailed")), "error");
+      setNotice3(serverMessage(payload, t("history.sessionFailed")), "error");
       return;
     }
     state.entries = payload.entries || [], notifyHistory(), el("list").scrollTop = 0, renderList();
@@ -75553,10 +75616,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let response = await fetch(`/api/library?space=${encodeURIComponent(state.space)}`), library = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(library, t("library.readFailed", { status: String(response.status) })));
     let selected = state.selectedId, active2 = state.activeCrate;
-    state.tracks = library.tracks, state.byId = new Map(library.tracks.map((track) => [track.id, track])), state.crates = library.crates, state.rootId = library.root_id, state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)])), state.presets = library.presets ?? {}, state.copies = library.copies ?? null, state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id)), state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all", state.selectedId = selected, state.duplicateSpace !== state.space && (state.duplicateIds = null, state.duplicateGroups = []), applyStatus(library.serato), renderList();
+    state.tracks = library.tracks, state.byId = new Map(library.tracks.map((track) => [track.id, track])), state.crates = library.crates, state.rootId = library.root_id, state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)])), state.presets = library.presets ?? {}, state.copies = library.copies ?? null, state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id)), state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all", state.selectedId = selected, state.duplicateSpace !== state.space && (state.duplicateIds = null, state.duplicateGroups = []), applyStatus2(library.serato), renderList();
   }
   function setMode(mode) {
-    if (rememberMode(mode), state.mode = mode, el("list").scrollTop = 0, mode === "history" ? (state.sort = "start", state.sortDir = -1, state.historySessions.length || loadHistory().catch((error2) => setNotice2(failureOf(error2).message, "error"))) : (state.sort === "start" || state.sort === "deck" || state.sort === "played") && (state.sort = "name", state.sortDir = 1), mode === "duplicates" && state.duplicateSpace !== state.space && loadDuplicates().catch((error2) => setNotice2(failureOf(error2).message, "error")), mode === "files") {
+    if (rememberMode(mode), state.mode = mode, el("list").scrollTop = 0, mode === "history" ? (state.sort = "start", state.sortDir = -1, state.historySessions.length || loadHistory().catch((error2) => setNotice3(failureOf(error2).message, "error"))) : (state.sort === "start" || state.sort === "deck" || state.sort === "played") && (state.sort = "name", state.sortDir = 1), mode === "duplicates" && state.duplicateSpace !== state.space && loadDuplicates().catch((error2) => setNotice3(failureOf(error2).message, "error")), mode === "files") {
       state.filesLoading = !0;
       let path = state.filesAtRoots ? "" : state.filesPath || "";
       loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots }).catch((error2) => failFiles(error2));
@@ -75624,14 +75687,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("export-m3u").addEventListener("click", () => exportPlaylistM3u()), el("import-m3u").addEventListener("click", () => {
       if (playlistCrate() != null) {
         if (!state.writable) {
-          setNotice2(el("status").textContent);
+          setNotice3(el("status").textContent);
           return;
         }
         el("import-file").click();
       }
     }), el("import-file").addEventListener("change", (event) => {
       let file = event.target.files?.[0];
-      event.target.value = "", file && importPlaylist(file).catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      event.target.value = "", file && importPlaylist(file).catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("space").addEventListener("change", () => {
       state.space = el("space").value, state.activeCrate = "all", state.selectedId = null, state.duplicateIds = null, state.duplicateGroups = [], syncHash(), loadLibrary().then(() => state.mode === "duplicates" ? loadDuplicates() : state.mode === "gig" ? loadGigCheck().catch(showGigFailure) : state.mode === "portable" ? loadPortableView().catch(showPortableFailure) : state.mode === "drift" ? loadDrift().catch(showDriftFailure) : state.mode === "octave" ? loadOctave().catch(showOctaveFailure) : state.mode === "health" ? loadHealth().catch(showHealthFailure) : state.mode === "stats" ? loadHistoryStats().catch(showHistoryStatsFailure) : state.mode === "scan" ? loadScan().catch(showScanFailure) : state.mode === "bitrate" ? loadBitrate().catch(showBitrateFailure) : state.mode === "tags" ? loadTags().catch(showTagsFailure) : state.mode === "lost" ? loadLostTags().catch(showLostTagsFailure) : state.mode === "energy" ? loadEnergy().catch(showEnergyFailure) : state.mode === "audio" ? loadAudioChanged().catch(showAudioChangedFailure) : state.mode === "compare" ? loadCrateCompare().catch(showCrateCompareFailure) : null).catch(showFailure);
     }), el("views").addEventListener("click", (event) => {
@@ -75645,7 +75708,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), document.querySelector(".sort-crates").addEventListener("click", (event) => {
       let button = event.target.closest("button");
       button?.dataset.crateSort && (state.crateSort = button.dataset.crateSort, renderCrates(), renderShell());
-    }), el("crate-new").addEventListener("click", () => createCrate3().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-rename").addEventListener("click", () => renameCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-list").addEventListener("keydown", (event) => {
+    }), el("crate-new").addEventListener("click", () => createCrate3().catch((error2) => setNotice3(failureOf(error2).message, "error"))), el("crate-rename").addEventListener("click", () => renameCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"))), el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"))), el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"))), el("crate-list").addEventListener("keydown", (event) => {
       let item = event.target.closest(".crate");
       if (!item || !el("crate-list").contains(item)) return;
       let items = [...el("crate-list").querySelectorAll(".crate")], index = items.indexOf(item), id = item.dataset.id === "all" ? "all" : Number(item.dataset.id);
@@ -75671,7 +75734,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     openInLibrary: (id) => {
       openInLibrary(id);
     },
-    setNotice: setNotice2,
+    setNotice: setNotice3,
     setSort: (key) => {
       state.sort === key ? state.sortDir *= -1 : (state.sort = key, state.sortDir = isNumericSort(key) ? -1 : 1), renderColumns(), renderList();
     }
@@ -75680,16 +75743,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     select: selectCrate,
     toggle: toggleCrate,
     create: () => {
-      createCrate3().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      createCrate3().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     rename: () => {
-      renameCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      renameCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     color: () => {
-      colorCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      colorCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     remove: () => {
-      deleteCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      deleteCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     exportM3u: exportPlaylistM3u
   });
@@ -75697,9 +75760,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   historyActions.openSession = openSession;
   historyActions.selectEntry = selectEntry;
   historyActions.openInLibrary = openInLibrary;
-  bridge.applyStatus = applyStatus;
+  bridge.applyStatus = applyStatus2;
   bridge.renderShell = renderShell;
-  bridge.setNotice = setNotice2;
+  bridge.setNotice = setNotice3;
 
   // src/lib/ui/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
@@ -75712,7 +75775,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function save(width2) {
     changedHere = !0, clearTimeout(saveTimer), saveTimer = setTimeout(() => {
       postJSON("/api/settings", { layout: { track_list_width: width2 } }).catch(() => {
-        setNotice2(t("layout.widthNotSaved"), "error");
+        setNotice3(t("layout.widthNotSaved"), "error");
       });
     }, SAVE_DELAY_MS);
   }
@@ -75734,7 +75797,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function saveDrawerOpen(open) {
     postJSON("/api/settings", { layout: { drawer_open: open } }).catch(() => {
-      setNotice2(t("layout.widthNotSaved"), "error");
+      setNotice3(t("layout.widthNotSaved"), "error");
     });
   }
   function applyLayout(payload) {
@@ -75787,7 +75850,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (token4 === rekordboxReportToken) {
         if (!ok || typeof body2.xml != "string" || !body2.xml.startsWith("<?xml")) {
           let message = serverMessage(body2, t("rekordbox.failed"));
-          el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice2(message, "error");
+          el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice3(message, "error");
           return;
         }
         rekordboxXml = body2.xml, fillRekordboxReport(body2.report || []), el("rekordbox-status").textContent = "", el("rekordbox-dialog").open || el("rekordbox-dialog").showModal();
@@ -75795,7 +75858,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }).catch((error2) => {
       if (token4 !== rekordboxReportToken) return;
       let message = failureOf(error2).message;
-      el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice2(message, "error");
+      el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice3(message, "error");
     });
   }
   function selectedMergeKeepId() {
@@ -75908,7 +75971,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         label.className = "merge-choice", label.htmlFor = `merge-keep-${id}`;
         let input = inputEl(keepCopy(track.file || `Track ${id}`));
         input.type = "radio", input.name = "merge-keep", input.id = `merge-keep-${id}`, input.value = String(id), input.checked = id === state.selectedId, input.addEventListener("change", () => {
-          input.checked && refreshMergePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+          input.checked && refreshMergePreview().catch((error2) => setNotice3(failureOf(error2).message, "error"));
         });
         let text2 = document.createElement("span"), name = document.createElement("span");
         name.textContent = track.file || t("track.numbered", { id: String(id) });
@@ -75937,14 +76000,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         confirm_delete_files: trash
       });
       if (isQueuedWrite(result)) {
-        el("merge-dialog").close(), setNotice2(t("gigLock.queued"));
+        el("merge-dialog").close(), setNotice3(t("gigLock.queued"));
         return;
       }
       el("merge-dialog").close();
       let count = (result.removed || []).length, name = result.kept?.file || t("merge.keptCopy"), message = t("merge.merged", { count, name });
       result.warning && (message = `${message} ${result.warning}`);
       let copy2 = result.cue_copy;
-      copy2 && (copy2.markers || copy2.beatgrid) && copy2.status === "copied" && (message = `${message} ${mergeCopyLine(copy2, !0)}`), result.cue_warning && (message = `${message} ${result.cue_warning}`), setNotice2(message), state.selectedId = keepId, await loadLibrary(), state.mode === "duplicates" && await loadDuplicates(), state.byId.has(keepId) && selectTrack(keepId);
+      copy2 && (copy2.markers || copy2.beatgrid) && copy2.status === "copied" && (message = `${message} ${mergeCopyLine(copy2, !0)}`), result.cue_warning && (message = `${message} ${result.cue_warning}`), setNotice3(message), state.selectedId = keepId, await loadLibrary(), state.mode === "duplicates" && await loadDuplicates(), state.byId.has(keepId) && selectTrack(keepId);
     } catch (error2) {
       el("merge-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("merge-dialog").close());
     } finally {
@@ -76001,7 +76064,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       label.className = "merge-choice", label.htmlFor = `crates-replace-to-${track.id}`;
       let input = inputEl(openReplaceCopy(track.file || `Track ${track.id}`));
       input.type = "radio", input.name = "crates-replace-to", input.id = `crates-replace-to-${track.id}`, input.value = String(track.id), input.checked = track.id === replaceToId, input.addEventListener("change", () => {
-        input.checked && (replaceToId = track.id, refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error")));
+        input.checked && (replaceToId = track.id, refreshReplacePreview().catch((error2) => setNotice3(failureOf(error2).message, "error")));
       });
       let text2 = document.createElement("span"), name = document.createElement("span");
       name.textContent = track.file || t("track.numbered", { id: String(track.id) });
@@ -76053,12 +76116,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           retire: el("crates-replace-retire").checked
         });
         if (isQueuedWrite(result)) {
-          el("crates-replace-dialog").close(), setNotice2(t("gigLock.queued"));
+          el("crates-replace-dialog").close(), setNotice3(t("gigLock.queued"));
           return;
         }
         el("crates-replace-dialog").close();
         let added = (result.crates_added || []).length, removed = (result.crates_removed || []).length, name = result.to?.file || result.to?.name || t("cratesReplace.title"), message = added ? t("cratesReplace.placed", { count: added, name }) : t("cratesReplace.nothingToDo");
-        result.retire && removed && (message = `${message} ${t("cratesReplace.retired", { name: result.from?.file || result.from?.name || "" })}`), !added && removed && result.retire && (message = t("cratesReplace.updated")), result.warning && (message = `${message} ${result.warning}`), setNotice2(message), await loadLibrary(), state.byId.has(fromId) && selectTrack(fromId);
+        result.retire && removed && (message = `${message} ${t("cratesReplace.retired", { name: result.from?.file || result.from?.name || "" })}`), !added && removed && result.retire && (message = t("cratesReplace.updated")), result.warning && (message = `${message} ${result.warning}`), setNotice3(message), await loadLibrary(), state.byId.has(fromId) && selectTrack(fromId);
       } catch (error2) {
         el("crates-replace-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("crates-replace-dialog").close());
       } finally {
@@ -76094,7 +76157,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         applyPrivacy(payload);
       },
       onStatus(info) {
-        applyStatus({
+        applyStatus2({
           message: info.message,
           writable: info.writable,
           open: info.open
@@ -76140,9 +76203,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }));
     typeof relinkPlan?.scanned == "number" && parts.push(t("relink.scanned", { count: relinkPlan.scanned })), banner.textContent = parts.join(" "), banner.hidden = parts.length === 0;
   }
-  function syncRelinkConfirm(refreshStatus = !0) {
+  function syncRelinkConfirm(refreshStatus2 = !0) {
     let confirm = el("relink-confirm"), accept = el("relink-accept-high"), find = el("relink-find"), selected = selectedRelinkMatches();
-    confirm.disabled = relinkLoading || !state.writable || selected.length === 0, accept.disabled = relinkLoading || !relinkPlan, find.disabled = relinkLoading || !state.writable, refreshStatus && !relinkLoading && selected.length && (el("relink-status").textContent = t("relink.selected", { count: selected.length }));
+    confirm.disabled = relinkLoading || !state.writable || selected.length === 0, accept.disabled = relinkLoading || !relinkPlan, find.disabled = relinkLoading || !state.writable, refreshStatus2 && !relinkLoading && selected.length && (el("relink-status").textContent = t("relink.selected", { count: selected.length }));
   }
   function renderRelinkRows() {
     let body2 = el("relink-rows");
@@ -76216,19 +76279,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       relinkLoading = !0, el("relink-confirm").disabled = !0, el("relink-status").textContent = t("relink.previewing");
       try {
         let preview = await postJSON("/api/files", { action: "relink", matches });
-        if (preview.serato && applyStatus(preview.serato), !preview.ok) {
+        if (preview.serato && applyStatus2(preview.serato), !preview.ok) {
           el("relink-status").textContent = preview.error || t("files.notSaved");
           return;
         }
         el("relink-status").textContent = preview.summary || t("relink.relinking");
         let result = await postJSON("/api/files", { action: "relink", matches, confirm: !0 });
         if (isQueuedWrite(result)) {
-          el("relink-dialog").close(), setNotice2(t("gigLock.queued"));
+          el("relink-dialog").close(), setNotice3(t("gigLock.queued"));
           return;
         }
-        result.serato && applyStatus(result.serato), el("relink-dialog").close();
+        result.serato && applyStatus2(result.serato), el("relink-dialog").close();
         let message = t("relink.done", { count: matches.length });
-        result.summary && (message = result.summary), result.warning && (message = `${message} ${result.warning}`), setNotice2(message), await loadLibrary();
+        result.summary && (message = result.summary), result.warning && (message = `${message} ${result.warning}`), setNotice3(message), await loadLibrary();
       } catch (error2) {
         el("relink-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("relink-dialog").close());
       } finally {
@@ -76243,7 +76306,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }), el("rekordbox-dialog").open && requestRekordboxReport();
     };
     el("rekordbox-hot-loops").addEventListener("change", saveExportBar), el("rekordbox-memory").addEventListener("change", saveExportBar), el("rekordbox-key").addEventListener("change", saveExportBar), loadPrivacy().catch((error2) => {
-      setNotice2(failureOf(error2).message || t("sharing.loadFailedOff"), "error");
+      setNotice3(failureOf(error2).message || t("sharing.loadFailedOff"), "error");
     }), el("export-rekordbox").addEventListener("click", () => {
       playlistCrate() != null && requestRekordboxReport();
     }), el("rekordbox-cancel").addEventListener("click", () => {
@@ -76258,26 +76321,26 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("health-list-chrome").addEventListener("click", (event) => {
       let button = event.target.closest("button");
       if (button?.id === "merge-duplicates") {
-        openMergeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+        openMergeDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
         return;
       }
-      button?.id === "open-relink" && openRelinkDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      button?.id === "open-relink" && openRelinkDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("relink-cancel").addEventListener("click", () => el("relink-dialog").close()), el("relink-find").addEventListener("click", () => {
       scanRelink().catch((error2) => {
         el("relink-status").textContent = failureOf(error2).message;
       });
     }), el("relink-accept-high").addEventListener("click", () => acceptRelinkHigh()), el("relink-confirm").addEventListener("click", () => {
-      confirmRelink().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      confirmRelink().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("merge-cancel").addEventListener("click", () => el("merge-dialog").close()), el("merge-confirm").addEventListener("click", () => {
-      confirmMerge().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      confirmMerge().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("merge-trash").addEventListener("change", () => syncTrashChoice()), el("crates-replace-cancel").addEventListener("click", () => el("crates-replace-dialog").close()), el("crates-replace-confirm").addEventListener("click", () => {
-      confirmReplaceInCrates().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      confirmReplaceInCrates().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crates-replace-search").addEventListener("input", () => {
       renderReplaceChoices();
     }), el("crates-replace-keep").addEventListener("change", () => {
-      el("crates-replace-keep").checked && refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      el("crates-replace-keep").checked && refreshReplacePreview().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crates-replace-retire").addEventListener("change", () => {
-      el("crates-replace-retire").checked && refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      el("crates-replace-retire").checked && refreshReplacePreview().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("consent-decline").addEventListener("click", () => {
       saveConsent(!1, el("consent-status")).then((ok) => {
         ok && (consentSettled = !0, el("consent-dialog").close());
@@ -76494,7 +76557,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/quick-open.ts
-  var QUICK_OPEN_MS = 200, LIMIT = 8, KIND_RANK = { view: 0, crate: 1, track: 2, file: 3 }, returnFocus = null, timer2 = 0, requestToken = 0, hits = [], active = 0, phase = "idle", truncated = !1, pendingQuery = "";
+  var QUICK_OPEN_MS = 200, LIMIT = 8, KIND_RANK = { view: 0, crate: 1, track: 2, file: 3 }, returnFocus = null, timer3 = 0, requestToken = 0, hits = [], active = 0, phase = "idle", truncated = !1, pendingQuery = "";
   function parentDirectory(path) {
     let slash = Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\"));
     if (slash < 0) return path;
@@ -76563,7 +76626,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function openQuickOpen() {
     let dialog = el("quick-open");
-    dialog.open || (returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null, pendingQuery = "", hits = [], active = 0, phase = "idle", truncated = !1, window.clearTimeout(timer2), el("quick-open-query").value = "", labelQuickOpen(), paint2(), dialog.showModal(), el("quick-open-query").focus());
+    dialog.open || (returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null, pendingQuery = "", hits = [], active = 0, phase = "idle", truncated = !1, window.clearTimeout(timer3), el("quick-open-query").value = "", labelQuickOpen(), paint2(), dialog.showModal(), el("quick-open-query").focus());
   }
   function closeQuickOpen() {
     let dialog = el("quick-open");
@@ -76576,7 +76639,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function wireQuickOpen() {
     let dialog = el("quick-open");
     dialog.addEventListener("keydown", onDialogKey), dialog.addEventListener("close", () => {
-      window.clearTimeout(timer2);
+      window.clearTimeout(timer3);
       let node2 = returnFocus;
       returnFocus = null, node2 && node2.isConnected && !node2.closest("[hidden]") && node2.focus();
     }), window.addEventListener("hashchange", closeQuickOpenOnHash), window.addEventListener("popstate", closeQuickOpenOnHash), el("quick-open-query").addEventListener("input", () => schedule2()), el("quick-open-close").addEventListener("click", () => closeQuickOpen()), el("quick-open-retry").addEventListener("click", () => {
@@ -76596,7 +76659,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
   function schedule2() {
-    window.clearTimeout(timer2);
+    window.clearTimeout(timer3);
     let query = el("quick-open-query").value;
     pendingQuery = query;
     let local = localHits(query);
@@ -76604,7 +76667,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       phase = "idle", requestToken += 1, paint2();
       return;
     }
-    phase = "loading", paint2(), timer2 = window.setTimeout(() => {
+    phase = "loading", paint2(), timer3 = window.setTimeout(() => {
       loadFiles(query.trim(), local);
     }, QUICK_OPEN_MS);
   }
@@ -77213,7 +77276,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/update.ts
-  var UPDATE_CHOICE_EVENT = "serato-update-choice", latest15 = null, dismissed = !1, token3 = 0, wired2 = !1;
+  var UPDATE_CHOICE_EVENT = "serato-update-choice", latest15 = null, dismissed = !1, token3 = 0, wired3 = !1;
   function parseUpdateStatus(value) {
     if (typeof value != "object" || value === null || Array.isArray(value)) return null;
     let body2 = value, enabled = body2.enabled;
@@ -77263,7 +77326,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     paintUpdate();
   }
   function wireUpdate() {
-    wired2 || (wired2 = !0, bindUpdateSaves(
+    wired3 || (wired3 = !0, bindUpdateSaves(
       (on) => save2({ enabled: on }),
       (on) => save2({ include_prereleases: on })
     ), el("update-download").addEventListener("click", () => {
@@ -77415,7 +77478,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openFolderSyncDialog() {
     if (mountSharedDialogs(), !state.writable || typeof state.activeCrate != "number") {
-      setNotice2(el("status").textContent || "");
+      setNotice3(el("status").textContent || "");
       return;
     }
     el("folder-sync-status").textContent = "", el("folder-sync-dialog").open || el("folder-sync-dialog").showModal(), el("folder-sync-path").focus(), await previewFolderSync();
@@ -77435,10 +77498,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           full: form.full
         });
         if (el("folder-sync-dialog").close(), isQueuedWrite(reply)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        setNotice2(folderSyncDoneText(reply)), await loadLibrary();
+        setNotice3(folderSyncDoneText(reply)), await loadLibrary();
       } catch (error2) {
         el("folder-sync-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("folder-sync-dialog").close());
       } finally {
@@ -77448,18 +77511,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wireFolderSync() {
     mountSharedDialogs(), el("crate-folder-sync").addEventListener("click", () => {
-      openFolderSyncDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openFolderSyncDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("folder-sync-path").addEventListener("input", schedulePreview), el("folder-sync-subcrates").addEventListener("change", () => {
       previewFolderSync();
     }), el("folder-sync-full").addEventListener("change", () => {
       previewFolderSync();
     }), el("folder-sync-cancel").addEventListener("click", () => el("folder-sync-dialog").close()), el("folder-sync-run").addEventListener("click", () => {
-      runFolderSync().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      runFolderSync().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     });
   }
   bindCrateActions({
     folderSync: () => {
-      openFolderSyncDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openFolderSyncDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }
   });
 
@@ -77491,7 +77554,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openPresetDialog() {
     if (mountSharedDialogs(), !state.writable) {
-      setNotice2(el("status").textContent || "");
+      setNotice3(el("status").textContent || "");
       return;
     }
     let track = state.selectedId == null ? void 0 : state.byId.get(state.selectedId);
@@ -77510,11 +77573,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       let reply = await postJSON("/api/smart-preset", { action: "create", space: state.space, preset, name });
       if (el("preset-dialog").close(), isQueuedWrite(reply)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let message = t("presets.created", { name: reply.name || name, count: Number(reply.added) || 0 });
-      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
+      setNotice3(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
     } catch (error2) {
       el("preset-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("preset-dialog").close());
     } finally {
@@ -77528,7 +77591,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       let reply = await postJSON("/api/smart-preset", { action: "refresh", id });
       if (isQueuedWrite(reply)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let message = t("presets.refreshed", {
@@ -77536,9 +77599,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         added: Number(reply.added) || 0,
         removed: Number(reply.removed) || 0
       });
-      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
+      setNotice3(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error"), failureOf(error2).status === 404 && await loadLibrary();
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error"), failureOf(error2).status === 404 && await loadLibrary();
     }
   }
   async function refreshPresetsOnOpen() {
@@ -77546,22 +77609,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         let reply = await postJSON("/api/smart-preset", { action: "refresh_all" });
         if (isQueuedWrite(reply)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
         let changed = reply.changed?.length ?? 0;
         if (!changed) return;
         let message = t("presets.refreshedOnOpen", { count: changed });
-        setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
+        setNotice3(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status !== 409 && setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status !== 409 && setNotice3(failureOf(error2).message, "error");
       }
   }
   function wirePresets() {
     mountSharedDialogs(), el("crate-preset").addEventListener("click", () => {
-      openPresetDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openPresetDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crate-refresh").addEventListener("click", () => {
-      refreshActivePreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      refreshActivePreset().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("preset-kind").addEventListener("change", () => {
       syncPresetFields(), previewPreset();
     });
@@ -77578,15 +77641,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("preset-scope").addEventListener("change", () => {
       previewPreset();
     }), el("preset-cancel").addEventListener("click", () => el("preset-dialog").close()), el("preset-create").addEventListener("click", () => {
-      createPreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      createPreset().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     });
   }
   bindCrateActions({
     preset: () => {
-      openPresetDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openPresetDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     refresh: () => {
-      refreshActivePreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      refreshActivePreset().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }
   });
 
@@ -77671,7 +77734,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openCrateTreeDialog() {
     if (mountSharedDialogs(), !state.writable) {
-      setNotice2(el("status").textContent || "");
+      setNotice3(el("status").textContent || "");
       return;
     }
     let scope = scopeCrate();
@@ -77691,11 +77754,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         name
       });
       if (el("crate-tree-dialog").close(), isQueuedWrite(reply)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let count = Array.isArray(reply.children) ? reply.children.length : 0, message = t("crateTree.created", { name: reply.name || name, count });
-      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
+      setNotice3(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
     } catch (error2) {
       el("crate-tree-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("crate-tree-dialog").close());
     } finally {
@@ -77706,7 +77769,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wireCrateTrees() {
     mountSharedDialogs(), el("crate-tree").addEventListener("click", () => {
-      openCrateTreeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openCrateTreeDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crate-tree-kind").addEventListener("change", () => {
       syncTreeFields(), previewCrateTree();
     });
@@ -77722,12 +77785,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     el("crate-tree-scope").addEventListener("change", () => {
       previewCrateTree();
     }), el("crate-tree-cancel").addEventListener("click", () => el("crate-tree-dialog").close()), el("crate-tree-create").addEventListener("click", () => {
-      createCrateTree().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      createCrateTree().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     });
   }
   bindCrateActions({
     tree: () => {
-      openCrateTreeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openCrateTreeDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }
   });
 
@@ -79160,7 +79223,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       postedOpen.current = !0, setSavedOpen(next3), saveDrawerOpen(next3);
     }
     return (0, import_react83.useLayoutEffect)(() => {
-      adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(lockSlot.current, "folder-access"), adopt(lockSlot.current, "folder-access-allow"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
+      adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(lockSlot.current, "status-refresh"), adopt(lockSlot.current, "folder-access"), adopt(lockSlot.current, "folder-access-allow"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
     }, [open]), /* @__PURE__ */ (0, import_jsx_runtime319.jsxs)(
       Box_default,
       {
@@ -79452,7 +79515,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (saving || !state.writable) return;
     let assets = saveViewIds(focusedView());
     if (!assets.length) {
-      setNotice2(t("crates.saveViewEmpty"), "error");
+      setNotice3(t("crates.saveViewEmpty"), "error");
       return;
     }
     mountSharedDialogs();
@@ -79473,19 +79536,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         space: state.space
       });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("crates.saveViewCreated", { count: Number(result.added) || assets.length })), await loadLibrary(), typeof result.id == "number" && selectCrate(result.id);
+      setNotice3(result.warning || t("crates.saveViewCreated", { count: Number(result.added) || assets.length })), await loadLibrary(), typeof result.id == "number" && selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     } finally {
       saving = !1;
     }
   }
   function wireDualCrates() {
     el("crate-split").addEventListener("click", () => toggleSplit()), el("crate-save-view").addEventListener("click", () => {
-      saveFocusedView().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      saveFocusedView().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crate-pane-a").addEventListener("focusin", () => {
       !state.splitCrates || state.focusedPane === "a" || (state.focusedPane = "a", paintDualChrome());
     }), el("crate-pane-b").addEventListener("focusin", () => {
@@ -79495,7 +79558,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   bindCrateActions({
     split: toggleSplit,
     saveView: () => {
-      saveFocusedView().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      saveFocusedView().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }
   });
 
@@ -79540,6 +79603,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   wireCrateCompare();
   wirePortable();
   wireLayout();
+  wireStatusPoll({ applyStatus: applyStatus2, setNotice: setNotice3 });
   wireVersion();
   loadVersion();
   wireUpdate();
