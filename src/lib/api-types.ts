@@ -850,6 +850,34 @@ export interface GigReport {
   error?: string;
 }
 
+/** One child crate in a tonight plan or write result (#429). */
+export interface TonightChild {
+  kind?: string;
+  name: string;
+  count: number;
+  id?: number;
+  tracks?: Array<{ id: number; name: string; artist: string }>;
+}
+
+/** Preview or create result from GET/POST /api/tonight. */
+export interface TonightPlan {
+  preview?: boolean;
+  written?: boolean;
+  folder?: string;
+  tonight?: string;
+  newest?: number;
+  played?: number;
+  children?: TonightChild[];
+  count?: number;
+  id?: number;
+  name?: string;
+  existing?: { id: number; name: string } | null;
+  replaced?: { id: number; name: string } | null;
+  warning?: string;
+  error?: string;
+  code?: string;
+}
+
 export interface TempoDriftFlag {
   id: number;
   name: string;

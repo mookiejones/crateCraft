@@ -11,6 +11,10 @@
 5. Read the score on each step. It shows the number out of 100, such as **72/100**, and **✓ Ready** or **✕ Not ready**. Color is not the only signal. **Ready** means the score is at least 70 and nothing below is a hard stop. **Not ready** means do not treat the crate as ready to play.
 6. The last screen says whether you are ready for the gig, the score, the crate, and the time of the check. **Check again** after you plug a drive back in or move a file. The report stays up while the new check runs. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
 
+## Tonight crates
+
+**Tonight crates** sits next to **Check again** on Ready. One confirm builds ready-to-play crates under **`_crateCraft generated` / `Tonight`**: **Newest adds**, **Most played**, and one crate per decade from the year field. Quit Serato DJ Pro before confirm. A re-run replaces only that Tonight folder and the crates inside it. Crates you made yourself stay put. An empty plan does not write.
+
 The same check from a terminal, in the repository directory:
 
 ```bash

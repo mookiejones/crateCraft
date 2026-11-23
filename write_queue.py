@@ -38,6 +38,7 @@ import music_mirror
 import smart_presets
 import snapshots
 import tag_cleanup
+import tonight_crates
 
 STORE_NAME = "write-queue.json"
 UNDO_DAYS = 30
@@ -73,6 +74,7 @@ QUEUEABLE = frozenset(
         "/api/crate-tree",
         "/api/folder-sync",
         "/api/history-stats",
+        "/api/tonight",
         "/api/tag-clusters",
         "/api/lost-tags",
         "/api/energy",
@@ -513,6 +515,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return folder_sync.action(request)
     if path == "/api/history-stats":
         return history_stats.action(request)
+    if path == "/api/tonight":
+        return tonight_crates.action(request)
     if path == "/api/tag-clusters":
         return tag_cleanup.action(request)
     if path == "/api/lost-tags":

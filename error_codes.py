@@ -169,6 +169,7 @@ ERROR_CODES: dict[str, str] = {
     crate_trees.BAD_BANDS: "tree_bad_bands",
     crate_trees.BAD_GENRES: "tree_bad_genres",
     crate_trees.EMPTY_TREE: "tree_empty",
+    "No tracks fit tonight crates.": "tonight_empty",
     folder_sync.SMART: "smart_crate_tracks",
     folder_sync.ROOT_CRATE: "crate_not_root",
     music_mirror.DEST_SERATO: "mirror_dest_serato",
