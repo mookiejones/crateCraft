@@ -222,11 +222,13 @@ describe("gigValueFromArgs", () => {
       empty: false,
       emptyPortable: true,
       emptyDrift: true,
+      emptyOctave: true,
     });
     expect(value.gig.report?.ready).toBe(true);
     expect(value.gig.report?.score).toBe(100);
     expect(value.portable.report).toBeNull();
     expect(value.drift.report).toBeNull();
+    expect(value.octave.report).toBeNull();
   });
 });
 

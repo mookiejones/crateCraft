@@ -18,6 +18,7 @@
 [Organizing files](Organizing-Files)
 [Related tracks](Related-Tracks)
 [Audio changed](Audio-Changed)
+[BPM check](BPM-Check)
 
 **The app**
 

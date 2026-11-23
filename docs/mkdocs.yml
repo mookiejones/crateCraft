@@ -75,6 +75,7 @@ nav:
       - Library health: guide/library-health.md
       - Ready: guide/gig-check.md
       - Tempo drift: guide/tempo-drift.md
+      - BPM check: guide/bpm-check.md
       - Duplicates: guide/duplicates.md
       - Stems: guide/stems.md
       - Damaged files: guide/file-scan.md

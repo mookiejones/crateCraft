@@ -15,6 +15,7 @@ import type {
   SnapshotInfo,
   TagClusterPlan,
   TagClusters,
+  BpmSanityReport,
   TempoDriftReport,
   Track,
 } from "../api-types";
@@ -407,10 +408,32 @@ export const driftReport: TempoDriftReport = {
   ],
 };
 
+export const octaveReport: BpmSanityReport = {
+  crate: 5,
+  checked: 8,
+  anchor: 128,
+  skipped: 1,
+  ready: true,
+  beatgrid: "unchanged",
+  flags: [
+    {
+      id: 4,
+      name: "Half Time",
+      artist: "A",
+      file: "half.wav",
+      bpm: 64,
+      suggested: 128,
+      fix: "x2",
+      kind: "half",
+    },
+  ],
+};
+
 export function gigValue(partial: Partial<GigContextValue> = {}): GigContextValue {
   return {
     gig: { report: gigReport, stepIndex: 0, checkedAt: new Date("2026-01-01T12:00:00Z") },
     drift: { report: driftReport, scope: "Friday" },
+    octave: { report: octaveReport, scope: "Friday", busy: false },
     portable: {
       report: driveReport,
       status: driveReport.summary,

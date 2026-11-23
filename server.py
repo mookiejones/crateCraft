@@ -28,6 +28,7 @@ import app_log
 import audio_stream
 import batch_run
 import bitrate_check
+import bpm_sanity
 import crate_compare
 import crate_trees
 import folder_sync
@@ -1875,7 +1876,7 @@ class Handler(BaseHTTPRequestHandler):
         Health, version, and the portable-drive check are answered before the library is opened.
         Settings and logs are answered before the library routes. Library,
         status, track, history, duplicate, file, related-track, gig-check,
-        tempo-drift, M3U, and rekordbox XML paths return data. Every other path is a file
+        tempo-drift, bpm-sanity, M3U, and rekordbox XML paths return data. Every other path is a file
         under static/. A Host or Origin that is not this computer is refused first.
         """
         try:
@@ -1889,7 +1890,7 @@ class Handler(BaseHTTPRequestHandler):
         """Answer a GET request.
 
         Health, version, and the portable-drive check do not open the library.
-        Library, status, track, history, duplicate, file, related-track, gig-check, tempo-drift, M3U, and rekordbox
+        Library, status, track, history, duplicate, file, related-track, gig-check, tempo-drift, bpm-sanity, M3U, and rekordbox
         XML paths return data. Every other path is a file under static/.
         """
         parsed = urlparse(self.path)
@@ -2088,6 +2089,12 @@ class Handler(BaseHTTPRequestHandler):
                 crate_id = crate_query(query_text(query, "crate", "all") or "all")
                 tempo_drift.require_crate(crate_id)
                 self.send_json(tempo_drift.scan(Path(library.MASTER), space, crate_id))
+                return
+            if parsed.path == "/api/bpm-sanity":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                bpm_sanity.require_crate(crate_id)
+                self.send_json(bpm_sanity.scan(Path(library.MASTER), space, crate_id))
                 return
             if parsed.path == "/api/file-scan":
                 space = require_space(query_text(query, "space"))
@@ -2327,6 +2334,7 @@ class Handler(BaseHTTPRequestHandler):
                     swapping = parsed.path == "/api/audio-changed"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
+                    bpm_check = parsed.path == "/api/bpm-sanity"
                     cueing = parsed.path == "/api/suspicious-cues"
                     forming = parsed.path == "/api/path-forms"
                     porting = parsed.path == "/api/portable-smart"
@@ -2372,6 +2380,7 @@ class Handler(BaseHTTPRequestHandler):
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
                         or (bitrate_crate and payload.get("action") == "preview")
+                        or (bpm_check and payload.get("confirm") is not True)
                         or (cueing and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
                         or (forming and payload.get("action") == "preview")
@@ -2491,6 +2500,10 @@ class Handler(BaseHTTPRequestHandler):
                         result = bitrate_check.action(request)
                         if request.get("action") == "create" and result.get("written"):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif bpm_check:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = bpm_sanity.action(request)
                     elif versioning:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

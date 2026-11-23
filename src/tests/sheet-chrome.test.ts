@@ -37,6 +37,7 @@ describe("sheet chrome", () => {
     expect(isCrateScopedMode("health")).toBe(true);
     expect(isCrateScopedMode("gig")).toBe(true);
     expect(isCrateScopedMode("drift")).toBe(true);
+    expect(isCrateScopedMode("octave")).toBe(true);
     expect(isCrateScopedMode("scan")).toBe(true);
     expect(isCrateScopedMode("bitrate")).toBe(true);
     expect(isCrateScopedMode("energy")).toBe(true);

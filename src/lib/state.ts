@@ -128,6 +128,7 @@ export interface PageState {
   snapshotPlanId: string;
   gigToken: number;
   driftToken: number;
+  octaveToken: number;
   healthToken: number;
   statsToken: number;
   scanToken: number;
@@ -211,6 +212,7 @@ export const state: PageState = {
   snapshotPlanId: "",
   gigToken: 0,
   driftToken: 0,
+  octaveToken: 0,
   healthToken: 0,
   statsToken: 0,
   scanToken: 0,

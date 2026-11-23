@@ -29,6 +29,7 @@ import { wireDialogs } from "./lib/ui/dialogs";
 import { mountSharedDialogs } from "./lib/ui/shared-dialog-mount";
 import { wireGigCheck } from "./lib/gig/gig";
 import { wireDrift } from "./lib/gig/drift";
+import { wireOctave } from "./lib/gig/octave";
 import { wireHealth } from "./lib/health/health";
 import { wireHistoryStats } from "./lib/history/history-stats";
 import { wireScan } from "./lib/health/scan";
@@ -93,6 +94,7 @@ wireHealth((action, id) => {
   else setMode("crates");
 });
 wireDrift();
+wireOctave();
 wireHistoryStats();
 wireScan();
 wireBitrate();

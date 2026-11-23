@@ -11,7 +11,7 @@
   and previews a rename, move, replace, or delete before it is saved.
   Backups lists hash-checked library snapshots and previews a
   restore before it is confirmed. Ready is a read-only ready score,
-  Check drive, and Tempo drift.
+  Check drive, Tempo drift, and BPM check.
   tokens.css, app.css, and app.js are local files. The page talks only to
   the library server on 127.0.0.1. It does not open master.sqlite itself.
 -->
@@ -72,6 +72,7 @@
           <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
           <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
           <button type="button" id="drift-tab" data-view="drift" role="tab" hidden aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
+          <button type="button" id="octave-tab" data-view="octave" role="tab" hidden aria-controls="octave-panel" data-i18n="view.octave">BPM check</button>
         </div>
         <button type="button" data-nav="files" role="tab" data-i18n="view.files">Organize files</button>
         <button type="button" data-nav="health" role="tab" data-i18n="view.group.health">Health</button>
@@ -278,6 +279,17 @@
         <p id="drift-hint" class="gig-note" data-i18n="drift.intro">Needs a crate because it decodes audio. Flags a wandering tempo, a live-looking name, or Serato's pending tempo-map mark. A grid that already changes tempo is skipped. This does not rewrite BPM.</p>
         <p id="drift-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="drift-report" class="gig-report" tabindex="-1"></div>
+      </section>
+
+      <section id="octave-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="octave-heading" aria-busy="false">
+        <h2 id="octave-heading" class="visually-hidden" data-i18n="octave.heading">BPM check</h2>
+        <div class="browser-bar">
+          <p id="octave-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="octave-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+        </div>
+        <p id="octave-hint" class="gig-note" data-i18n="octave.intro">Needs a crate. Flags a stored BPM that is about half or double the rest of the crate. ×2 or ÷2 writes only that BPM after you confirm. The beatgrid is left alone.</p>
+        <p id="octave-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="octave-report" class="gig-report" tabindex="-1"></div>
       </section>
 
       <section id="stats-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="stats-heading" aria-busy="false">

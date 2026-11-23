@@ -148,6 +148,11 @@ export interface ElementIds {
   "drift-status": HTMLParagraphElement;
   "drift-report": HTMLDivElement;
   "drift-refresh": HTMLButtonElement;
+  "octave-panel": HTMLElement;
+  "octave-scope": HTMLParagraphElement;
+  "octave-status": HTMLParagraphElement;
+  "octave-report": HTMLDivElement;
+  "octave-refresh": HTMLButtonElement;
   "stats-panel": HTMLElement;
   "stats-scope": HTMLParagraphElement;
   "stats-period": HTMLSelectElement;
