@@ -26,6 +26,7 @@ from pathlib import Path, PurePosixPath, PureWindowsPath, WindowsPath
 import app_log
 import library
 import safe_write
+import serato_schema
 import serato_web.completeness as completeness
 import snapshot_frames
 import snapshots
@@ -211,6 +212,23 @@ def _plist(path: Path, values: dict[str, object]) -> None:
     """
     with path.open("wb") as handle:
         plistlib.dump(values, handle)
+
+
+def _set_user_version(path: Path, version: int) -> None:
+    """Store ``PRAGMA user_version`` in the database header.
+
+    Args:
+        path: Temporary database. It is checkpointed so the header, not only
+            the WAL, holds the number. The connection is closed.
+        version: Non-negative integer written into the header.
+    """
+    conn = sqlite3.connect(path)
+    try:
+        conn.execute(f"PRAGMA user_version = {int(version)}")
+        conn.commit()
+        conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    finally:
+        conn.close()
 
 
 @contextmanager
@@ -871,16 +889,18 @@ class SnapshotTests(unittest.TestCase):
             self.assertTrue(snapshots.write_block_message(found))
 
     def test_510_is_known_unprobed_and_later_builds_stay_unknown(self) -> None:
-        """List 5.1.0 and keep writes off until a schema probe is recorded.
+        """Allow probed 5.1.0 when Protect Library is off.
 
         4.x and probed 5.0.0 with Protect Library off stay writable.
-        5.1.0 with Protect off is still read-only. 5.1.1, 5.2.0, and 6.0.0
-        stay unknown. Snapshots stay allowed because the gate is the same
-        write-block path as an unknown version.
+        5.1.0 with Protect off is writable. 5.1.0 with Protect on stays
+        read-only. 5.1.1, 5.2.0, and 6.0.0 stay unknown. An explicit
+        install does not read the library header, so this case does not
+        open a database.
 
         Returns:
-            None. The test fails if 5.1.0 can write, or if 5.0.0 / 4.x
-            are blocked, or if a later unlisted build is treated as Serato 5.
+            None. The test fails if 5.1.0 with Protect off is blocked, if
+            Protect on is allowed, or if a later unlisted build is treated
+            as Serato 5.
         """
         self.assertIsNone(
             snapshots.write_block_notice(
@@ -897,14 +917,20 @@ class SnapshotTests(unittest.TestCase):
                 snapshots.SeratoInstall("5.0.0", "5.0.0.1251", "off")
             )
         )
-        notice = snapshots.write_block_notice(
-            snapshots.SeratoInstall("5.1.0", "5.1.0.1", "off")
+        self.assertIsNone(
+            snapshots.write_block_notice(
+                snapshots.SeratoInstall("5.1.0", "51025", "off")
+            )
         )
-        assert notice is not None
-        self.assertEqual(notice.code, "serato_version_unprobed")
-        self.assertEqual(notice.params, {"version": "5.1.0", "build": "5.1.0.1"})
-        self.assertIn("5.1.0", notice.text)
-        self.assertIn("5.1.0", snapshots.KNOWN_UNPROBED_VERSIONS)
+        self.assertIn("5.1.0", snapshots.PROBED_SERATO_5_VERSIONS)
+        self.assertNotIn("5.1.0", snapshots.KNOWN_UNPROBED_VERSIONS)
+        self.assertEqual(serato_schema.PROBED_USER_VERSIONS["5.1.0"], 203)
+        protected = snapshots.write_block_notice(
+            snapshots.SeratoInstall("5.1.0", "51025", "on")
+        )
+        assert protected is not None
+        self.assertIsNone(protected.code)
+        self.assertIn("Protect Library is on", protected.text)
         for version, build in (
             ("5.1.1", "5.1.1.1"),
             ("5.2.0", "5.2.0.1"),
@@ -916,6 +942,85 @@ class SnapshotTests(unittest.TestCase):
                 )
                 assert blocked is not None
                 self.assertEqual(blocked.code, "serato_version_unknown")
+
+    def test_mismatched_user_version_blocks_510_writes(self) -> None:
+        """Keep 5.1.0 read-only when the library header is not 203.
+
+        The live gate reads 64 bytes of ``master.sqlite``. It does not open
+        the file with sqlite. A matching header with Protect Library off is
+        writable. A different header blocks, including when Protect Library
+        is also on. 5.0.0 has no recorded user_version, so a header of 0
+        stays writable. An explicit install does not read the header. A
+        missing library file is not a schema mismatch. A file that is not
+        SQLite is unreadable and stays read-only.
+
+        Returns:
+            None. The test fails if a header of 204 can write, or if a
+            header of 203 is blocked while Protect Library is off.
+        """
+        with TempLibrary() as temp:
+            info = temp.root / "Info.plist"
+            prefs = temp.root / "Preferences.plist"
+            _plist(
+                info,
+                {"CFBundleShortVersionString": "5.1.0", "CFBundleVersion": "51025"},
+            )
+            _plist(prefs, {"library_protect": 0})
+            _set_user_version(temp.db, 204)
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=str(prefs)):
+                mismatch = snapshots.write_block_notice()
+                explicit = snapshots.write_block_notice(
+                    snapshots.SeratoInstall("5.1.0", "51025", "off")
+                )
+            assert mismatch is not None
+            self.assertEqual(mismatch.code, "serato_schema_mismatch")
+            self.assertEqual(
+                mismatch.params,
+                {"version": "5.1.0", "build": "51025", "expected": "203", "found": "204"},
+            )
+            self.assertIsNone(explicit)
+            _plist(prefs, {"library_protect": 1})
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=str(prefs)):
+                both = snapshots.write_block_notice()
+            assert both is not None
+            self.assertEqual(both.code, "serato_schema_mismatch")
+            _set_user_version(temp.db, 203)
+            _plist(prefs, {"library_protect": 0})
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=str(prefs)):
+                self.assertIsNone(snapshots.write_block_notice())
+            _plist(prefs, {"library_protect": 1})
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=str(prefs)):
+                protect = snapshots.write_block_notice()
+            assert protect is not None
+            self.assertIsNone(protect.code)
+            self.assertIn("Protect Library is on", protect.text)
+            _plist(
+                info,
+                {"CFBundleShortVersionString": "5.0.0", "CFBundleVersion": "5.0.0.1251"},
+            )
+            _plist(prefs, {"library_protect": 0})
+            _set_user_version(temp.db, 0)
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=str(prefs)):
+                self.assertIsNone(snapshots.write_block_notice())
+            _plist(
+                info,
+                {"CFBundleShortVersionString": "5.1.0", "CFBundleVersion": "51025"},
+            )
+            missing = temp.root / "missing.sqlite"
+            library.MASTER = str(missing)
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=str(prefs)):
+                self.assertIsNone(snapshots.write_block_notice())
+            junk = temp.root / "not-a-database.sqlite"
+            junk.write_bytes(b"not sqlite")
+            library.MASTER = str(junk)
+            with _env(CRATECRAFT_APP_INFO=str(info), CRATECRAFT_PREFERENCES=str(prefs)):
+                unreadable = snapshots.write_block_notice()
+            assert unreadable is not None
+            self.assertEqual(unreadable.code, "serato_schema_unreadable")
+            self.assertEqual(
+                unreadable.params,
+                {"version": "5.1.0", "build": "51025", "expected": "203"},
+            )
 
     def test_process_list_failure_blocks_restore_and_is_rechecked(self) -> None:
         """Treat a lister error or timeout as Serato still running.

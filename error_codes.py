@@ -222,6 +222,16 @@ PARAM_CODES: dict[str, str] = {
         "Writes and restores are off until a schema probe is recorded. "
         "Snapshots can still be taken and read."
     ),
+    "serato_schema_mismatch": (
+        "Serato {version} (build {build}) was probed at library schema {expected}. "
+        "This library is schema {found}. "
+        "Writes and restores are off. Snapshots can still be taken and read."
+    ),
+    "serato_schema_unreadable": (
+        "Serato {version} (build {build}) was probed at library schema {expected}, "
+        "and this library's schema could not be read. "
+        "Writes and restores are off. Snapshots can still be taken and read."
+    ),
     "library_log_unconfirmed": (
         "The session log does not confirm this library file ({database}). "
         "Writes and restores are off. Snapshots can still be taken and read."

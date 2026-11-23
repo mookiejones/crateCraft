@@ -520,20 +520,36 @@ class ErrorCodeTests(unittest.TestCase):
         self.assertIsNone(snapshots.write_block_notice(snapshots.SeratoInstall("4.1.0", "4.1.0.1", "off")))
 
     def test_unprobed_510_notice_carries_version_and_build(self) -> None:
-        """5.1.0 uses the unprobed template, not the unknown-version one.
+        """5.1.0 is probed, and the unprobed template is still in the catalog.
+
+        An explicit 5.1.0 install with Protect Library off is allowed. The
+        unprobed sentence stays for a later listed version. The schema
+        mismatch sentence matches the English catalog.
 
         Returns:
             None.
         """
-        install = snapshots.SeratoInstall("5.1.0", "5.1.0.1", "off")
-        notice = snapshots.write_block_notice(install)
-        assert notice is not None
-        self.assertEqual(notice.code, "serato_version_unprobed")
-        self.assertEqual(notice.params, {"version": "5.1.0", "build": "5.1.0.1"})
+        self.assertIsNone(
+            snapshots.write_block_notice(
+                snapshots.SeratoInstall("5.1.0", "51025", "off")
+            )
+        )
         template = _catalog("en")["error.serato_version_unprobed"]
         assert isinstance(template, str)
         self.assertEqual(
-            notice.text, template.format(version="5.1.0", build="5.1.0.1")
+            error_codes.render(
+                "serato_version_unprobed", {"version": "5.1.0", "build": "51025"}
+            ),
+            template.format(version="5.1.0", build="51025"),
+        )
+        mismatch = _catalog("en")["error.serato_schema_mismatch"]
+        assert isinstance(mismatch, str)
+        self.assertEqual(
+            error_codes.render(
+                "serato_schema_mismatch",
+                {"version": "5.1.0", "build": "51025", "expected": "203", "found": "202"},
+            ),
+            mismatch.format(version="5.1.0", build="51025", expected="203", found="202"),
         )
         self.assertIsNone(
             snapshots.write_block_notice(
