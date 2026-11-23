@@ -26,6 +26,7 @@ import album_art
 import audio_changed
 import app_config
 import bitrate_check
+import gain_reset
 import crate_compare
 import crate_trees
 import files
@@ -79,6 +80,7 @@ QUEUEABLE = frozenset(
         "/api/lost-tags",
         "/api/energy",
         "/api/audio-changed",
+        "/api/gain",
         "/api/crate-compare",
         "/api/album-art",
         "/api/bitrate-check",
@@ -525,6 +527,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return energy_level.action(request)
     if path == "/api/audio-changed":
         return audio_changed.action(request)
+    if path == "/api/gain":
+        return gain_reset.action(request)
     if path == "/api/crate-compare":
         return crate_compare.action(request)
     if path == "/api/album-art":

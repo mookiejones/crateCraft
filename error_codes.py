@@ -61,6 +61,8 @@ ERROR_CODES: dict[str, str] = {
     "Choose a crate for a bitrate check.": "bitrate_needs_crate",
     "Choose a crate for an energy check.": "energy_needs_crate",
     suspicious_cues.NEEDS_CONFIRM: "cues_needs_confirm",
+    "Confirm before stored gain is reset to 0 dB.": "gain_needs_confirm",
+    "Gain was not 0 dB after the write. The library was put back.": "gain_did_not_stick",
     path_forms.NEEDS_CONFIRM: "path_forms_needs_confirm",
     stick_cues.NEEDS_CONFIRM: "stick_cues_needs_confirm",
     stick_cues.NEEDS_DRIVE: "stick_needs_drive",

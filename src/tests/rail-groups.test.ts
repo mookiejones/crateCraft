@@ -52,6 +52,7 @@ describe("rail groups", () => {
       "lost",
       "energy",
       "audio",
+      "gain",
       "snapshots",
       "gig",
       "portable",

@@ -224,6 +224,15 @@ export interface ElementIds {
   "audio-status": HTMLParagraphElement;
   "audio-report": HTMLDivElement;
   "audio-heading": HTMLHeadingElement;
+  "gain-panel": HTMLElement;
+  "gain-scope": HTMLParagraphElement;
+  "gain-hint": HTMLParagraphElement;
+  "gain-refresh": HTMLButtonElement;
+  "gain-save": HTMLButtonElement;
+  "gain-reset": HTMLButtonElement;
+  "gain-status": HTMLParagraphElement;
+  "gain-report": HTMLDivElement;
+  "gain-heading": HTMLHeadingElement;
   "crate-search": HTMLInputElement;
   reload: HTMLButtonElement;
   "export-m3u": HTMLButtonElement;

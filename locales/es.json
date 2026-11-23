@@ -1071,6 +1071,7 @@
   "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
   "merge.trashNote": "Desactivado por defecto. Los archivos van a la papelera de crateCraft durante 7 días. Restáuralos desde Copias de seguridad. No se eliminan para siempre hasta que termine ese plazo.",
   "mode.audio": "Avisa de un archivo reemplazado. Crear una caja escribe en la biblioteca. Los cues y la rejilla se quedan. Cierra Serato primero.",
+  "mode.gain": "Lista pistas cuyo Gain dB de Autotags no es 0. El reset solo escribe ese campo. Cierra Serato primero.",
   "mode.bitrate": "Necesita una caja. Guardar una caja escribe en la biblioteca. Cierra Serato primero.",
   "mode.compare": "Elige dos crates. Guardar una crate escribe en la biblioteca. Cierra Serato primero.",
   "mode.drift": "Solo lectura. Esta comprobación no cambia la biblioteca.",
@@ -2332,5 +2333,59 @@
   "tooltip.forceWrite": "Escribir aunque los archivos de la biblioteca cambiaron después de cargarse.",
   "write.forceTitle": "Biblioteca cambiada",
   "write.forceConfirm": "Los archivos de la biblioteca cambiaron en disco desde que se cargaron. ¿Escribir de todos modos?",
-  "write.forceWrite": "Escribir de todos modos"
+  "write.forceWrite": "Escribir de todos modos",
+  "view.gain": "Ganancia cambiada",
+  "gain.heading": "Ganancia cambiada",
+  "gain.intro": "Pistas cuya ganancia Autotags no es 0 dB. El restablecimiento solo escribe ese campo. Cierra Serato primero.",
+  "gain.checking": "Comprobando…",
+  "gain.empty": "Ninguna pista tiene una ganancia guardada distinta de cero.",
+  "gain.loadFailed": "No se pudo leer el informe de ganancia.",
+  "gain.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Comprobar de nuevo",
+  "gain.summary": {
+    "one": "{checked} archivos comprobados. 1 pista tiene ganancia distinta de cero.",
+    "other": "{checked} archivos comprobados. {count} pistas tienen ganancia distinta de cero."
+  },
+  "gain.summaryClear": "{checked} archivos comprobados. Ninguna tiene ganancia distinta de cero.",
+  "gain.offline": {
+    "one": "Se omitió 1 archivo en una unidad desconectada.",
+    "other": "Se omitieron {count} archivos en unidades desconectadas."
+  },
+  "gain.unreadableFiles": {
+    "one": "No se pudo leer 1 archivo.",
+    "other": "No se pudieron leer {count} archivos."
+  },
+  "gain.column.gain": "Ganancia dB",
+  "gain.saveCrate": "Guardar crate",
+  "gain.saving": "Preparando el crate…",
+  "gain.confirmCrate": "Confirmar crate",
+  "gain.confirming": "Guardando el crate…",
+  "gain.preview": {
+    "one": "1 pista iría en {folder} / {name}. No se escribe nada hasta que confirmes.",
+    "other": "{count} pistas irían en {folder} / {name}. No se escribe nada hasta que confirmes."
+  },
+  "gain.previewEmpty": "Nada que guardar. No se escribe ningún crate.",
+  "gain.written": {
+    "one": "Se guardó 1 pista en {folder} / {name}.",
+    "other": "Se guardaron {count} pistas en {folder} / {name}."
+  },
+  "gain.reset": "Restablecer a 0 dB",
+  "gain.resetting": "Restableciendo ganancia…",
+  "gain.confirmReset": "Confirmar restablecimiento",
+  "gain.resetPreview": {
+    "one": "1 pista restablecería la ganancia a 0 dB. Cierra Serato primero.",
+    "other": "{count} pistas restablecerían la ganancia a 0 dB. Cierra Serato primero."
+  },
+  "gain.resetDone": {
+    "one": "Ganancia restablecida a 0 dB en 1 pista.",
+    "other": "Ganancia restablecida a 0 dB en {count} pistas."
+  },
+  "gain.resetEmpty": "Nada que restablecer.",
+  "tooltip.viewGain": "Lista pistas cuya ganancia Autotags no es 0 dB. El restablecimiento solo escribe ese campo.",
+  "tooltip.gainRefresh": "Comprobar de nuevo la ganancia Autotags distinta de cero.",
+  "tooltip.gainSave": "Vista previa de un crate Ganancia cambiada bajo crateCraft. No se escribe nada hasta que confirmes.",
+  "tooltip.gainConfirm": "Guarda el crate Ganancia cambiada bajo crateCraft. Cierra Serato primero.",
+  "tooltip.gainReset": "Vista previa de restablecer la ganancia Autotags a 0. Markers2 y BeatGrid se quedan.",
+  "tooltip.gainConfirmReset": "Restablece la ganancia Autotags a 0 dB. Cierra Serato primero. Se puede deshacer desde Copias de seguridad.",
+  "error.gain_needs_confirm": "Confirma antes de restablecer la ganancia guardada a 0 dB.",
+  "error.gain_did_not_stick": "La ganancia no quedó en 0 dB tras la escritura. Se restauró la biblioteca."
 }

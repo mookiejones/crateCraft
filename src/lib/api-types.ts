@@ -1381,6 +1381,36 @@ export interface AudioReanalyzePlan extends AudioChangedReport {
   count: number;
 }
 
+
+export interface GainChangedTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  path: string;
+  gain_db: number;
+}
+
+export interface GainChangedReport {
+  checked: number;
+  offline: number;
+  not_found: number;
+  unreadable: number;
+  changed: GainChangedTrack[];
+  folder: string;
+  name: string;
+  error?: string;
+  code?: string;
+}
+
+export interface GainChangedPlan extends GainChangedReport {
+  preview?: boolean;
+  written?: boolean;
+  added?: number;
+  saved?: { id: number; name: string } | null;
+}
+
+
 export interface CrateCompareTrack {
   id: number;
   name: string;

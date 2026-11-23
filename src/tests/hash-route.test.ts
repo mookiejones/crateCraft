@@ -88,6 +88,7 @@ describe("parseHash", () => {
       "lost",
       "energy",
       "audio",
+      "gain",
       "snapshots",
       "gig",
       "portable",

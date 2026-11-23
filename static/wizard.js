@@ -22061,6 +22061,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "merge.trashLabel": "Move the other audio files to the Trash",
     "merge.trashNote": "Off by default. Files go to the crateCraft trash for 7 days. Restore them from Backups. They are not permanently deleted until that window ends.",
     "mode.audio": "Notices a replaced file. Creating a crate writes the library. Cues and the beatgrid stay put. Quit Serato first.",
+    "mode.gain": "Lists tracks whose Autotags Gain dB is not 0. Reset writes only that field. Quit Serato first.",
     "mode.bitrate": "Needs a crate. Saving a crate writes the library. Quit Serato first.",
     "mode.compare": "Pick two crates. Saving a crate writes the library. Quit Serato first.",
     "mode.drift": "Read-only. This check does not change the library.",
@@ -23322,7 +23323,61 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.forceWrite": "Write even though the library files changed after they were loaded.",
     "write.forceTitle": "Library changed",
     "write.forceConfirm": "The library files changed on disk since they were loaded. Write anyway?",
-    "write.forceWrite": "Write anyway"
+    "write.forceWrite": "Write anyway",
+    "view.gain": "Gain changed",
+    "gain.heading": "Gain changed",
+    "gain.intro": "Tracks whose Autotags Gain dB is not 0. Reset writes only that field. Quit Serato first.",
+    "gain.checking": "Checking…",
+    "gain.empty": "No track has a non-zero stored gain.",
+    "gain.loadFailed": "The gain report could not be read.",
+    "gain.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+    "gain.summary": {
+      one: "{checked} files checked. 1 track has a non-zero gain.",
+      other: "{checked} files checked. {count} tracks have a non-zero gain."
+    },
+    "gain.summaryClear": "{checked} files checked. None have a non-zero gain.",
+    "gain.offline": {
+      one: "1 file on an unplugged drive was skipped.",
+      other: "{count} files on unplugged drives were skipped."
+    },
+    "gain.unreadableFiles": {
+      one: "1 file could not be read.",
+      other: "{count} files could not be read."
+    },
+    "gain.column.gain": "Gain dB",
+    "gain.saveCrate": "Save crate",
+    "gain.saving": "Preparing the crate…",
+    "gain.confirmCrate": "Confirm crate",
+    "gain.confirming": "Saving the crate…",
+    "gain.preview": {
+      one: "1 track would go in {folder} / {name}. Nothing is written until you confirm.",
+      other: "{count} tracks would go in {folder} / {name}. Nothing is written until you confirm."
+    },
+    "gain.previewEmpty": "Nothing to save. No crate is written.",
+    "gain.written": {
+      one: "Saved 1 track in {folder} / {name}.",
+      other: "Saved {count} tracks in {folder} / {name}."
+    },
+    "gain.reset": "Reset to 0 dB",
+    "gain.resetting": "Resetting gain…",
+    "gain.confirmReset": "Confirm reset",
+    "gain.resetPreview": {
+      one: "1 track would reset Gain dB to 0. Quit Serato first.",
+      other: "{count} tracks would reset Gain dB to 0. Quit Serato first."
+    },
+    "gain.resetDone": {
+      one: "Reset Gain dB to 0 on 1 track.",
+      other: "Reset Gain dB to 0 on {count} tracks."
+    },
+    "gain.resetEmpty": "Nothing to reset.",
+    "tooltip.viewGain": "List tracks whose Autotags Gain dB is not 0. Reset writes only that field.",
+    "tooltip.gainRefresh": "Check again for non-zero Autotags Gain dB.",
+    "tooltip.gainSave": "Preview a Gain changed crate under crateCraft. Nothing is written until you confirm.",
+    "tooltip.gainConfirm": "Save the Gain changed crate under crateCraft. Quit Serato first.",
+    "tooltip.gainReset": "Preview resetting Autotags Gain dB to 0. Markers2 and BeatGrid stay put.",
+    "tooltip.gainConfirmReset": "Reset Autotags Gain dB to 0. Quit Serato first. Undoable from Backups.",
+    "error.gain_needs_confirm": "Confirm before stored gain is reset to 0 dB.",
+    "error.gain_did_not_stick": "Gain was not 0 dB after the write. The library was put back."
   };
 
   // locales/es.json
@@ -24399,6 +24454,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "merge.trashLabel": "Mover los otros archivos de audio a la Papelera",
     "merge.trashNote": "Desactivado por defecto. Los archivos van a la papelera de crateCraft durante 7 días. Restáuralos desde Copias de seguridad. No se eliminan para siempre hasta que termine ese plazo.",
     "mode.audio": "Avisa de un archivo reemplazado. Crear una caja escribe en la biblioteca. Los cues y la rejilla se quedan. Cierra Serato primero.",
+    "mode.gain": "Lista pistas cuyo Gain dB de Autotags no es 0. El reset solo escribe ese campo. Cierra Serato primero.",
     "mode.bitrate": "Necesita una caja. Guardar una caja escribe en la biblioteca. Cierra Serato primero.",
     "mode.compare": "Elige dos crates. Guardar una crate escribe en la biblioteca. Cierra Serato primero.",
     "mode.drift": "Solo lectura. Esta comprobación no cambia la biblioteca.",
@@ -25660,7 +25716,61 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.forceWrite": "Escribir aunque los archivos de la biblioteca cambiaron después de cargarse.",
     "write.forceTitle": "Biblioteca cambiada",
     "write.forceConfirm": "Los archivos de la biblioteca cambiaron en disco desde que se cargaron. ¿Escribir de todos modos?",
-    "write.forceWrite": "Escribir de todos modos"
+    "write.forceWrite": "Escribir de todos modos",
+    "view.gain": "Ganancia cambiada",
+    "gain.heading": "Ganancia cambiada",
+    "gain.intro": "Pistas cuya ganancia Autotags no es 0 dB. El restablecimiento solo escribe ese campo. Cierra Serato primero.",
+    "gain.checking": "Comprobando…",
+    "gain.empty": "Ninguna pista tiene una ganancia guardada distinta de cero.",
+    "gain.loadFailed": "No se pudo leer el informe de ganancia.",
+    "gain.unreachable": "No se pudo alcanzar el servidor de la biblioteca. Comprueba que está en marcha y pulsa Comprobar de nuevo",
+    "gain.summary": {
+      one: "{checked} archivos comprobados. 1 pista tiene ganancia distinta de cero.",
+      other: "{checked} archivos comprobados. {count} pistas tienen ganancia distinta de cero."
+    },
+    "gain.summaryClear": "{checked} archivos comprobados. Ninguna tiene ganancia distinta de cero.",
+    "gain.offline": {
+      one: "Se omitió 1 archivo en una unidad desconectada.",
+      other: "Se omitieron {count} archivos en unidades desconectadas."
+    },
+    "gain.unreadableFiles": {
+      one: "No se pudo leer 1 archivo.",
+      other: "No se pudieron leer {count} archivos."
+    },
+    "gain.column.gain": "Ganancia dB",
+    "gain.saveCrate": "Guardar crate",
+    "gain.saving": "Preparando el crate…",
+    "gain.confirmCrate": "Confirmar crate",
+    "gain.confirming": "Guardando el crate…",
+    "gain.preview": {
+      one: "1 pista iría en {folder} / {name}. No se escribe nada hasta que confirmes.",
+      other: "{count} pistas irían en {folder} / {name}. No se escribe nada hasta que confirmes."
+    },
+    "gain.previewEmpty": "Nada que guardar. No se escribe ningún crate.",
+    "gain.written": {
+      one: "Se guardó 1 pista en {folder} / {name}.",
+      other: "Se guardaron {count} pistas en {folder} / {name}."
+    },
+    "gain.reset": "Restablecer a 0 dB",
+    "gain.resetting": "Restableciendo ganancia…",
+    "gain.confirmReset": "Confirmar restablecimiento",
+    "gain.resetPreview": {
+      one: "1 pista restablecería la ganancia a 0 dB. Cierra Serato primero.",
+      other: "{count} pistas restablecerían la ganancia a 0 dB. Cierra Serato primero."
+    },
+    "gain.resetDone": {
+      one: "Ganancia restablecida a 0 dB en 1 pista.",
+      other: "Ganancia restablecida a 0 dB en {count} pistas."
+    },
+    "gain.resetEmpty": "Nada que restablecer.",
+    "tooltip.viewGain": "Lista pistas cuya ganancia Autotags no es 0 dB. El restablecimiento solo escribe ese campo.",
+    "tooltip.gainRefresh": "Comprobar de nuevo la ganancia Autotags distinta de cero.",
+    "tooltip.gainSave": "Vista previa de un crate Ganancia cambiada bajo crateCraft. No se escribe nada hasta que confirmes.",
+    "tooltip.gainConfirm": "Guarda el crate Ganancia cambiada bajo crateCraft. Cierra Serato primero.",
+    "tooltip.gainReset": "Vista previa de restablecer la ganancia Autotags a 0. Markers2 y BeatGrid se quedan.",
+    "tooltip.gainConfirmReset": "Restablece la ganancia Autotags a 0 dB. Cierra Serato primero. Se puede deshacer desde Copias de seguridad.",
+    "error.gain_needs_confirm": "Confirma antes de restablecer la ganancia guardada a 0 dB.",
+    "error.gain_did_not_stick": "La ganancia no quedó en 0 dB tras la escritura. Se restauró la biblioteca."
   };
 
   // src/lib/i18n.ts
@@ -26312,12 +26422,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     viewLost: spec("tooltip.viewLost"),
     viewEnergy: spec("tooltip.viewEnergy"),
     viewAudio: spec("tooltip.viewAudio"),
+    viewGain: spec("tooltip.viewGain"),
     lostApply: spec("tooltip.lostApply"),
     lostRefresh: spec("tooltip.lostRefresh"),
     energyApply: spec("tooltip.energyApply"),
     energyRefresh: spec("tooltip.energyRefresh"),
     audioRefresh: spec("tooltip.audioRefresh"),
     audioSave: spec("tooltip.audioSave"),
+    gainConfirm: spec("tooltip.gainConfirm"),
+    gainConfirmReset: spec("tooltip.gainConfirmReset"),
+    gainRefresh: spec("tooltip.gainRefresh"),
+    gainSave: spec("tooltip.gainSave"),
+    gainReset: spec("tooltip.gainReset"),
     audioReanalyze: spec("tooltip.audioReanalyze"),
     audioConfirm: spec("tooltip.audioConfirm"),
     healthRefresh: spec("tooltip.healthRefresh"),
