@@ -1,5 +1,5 @@
 /**
- * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, energy, audio changed, tempo drift, BPM check, and the portable drive check.
+ * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, energy, re-analyze, audio changed, tempo drift, BPM check, and the portable drive check.
  *
  * Files is React on FilesContext. This module re-exports that store so
  * existing callers keep one import. Play stats fetch is history-stats.ts;
@@ -38,6 +38,7 @@ import { loadBitrate, showBitrateFailure } from "../health/bitrate";
 import { loadTags, showTagsFailure } from "../health/tags";
 import { loadLostTags, showLostTagsFailure } from "../health/lost-tags";
 import { loadEnergy, showEnergyFailure } from "../health/energy";
+import { loadReanalyze, showReanalyzeFailure } from "../health/reanalyze";
 import { loadAudioChanged, showAudioChangedFailure } from "../health/audio-changed";
 import { loadCrateCompare, showCrateCompareFailure } from "../crates/crate-compare";
 import { loadPortableView, showPortableFailure } from "../gig/portable";
@@ -525,9 +526,10 @@ export function renderShell() {
   const tagsMode = state.mode === "tags";
   const lostMode = state.mode === "lost";
   const energyMode = state.mode === "energy";
+  const reanalyzeMode = state.mode === "reanalyze";
   const audioMode = state.mode === "audio";
   const historyMode = state.mode === "history";
-  const showCrates = cratesMode || gigMode || driftMode || octaveMode || healthMode || scanMode || bitrateMode || energyMode;
+  const showCrates = cratesMode || gigMode || driftMode || octaveMode || healthMode || scanMode || bitrateMode || energyMode || reanalyzeMode;
   el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
   el("crate-list").hidden = !showCrates;
@@ -538,7 +540,7 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || octaveMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || audioMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || octaveMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || reanalyzeMode || audioMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
@@ -556,6 +558,7 @@ export function renderShell() {
   el("tags-panel").hidden = !tagsMode;
   el("lost-panel").hidden = !lostMode;
   el("energy-panel").hidden = !energyMode;
+  el("reanalyze-panel").hidden = !reanalyzeMode;
   el("audio-panel").hidden = !audioMode;
   const listNote = healthListNote();
   if (listNote) el("mode-note").textContent = listNote;
@@ -608,6 +611,10 @@ export function renderShell() {
     el("mode-note").textContent = t("mode.energy");
     document.querySelector(".rules")?.remove();
   }
+  if (reanalyzeMode) {
+    el("mode-note").textContent = t("mode.reanalyze");
+    document.querySelector(".rules")?.remove();
+  }
   if (audioMode) {
     el("mode-note").textContent = t("mode.audio");
     document.querySelector(".rules")?.remove();
@@ -650,7 +657,7 @@ export function renderShell() {
     el("crate-foot").textContent = state.filesLoading ? t("files.readingFolder") : t("files.fileCount", { count: listed });
     return;
   }
-  if (gigMode || healthMode || scanMode || bitrateMode || energyMode) {
+  if (gigMode || healthMode || scanMode || bitrateMode || energyMode || reanalyzeMode) {
     const crate = state.crates.find((item) => item.id === state.activeCrate);
     el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
     return;
@@ -733,6 +740,11 @@ export function renderList() {
     return;
   }
   if (state.mode === "energy") {
+    renderCrates();
+    paintDualChrome();
+    return;
+  }
+  if (state.mode === "reanalyze") {
     renderCrates();
     paintDualChrome();
     return;
@@ -840,6 +852,7 @@ export function selectCrate(id: number | "all", event?: MouseEvent) {
   if (state.mode === "scan") loadScan().catch(showScanFailure);
   if (state.mode === "bitrate") loadBitrate().catch(showBitrateFailure);
   if (state.mode === "energy") loadEnergy().catch(showEnergyFailure);
+  if (state.mode === "reanalyze") loadReanalyze().catch(showReanalyzeFailure);
   if (pane !== "b") syncHash();
 }
 
@@ -2616,6 +2629,7 @@ export function setMode(mode: string) {
   if (mode === "tags") loadTags().catch(showTagsFailure);
   if (mode === "lost") loadLostTags().catch(showLostTagsFailure);
   if (mode === "energy") loadEnergy().catch(showEnergyFailure);
+  if (mode === "reanalyze") loadReanalyze().catch(showReanalyzeFailure);
   if (mode === "audio") loadAudioChanged().catch(showAudioChangedFailure);
   if (mode === "compare") loadCrateCompare().catch(showCrateCompareFailure);
   renderList();
@@ -2816,6 +2830,7 @@ export function wireLibrary(): void {
     if (state.mode === "tags") jobs.push(loadTags().catch(showTagsFailure));
     if (state.mode === "lost") jobs.push(loadLostTags().catch(showLostTagsFailure));
     if (state.mode === "energy") jobs.push(loadEnergy().catch(showEnergyFailure));
+    if (state.mode === "reanalyze") jobs.push(loadReanalyze().catch(showReanalyzeFailure));
     if (state.mode === "audio") jobs.push(loadAudioChanged().catch(showAudioChangedFailure));
     if (state.mode === "compare") jobs.push(loadCrateCompare().catch(showCrateCompareFailure));
     Promise.all(jobs).catch(showFailure);
@@ -2857,6 +2872,7 @@ export function wireLibrary(): void {
       if (state.mode === "tags") return loadTags().catch(showTagsFailure);
       if (state.mode === "lost") return loadLostTags().catch(showLostTagsFailure);
       if (state.mode === "energy") return loadEnergy().catch(showEnergyFailure);
+      if (state.mode === "reanalyze") return loadReanalyze().catch(showReanalyzeFailure);
       if (state.mode === "audio") return loadAudioChanged().catch(showAudioChangedFailure);
       if (state.mode === "compare") return loadCrateCompare().catch(showCrateCompareFailure);
       return null;

@@ -68,6 +68,7 @@
           <button type="button" id="tags-tab" data-view="tags" role="tab" hidden aria-controls="tags-panel" data-i18n="view.tags">Tag spellings</button>
           <button type="button" id="lost-tab" data-view="lost" role="tab" hidden aria-controls="lost-panel" data-i18n="view.lost">Lost tags</button>
           <button type="button" id="energy-tab" data-view="energy" role="tab" hidden aria-controls="energy-panel" data-i18n="view.energy">Energy</button>
+          <button type="button" id="reanalyze-tab" data-view="reanalyze" role="tab" hidden aria-controls="reanalyze-panel" data-i18n="view.reanalyze">Re-analyze</button>
           <button type="button" id="audio-tab" data-view="audio" role="tab" hidden aria-controls="audio-panel" data-i18n="view.audio">Audio changed</button>
           <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
           <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
@@ -421,6 +422,26 @@
         <p id="energy-hint" class="gig-note" data-i18n="energy.intro">Needs a crate. Writes Energy 1–10 into a blank Grouping field. Audio files stay. Quit Serato first.</p>
         <p id="energy-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="energy-report" class="gig-report" tabindex="-1"></div>
+      </section>
+
+      <section id="reanalyze-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="reanalyze-heading" aria-busy="false">
+        <h2 id="reanalyze-heading" class="visually-hidden" data-i18n="reanalyze.heading">Re-analyze</h2>
+        <div class="browser-bar">
+          <p id="reanalyze-scope" class="files-path" data-i18n="crates.allTracks">All tracks</p>
+          <button id="reanalyze-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+          <button id="reanalyze-preview" type="button" data-i18n="reanalyze.preview">Preview</button>
+        </div>
+        <p id="reanalyze-hint" class="gig-note" data-i18n="reanalyze.intro">Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids and overviews. Cues stay. Quit Serato first.</p>
+        <label class="gig-note">
+          <input type="checkbox" id="reanalyze-clear-frames" checked>
+          <span data-i18n="reanalyze.clearFrames">Also clear BeatGrid and Autotags</span>
+        </label>
+        <label class="gig-note">
+          <input type="checkbox" id="reanalyze-include-locked">
+          <span data-i18n="reanalyze.includeLocked">Include locked beatgrids (unlocks them)</span>
+        </label>
+        <p id="reanalyze-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="reanalyze-report" class="gig-report" tabindex="-1"></div>
       </section>
 
       <section id="audio-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="audio-heading" aria-busy="false">

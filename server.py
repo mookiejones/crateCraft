@@ -56,6 +56,7 @@ import portable_smart
 import rekordbox
 import related
 import relink
+import reanalyze
 import version_family
 import setup_flow
 import smart_presets
@@ -2133,9 +2134,28 @@ class Handler(BaseHTTPRequestHandler):
                 energy_level.require_crate(crate_id)
                 self.send_json(energy_level.plan(Path(library.MASTER), space, crate_id))
                 return
+            if parsed.path == "/api/reanalyze":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                reanalyze.require_crate(crate_id)
+                clear_frames = (query_text(query, "clear_frames", "1") or "1") != "0"
+                include_locked = (query_text(query, "include_locked", "0") or "0") == "1"
+                self.send_json(
+                    reanalyze.preview(
+                        space,
+                        crate_id,
+                        clear_frames=clear_frames,
+                        include_locked=include_locked,
+                    )
+                )
+                return
             if parsed.path == "/api/audio-changed":
                 space = require_space(query_text(query, "space"))
                 self.send_json(audio_changed.scan(Path(library.MASTER), space))
+                return
+            if parsed.path == "/api/gain":
+                space = require_space(query_text(query, "space"))
+                self.send_json(gain_reset.scan(Path(library.MASTER), space))
                 return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
@@ -2356,11 +2376,14 @@ class Handler(BaseHTTPRequestHandler):
                     families = parsed.path == "/api/genre-families"
                     losting = parsed.path == "/api/lost-tags"
                     energizing = parsed.path == "/api/energy"
+                    reanalyzing = parsed.path == "/api/reanalyze"
                     swapping = parsed.path == "/api/audio-changed"
+                    gaining = parsed.path == "/api/gain"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     bpm_check = parsed.path == "/api/bpm-sanity"
                     cueing = parsed.path == "/api/suspicious-cues"
+                    cue_editing = parsed.path == "/api/cue-edit"
                     forming = parsed.path == "/api/path-forms"
                     porting = parsed.path == "/api/portable-smart"
                     sticking = parsed.path == "/api/stick-cues"
@@ -2403,11 +2426,31 @@ class Handler(BaseHTTPRequestHandler):
                         or (losting and payload.get("action") == "preview")
                         or (energizing and payload.get("action") == "preview")
                         or (
+                            reanalyzing
+                            and (
+                                payload.get("action") == "preview"
+                                or (
+                                    payload.get("action") == "apply"
+                                    and payload.get("confirm") is not True
+                                )
+                            )
+                        )
+                        or (
                             swapping
                             and (
                                 payload.get("action") in ("preview", "reanalyze")
                                 or (
                                     payload.get("action") == "create"
+                                    and payload.get("confirm") is not True
+                                )
+                            )
+                        )
+                        or (
+                            gaining
+                            and (
+                                payload.get("action") == "preview"
+                                or (
+                                    payload.get("action") in ("create", "reset")
                                     and payload.get("confirm") is not True
                                 )
                             )
@@ -2419,6 +2462,12 @@ class Handler(BaseHTTPRequestHandler):
                         or (bpm_check and payload.get("confirm") is not True)
                         or (cueing and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
+                        or (cue_editing and payload.get("action") == "preview")
+                        or (
+                            cue_editing
+                            and payload.get("action") in ("apply", "undo")
+                            and payload.get("confirm") is not True
+                        )
                         or (forming and payload.get("action") == "preview")
                         or (forming and payload.get("action") == "apply" and payload.get("confirm") is not True)
                         or (porting and payload.get("action") == "preview")
@@ -2520,10 +2569,24 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = energy_level.action(request)
+                    elif reanalyzing:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = reanalyze.action(request)
                     elif swapping:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = audio_changed.action(request)
+                        if (
+                            request.get("action") == "create"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif gaining:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = gain_reset.action(request)
                         if (
                             request.get("action") == "create"
                             and request.get("confirm") is True
@@ -2565,6 +2628,11 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = suspicious_cues.action(request)
+                    elif cue_editing:
+                        request = dict(payload)
+                        if request.get("action") != "undo":
+                            request["space"] = require_space(optional_text(payload.get("space")))
+                        result = cue_edit.action(request)
                     elif forming:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
