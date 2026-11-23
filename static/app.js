@@ -73820,6 +73820,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     );
   }
+  function CuePads({ cues: cues2 }) {
+    let slots = cueSlots(cues2), extra = extraCues(cues2);
+    return /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(import_jsx_runtime294.Fragment, { children: [
+      slots.map((cue, slot) => /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(CueSlot, { slot, cue }, slot)),
+      extra.map((cue, index) => {
+        let cueIndex = Number(cue.index), slot = Number.isInteger(cueIndex) ? cueIndex : -1;
+        return /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(CueSlot, { slot, cue }, `extra-${index}`);
+      })
+    ] });
+  }
 
   // src/components/CueEditor.tsx
   var import_jsx_runtime295 = __toESM(require_jsx_runtime(), 1), DEFAULT_PALETTE = [
@@ -73897,12 +73907,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     function onDiscard() {
       setPending([...baseline]), setSwapFrom(null), setStatus(t("markers.cueEdit.discarded"));
     }
-    let note = t("markers.cueEdit.help");
-    track.markers_unavailable ? note = t("markers.unavailable") : !editable && reasonText ? note = reasonText : !track.markers_found && !editable ? note = t("markers.none") : editable || (note = t("markers.readOnly"));
-    let cues2 = track.cues || [], showPads = !track.markers_unavailable;
+    let cues2 = track.cues || [], note = t("markers.cueEdit.help");
+    track.markers_unavailable ? note = t("markers.unavailable") : !track.markers_found && cues2.length === 0 ? note = t("markers.none") : !editable && reasonText ? note = reasonText : editable ? note = t("markers.cueEdit.help") : note = t("markers.readOnly");
+    let showPads = !track.markers_unavailable && (cues2.length > 0 || canEdit);
     return /* @__PURE__ */ (0, import_jsx_runtime295.jsxs)(import_jsx_runtime295.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime295.jsx)("p", { className: "detail-kicker", children: note }),
-      showPads ? /* @__PURE__ */ (0, import_jsx_runtime295.jsxs)("div", { className: "cue-editor", "data-editable": canEdit ? "true" : "false", children: [
+      showPads && !canEdit ? /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(CuePads, { cues: cues2 }) : null,
+      showPads && canEdit ? /* @__PURE__ */ (0, import_jsx_runtime295.jsxs)("div", { className: "cue-editor", "data-editable": "true", children: [
         pending.map((pad, slot) => /* @__PURE__ */ (0, import_jsx_runtime295.jsx)(
           CueEditRow,
           {
@@ -73910,7 +73921,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             pad,
             palette: palette2,
             beatMs,
-            disabled: !canEdit,
+            disabled: !1,
             swapArmed: swapFrom === slot,
             playheadSeconds: player2.mediaTime(),
             onChange: (next3) => updateSlot(slot, next3),

@@ -45,7 +45,7 @@ import {
   cueEditTimeTip,
 } from "../lib/ui/tooltip-strings";
 import { tooltipRef } from "./tooltip-ref";
-import { CueSlot } from "./CuePads";
+import { CuePads, CueSlot } from "./CuePads";
 
 const DEFAULT_PALETTE = [
   "#C02626",
@@ -199,20 +199,25 @@ export function CueEditor({ track, writable }: CueEditorProps) {
     setStatus(t("markers.cueEdit.discarded"));
   }
 
+  const cues = track.cues || [];
   let note = t("markers.cueEdit.help");
   if (track.markers_unavailable) note = t("markers.unavailable");
+  else if (!track.markers_found && cues.length === 0) note = t("markers.none");
   else if (!editable && reasonText) note = reasonText;
-  else if (!track.markers_found && !editable) note = t("markers.none");
   else if (!editable) note = t("markers.readOnly");
+  else note = t("markers.cueEdit.help");
 
-  const cues = track.cues || [];
-  const showPads = !track.markers_unavailable;
+  // Read-only keeps the CuePads list (Empty label, no inputs). The editor
+  // rows appear once preview says the library can write.
+  const showPads =
+    !track.markers_unavailable && (cues.length > 0 || canEdit);
 
   return (
     <>
       <p className="detail-kicker">{note}</p>
-      {showPads ? (
-        <div className="cue-editor" data-editable={canEdit ? "true" : "false"}>
+      {showPads && !canEdit ? <CuePads cues={cues} /> : null}
+      {showPads && canEdit ? (
+        <div className="cue-editor" data-editable="true">
           {pending.map((pad, slot) => (
             <CueEditRow
               key={slot}
@@ -220,7 +225,7 @@ export function CueEditor({ track, writable }: CueEditorProps) {
               pad={pad}
               palette={palette}
               beatMs={beatMs}
-              disabled={!canEdit}
+              disabled={false}
               swapArmed={swapFrom === slot}
               playheadSeconds={player.mediaTime()}
               onChange={(next) => updateSlot(slot, next)}
