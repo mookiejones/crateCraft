@@ -253,6 +253,54 @@ def _save_backups(payload: Mapping[str, object]) -> None:
     os.replace(tmp, path)
 
 
+def _absolute_under_drive(value: str) -> str:
+    """Normalize a caller path and require it stay on its drive root.
+
+    Same guard as :func:`music_mirror._open_dest` so CodeQL treats the
+    path as contained before any join or open.
+
+    Args:
+        value: Non-empty path string (already stripped).
+
+    Returns:
+        Absolute normalized path string.
+
+    Raises:
+        LibraryError: When the path escapes its drive root.
+    """
+    expanded = os.path.expanduser(value)
+    normalized = os.path.normpath(os.path.abspath(expanded))
+    root = os.path.abspath(os.path.splitdrive(normalized)[0] + os.sep)
+    if not normalized.startswith(root):
+        raise LibraryError(folder_sync.FOLDER_UNREADABLE)
+    return normalized
+
+
+def _under_base(base: Path, candidate: Path) -> bool:
+    """True when ``candidate`` is ``base`` or a file under it."""
+    try:
+        candidate.relative_to(base)
+    except ValueError:
+        return False
+    return True
+
+
+def _unsafe_rel_parts(parts: Sequence[str]) -> bool:
+    """True when a relative dest would leave the folder."""
+    return any(part in (".", "..") or "\x00" in part for part in parts)
+
+
+def _dest_for(dest: Path, rel: str) -> Path | None:
+    """Map a stick-relative path onto dest, or None when unsafe."""
+    parts = Path(rel.replace("\\", "/")).parts
+    if not parts or _unsafe_rel_parts(parts):
+        return None
+    candidate = dest.joinpath(*parts)
+    if not _under_base(dest, candidate):
+        return None
+    return candidate
+
+
 def _open_source(value: object) -> Path:
     """Resolve a Serato stick root. Does not write.
 
@@ -263,9 +311,7 @@ def _open_source(value: object) -> Path:
         raise LibraryError(SOURCE_MISSING)
     if "\x00" in value or len(value.strip()) > 4096:
         raise LibraryError(folder_sync.FOLDER_UNREADABLE)
-    expanded = os.path.expanduser(value.strip())
-    normalized = os.path.normpath(os.path.abspath(expanded))
-    path = Path(normalized)
+    path = Path(_absolute_under_drive(value.strip()))
     try:
         if path.is_symlink():
             raise LibraryError(SOURCE_SHORTCUT)
@@ -275,7 +321,10 @@ def _open_source(value: object) -> Path:
         raise
     except OSError as exc:
         raise LibraryError(folder_sync.FOLDER_UNREADABLE) from exc
-    source = _normalized(path)
+    try:
+        source = path.resolve(strict=False)
+    except OSError as exc:
+        raise LibraryError(folder_sync.FOLDER_UNREADABLE) from exc
     serato = source / "_Serato_"
     try:
         if serato.is_symlink():
@@ -295,9 +344,7 @@ def _open_dest(value: object, source: Path, *, must_exist: bool) -> Path:
         raise LibraryError(folder_sync.CHOOSE_FOLDER)
     if "\x00" in value or len(value.strip()) > 4096:
         raise LibraryError(folder_sync.FOLDER_UNREADABLE)
-    expanded = os.path.expanduser(value.strip())
-    normalized = os.path.normpath(os.path.abspath(expanded))
-    path = Path(normalized)
+    path = Path(_absolute_under_drive(value.strip()))
     try:
         if path.is_symlink():
             raise LibraryError(folder_sync.SHORTCUT)
@@ -310,7 +357,10 @@ def _open_dest(value: object, source: Path, *, must_exist: bool) -> Path:
         raise
     except OSError as exc:
         raise LibraryError(folder_sync.FOLDER_UNREADABLE) from exc
-    dest = _normalized(path)
+    try:
+        dest = path.resolve(strict=False)
+    except OSError as exc:
+        raise LibraryError(folder_sync.FOLDER_UNREADABLE) from exc
     _refuse_dest(dest, source)
     return dest
 
@@ -372,25 +422,47 @@ def _newest_track_mtime(source: Path) -> float | None:
 def _iter_music_files(source: Path) -> list[tuple[str, Path]]:
     """List music (non-``_Serato_``) files under the stick root."""
     found: list[tuple[str, Path]] = []
+    source_root = str(source)
 
     def onerror(error: OSError) -> None:
         raise error
 
     try:
         for dirpath, dirnames, filenames in os.walk(
-            source, followlinks=False, onerror=onerror
+            source_root, followlinks=False, onerror=onerror
         ):
+            # Stay inside the opened stick; skip anything that escaped.
+            if not (
+                dirpath == source_root
+                or dirpath.startswith(source_root + os.sep)
+            ):
+                dirnames[:] = []
+                continue
             current = Path(dirpath)
-            dirnames[:] = [
-                name
-                for name in dirnames
-                if name.casefold() != "_serato_" and not (current / name).is_symlink()
-            ]
+            kept: list[str] = []
+            for name in dirnames:
+                if name.casefold() == "_serato_" or name in (".", ".."):
+                    continue
+                child = os.path.join(dirpath, name)
+                if not child.startswith(source_root + os.sep):
+                    continue
+                if os.path.islink(child):
+                    continue
+                kept.append(name)
+            dirnames[:] = kept
             for name in filenames:
-                path = current / name
+                if name in (".", "..") or "\x00" in name:
+                    continue
+                joined = os.path.join(dirpath, name)
+                if not joined.startswith(source_root + os.sep):
+                    continue
+                path = Path(joined)
                 if path.is_symlink() or not path.is_file():
                     continue
-                rel = path.relative_to(source).as_posix()
+                try:
+                    rel = path.relative_to(source).as_posix()
+                except ValueError:
+                    continue
                 found.append((rel, path))
     except OSError:
         return found
@@ -402,9 +474,17 @@ def _iter_serato_files(source: Path) -> list[tuple[str, Path]]:
     import snapshots
 
     root = source / "_Serato_"
+    root_text = str(root)
     items: list[tuple[str, Path]] = []
     try:
         for rel, path in snapshots.iter_backup_files(root):
+            if _unsafe_rel_parts(Path(rel).parts):
+                continue
+            text = str(path)
+            if not (
+                text == root_text or text.startswith(root_text + os.sep)
+            ):
+                continue
             items.append((f"_Serato_/{rel}", path))
     except OSError:
         return items
@@ -435,7 +515,9 @@ def _scan(source: Path, dest: Path) -> dict[str, object]:
         if not key or key in seen:
             continue
         seen.add(key)
-        dest_path = dest.joinpath(*Path(rel).parts)
+        dest_path = _dest_for(dest, rel)
+        if dest_path is None:
+            continue
         item = _row(rel, path, dest_path)
         if not _is_file(path):
             mismatch.append(item)
@@ -560,11 +642,23 @@ def copy_files(source: object, dest: object) -> dict[str, object]:
     copied = 0
     mismatch = list(scan["mismatch"]) if isinstance(scan["mismatch"], list) else []
     remaining: list[dict[str, object]] = []
+    stick_root = str(stick)
+    dest_root = str(path)
     for item in scan["copy"] if isinstance(scan["copy"], list) else []:
         if not isinstance(item, dict):
             continue
-        src = Path(str(item.get("source") or ""))
-        dest_path = Path(str(item.get("dest") or ""))
+        src_text = str(item.get("source") or "")
+        dest_text = str(item.get("dest") or "")
+        if not (
+            src_text == stick_root or src_text.startswith(stick_root + os.sep)
+        ):
+            continue
+        if not (
+            dest_text == dest_root or dest_text.startswith(dest_root + os.sep)
+        ):
+            continue
+        src = Path(src_text)
+        dest_path = Path(dest_text)
         result = _copy_one(src, dest_path)
         if result == "copied":
             copied += 1

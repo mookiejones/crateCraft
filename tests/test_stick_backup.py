@@ -130,6 +130,23 @@ class StickBackupTests(unittest.TestCase):
                 stick_backup.preview(str(empty), str(dest))
             with self.assertRaisesRegex(LibraryError, folder_sync.CHOOSE_FOLDER):
                 stick_backup.preview(str(stick), "")
+            dest = Path(raw) / "backup"
+            dest.mkdir(exist_ok=True)
+            with self.assertRaisesRegex(LibraryError, folder_sync.FOLDER_UNREADABLE):
+                stick_backup.preview(str(stick) + "\x00evil", str(dest))
+            with self.assertRaisesRegex(LibraryError, folder_sync.FOLDER_UNREADABLE):
+                stick_backup.preview(str(stick), str(dest) + "\x00evil")
+
+    def test_dest_for_refuses_dotdot(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            dest = Path(raw) / "backup"
+            dest.mkdir()
+            self.assertIsNone(stick_backup._dest_for(dest, "../outside.mp3"))
+            self.assertIsNone(stick_backup._dest_for(dest, "ok/../../etc/passwd"))
+            inside = stick_backup._dest_for(dest, "Music/track.mp3")
+            self.assertIsNotNone(inside)
+            assert inside is not None
+            self.assertTrue(str(inside).startswith(str(dest) + os.sep))
 
     def test_same_disk_refused(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
