@@ -121,7 +121,7 @@ class FixtureManifestTests(unittest.TestCase):
         manifest = _manifest("serato5")
         self.assertEqual(manifest["status"], "spec-derived, unverified")
         note = str(manifest["note"])
-        self.assertIn("serato5-probe.sh", note)
+        self.assertIn("scripts/serato5-probe.py", note)
         self.assertIn("Lucid", note)
         self.assertIn("Protect Library", note)
         files = manifest["files"]

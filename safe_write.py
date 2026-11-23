@@ -1060,7 +1060,8 @@ def _refuse_rollback() -> None:
     """Refuse to replace library files when the version gate or Serato says no.
 
     Raises:
-        LibraryError: If an unknown or unprobed version, probed Serato 5.0.0
+        LibraryError: If an unknown or unprobed version, a probed Serato 5
+            library whose schema does not match, probed Serato 5.0.0 or 5.1.0
             with Protect Library on or unread, or a running Serato DJ process
             blocks the write. Nothing has been replaced yet.
     """

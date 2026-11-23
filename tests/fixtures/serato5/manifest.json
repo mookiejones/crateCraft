@@ -1,7 +1,7 @@
 {
   "version": "serato5",
   "status": "spec-derived, unverified",
-  "note": "spec-derived, unverified. Lucid/Flexible beatgrid storage and Protect Library storage are not in the published notes, so these fixtures do not invent them. The beatgrid here is the documented version-byte-1 layout. Unverified until Byte Beat's serato5-probe.sh runs on a real Serato 5 install.",
+  "note": "spec-derived, unverified. Lucid/Flexible beatgrid storage and Protect Library storage are not in the published notes, so these fixtures do not invent them. The beatgrid here is the documented version-byte-1 layout. scripts/serato5-probe.py reads a copied master.sqlite and does not confirm Lucid bytes, so these fixtures stay unverified.",
   "files": [
     {
       "bytes": 826,

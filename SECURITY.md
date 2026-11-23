@@ -42,6 +42,6 @@ gh attestation verify SHA256SUMS --repo mookiejones/crateCraft
 | App | `1.1.0` in source. Latest GitHub Release: v0.1.1. |
 | Python | 3.12 and 3.14 in CI. Frozen builds embed 3.12. |
 | OS | macOS and Windows. |
-| Serato | Serato DJ Pro. Writes and restores stay off on Serato 5 when Protect Library is on or unread, on listed unprobed versions such as 5.1.0, and when the version cannot be read. |
+| Serato | Serato DJ Pro. Writes and restores stay off on Serato 5 when Protect Library is on or unread, on a listed version that has not been probed, when Serato 5.1.0's library schema is not `user_version` 203, and when the version cannot be read. |
 
 Report against the version you run. Say whether it is the v0.1.1 download or a build from source.

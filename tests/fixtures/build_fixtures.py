@@ -7,8 +7,8 @@ repository's tag writer. Run it from the repository root:
 
 Serato 5 Lucid/Flexible beatgrids and Protect Library are not written.
 Their on-disk layout is not in those notes. Every serato5 file is marked
-``spec-derived, unverified`` until Byte Beat's serato5-probe.sh is run on
-a real install.
+``spec-derived, unverified``. ``scripts/serato5-probe.py`` reads a copied
+master.sqlite and does not confirm Lucid bytes.
 
 Citations are repeated in the manifest written next to the files.
 """
@@ -103,8 +103,8 @@ CITE_M4A = (
 SERATO5_NOTE = (
     "spec-derived, unverified. Lucid/Flexible beatgrid storage and Protect Library storage "
     "are not in the published notes, so these fixtures do not invent them. The beatgrid here "
-    "is the documented version-byte-1 layout. Unverified until Byte Beat's serato5-probe.sh "
-    "runs on a real Serato 5 install."
+    "is the documented version-byte-1 layout. scripts/serato5-probe.py reads a copied "
+    "master.sqlite and does not confirm Lucid bytes, so these fixtures stay unverified."
 )
 SERATO4_NOTE = (
     "spec-derived from the published Scratch Live compatibility format that Serato 4 still "
@@ -1063,8 +1063,8 @@ def _readme(rows: list[dict[str, str]]) -> str:
         "",
         "Serato 4 entries are `spec-derived` (the Scratch Live compatibility export).",
         "Serato 5 entries are `spec-derived, unverified`. Lucid/Flexible beatgrids and",
-        "Protect Library are omitted because their storage is unknown until Byte Beat's",
-        "`serato5-probe.sh` runs on a real Serato 5 install.",
+        "Protect Library are omitted because their storage is unknown.",
+        "`scripts/serato5-probe.py` reads a copied master.sqlite and does not locate those bytes.",
         "",
         "| Tree | File | Status | Citation |",
         "| --- | --- | --- | --- |",
