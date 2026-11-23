@@ -5,8 +5,8 @@ Serato DJ Pro 4.0.10 session. ``captured-serato5`` keeps the same shape
 from a 5.0.0 session. The other folders are spec-derived. A missing
 folder leaves today's version gate alone. A log that does not name a dotted
 version uses the existing unknown-version notice. Probed Serato 5.0.0
-writes when Protect Library is off. 5.1.0 stays read-only until probed.
-The parser never writes a log.
+writes when Protect Library is off. 5.1.0 writes when Protect Library is off
+and ``master.sqlite`` user_version is 203. The parser never writes a log.
 """
 
 from __future__ import annotations
