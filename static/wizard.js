@@ -26504,7 +26504,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     tip instanceof HTMLElement && (tip.textContent = current.dataset.tooltip ?? "");
   }
   function setTooltip(element, spec2) {
-    element.dataset.tooltipKey = spec2.key, spec2.params ? tipParams.set(element, spec2.params) : tipParams.delete(element), writeTooltip(element), element.removeAttribute("title"), current === element && syncOpenTooltip();
+    element instanceof HTMLElement && (element.dataset.tooltipKey = spec2.key, spec2.params ? tipParams.set(element, spec2.params) : tipParams.delete(element), writeTooltip(element), element.removeAttribute("title"), current === element && syncOpenTooltip());
   }
 
   // src/pages/WizardScreen.tsx

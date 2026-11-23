@@ -18904,11 +18904,11 @@ Error generating stack: ` + x.message + `
     tip instanceof HTMLElement && (tip.textContent = current.dataset.tooltip ?? "");
   }
   function setTooltip(element, spec2) {
-    element.dataset.tooltipKey = spec2.key, spec2.params ? tipParams.set(element, spec2.params) : tipParams.delete(element), writeTooltip(element), element.removeAttribute("title"), current === element && syncOpenTooltip();
+    element instanceof HTMLElement && (element.dataset.tooltipKey = spec2.key, spec2.params ? tipParams.set(element, spec2.params) : tipParams.delete(element), writeTooltip(element), element.removeAttribute("title"), current === element && syncOpenTooltip());
   }
   function tooltipRef(spec2) {
     return (element) => {
-      element && setTooltip(element, spec2);
+      element instanceof HTMLElement && setTooltip(element, spec2);
     };
   }
   function buttonEl(spec2) {
@@ -62955,7 +62955,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/tooltip-ref.ts
   function tooltipRef5(spec2) {
     return (element) => {
-      element && setTooltip(element, spec2);
+      element instanceof HTMLElement && setTooltip(element, spec2);
     };
   }
 
@@ -73840,24 +73840,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         children: [
           /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("h2", { id: "history-rescue-heading", className: "operations-heading", children: t("historyRescue.heading") }),
           /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("p", { className: "notice", children: t("historyRescue.intro") }),
-          /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(
-            TextField_default,
-            {
-              id: "history-rescue-source",
-              select: !0,
-              label: t("historyRescue.source"),
-              size: "small",
-              fullWidth: !0,
-              value: source,
-              inputRef: tooltipRef5(tips.historyRescueSource),
-              onChange: (event) => setSource(event.target.value),
-              sx: { mt: 1 },
-              children: [
-                /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(MenuItem_default, { value: "", children: t("historyRescue.source") }),
-                sources.filter((item) => item.id && item.id !== "live").map((item) => /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(MenuItem_default, { value: String(item.id), children: item.status === "not_checked" ? `${item.label || item.id} (${t("historyRescue.notChecked")})` : item.label || item.id }, String(item.id)))
-              ]
-            }
-          ),
+          /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)("label", { className: "field", htmlFor: "history-rescue-source", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("span", { className: "field-label", children: t("historyRescue.source") }),
+            /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(
+              "select",
+              {
+                id: "history-rescue-source",
+                value: source,
+                ref: tooltipRef5(tips.historyRescueSource),
+                onChange: (event) => setSource(event.target.value),
+                children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("option", { value: "", children: t("historyRescue.source") }),
+                  sources.filter((item) => item.id && item.id !== "live").map((item) => /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("option", { value: String(item.id), children: item.status === "not_checked" ? `${item.label || item.id} (${t("historyRescue.notChecked")})` : item.label || item.id }, String(item.id)))
+                ]
+              }
+            )
+          ] }),
           /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(
             TextField_default,
             {
@@ -75483,7 +75481,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let cratesMode = state.mode === "crates", gigMode = state.mode === "gig", portableMode = state.mode === "portable", driftMode = state.mode === "drift", octaveMode = state.mode === "octave", healthMode = state.mode === "health", statsMode = state.mode === "stats", compareMode = state.mode === "compare", scanMode = state.mode === "scan", bitrateMode = state.mode === "bitrate", tagsMode = state.mode === "tags", lostMode = state.mode === "lost", energyMode = state.mode === "energy", audioMode = state.mode === "audio", historyMode = state.mode === "history", showCrates2 = cratesMode || gigMode || driftMode || octaveMode || healthMode || scanMode || bitrateMode || energyMode;
     el("crate-tools").hidden = !showCrates2, el("crate-actions").hidden = !cratesMode, el("crate-list").hidden = !showCrates2, el("export-m3u").hidden = !cratesMode, el("export-rekordbox").hidden = !cratesMode, el("import-m3u").hidden = !cratesMode, el("session-list").hidden = !historyMode;
     let rescueHost = document.getElementById("history-rescue-host");
-    rescueHost instanceof HTMLElement && (rescueHost.hidden = !historyMode), el("mode-note").hidden = cratesMode || historyMode, historyMode && renderHistoryRescue();
+    rescueHost instanceof HTMLElement && (rescueHost.hidden = !historyMode), el("mode-note").hidden = cratesMode || historyMode, historyMode ? renderHistoryRescue() : unmountHistoryRescue();
     let filesMode = state.mode === "files", snapshotsMode = state.mode === "snapshots", panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || octaveMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || audioMode;
     el("browser").hidden = panelMode, el("track-splitter").hidden = panelMode, el("detail").hidden = panelMode, el("files-panel").hidden = !filesMode, el("snapshots-panel").hidden = !snapshotsMode, el("gig-panel").hidden = !gigMode, el("portable-panel").hidden = !portableMode, el("drift-panel").hidden = !driftMode, el("octave-panel").hidden = !octaveMode, el("health-panel").hidden = !healthMode, el("stats-panel").hidden = !statsMode, el("compare-panel").hidden = !compareMode, el("scan-panel").hidden = !scanMode, el("bitrate-panel").hidden = !bitrateMode, el("tags-panel").hidden = !tagsMode, el("lost-panel").hidden = !lostMode, el("energy-panel").hidden = !energyMode, el("audio-panel").hidden = !audioMode;
     let listNote = healthListNote();
@@ -75964,6 +75962,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       host: historyRescueHost,
       root: historyRescueRoot
     }), historyRescueHost = node2);
+  }
+  function unmountHistoryRescue() {
+    if (historyRescueRoot) {
+      try {
+        historyRescueRoot.unmount();
+      } catch {
+      }
+      historyRescueRoot = null, historyRescueHost = null;
+    }
   }
   async function loadHistory() {
     let response = await fetch("/api/history"), payload = await readJSONOr(response, {});

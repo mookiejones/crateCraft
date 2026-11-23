@@ -544,6 +544,8 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   if (historyMode) {
     renderHistoryRescue();
+  } else {
+    unmountHistoryRescue();
   }
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
@@ -2471,6 +2473,23 @@ export function renderHistoryRescue() {
     root: historyRescueRoot,
   });
   historyRescueHost = node;
+}
+
+/**
+ * Unmount the history rescue island.
+ *
+ * Tests replace ``document.body`` between cases. Unmount first so MUI
+ * refs do not run after jsdom drops the host.
+ */
+export function unmountHistoryRescue(): void {
+  if (!historyRescueRoot) return;
+  try {
+    historyRescueRoot.unmount();
+  } catch {
+    // Host may already be gone.
+  }
+  historyRescueRoot = null;
+  historyRescueHost = null;
 }
 
 /**

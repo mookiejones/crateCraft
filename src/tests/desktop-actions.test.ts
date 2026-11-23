@@ -4,17 +4,23 @@
  * Fetch is stubbed. No library file is opened.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { runDesktopAction } from "../lib/ui/desktop-actions";
 import { el } from "../lib/dom";
 import { state } from "../lib/state";
-import { installPage } from "./test-page";
+import { unmountHistoryRescue } from "../lib/ui/views";
+import { drainReactScheduler, installPage } from "./test-page";
 
 beforeEach(() => {
   installPage();
   state.mode = "crates";
   vi.stubGlobal("fetch", vi.fn(() => Promise.resolve(new Response("{}", { status: 200, headers: { "Content-Type": "application/json" } }))));
+});
+
+afterEach(async () => {
+  unmountHistoryRescue();
+  await drainReactScheduler();
 });
 
 describe("desktop menu actions", () => {

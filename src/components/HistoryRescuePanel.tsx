@@ -4,7 +4,6 @@
 
 import { useRef, useState } from "react";
 import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import type { HistoryRescueReport, HistoryRescueSource } from "../lib/api-types";
@@ -86,28 +85,26 @@ export function HistoryRescuePanel() {
         {t("historyRescue.heading")}
       </h2>
       <p className="notice">{t("historyRescue.intro")}</p>
-      <TextField
-        id="history-rescue-source"
-        select
-        label={t("historyRescue.source")}
-        size="small"
-        fullWidth
-        value={source}
-        inputRef={tooltipRef(tips.historyRescueSource)}
-        onChange={(event) => setSource(event.target.value)}
-        sx={{ mt: 1 }}
-      >
-        <MenuItem value="">{t("historyRescue.source")}</MenuItem>
-        {sources
-          .filter((item) => item.id && item.id !== "live")
-          .map((item) => (
-            <MenuItem key={String(item.id)} value={String(item.id)}>
-              {item.status === "not_checked"
-                ? `${item.label || item.id} (${t("historyRescue.notChecked")})`
-                : item.label || item.id}
-            </MenuItem>
-          ))}
-      </TextField>
+      <label className="field" htmlFor="history-rescue-source">
+        <span className="field-label">{t("historyRescue.source")}</span>
+        <select
+          id="history-rescue-source"
+          value={source}
+          ref={tooltipRef(tips.historyRescueSource)}
+          onChange={(event) => setSource(event.target.value)}
+        >
+          <option value="">{t("historyRescue.source")}</option>
+          {sources
+            .filter((item) => item.id && item.id !== "live")
+            .map((item) => (
+              <option key={String(item.id)} value={String(item.id)}>
+                {item.status === "not_checked"
+                  ? `${item.label || item.id} (${t("historyRescue.notChecked")})`
+                  : item.label || item.id}
+              </option>
+            ))}
+        </select>
+      </label>
       <TextField
         id="history-rescue-sessions"
         label={t("historyRescue.sessions")}

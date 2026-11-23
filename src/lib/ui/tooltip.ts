@@ -80,6 +80,7 @@ function syncOpenTooltip(): void {
  * @returns {void}
  */
 export function setTooltip(element: HTMLElement, spec: TipSpec): void {
+  if (!(element instanceof HTMLElement)) return;
   element.dataset.tooltipKey = spec.key;
   if (spec.params) tipParams.set(element, spec.params);
   else tipParams.delete(element);
@@ -96,7 +97,8 @@ export function setTooltip(element: HTMLElement, spec: TipSpec): void {
  */
 export function tooltipRef(spec: TipSpec) {
   return (element: HTMLElement | null) => {
-    if (element) setTooltip(element, spec);
+    // MUI Select/useForkRef can pass a non-element; only real hosts get tips.
+    if (element instanceof HTMLElement) setTooltip(element, spec);
   };
 }
 
