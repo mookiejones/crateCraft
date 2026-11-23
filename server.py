@@ -48,6 +48,7 @@ import audio_changed
 import lost_tags
 import library
 import library_health
+import history_rescue
 import music_mirror
 import quality_line
 import music_roots
@@ -61,6 +62,7 @@ import setup_flow
 import smart_presets
 import smart_rules
 import snapshots
+import stick_backup
 import stick_cues
 import suspicious_cues
 import tag_cleanup
@@ -2013,6 +2015,22 @@ class Handler(BaseHTTPRequestHandler):
                     raise library.LibraryError(folder_sync.CHOOSE_FOLDER)
                 self.send_json(music_mirror.preview(dest, space))
                 return
+            if parsed.path == "/api/stick-backup":
+                source = query_text(query, "source", "") or ""
+                dest = query_text(query, "dest", "") or ""
+                if not source.strip():
+                    raise library.LibraryError(stick_backup.SOURCE_MISSING)
+                if not dest.strip():
+                    raise library.LibraryError(folder_sync.CHOOSE_FOLDER)
+                self.send_json(stick_backup.preview(source, dest))
+                return
+            if parsed.path == "/api/history-rescue":
+                source = query_text(query, "source", "") or ""
+                if source.strip():
+                    self.send_json(history_rescue.compare(source.strip()))
+                else:
+                    self.send_json(history_rescue.catalog())
+                return
             if parsed.path == "/api/export.m3u":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
@@ -2342,6 +2360,8 @@ class Handler(BaseHTTPRequestHandler):
                     history = parsed.path == "/api/history-stats"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
+                    sticking_backup = parsed.path == "/api/stick-backup"
+                    rescuing = parsed.path == "/api/history-rescue"
                     versioning = parsed.path == "/api/version-family"
                     preview = (
                         (merging and payload.get("preview") is True)
@@ -2399,6 +2419,20 @@ class Handler(BaseHTTPRequestHandler):
                             mirroring
                             and (
                                 payload.get("action") in ("preview", "copy")
+                                or payload.get("confirm") is not True
+                            )
+                        )
+                        or (
+                            sticking_backup
+                            and (
+                                payload.get("action") in ("preview", "copy")
+                                or payload.get("confirm") is not True
+                            )
+                        )
+                        or (
+                            rescuing
+                            and (
+                                payload.get("action") in ("scan", "preview")
                                 or payload.get("confirm") is not True
                             )
                         )
@@ -2533,6 +2567,19 @@ class Handler(BaseHTTPRequestHandler):
                         result = music_mirror.action(request)
                         if (
                             request.get("action") == "crate"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif sticking_backup:
+                        result = stick_backup.action(dict(payload))
+                    elif rescuing:
+                        request = dict(payload)
+                        if "space" in request or request.get("action") == "crates":
+                            request["space"] = require_space(optional_text(payload.get("space")))
+                        result = history_rescue.action(request)
+                        if (
+                            request.get("action") == "crates"
                             and request.get("confirm") is True
                             and result.get("written")
                         ):

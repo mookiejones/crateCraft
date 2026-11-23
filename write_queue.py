@@ -30,6 +30,7 @@ import crate_compare
 import crate_trees
 import files
 import folder_sync
+import history_rescue
 import history_stats
 import library
 import lost_tags
@@ -83,6 +84,7 @@ QUEUEABLE = frozenset(
         "/api/duplicates/merge",
         "/api/replace-in-crates",
         "/api/music-mirror",
+        "/api/history-rescue",
     }
 )
 
@@ -127,6 +129,8 @@ def should_queue(path: str, payload: Mapping[str, object], *, is_preview: bool =
     if path == "/api/crate" and payload.get("action") == "expanded":
         return False
     if path == "/api/music-mirror" and payload.get("action") == "copy":
+        return False
+    if path == "/api/stick-backup":
         return False
     if path == "/api/files" and payload.get("confirm") is not True:
         return False
@@ -533,6 +537,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return library.replace_in_crates(body)
     if path == "/api/music-mirror":
         return music_mirror.action(request)
+    if path == "/api/history-rescue":
+        return history_rescue.action(request)
     raise library.LibraryError("That action is not available.", 404)
 
 

@@ -174,6 +174,26 @@ ERROR_CODES: dict[str, str] = {
     music_mirror.DEST_SERATO: "mirror_dest_serato",
     music_mirror.DEST_LIBRARY: "mirror_dest_library",
     music_mirror.DEST_MUSIC: "mirror_dest_music",
+    # Stick backup and history rescue sentences are literals here so
+    # error_codes does not import those modules (they pull snapshots).
+    "Choose a Serato stick.": "stick_backup_source",
+    "That folder has no _Serato_ library.": "stick_backup_no_serato",
+    "A stick backup cannot go into the Serato folder.": "stick_backup_dest_serato",
+    "A stick backup cannot go into the Serato library.": "stick_backup_dest_library",
+    "A stick backup cannot go onto the source stick.": "stick_backup_dest_source",
+    "A stick backup cannot go onto the same disk as the source stick.": (
+        "stick_backup_same_disk"
+    ),
+    "History write-back was not checked for this Serato version. "
+    "Rebuild as crates instead.": "history_write_unprobed",
+    "That history source is not available.": "history_rescue_source",
+    "Choose at least one history session.": "history_rescue_sessions",
+    "Nothing to change.": "history_rescue_nothing",
+    "Choose a backup or snapshot to compare.": "history_rescue_compare_live",
+    "Serato 3.x History/Sessions is not checked yet. "
+    "Use a backup or snapshot database, or rebuild as crates from live history.": (
+        "history_rescue_folder"
+    ),
     smart_presets.UNKNOWN_PRESET: "preset_unknown",
     write_queue.CONFIRM_NEEDED: "queue_confirm",
     write_queue.QUEUE_LOCKED: "queue_locked",

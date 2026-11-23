@@ -60,6 +60,18 @@ The list under that line names each problem. Fix it on the laptop. The check doe
 
 **Review stick cues** and **Import empty pads** sit under that report, on Organize files and under Gig. Review lists cues that are on the stick and not in the library. It writes nothing. Import copies those cues into empty pads only. A cue you already have stays. The stick file is not changed. An unplugged drive stays named. It is not a missing file. The check above still only reads the drive.
 
+## Back up this stick
+
+**Back up this stick** sits under **Check drive**. It copies the stick's music and `_Serato_` folder to another drive or a mounted disk image. The source stick is never written. This is not **Music files** on Backups (that mirrors the laptop library).
+
+1. Click **Gig**, then **Check drive**, and pick the stick.
+2. Type a backup folder on another drive or a mounted disk image.
+3. Click **Preview**. A stick whose Serato database is older than the tracks on it shows a warning. That warning is not a pass.
+4. Click **Back up**. Each file is hash-checked. A failed verify is shown and the stick is not marked backed up.
+5. The line remembers **Last backed up to … on …** for that stick.
+
+Dest cannot be the source stick, the same disk as the stick, a `_Serato_` folder, or the Serato library. A later run skips files that already match (size and hash, or size and a 2-second mtime tolerance on FAT/exFAT).
+
 ## Copy smart crates to the drive
 
 Quit Serato DJ Pro first.
