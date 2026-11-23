@@ -53,10 +53,10 @@ import quality_line
 import music_roots
 import path_forms
 import portable_smart
+import reanalyze
 import rekordbox
 import related
 import relink
-import reanalyze
 import version_family
 import setup_flow
 import smart_presets
@@ -2153,39 +2153,11 @@ class Handler(BaseHTTPRequestHandler):
                 space = require_space(query_text(query, "space"))
                 self.send_json(audio_changed.scan(Path(library.MASTER), space))
                 return
-            if parsed.path == "/api/gain":
-                space = require_space(query_text(query, "space"))
-                self.send_json(gain_reset.scan(Path(library.MASTER), space))
-                return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
                 report = gig_check.run_gig_check(space=space, crate_id=crate_query(raw_crate))
                 self.send_json(gig_check.report_to_dict(report))
-                return
-            if parsed.path == "/api/tonight":
-                space = require_space(query_text(query, "space"))
-                number = history_stats.number
-                self.send_json(
-                    tonight_crates.preview(
-                        Path(library.MASTER),
-                        space,
-                        newest=number(
-                            query_text(query, "newest"),
-                            tonight_crates.NEWEST_LIMIT,
-                            1,
-                            tonight_crates.LIMIT_MAX,
-                        )
-                        or tonight_crates.NEWEST_LIMIT,
-                        played=number(
-                            query_text(query, "played"),
-                            tonight_crates.PLAYED_LIMIT,
-                            1,
-                            tonight_crates.LIMIT_MAX,
-                        )
-                        or tonight_crates.PLAYED_LIMIT,
-                    )
-                )
                 return
             if parsed.path == "/api/export.rekordbox.xml":
                 space = require_space(query_text(query, "space"))
@@ -2375,20 +2347,17 @@ class Handler(BaseHTTPRequestHandler):
                     clustering = parsed.path == "/api/tag-clusters"
                     families = parsed.path == "/api/genre-families"
                     losting = parsed.path == "/api/lost-tags"
-                    energizing = parsed.path == "/api/energy"
                     reanalyzing = parsed.path == "/api/reanalyze"
+                    energizing = parsed.path == "/api/energy"
                     swapping = parsed.path == "/api/audio-changed"
-                    gaining = parsed.path == "/api/gain"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     bpm_check = parsed.path == "/api/bpm-sanity"
                     cueing = parsed.path == "/api/suspicious-cues"
-                    cue_editing = parsed.path == "/api/cue-edit"
                     forming = parsed.path == "/api/path-forms"
                     porting = parsed.path == "/api/portable-smart"
                     sticking = parsed.path == "/api/stick-cues"
                     history = parsed.path == "/api/history-stats"
-                    tonight = parsed.path == "/api/tonight"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
                     versioning = parsed.path == "/api/version-family"
@@ -2399,16 +2368,6 @@ class Handler(BaseHTTPRequestHandler):
                         or (tree and payload.get("action") == "preview")
                         or (foldering and payload.get("action") == "preview")
                         or (history and payload.get("action") == "preview")
-                        or (
-                            tonight
-                            and (
-                                payload.get("action") == "preview"
-                                or (
-                                    payload.get("action") == "create"
-                                    and payload.get("confirm") is not True
-                                )
-                            )
-                        )
                         or (
                             clustering
                             and payload.get("action")
@@ -2445,16 +2404,6 @@ class Handler(BaseHTTPRequestHandler):
                                 )
                             )
                         )
-                        or (
-                            gaining
-                            and (
-                                payload.get("action") == "preview"
-                                or (
-                                    payload.get("action") in ("create", "reset")
-                                    and payload.get("confirm") is not True
-                                )
-                            )
-                        )
                         or (comparing and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "embed" and payload.get("confirm") is not True)
@@ -2462,12 +2411,6 @@ class Handler(BaseHTTPRequestHandler):
                         or (bpm_check and payload.get("confirm") is not True)
                         or (cueing and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
-                        or (cue_editing and payload.get("action") == "preview")
-                        or (
-                            cue_editing
-                            and payload.get("action") in ("apply", "undo")
-                            and payload.get("confirm") is not True
-                        )
                         or (forming and payload.get("action") == "preview")
                         or (forming and payload.get("action") == "apply" and payload.get("confirm") is not True)
                         or (porting and payload.get("action") == "preview")
@@ -2543,16 +2486,6 @@ class Handler(BaseHTTPRequestHandler):
                         result = history_stats.action(request)
                         if request.get("action") == "create" and result.get("written"):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
-                    elif tonight:
-                        request = dict(payload)
-                        request["space"] = require_space(optional_text(payload.get("space")))
-                        result = tonight_crates.action(request)
-                        if (
-                            request.get("action") == "create"
-                            and request.get("confirm") is True
-                            and result.get("written")
-                        ):
-                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif clustering:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
@@ -2577,16 +2510,6 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = audio_changed.action(request)
-                        if (
-                            request.get("action") == "create"
-                            and request.get("confirm") is True
-                            and result.get("written")
-                        ):
-                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
-                    elif gaining:
-                        request = dict(payload)
-                        request["space"] = require_space(optional_text(payload.get("space")))
-                        result = gain_reset.action(request)
                         if (
                             request.get("action") == "create"
                             and request.get("confirm") is True
@@ -2628,11 +2551,6 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = suspicious_cues.action(request)
-                    elif cue_editing:
-                        request = dict(payload)
-                        if request.get("action") != "undo":
-                            request["space"] = require_space(optional_text(payload.get("space")))
-                        result = cue_edit.action(request)
                     elif forming:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
