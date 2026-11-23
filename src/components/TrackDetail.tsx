@@ -36,7 +36,7 @@ import {
   tips,
 } from "../lib/ui/tooltip-strings";
 import { BeatgridBlock } from "./BeatgridBlock";
-import { CuePads } from "./CuePads";
+import { CueEditor } from "./CueEditor";
 import {
   DetailHead,
   DetailSection,
@@ -88,15 +88,10 @@ function fieldsFromForm(form: HTMLFormElement): TrackSaveFields | { error: strin
   return fields;
 }
 
-function MarkerSection({ track }: { track: Track }) {
-  let note = t("markers.readOnly");
-  if (track.markers_unavailable) note = t("markers.unavailable");
-  else if (!track.markers_found) note = t("markers.none");
-  const cues = track.cues || [];
+function MarkerSection({ track, writable }: { track: Track; writable: boolean }) {
   return (
     <>
-      <p className="detail-kicker">{note}</p>
-      {cues.length > 0 && !track.markers_unavailable ? <CuePads cues={cues} /> : null}
+      <CueEditor track={track} writable={writable} />
       {(track.loops || []).map((loop, index) => (
         <LoopRow key={`loop-${index}`} loop={loop} />
       ))}
@@ -465,7 +460,7 @@ function TrackBody({ track }: { track: Track }) {
         count={markerCount(track)}
         empty={markersAreEmpty(track) ? t("detail.emptyMarkers") : undefined}
       >
-        <MarkerSection track={track} />
+        <MarkerSection track={track} writable={writable} />
       </DetailSection>
       <DetailSection
         id="crates"

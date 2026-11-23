@@ -1215,7 +1215,7 @@ function markerSection(track: Track) {
   note.className = "detail-kicker";
   if (track.markers_unavailable) note.textContent = t("markers.unavailable");
   else if (!track.markers_found) note.textContent = t("markers.none");
-  else note.textContent = t("markers.readOnly");
+  else note.textContent = t("markers.cueEdit.help");
   section.append(note);
   /**
    * Format a loop time as m:ss.sss.

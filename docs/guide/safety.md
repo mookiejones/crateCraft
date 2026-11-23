@@ -19,7 +19,7 @@ Saving a related-track link is the exception. That link is stored beside the app
 
 ## What a save changes
 
-A track edit writes Serato's library database. It does not rewrite the audio file. Cue points, loops, flips, and the beatgrid live in the audio file. This app reads them. A normal save does not write them back.
+A track field save writes Serato's library database and does not rewrite the audio file. Cue points, loops, flips, and the beatgrid live in the audio file. **Apply** under Cue points writes hot cues 1–8 into Markers2 after a snapshot while Serato is quit. Loops and the beatgrid stay view-only. A normal Save track does not write cues.
 
 File changes in the [Files](files.md) view are different. Rename and move carry the audio file, cues included, to a new name or folder, and then update the path in the library. Replace can copy cue points onto the new file when that is safe. Delete moves the audio file to the Trash. Read that page before you use it.
 

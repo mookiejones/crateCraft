@@ -31,6 +31,7 @@ import legacy_library
 import music_mirror
 import other_dj
 import smart_presets
+import cue_edit
 import path_forms
 import stick_cues
 import suspicious_cues
@@ -61,6 +62,15 @@ ERROR_CODES: dict[str, str] = {
     "Choose a crate for a bitrate check.": "bitrate_needs_crate",
     "Choose a crate for an energy check.": "energy_needs_crate",
     suspicious_cues.NEEDS_CONFIRM: "cues_needs_confirm",
+    cue_edit.NEEDS_CONFIRM: "cue_edit_needs_confirm",
+    cue_edit.NEEDS_UNDO: "cue_edit_needs_undo",
+    cue_edit.MISSING_UNDO: "cue_edit_missing_undo",
+    cue_edit.PROTECTED: "cue_edit_protected",
+    cue_edit.UNSUPPORTED: "cue_edit_unsupported",
+    cue_edit.MISSING_FILE: "cue_edit_missing",
+    cue_edit.CORRUPT: "cue_edit_corrupt",
+    cue_edit.OUTSIDE_CHANGE: "cue_edit_outside_change",
+    cue_edit.BAD_PADS: "cue_edit_bad_pads",
     path_forms.NEEDS_CONFIRM: "path_forms_needs_confirm",
     stick_cues.NEEDS_CONFIRM: "stick_cues_needs_confirm",
     stick_cues.NEEDS_DRIVE: "stick_needs_drive",

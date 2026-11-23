@@ -61,6 +61,7 @@ import setup_flow
 import smart_presets
 import smart_rules
 import snapshots
+import cue_edit
 import stick_cues
 import suspicious_cues
 import tag_cleanup
@@ -2361,6 +2362,7 @@ class Handler(BaseHTTPRequestHandler):
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     bpm_check = parsed.path == "/api/bpm-sanity"
                     cueing = parsed.path == "/api/suspicious-cues"
+                    cue_editing = parsed.path == "/api/cue-edit"
                     forming = parsed.path == "/api/path-forms"
                     porting = parsed.path == "/api/portable-smart"
                     sticking = parsed.path == "/api/stick-cues"
@@ -2419,6 +2421,12 @@ class Handler(BaseHTTPRequestHandler):
                         or (bpm_check and payload.get("confirm") is not True)
                         or (cueing and payload.get("action") == "preview")
                         or (cueing and payload.get("action") == "apply" and payload.get("confirm") is not True)
+                        or (cue_editing and payload.get("action") == "preview")
+                        or (
+                            cue_editing
+                            and payload.get("action") in ("apply", "undo")
+                            and payload.get("confirm") is not True
+                        )
                         or (forming and payload.get("action") == "preview")
                         or (forming and payload.get("action") == "apply" and payload.get("confirm") is not True)
                         or (porting and payload.get("action") == "preview")
@@ -2565,6 +2573,11 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = suspicious_cues.action(request)
+                    elif cue_editing:
+                        request = dict(payload)
+                        if request.get("action") != "undo":
+                            request["space"] = require_space(optional_text(payload.get("space")))
+                        result = cue_edit.action(request)
                     elif forming:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
