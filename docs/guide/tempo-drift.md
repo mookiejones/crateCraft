@@ -36,7 +36,7 @@ python3 tempo_drift.py
 
 A grid that already changes tempo is not listed, even when the name looks live. 60 BPM against 120 BPM is treated as the same pulse, not as drift.
 
-The check does not write a crate of flagged tracks. It does not rewrite BPM.
+The check does not write a crate of flagged tracks. It does not rewrite a wrong constant BPM. A stored BPM that is about half or double the rest of the crate is [BPM check](bpm-check.md).
 
 ## Resize the list and the details
 

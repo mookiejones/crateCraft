@@ -873,6 +873,37 @@ export interface TempoDriftReport {
   code?: string;
 }
 
+export interface BpmSanityFlag {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  bpm: number;
+  suggested: number;
+  fix: "x2" | "div2";
+  kind: string;
+}
+
+export interface BpmSanityReport {
+  crate: number | null;
+  checked: number;
+  anchor: number | null;
+  skipped: number;
+  ready: boolean;
+  flags: BpmSanityFlag[];
+  beatgrid: string;
+  error?: string;
+  code?: string;
+}
+
+export interface BpmSanityWrite {
+  ok: boolean;
+  written: boolean;
+  id: number;
+  bpm: number;
+  beatgrid: string;
+}
+
 export interface BitrateSuspect {
   id: number;
   name: string;

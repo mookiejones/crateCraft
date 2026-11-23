@@ -1,5 +1,5 @@
 /**
- * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, energy, audio changed, tempo drift, and the portable drive check.
+ * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, energy, audio changed, tempo drift, BPM check, and the portable drive check.
  *
  * Files is React on FilesContext. This module re-exports that store so
  * existing callers keep one import. Play stats fetch is history-stats.ts;
@@ -29,6 +29,7 @@ import { clickPane, paintDualChrome } from "../crates/dual-crate-view";
 import { colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "../format";
 import { loadGigCheck, showGigFailure } from "../gig/gig";
 import { loadDrift, showDriftFailure } from "../gig/drift";
+import { loadOctave, showOctaveFailure } from "../gig/octave";
 import { loadHealth, mountHealthListChrome, showHealthFailure } from "../health/health";
 import { healthListNote } from "../health/health-list";
 import { loadHistoryStats, showHistoryStatsFailure } from "../history/history-stats";
@@ -514,6 +515,7 @@ export function renderShell() {
   const gigMode = state.mode === "gig";
   const portableMode = state.mode === "portable";
   const driftMode = state.mode === "drift";
+  const octaveMode = state.mode === "octave";
   const healthMode = state.mode === "health";
   const statsMode = state.mode === "stats";
   const compareMode = state.mode === "compare";
@@ -524,7 +526,7 @@ export function renderShell() {
   const energyMode = state.mode === "energy";
   const audioMode = state.mode === "audio";
   const historyMode = state.mode === "history";
-  const showCrates = cratesMode || gigMode || driftMode || healthMode || scanMode || bitrateMode || energyMode;
+  const showCrates = cratesMode || gigMode || driftMode || octaveMode || healthMode || scanMode || bitrateMode || energyMode;
   el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
   el("crate-list").hidden = !showCrates;
@@ -535,7 +537,7 @@ export function renderShell() {
   el("mode-note").hidden = cratesMode || historyMode;
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || audioMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || octaveMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || audioMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
@@ -544,6 +546,7 @@ export function renderShell() {
   el("gig-panel").hidden = !gigMode;
   el("portable-panel").hidden = !portableMode;
   el("drift-panel").hidden = !driftMode;
+  el("octave-panel").hidden = !octaveMode;
   el("health-panel").hidden = !healthMode;
   el("stats-panel").hidden = !statsMode;
   el("compare-panel").hidden = !compareMode;
@@ -566,6 +569,10 @@ export function renderShell() {
   }
   if (driftMode) {
     el("mode-note").textContent = t("mode.drift");
+    document.querySelector(".rules")?.remove();
+  }
+  if (octaveMode) {
+    el("mode-note").textContent = t("mode.octave");
     document.querySelector(".rules")?.remove();
   }
   if (healthMode) {
@@ -827,6 +834,7 @@ export function selectCrate(id: number | "all", event?: MouseEvent) {
   renderList();
   if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
   if (state.mode === "drift") loadDrift().catch(showDriftFailure);
+  if (state.mode === "octave") loadOctave().catch(showOctaveFailure);
   if (state.mode === "health") loadHealth().catch(showHealthFailure);
   if (state.mode === "scan") loadScan().catch(showScanFailure);
   if (state.mode === "bitrate") loadBitrate().catch(showBitrateFailure);
@@ -2597,6 +2605,7 @@ export function setMode(mode: string) {
   if (mode === "gig") loadGigCheck().catch(showGigFailure);
   if (mode === "portable") loadPortableView().catch(showPortableFailure);
   if (mode === "drift") loadDrift().catch(showDriftFailure);
+  if (mode === "octave") loadOctave().catch(showOctaveFailure);
   if (mode === "health") loadHealth().catch(showHealthFailure);
   if (mode === "stats") loadHistoryStats().catch(showHistoryStatsFailure);
   if (mode === "scan") loadScan("quick").catch(showScanFailure);
@@ -2796,6 +2805,7 @@ export function wireLibrary(): void {
     if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
     if (state.mode === "portable") jobs.push(loadPortableView().catch(showPortableFailure));
     if (state.mode === "drift") jobs.push(loadDrift().catch(showDriftFailure));
+    if (state.mode === "octave") jobs.push(loadOctave().catch(showOctaveFailure));
     if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
     if (state.mode === "stats") jobs.push(loadHistoryStats().catch(showHistoryStatsFailure));
     if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
@@ -2836,6 +2846,7 @@ export function wireLibrary(): void {
       if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
       if (state.mode === "portable") return loadPortableView().catch(showPortableFailure);
       if (state.mode === "drift") return loadDrift().catch(showDriftFailure);
+      if (state.mode === "octave") return loadOctave().catch(showOctaveFailure);
       if (state.mode === "health") return loadHealth().catch(showHealthFailure);
       if (state.mode === "stats") return loadHistoryStats().catch(showHistoryStatsFailure);
       if (state.mode === "scan") return loadScan().catch(showScanFailure);

@@ -92,6 +92,7 @@ describe("parseHash", () => {
       "gig",
       "portable",
       "drift",
+      "octave",
     ] as const;
     for (const mode of modes) {
       const hash = formatHash("Serato Library", mode, "all");

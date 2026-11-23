@@ -27,6 +27,7 @@ import {
   crateValue,
   driveReport,
   driftReport,
+  octaveReport,
   filesValue,
   gigReport,
   gigValue,
@@ -414,6 +415,7 @@ export type GigStoryArgs = {
   empty: boolean;
   emptyPortable: boolean;
   emptyDrift: boolean;
+  emptyOctave: boolean;
 };
 
 export const gigStoryArgs: GigStoryArgs = {
@@ -421,6 +423,7 @@ export const gigStoryArgs: GigStoryArgs = {
   empty: false,
   emptyPortable: false,
   emptyDrift: false,
+  emptyOctave: false,
 };
 
 export const gigArgTypes = {
@@ -428,6 +431,7 @@ export const gigArgTypes = {
   empty: { control: "boolean" as const, description: "No gig report yet." },
   emptyPortable: { control: "boolean" as const, description: "No drive findings." },
   emptyDrift: { control: "boolean" as const, description: "No tempo-drift flags." },
+  emptyOctave: { control: "boolean" as const, description: "No BPM-check flags." },
 };
 
 /**
@@ -458,6 +462,9 @@ export function gigValueFromArgs(args: GigStoryArgs): GigContextValue {
         smartBusy: false,
       },
     drift: args.emptyDrift ? { report: null, scope: "" } : { report: driftReport, scope: "Friday" },
+    octave: args.emptyOctave
+      ? { report: null, scope: "", busy: false }
+      : { report: octaveReport, scope: "Friday", busy: false },
   });
 }
 

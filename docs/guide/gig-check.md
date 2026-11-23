@@ -41,4 +41,6 @@ A missing drive, or a missing file in the crate you selected, is **Not ready** e
 
 **Tempo drift** sits beside this check in the same rail group. It lists tracks whose tempo wanders or that look live, so you can give them a flexible beatgrid. It needs a crate. See [Tempo drift](tempo-drift.md).
 
+**BPM check** sits beside this check in the same rail group. It flags a stored BPM that is about half or double the rest of the crate, then **×2** or **÷2** writes only that BPM after you confirm. The beatgrid is left alone. It needs a crate. See [BPM check](bpm-check.md).
+
 When a snapshot exists, **Since last gig** lists crates, cues, beatgrids, and tags that differ from the latest one. Title, artist, BPM, and key show the old value and the new value. The snapshots are the ones in **Backups**. The check compares the library copy and the cues and beatgrids saved in that snapshot with the library now. **Revert** opens the restore plan for that snapshot. Confirm stays off while Serato is running. The plan is a dry run; nothing is written until you confirm. With no snapshot, that section says **No snapshots yet**.

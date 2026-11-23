@@ -42,6 +42,7 @@ RAIL_KEYS = (
     "view.gig",
     "view.portable",
     "view.drift",
+    "view.octave",
 )
 
 
@@ -149,6 +150,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Ready",
             "Check drive",
             "Tempo drift",
+            "BPM check",
             "Take a backup",
             "Backups",
             "Review undo",
@@ -306,7 +308,12 @@ class DesktopMenuTests(unittest.TestCase):
             gig = _child_menu(tools, catalog["view.group.gig"])
             self.assertEqual(
                 _action_titles(gig),
-                [catalog["view.gig"], catalog["view.portable"], catalog["view.drift"]],
+                [
+                    catalog["view.gig"],
+                    catalog["view.portable"],
+                    catalog["view.drift"],
+                    catalog["view.octave"],
+                ],
             )
             space = _child_menu(music, catalog["space.label"])
             self.assertEqual(

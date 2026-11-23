@@ -170,6 +170,7 @@ test("Check drive sits under Gig with a labelled picker", async ({ page }) => {
   await expect(page.locator("#view-children [data-view='gig']")).toHaveText("Ready");
   await expect(page.locator("#view-children [data-view='portable']")).toHaveText("Check drive");
   await expect(page.locator("#view-children [data-view='drift']")).toHaveText("Tempo drift");
+  await expect(page.locator("#view-children [data-view='octave']")).toHaveText("BPM check");
   await expect(page.locator("#sheet-title")).toHaveText("Ready · Serato Library");
   await expect(page.locator("#sheet-scope")).toBeVisible();
   await expect(page.locator("#sheet-scope-text")).toHaveText("Scope: Deep");

@@ -56,6 +56,7 @@ describe("rail groups", () => {
       "gig",
       "portable",
       "drift",
+      "octave",
     ]);
     expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Play stats");
     expect(document.querySelector("[data-view='compare']")?.textContent).toBe("Compare crates");
