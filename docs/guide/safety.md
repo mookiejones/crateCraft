@@ -4,13 +4,14 @@ Quit Serato DJ Pro before you change the library. Serato and this app must not w
 
 ## How you know edits are on
 
-When Serato is open, a notice under the top bar says edits stay off. That notice is hidden when writes are on.
+When Serato is open, a notice under the top bar says edits stay off. That notice is hidden when writes are on. The page checks again every few seconds while the window is visible, and **Check again** next to the notice asks right away. After Serato quits, the line updates without a reload. If another reason still blocks writes (for example an unknown Serato version), that reason shows instead of the old open message.
 
 | Notice | What it means |
 | --- | --- |
 | No notice under the top bar | Saves, crate edits, merges, and file changes are allowed. |
-| A sentence that names Serato and says **Edits stay off until it quits.** | Serato still has the library. Buttons that write stay off. |
-| **Serato DJ Pro has the library open. Edits stay off until it quits.** | The database is locked. Quit Serato, then choose Reload. |
+| A sentence that names Serato and says **Edits stay off until it quits.** | Serato still has the library. Buttons that write stay off. Quit Serato, or press **Check again**. |
+| **Serato DJ Pro has the library open. Edits stay off until it quits.** | The database is locked. Quit Serato, then press **Check again** (or wait a few seconds). |
+| A sentence about Serato version, Protect Library, or a schema mismatch | Serato is quit, but writes stay off for that reason. The notice names it. |
 
 A failed save shows the error in a snackbar at the bottom of the page. An error that could not put a file back names only that file (for example `master.sqlite`) and says to open the local log from **Settings**, or read the operation log on **Backups**. The full path stays in that local log.
 
