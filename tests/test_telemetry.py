@@ -459,7 +459,7 @@ class PosthogHookTests(TelemetryCase):
     def test_posthog_before_send_strips_library_fields(self) -> None:
         """Drop a title and a path from the batch the SDK would upload.
 
-        ``batch_post`` is patched, so the test does not open a socket.
+        ``_send_v1_batch`` is patched, so the test does not open a socket.
         GeoIP stays disabled.
 
         Returns:
@@ -468,7 +468,9 @@ class PosthogHookTests(TelemetryCase):
         self._opt_in()
         install_id = app_config.load_settings().install_id
         self.assertIsNotNone(install_id)
-        with mock.patch("posthog.client.batch_post") as batch_post, mock.patch("posthog.consumer.batch_post"):
+        with mock.patch("posthog.client._send_v1_batch") as send_batch, mock.patch(
+            "posthog.consumer._send_v1_batch"
+        ):
             client = Posthog(
                 "phc_test",
                 host="https://us.i.posthog.com",
@@ -492,8 +494,8 @@ class PosthogHookTests(TelemetryCase):
                 )
             finally:
                 client.shutdown()
-        batch_post.assert_called_once()
-        batch = batch_post.call_args.kwargs["batch"]
+        send_batch.assert_called_once()
+        batch = send_batch.call_args.args[2]
         blob = json.dumps(batch)
         self.assertNotIn("Secret Track", blob)
         self.assertNotIn("/Users/dj", blob)
