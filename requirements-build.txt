@@ -2,10 +2,10 @@ pywebview==6.2.1
 pythonnet==3.2.1; sys_platform == "win32"
 clr-loader==0.3.1; sys_platform == "win32"
 sentry-sdk==2.75.0
-posthog==7.89.0
+posthog==8.0.2
 miniaudio==1.73
 cffi==2.1.1
 pycparser==3.12
-numpy==2.5.4
+numpy==2.5.5
 mutagen==1.48.1
 pyinstaller==6.22.3
