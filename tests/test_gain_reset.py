@@ -332,9 +332,9 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(body.get("code"), "gain_needs_confirm")
         self.assertEqual(body.get("error"), gain_reset.NEEDS_CONFIRM)
 
-    def test_sibling_feature_routes_are_absent(self) -> None:
-        """This branch serves /api/gain only; sibling feature APIs stay 404."""
-        for path in ("/api/reanalyze", "/api/tonight", "/api/cue-edit"):
+    def test_parallel_feature_routes_are_absent(self) -> None:
+        """Unmerged parallel features stay 404; tonight from main stays."""
+        for path in ("/api/reanalyze", "/api/cue-edit"):
             with self.subTest(path=path):
                 try:
                     with urllib.request.urlopen(self.base + path) as response:
@@ -342,6 +342,8 @@ class ApiTests(unittest.TestCase):
                 except urllib.error.HTTPError as exc:
                     status = exc.code
                 self.assertEqual(status, 404)
+        status, _body = self._get("/api/tonight?space=Serato%20Library")
+        self.assertEqual(status, 200)
 
 
 if __name__ == "__main__":
