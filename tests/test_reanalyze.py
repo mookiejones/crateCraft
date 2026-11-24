@@ -447,6 +447,16 @@ class PreviewApplyTests(unittest.TestCase):
                 flags = conn.execute("SELECT analysis_flags FROM asset WHERE id = 17").fetchone()[0]
             self.assertTrue(reanalyze.analyzed_bit_set(flags))
 
+    def test_parse_db_path_keeps_windows_drive_letter(self) -> None:
+        """A file:///C:/ URI must not keep the slash urlparse puts before C:."""
+        parsed = library._parse_db_path("file:///C:/Music/location.sqlite")
+        self.assertIsNotNone(parsed)
+        text = parsed.as_posix()
+        self.assertTrue(text.startswith("C:/"), text)
+        self.assertFalse(text.startswith("/C:"), text)
+        posix = library._parse_db_path("file:///Users/dj/Library/location.sqlite")
+        self.assertEqual(posix, Path("/Users/dj/Library/location.sqlite"))
+
 
 class RouteTests(unittest.TestCase):
     """GET and POST /api/reanalyze."""
