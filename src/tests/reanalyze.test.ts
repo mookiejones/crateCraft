@@ -71,5 +71,11 @@ describe("reanalyze", () => {
     await loadReanalyze();
     expect(document.querySelector("#reanalyze-report .MuiDataGrid-root")).not.toBeNull();
     expect(document.getElementById("reanalyze-scope")!.textContent).toBe("Gig");
+    expect(document.querySelector("[data-reanalyze-action='confirm']")).not.toBeNull();
+    const box = document.getElementById("reanalyze-clear-frames") as HTMLInputElement;
+    box.checked = false;
+    box.dispatchEvent(new Event("change"));
+    expect(document.querySelector("[data-reanalyze-action='confirm']")).toBeNull();
+    expect(document.getElementById("reanalyze-status")!.textContent).toContain("Preview again");
   });
 });

@@ -12,6 +12,6 @@ flowchart LR
   mark --> serato["Open in Serato to rebuild"]
 ```
 
-Quit Serato DJ Pro before you confirm. You can read the list while Serato is open. **All tracks** stays off. **Also clear BeatGrid and Autotags** starts on; turn it off to mark the database only. **Include locked beatgrids** unlocks those rows so Serato can rebuild them.
+Quit Serato DJ Pro before you confirm. You can read the list while Serato is open. **All tracks** stays off. **Also clear BeatGrid and Autotags** starts on; turn it off to mark the database only. **Include locked beatgrids** unlocks those rows so Serato can rebuild them. Locked rows are left as they are when that option is off, and the other tracks are still marked. Changing an option turns Confirm off until you preview again. A connected drive gets the same mark. If that copy does not take the mark, the library is put back.
 
 crateCraft does not re-analyze the audio. The undo is the snapshot taken just before the write.

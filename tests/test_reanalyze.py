@@ -180,9 +180,42 @@ class PreviewApplyTests(unittest.TestCase):
             plan = reanalyze.preview(library.LIBRARY_SPACE, 5)
             self.assertEqual(plan["count"], 0)
             self.assertEqual(len(plan["locked"]), 1)
+            original = path.read_bytes()
             with self.assertRaises(library.LibraryError) as raised:
                 reanalyze.apply(library.LIBRARY_SPACE, 5)
             self.assertEqual(raised.exception.message, reanalyze.LOCKED)
+            self.assertEqual(path.read_bytes(), original)
+            with open_database(temp.db) as conn:
+                flags = conn.execute("SELECT analysis_flags FROM asset WHERE id = 11").fetchone()[0]
+            self.assertTrue(reanalyze.analyzed_bit_set(flags))
+
+    def test_apply_skips_locked_and_marks_the_rest(self) -> None:
+        with TempLibrary() as temp:
+            locked_path = temp.root / "locked.mp3"
+            ready_path = temp.root / "ready.mp3"
+            _audio(locked_path)
+            _audio(ready_path)
+            locked_bytes = locked_path.read_bytes()
+            _seed(temp.db, [(11, locked_path, 4, 1), (12, ready_path, 4, 0)])
+            result = reanalyze.apply(library.LIBRARY_SPACE, 5)
+            self.assertTrue(result["written"])
+            self.assertEqual(result["count"], 1)
+            self.assertEqual(result["tracks"][0]["id"], 12)
+            self.assertEqual(len(result["locked"]), 1)
+            self.assertEqual(locked_path.read_bytes(), locked_bytes)
+            with open_database(temp.db) as conn:
+                rows = {
+                    int(row[0]): row
+                    for row in conn.execute(
+                        "SELECT id, analysis_flags, is_beatgrid_locked FROM asset WHERE id IN (11, 12)"
+                    )
+                }
+            self.assertTrue(reanalyze.analyzed_bit_set(rows[11][1]))
+            self.assertEqual(int(rows[11][2] or 0), 1)
+            self.assertFalse(reanalyze.analyzed_bit_set(rows[12][1]))
+            self.assertNotIn("BeatGrid", snapshot_frames.read_stored_frames(ready_path))
+            self.assertIn("Markers2", snapshot_frames.read_stored_frames(ready_path))
+            self.assertIn("BeatGrid", snapshot_frames.read_stored_frames(locked_path))
 
     def test_apply_clears_flags_and_frames_keeps_cues(self) -> None:
         with TempLibrary() as temp:
@@ -279,6 +312,135 @@ class PreviewApplyTests(unittest.TestCase):
             with mock.patch("snapshot_frames.analysis_frames_cleared", side_effect=flaky):
                 with self.assertRaises(library.LibraryError) as raised:
                     reanalyze.apply(library.LIBRARY_SPACE, 5)
+            self.assertIn(reanalyze.DID_NOT_STICK, raised.exception.message)
+            self.assertEqual(path.read_bytes(), original)
+            with open_database(temp.db) as conn:
+                flags = conn.execute("SELECT analysis_flags FROM asset WHERE id = 17").fetchone()[0]
+            self.assertTrue(reanalyze.analyzed_bit_set(flags))
+
+    def test_apply_copies_the_mark_into_the_location_database(self) -> None:
+        with TempLibrary() as temp:
+            path = temp.root / "ready.mp3"
+            _audio(path)
+            markers = snapshot_frames.read_stored_frames(path)["Markers2"]
+            _seed(temp.db, [(12, path, 4 | 1, 0)])
+            root = temp.db.parent / "root.sqlite"
+            with open_database(root) as conn:
+                conn.executescript(
+                    """
+                    CREATE TABLE serato (revision INTEGER);
+                    CREATE TABLE asset (
+                        id INTEGER PRIMARY KEY,
+                        analysis_flags INTEGER,
+                        is_beatgrid_locked INTEGER,
+                        revision INTEGER
+                    );
+                    INSERT INTO serato (revision) VALUES (3);
+                    INSERT INTO asset (id, analysis_flags, is_beatgrid_locked, revision)
+                    VALUES (201, 5, 0, 3);
+                    """
+                )
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET location_id = 3, external_id = 201 WHERE id = 12")
+                conn.execute(
+                    "INSERT INTO connection (location_id, database_uri) VALUES (3, ?)",
+                    (root.resolve().as_uri(),),
+                )
+            result = reanalyze.apply(library.LIBRARY_SPACE, 5)
+            self.assertTrue(result["written"])
+            self.assertNotIn("drive_absent", result)
+            with open_database(root) as conn:
+                row = conn.execute(
+                    "SELECT analysis_flags, is_beatgrid_locked, revision FROM asset WHERE id = 201"
+                ).fetchone()
+                serato_rev = conn.execute("SELECT revision FROM serato").fetchone()[0]
+            self.assertFalse(reanalyze.analyzed_bit_set(row[0]))
+            self.assertEqual(int(row[0]), 1)
+            self.assertEqual(int(row[1] or 0), 0)
+            self.assertGreater(int(serato_rev), 3)
+            self.assertEqual(snapshot_frames.read_stored_frames(path).get("Markers2"), markers)
+            self.assertNotIn("BeatGrid", snapshot_frames.read_stored_frames(path))
+
+    def test_absent_drive_keeps_the_laptop_mark(self) -> None:
+        with TempLibrary() as temp:
+            path = temp.root / "ready.mp3"
+            _audio(path)
+            _seed(temp.db, [(12, path, 4, 0)])
+            missing = temp.db.parent / "gone.sqlite"
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET location_id = 9, external_id = 201 WHERE id = 12")
+                conn.execute(
+                    "INSERT INTO connection (location_id, database_uri) VALUES (9, ?)",
+                    (missing.resolve().as_uri(),),
+                )
+            result = reanalyze.apply(library.LIBRARY_SPACE, 5)
+            self.assertTrue(result["written"])
+            self.assertTrue(result["drive_absent"])
+            with open_database(temp.db) as conn:
+                flags = conn.execute("SELECT analysis_flags FROM asset WHERE id = 12").fetchone()[0]
+            self.assertFalse(reanalyze.analyzed_bit_set(flags))
+
+    def test_location_readback_failure_rolls_back(self) -> None:
+        with TempLibrary() as temp:
+            path = temp.root / "ready.mp3"
+            _audio(path)
+            original = path.read_bytes()
+            _seed(temp.db, [(18, path, 4, 0)])
+            root = temp.db.parent / "root.sqlite"
+            with open_database(root) as conn:
+                conn.executescript(
+                    """
+                    CREATE TABLE serato (revision INTEGER);
+                    CREATE TABLE asset (
+                        id INTEGER PRIMARY KEY,
+                        analysis_flags INTEGER,
+                        is_beatgrid_locked INTEGER,
+                        revision INTEGER
+                    );
+                    INSERT INTO serato (revision) VALUES (1);
+                    INSERT INTO asset (id, analysis_flags, is_beatgrid_locked, revision)
+                    VALUES (201, 4, 0, 1);
+                    CREATE TRIGGER keep_analyzed
+                    AFTER UPDATE OF analysis_flags ON asset
+                    WHEN (NEW.analysis_flags & 4) = 0
+                    BEGIN
+                        UPDATE asset SET analysis_flags = NEW.analysis_flags | 4 WHERE id = NEW.id;
+                    END;
+                    """
+                )
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET location_id = 3, external_id = 201 WHERE id = 18")
+                conn.execute(
+                    "INSERT INTO connection (location_id, database_uri) VALUES (3, ?)",
+                    (root.resolve().as_uri(),),
+                )
+            with self.assertRaises(library.LibraryError) as raised:
+                reanalyze.apply(library.LIBRARY_SPACE, 5)
+            self.assertIn(reanalyze.DID_NOT_STICK, raised.exception.message)
+            self.assertEqual(path.read_bytes(), original)
+            with open_database(temp.db) as conn:
+                flags = conn.execute("SELECT analysis_flags FROM asset WHERE id = 18").fetchone()[0]
+            self.assertTrue(reanalyze.analyzed_bit_set(flags))
+            with open_database(root) as conn:
+                loc = conn.execute("SELECT analysis_flags FROM asset WHERE id = 201").fetchone()[0]
+            self.assertTrue(reanalyze.analyzed_bit_set(loc))
+
+    def test_location_write_failure_rolls_back(self) -> None:
+        with TempLibrary() as temp:
+            path = temp.root / "ready.mp3"
+            _audio(path)
+            original = path.read_bytes()
+            _seed(temp.db, [(17, path, 4, 0)])
+            bad = temp.db.parent / "drive.sqlite"
+            bad.write_bytes(b"not a database")
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET location_id = 9, external_id = 201 WHERE id = 17")
+                conn.execute(
+                    "INSERT INTO connection (location_id, database_uri) VALUES (9, ?)",
+                    (bad.resolve().as_uri(),),
+                )
+            with self.assertRaises(library.LibraryError) as raised:
+                reanalyze.apply(library.LIBRARY_SPACE, 5)
             self.assertIn(reanalyze.DID_NOT_STICK, raised.exception.message)
             self.assertEqual(path.read_bytes(), original)
             with open_database(temp.db) as conn:

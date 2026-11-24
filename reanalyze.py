@@ -11,8 +11,12 @@ observed by serato-dj-mcp. Default apply also removes BeatGrid and
 Autotags from the audio file through ``snapshot_frames.clear_analysis_frames``,
 keeping Markers2 cues. Overview and ``RVA2:SeratoGain`` stay; Serato
 overwrites them on Analyze Files. Pass ``clear_frames`` false for a
-database-only mark. Locked beatgrids are refused unless
+database-only mark. Locked beatgrids stay locked unless
 ``include_locked`` is true (which clears ``is_beatgrid_locked`` only).
+The other tracks in the crate are still marked. The same mark is copied
+into a connected location database. If that copy does not take the mark,
+the preimage is put back. An unplugged drive is reported and the laptop
+mark stays.
 
 Inspired by serato-tools 6.0.0 ``Library.set_unanalyzed`` /
 ``DatabaseV2.set_unanalyzed`` / ``Track.delete_analysis`` (MIT,
@@ -30,6 +34,7 @@ import json
 import sqlite3
 import sys
 from collections.abc import Mapping, Sequence
+from contextlib import closing
 from pathlib import Path
 from typing import Any
 
@@ -43,7 +48,7 @@ ANALYZED_BIT = 4
 NEEDS_CONFIRM = "Confirm before tracks are marked for re-analyze."
 NEEDS_CRATE = "Choose a crate for re-analyze."
 DID_NOT_STICK = "The unanalyzed mark did not stick. The library was put back."
-LOCKED = "A locked beatgrid was not cleared. Pass include_locked to unlock it."
+LOCKED = "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them."
 MARKERS_NOTE = (
     "Markers2 cues stay. BeatGrid and Autotags are cleared when clear_frames "
     "is on. Overview stays for Serato to overwrite. Open the tracks in Serato "
@@ -360,7 +365,7 @@ def _public(
         preview: True for preview.
         clear_frames: Whether frames are cleared.
         include_locked: Whether locks may be cleared.
-        locked: Tracks refused for a locked beatgrid.
+        locked: Tracks left unchanged because the beatgrid is locked.
 
     Returns:
         Public plan fields.
@@ -450,6 +455,171 @@ def preview(
     )
 
 
+class _LocationMiss(Exception):
+    """The location row still has the analyzed bit, so the transaction must not commit."""
+
+
+class _LocationUndo:
+    """Previous location flags to put back when a later track does not take the mark."""
+
+    def __init__(self, path: Path, external_id: int, flags: object, lock: object) -> None:
+        """Remember one location row.
+
+        Args:
+            path: Location database file.
+            external_id: Asset id in that database.
+            flags: ``analysis_flags`` before this write.
+            lock: ``is_beatgrid_locked`` before this write.
+        """
+        self.path = path
+        self.external_id = external_id
+        self.flags = flags
+        self.lock = lock
+
+    def restore(self) -> None:
+        """Write the previous flags and lock. A missing file is left alone."""
+
+        def apply(conn: sqlite3.Connection) -> str | None:
+            """Restore the two columns inside the location transaction."""
+            library._assign(
+                conn,
+                "asset",
+                {"analysis_flags": self.flags, "is_beatgrid_locked": self.lock},
+                "id = ?",
+                self.external_id,
+            )
+            return None
+
+        library._with_location(self.path, apply)
+
+
+def _push_location(
+    master: sqlite3.Connection,
+    asset_id: int,
+    unlock: bool,
+) -> tuple[str, _LocationUndo | None]:
+    """Copy the unanalyzed mark into one track's location database.
+
+    The location row keeps its other flag bits. Only the analyzed bit is
+    cleared, and the lock is cleared when ``unlock`` is true.
+
+    Args:
+        master: Read connection for ``master.sqlite``.
+        asset_id: Master asset id.
+        unlock: Whether this track's beatgrid lock is cleared.
+
+    Returns:
+        ``(status, undo)``. ``status`` is ``skip`` when the track has no
+        location row, ``absent`` when the location file is not on disk,
+        ``ok`` after a committed update, or ``failed`` when a connected
+        location does not take the mark. ``undo`` is set only after a
+        committed update.
+    """
+    asset = library._asset_location(master, asset_id)
+    location_id = asset["location_id"]
+    external = asset["external_id"]
+    if location_id is None or external is None:
+        return "skip", None
+    path = library._location_paths(master).get(int(location_id))
+    if path is None:
+        return "absent", None
+    external_id = int(external)
+    saved: dict[str, object] = {}
+
+    def apply(conn: sqlite3.Connection) -> str | None:
+        """Clear the analyzed bit on the location row and read it back."""
+        present = library._columns(conn, "asset")
+        if "analysis_flags" not in present:
+            saved["status"] = "skip"
+            return None
+        before = conn.execute(
+            "SELECT analysis_flags, is_beatgrid_locked FROM asset WHERE id = ?",
+            (external_id,),
+        ).fetchone()
+        if before is None:
+            saved["status"] = "skip"
+            return None
+        new_flags = clear_analyzed_bit(before[0])
+        saved["before_flags"] = before[0]
+        saved["before_lock"] = before[1]
+        values: dict[str, object] = {"analysis_flags": new_flags}
+        if unlock and "is_beatgrid_locked" in present:
+            values["is_beatgrid_locked"] = 0
+        revision = library._next_revision(conn)
+        if "revision" in present:
+            values["revision"] = revision
+        library._assign(conn, "asset", values, "id = ?", external_id)
+        row = conn.execute(
+            "SELECT analysis_flags, is_beatgrid_locked FROM asset WHERE id = ?",
+            (external_id,),
+        ).fetchone()
+        if row is None or analyzed_bit_set(row[0]):
+            raise _LocationMiss()
+        if unlock and "is_beatgrid_locked" in present and int(row[1] or 0):
+            raise _LocationMiss()
+        saved["status"] = "ok"
+        return None
+
+    try:
+        warning = library._with_location(path, apply)
+    except _LocationMiss:
+        return "failed", None
+    if isinstance(warning, str) and "was not updated" in warning:
+        return "failed", None
+    if isinstance(warning, str):
+        return "absent", None
+    if saved.get("status") != "ok":
+        return "skip", None
+    return "ok", _LocationUndo(path, external_id, saved.get("before_flags"), saved.get("before_lock"))
+
+
+def _sync_location_marks(
+    ready: Sequence[_Prepared],
+    expected_unlock: set[int],
+    snapshot_id: str,
+) -> bool:
+    """Copy the mark into each connected location database.
+
+    Args:
+        ready: Tracks the master write marked.
+        expected_unlock: Asset ids whose beatgrid lock was cleared.
+        snapshot_id: Preimage from the master write. Used when a location
+            copy does not take the mark.
+
+    Returns:
+        True when a location file is not on disk. The master mark stays.
+
+    Raises:
+        library.LibraryError: A connected location did not take the mark.
+            Location rows already written are put back, then the preimage
+            (database and audio) is restored.
+    """
+    import safe_write
+
+    undos: list[_LocationUndo] = []
+    absent = False
+    try:
+        with closing(library.read_conn()) as master:
+            for item in ready:
+                status, undo = _push_location(master, item.id, item.id in expected_unlock)
+                if undo is not None:
+                    undos.append(undo)
+                if status == "absent":
+                    absent = True
+                elif status == "failed":
+                    raise library.LibraryError(DID_NOT_STICK, 409)
+    except Exception:
+        for undo in undos:
+            try:
+                undo.restore()
+            except (OSError, sqlite3.Error, library.LibraryError):
+                continue
+        if snapshot_id:
+            safe_write.undo_preimage(snapshot_id, operation="reanalyze", target="re-analyze")
+        raise
+    return absent
+
+
 def apply(
     space: str,
     crate_id: int | None = None,
@@ -461,7 +631,8 @@ def apply(
     """Mark tracks unanalyzed through ``safe_write``.
 
     Serato must be quit. An empty plan does not write. Locked tracks are
-    refused before any write when ``include_locked`` is false.
+    left unchanged when ``include_locked`` is false. If every chosen track
+    is locked, nothing is written.
 
     Args:
         space: Space name.
@@ -488,7 +659,7 @@ def apply(
         include_locked=include_locked,
         ids=ids,
     )
-    if locked:
+    if locked and not ready:
         raise library.LibraryError(LOCKED, 400)
     if not ready:
         return _public(
@@ -510,12 +681,22 @@ def apply(
     expected_flags: dict[int, int] = {}
     expected_unlock: set[int] = set()
     frame_checks: list[tuple[Path, bool, bytes | None]] = []
+    snapshot_ids: list[str] = []
 
     def body(conn: sqlite3.Connection, write: Any) -> Plan:
         """Update flags, clear frames, and register the post-commit check."""
+        snapshot_id = getattr(write, "snapshot_id", None)
+        if isinstance(snapshot_id, str) and snapshot_id:
+            snapshot_ids.append(snapshot_id)
         for item in ready:
             write.set_target(item.file or item.name or f"track {item.id}")
-            new_flags = clear_analyzed_bit(item.analysis_flags)
+            live = conn.execute(
+                "SELECT analysis_flags FROM asset WHERE id = ?",
+                (item.id,),
+            ).fetchone()
+            if live is None:
+                raise safe_write.VerifyMismatch(DID_NOT_STICK)
+            new_flags = clear_analyzed_bit(live[0])
             expected_flags[item.id] = new_flags
             if include_locked and item.locked:
                 expected_unlock.add(item.id)
@@ -592,10 +773,11 @@ def apply(
             preview=False,
             clear_frames=clear_frames,
             include_locked=include_locked,
+            locked=locked,
         )
 
     try:
-        return safe_write.run(
+        result = safe_write.run(
             "reanalyze",
             "re-analyze",
             body,
@@ -603,6 +785,15 @@ def apply(
         )
     except safe_write.VerifyMismatch as exc:
         raise library.LibraryError(exc.message or DID_NOT_STICK, 409) from exc
+    if result.get("written"):
+        absent = _sync_location_marks(
+            ready,
+            expected_unlock,
+            snapshot_ids[-1] if snapshot_ids else "",
+        )
+        if absent:
+            result["drive_absent"] = True
+    return result
 
 
 def action(payload: Mapping[str, object]) -> Plan:

@@ -41,6 +41,11 @@ export function wireReanalyze(): void {
   el("reanalyze-preview").addEventListener("click", () => {
     void previewReanalyze();
   });
+  for (const id of ["reanalyze-clear-frames", "reanalyze-include-locked"] as const) {
+    el(id).addEventListener("change", () => {
+      dropStalePreview();
+    });
+  }
   el("reanalyze-report").addEventListener("click", (event) => {
     const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-reanalyze-action]");
     if (!button || button.disabled) return;
@@ -209,8 +214,8 @@ async function applyReanalyze(): Promise<void> {
       confirm: true,
       space: state.space,
       crate,
-      clear_frames: clearFramesOn(),
-      include_locked: includeLockedOn(),
+      clear_frames: latest.clear_frames !== false,
+      include_locked: latest.include_locked === true,
     });
     if (token !== state.reanalyzeToken) return;
     if (isQueuedWrite(payload)) {
@@ -221,9 +226,9 @@ async function applyReanalyze(): Promise<void> {
     await bridge.reloadLibrary();
     if (token !== state.reanalyzeToken) return;
     latest = payload;
-    el("reanalyze-status").textContent = writtenCount
-      ? t("reanalyze.written", { count: writtenCount })
-      : "";
+    const writtenText = writtenCount ? t("reanalyze.written", { count: writtenCount }) : "";
+    const driveText = payload.drive_absent ? t("reanalyze.driveAbsent") : "";
+    el("reanalyze-status").textContent = [writtenText, driveText].filter(Boolean).join(" ");
     renderReanalyzeReport(payload);
     el("reanalyze-report").focus();
   } catch (error) {
@@ -236,6 +241,13 @@ async function applyReanalyze(): Promise<void> {
     if (token !== state.reanalyzeToken) return;
     endBusy();
   }
+}
+
+function dropStalePreview(): void {
+  if (!latest?.preview) return;
+  latest = { ...latest, preview: false };
+  el("reanalyze-status").textContent = t("reanalyze.optionsChanged");
+  renderReanalyzeReport(latest);
 }
 
 function clearFramesOn(): boolean {

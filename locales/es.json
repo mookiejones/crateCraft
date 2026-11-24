@@ -2364,6 +2364,8 @@
     "other": "Vista previa lista: {count} pistas. Confirma para marcarlas."
   },
   "reanalyze.previewEmpty": "Nada que marcar. No se escribe nada.",
+  "reanalyze.optionsChanged": "Vuelve a la vista previa antes de confirmar. Las opciones cambiaron.",
+  "reanalyze.driveAbsent": "La unidad de una pista no está conectada. Serato puede volver a poner la marca de analizada cuando esa unidad regrese.",
   "reanalyze.written": {
     "one": "Se marcó 1 pista. Ábrela en Serato para reconstruir.",
     "other": "Se marcaron {count} pistas. Ábrelas en Serato para reconstruir."
@@ -2377,5 +2379,5 @@
   "error.reanalyze_needs_confirm": "Confirma antes de marcar pistas para reanalizar.",
   "error.reanalyze_needs_crate": "Elige una caja para reanalizar.",
   "error.reanalyze_did_not_stick": "La marca de sin analizar no se guardó. Se restauró la biblioteca.",
-  "error.reanalyze_locked": "No se borró una rejilla bloqueada. Pasa include_locked para desbloquearla."
+  "error.reanalyze_locked": "Esas rejillas están bloqueadas. Activa Incluir rejillas bloqueadas para desbloquearlas."
 }

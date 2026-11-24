@@ -1373,6 +1373,8 @@ export interface ReanalyzePlan {
   include_locked: boolean;
   markers2: string;
   message?: string;
+  /** A location file for one of these tracks is not on disk. */
+  drive_absent?: boolean;
   error?: string;
   code?: string;
 }

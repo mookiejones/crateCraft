@@ -63,7 +63,7 @@ ERROR_CODES: dict[str, str] = {
     "Confirm before tracks are marked for re-analyze.": "reanalyze_needs_confirm",
     "Choose a crate for re-analyze.": "reanalyze_needs_crate",
     "The unanalyzed mark did not stick. The library was put back.": "reanalyze_did_not_stick",
-    "A locked beatgrid was not cleared. Pass include_locked to unlock it.": "reanalyze_locked",
+    "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them.": "reanalyze_locked",
     suspicious_cues.NEEDS_CONFIRM: "cues_needs_confirm",
     path_forms.NEEDS_CONFIRM: "path_forms_needs_confirm",
     stick_cues.NEEDS_CONFIRM: "stick_cues_needs_confirm",

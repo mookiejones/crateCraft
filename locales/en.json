@@ -2364,6 +2364,8 @@
     "other": "Preview ready: {count} tracks. Confirm to mark them."
   },
   "reanalyze.previewEmpty": "Nothing to mark. No write will run.",
+  "reanalyze.optionsChanged": "Preview again before Confirm. The options changed.",
+  "reanalyze.driveAbsent": "A track's drive is not connected. Serato may put the analyzed mark back when that drive returns.",
   "reanalyze.written": {
     "one": "Marked 1 track. Open it in Serato to rebuild.",
     "other": "Marked {count} tracks. Open them in Serato to rebuild."
@@ -2377,5 +2379,5 @@
   "error.reanalyze_needs_confirm": "Confirm before tracks are marked for re-analyze.",
   "error.reanalyze_needs_crate": "Choose a crate for re-analyze.",
   "error.reanalyze_did_not_stick": "The unanalyzed mark did not stick. The library was put back.",
-  "error.reanalyze_locked": "A locked beatgrid was not cleared. Pass include_locked to unlock it."
+  "error.reanalyze_locked": "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them."
 }

@@ -23354,6 +23354,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       other: "Preview ready: {count} tracks. Confirm to mark them."
     },
     "reanalyze.previewEmpty": "Nothing to mark. No write will run.",
+    "reanalyze.optionsChanged": "Preview again before Confirm. The options changed.",
+    "reanalyze.driveAbsent": "A track's drive is not connected. Serato may put the analyzed mark back when that drive returns.",
     "reanalyze.written": {
       one: "Marked 1 track. Open it in Serato to rebuild.",
       other: "Marked {count} tracks. Open them in Serato to rebuild."
@@ -23367,7 +23369,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "error.reanalyze_needs_confirm": "Confirm before tracks are marked for re-analyze.",
     "error.reanalyze_needs_crate": "Choose a crate for re-analyze.",
     "error.reanalyze_did_not_stick": "The unanalyzed mark did not stick. The library was put back.",
-    "error.reanalyze_locked": "A locked beatgrid was not cleared. Pass include_locked to unlock it."
+    "error.reanalyze_locked": "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them."
   };
 
   // locales/es.json
@@ -25737,6 +25739,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       other: "Vista previa lista: {count} pistas. Confirma para marcarlas."
     },
     "reanalyze.previewEmpty": "Nada que marcar. No se escribe nada.",
+    "reanalyze.optionsChanged": "Vuelve a la vista previa antes de confirmar. Las opciones cambiaron.",
+    "reanalyze.driveAbsent": "La unidad de una pista no está conectada. Serato puede volver a poner la marca de analizada cuando esa unidad regrese.",
     "reanalyze.written": {
       one: "Se marcó 1 pista. Ábrela en Serato para reconstruir.",
       other: "Se marcaron {count} pistas. Ábrelas en Serato para reconstruir."
@@ -25750,7 +25754,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "error.reanalyze_needs_confirm": "Confirma antes de marcar pistas para reanalizar.",
     "error.reanalyze_needs_crate": "Elige una caja para reanalizar.",
     "error.reanalyze_did_not_stick": "La marca de sin analizar no se guardó. Se restauró la biblioteca.",
-    "error.reanalyze_locked": "No se borró una rejilla bloqueada. Pasa include_locked para desbloquearla."
+    "error.reanalyze_locked": "Esas rejillas están bloqueadas. Activa Incluir rejillas bloqueadas para desbloquearlas."
   };
 
   // src/lib/i18n.ts

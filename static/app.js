@@ -15080,6 +15080,8 @@ Error generating stack: ` + x.message + `
       other: "Preview ready: {count} tracks. Confirm to mark them."
     },
     "reanalyze.previewEmpty": "Nothing to mark. No write will run.",
+    "reanalyze.optionsChanged": "Preview again before Confirm. The options changed.",
+    "reanalyze.driveAbsent": "A track's drive is not connected. Serato may put the analyzed mark back when that drive returns.",
     "reanalyze.written": {
       one: "Marked 1 track. Open it in Serato to rebuild.",
       other: "Marked {count} tracks. Open them in Serato to rebuild."
@@ -15093,7 +15095,7 @@ Error generating stack: ` + x.message + `
     "error.reanalyze_needs_confirm": "Confirm before tracks are marked for re-analyze.",
     "error.reanalyze_needs_crate": "Choose a crate for re-analyze.",
     "error.reanalyze_did_not_stick": "The unanalyzed mark did not stick. The library was put back.",
-    "error.reanalyze_locked": "A locked beatgrid was not cleared. Pass include_locked to unlock it."
+    "error.reanalyze_locked": "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them."
   };
 
   // locales/es.json
@@ -17463,6 +17465,8 @@ Error generating stack: ` + x.message + `
       other: "Vista previa lista: {count} pistas. Confirma para marcarlas."
     },
     "reanalyze.previewEmpty": "Nada que marcar. No se escribe nada.",
+    "reanalyze.optionsChanged": "Vuelve a la vista previa antes de confirmar. Las opciones cambiaron.",
+    "reanalyze.driveAbsent": "La unidad de una pista no está conectada. Serato puede volver a poner la marca de analizada cuando esa unidad regrese.",
     "reanalyze.written": {
       one: "Se marcó 1 pista. Ábrela en Serato para reconstruir.",
       other: "Se marcaron {count} pistas. Ábrelas en Serato para reconstruir."
@@ -17476,7 +17480,7 @@ Error generating stack: ` + x.message + `
     "error.reanalyze_needs_confirm": "Confirma antes de marcar pistas para reanalizar.",
     "error.reanalyze_needs_crate": "Elige una caja para reanalizar.",
     "error.reanalyze_did_not_stick": "La marca de sin analizar no se guardó. Se restauró la biblioteca.",
-    "error.reanalyze_locked": "No se borró una rejilla bloqueada. Pasa include_locked para desbloquearla."
+    "error.reanalyze_locked": "Esas rejillas están bloqueadas. Activa Incluir rejillas bloqueadas para desbloquearlas."
   };
 
   // src/lib/i18n.ts
@@ -71976,14 +71980,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var latest13 = null, reportRoot4, reportHost5 = null;
   function wireReanalyze() {
     let panel = el("reanalyze-panel");
-    panel.dataset.reanalyzeWired !== "true" && (panel.dataset.reanalyzeWired = "true", el("reanalyze-refresh").addEventListener("click", () => {
-      loadReanalyze();
-    }), el("reanalyze-preview").addEventListener("click", () => {
-      previewReanalyze();
-    }), el("reanalyze-report").addEventListener("click", (event) => {
-      let button = event.target.closest("[data-reanalyze-action]");
-      !button || button.disabled || button.dataset.reanalyzeAction === "confirm" && applyReanalyze();
-    }));
+    if (panel.dataset.reanalyzeWired !== "true") {
+      panel.dataset.reanalyzeWired = "true", el("reanalyze-refresh").addEventListener("click", () => {
+        loadReanalyze();
+      }), el("reanalyze-preview").addEventListener("click", () => {
+        previewReanalyze();
+      });
+      for (let id of ["reanalyze-clear-frames", "reanalyze-include-locked"])
+        el(id).addEventListener("change", () => {
+          dropStalePreview();
+        });
+      el("reanalyze-report").addEventListener("click", (event) => {
+        let button = event.target.closest("[data-reanalyze-action]");
+        !button || button.disabled || button.dataset.reanalyzeAction === "confirm" && applyReanalyze();
+      });
+    }
   }
   async function loadReanalyze() {
     let token4 = ++state.reanalyzeToken;
@@ -72070,8 +72081,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         confirm: !0,
         space: state.space,
         crate,
-        clear_frames: clearFramesOn(),
-        include_locked: includeLockedOn()
+        clear_frames: latest13.clear_frames !== !1,
+        include_locked: latest13.include_locked === !0
       });
       if (token4 !== state.reanalyzeToken) return;
       if (isQueuedWrite(payload)) {
@@ -72080,7 +72091,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       let writtenCount = payload.written ? payload.count : 0;
       if (await bridge.reloadLibrary(), token4 !== state.reanalyzeToken) return;
-      latest13 = payload, el("reanalyze-status").textContent = writtenCount ? t("reanalyze.written", { count: writtenCount }) : "", renderReanalyzeReport(payload), el("reanalyze-report").focus();
+      latest13 = payload;
+      let writtenText = writtenCount ? t("reanalyze.written", { count: writtenCount }) : "", driveText = payload.drive_absent ? t("reanalyze.driveAbsent") : "";
+      el("reanalyze-status").textContent = [writtenText, driveText].filter(Boolean).join(" "), renderReanalyzeReport(payload), el("reanalyze-report").focus();
     } catch (error2) {
       if (token4 !== state.reanalyzeToken) return;
       let failed = failureOf(error2);
@@ -72089,6 +72102,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (token4 !== state.reanalyzeToken) return;
       endBusy12();
     }
+  }
+  function dropStalePreview() {
+    latest13?.preview && (latest13 = { ...latest13, preview: !1 }, el("reanalyze-status").textContent = t("reanalyze.optionsChanged"), renderReanalyzeReport(latest13));
   }
   function clearFramesOn() {
     return document.getElementById("reanalyze-clear-frames")?.checked !== !1;
