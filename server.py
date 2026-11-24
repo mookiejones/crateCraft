@@ -2021,7 +2021,8 @@ class Handler(BaseHTTPRequestHandler):
                 if not source.strip():
                     raise library.LibraryError(stick_backup.SOURCE_MISSING)
                 if not dest.strip():
-                    raise library.LibraryError(folder_sync.CHOOSE_FOLDER)
+                    self.send_json(stick_backup.status(source))
+                    return
                 self.send_json(stick_backup.preview(source, dest))
                 return
             if parsed.path == "/api/history-rescue":

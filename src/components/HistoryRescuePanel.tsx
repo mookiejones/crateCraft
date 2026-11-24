@@ -4,8 +4,9 @@
 
 import { useRef, useState } from "react";
 import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
 import type { HistoryRescueReport, HistoryRescueSource } from "../lib/api-types";
 import { failureOf } from "../lib/api";
 import { t } from "../lib/i18n";
@@ -15,8 +16,9 @@ import {
   postHistoryRescue,
 } from "../lib/history/history-rescue";
 import {
+  historyRescueSessionRows,
+  historyRescueSideLabel,
   historyRescueStatusText,
-  parseSessionIds,
   type HistoryRescueAction,
 } from "../lib/history/history-rescue-view";
 import { isQueuedWrite } from "../lib/crates/queue-notice";
@@ -28,18 +30,29 @@ const BUTTON_SX = { textTransform: "none" as const, minHeight: 44 };
 
 /**
  * Compare, restore, or rebuild history sessions.
+ *
+ * Catalog and compare stay behind Scan / Compare so a language repaint of
+ * History does not fetch.
  */
 export function HistoryRescuePanel() {
   const [source, setSource] = useState("");
-  const [sessions, setSessions] = useState("");
+  const [selected, setSelected] = useState<number[]>([]);
   const [sources, setSources] = useState<HistoryRescueSource[]>([]);
   const [report, setReport] = useState<HistoryRescueReport | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const tokenRef = useRef(0);
-  const ids = parseSessionIds(sessions);
+  const rows = historyRescueSessionRows(report);
+  const ids = selected.filter((id) => rows.some((row) => row.id === id && row.selectable));
   const readyCompare = Boolean(source) && !busy;
   const readyWrite = ids.length > 0 && !busy;
+
+  function toggleSession(id: number, on: boolean): void {
+    setSelected((prev) => {
+      if (on) return prev.includes(id) ? prev : [...prev, id];
+      return prev.filter((value) => value !== id);
+    });
+  }
 
   async function run(
     action: HistoryRescueAction,
@@ -53,8 +66,10 @@ export function HistoryRescuePanel() {
       if (action === "scan") {
         payload = await fetchHistoryRescueCatalog();
         setSources(Array.isArray(payload.sources) ? payload.sources : []);
+        setSelected([]);
       } else if (action === "preview" && source && ids.length === 0) {
         payload = await fetchHistoryRescueCompare(source);
+        setSelected([]);
       } else {
         payload = await postHistoryRescue(action, source || "live", ids, confirm);
       }
@@ -105,17 +120,49 @@ export function HistoryRescuePanel() {
             ))}
         </select>
       </label>
-      <TextField
+      <div
         id="history-rescue-sessions"
-        label={t("historyRescue.sessions")}
-        size="small"
-        fullWidth
-        value={sessions}
-        autoComplete="off"
-        inputRef={tooltipRef(tips.historyRescueSessions)}
-        onChange={(event) => setSessions(event.target.value)}
-        sx={{ mt: 1 }}
-      />
+        className="history-rescue-sessions"
+        role="group"
+        aria-label={t("historyRescue.sessions")}
+        ref={tooltipRef(tips.historyRescueSessions)}
+      >
+        <p className="field-label">{t("historyRescue.sessions")}</p>
+        {rows.length === 0 ? (
+          <p className="notice">{t("historyRescue.sessionsEmpty")}</p>
+        ) : (
+          <ul className="history-rescue-session-list">
+            {rows.map((row) => (
+              <li key={`${row.side}-${row.id}`}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      size="small"
+                      checked={selected.includes(row.id)}
+                      disabled={!row.selectable || busy}
+                      onChange={(event) => toggleSession(row.id, event.target.checked)}
+                      slotProps={{
+                        input: {
+                          "aria-label": t("historyRescue.sessionRow", {
+                            id: row.id,
+                            name: row.name,
+                            side: historyRescueSideLabel(row.side),
+                          }),
+                        },
+                      }}
+                    />
+                  }
+                  label={t("historyRescue.sessionRow", {
+                    id: row.id,
+                    name: row.name,
+                    side: historyRescueSideLabel(row.side),
+                  })}
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <Stack direction="row" spacing={1} sx={{ mt: 1, flexWrap: "wrap", gap: 1 }}>
         <Button
           id="history-rescue-scan"

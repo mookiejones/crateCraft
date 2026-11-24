@@ -164,17 +164,40 @@ class StickBackupTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as raw:
             source = Path(raw) / "a.mp3"
             dest = Path(raw) / "b.mp3"
-            source.write_bytes(b"same-size-a")
-            dest.write_bytes(b"same-size-b")
+            same = b"same-bytes!!"
+            source.write_bytes(same)
+            dest.write_bytes(same)
             now = time.time()
             os.utime(source, (now, now))
             os.utime(dest, (now + 1.5, now + 1.5))
             self.assertTrue(
                 stick_backup.files_match(source, dest, fat=True, source_hash=None)
             )
+            self.assertTrue(
+                stick_backup.files_match(source, dest, fat=False, source_hash=None)
+            )
+            dest.write_bytes(b"same-size-b")
+            os.utime(dest, (now + 1.5, now + 1.5))
+            self.assertFalse(
+                stick_backup.files_match(source, dest, fat=True, source_hash=None)
+            )
             self.assertFalse(
                 stick_backup.files_match(source, dest, fat=False, source_hash=None)
             )
+
+    def test_status_returns_last_backup(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            stick = _stick(Path(raw) / "stick")
+            dest = Path(raw) / "backup"
+            dest.mkdir()
+            with self._separate_disks():
+                copied = stick_backup.copy_files(str(stick), str(dest))
+            self.assertTrue(copied["verified"])
+            body = stick_backup.status(str(stick))
+            self.assertIsNotNone(body.get("last_backup"))
+            last = body["last_backup"]
+            assert isinstance(last, dict)
+            self.assertEqual(Path(str(last.get("dest") or "")).name, "backup")
 
     def test_nfc_rel_key(self) -> None:
         nfd = "Music/cafe\u0301.mp3"

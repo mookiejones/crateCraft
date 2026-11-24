@@ -12609,7 +12609,7 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState84 = React321.useState, useEffect94 = React321.useEffect, useLayoutEffect22 = React321.useLayoutEffect, useDebugValue3 = React321.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState84 = React321.useState, useEffect95 = React321.useEffect, useLayoutEffect22 = React321.useLayoutEffect, useDebugValue3 = React321.useDebugValue;
       function useSyncExternalStore$2(subscribe3, getSnapshot) {
         var value = getSnapshot(), _useState = useState84({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
         return useLayoutEffect22(
@@ -12617,7 +12617,7 @@ Error generating stack: ` + x.message + `
             inst.value = value, inst.getSnapshot = getSnapshot, checkIfSnapshotChanged(inst) && forceUpdate({ inst });
           },
           [subscribe3, value, getSnapshot]
-        ), useEffect94(
+        ), useEffect95(
           function() {
             return checkIfSnapshotChanged(inst) && forceUpdate({ inst }), subscribe3(function() {
               checkIfSnapshotChanged(inst) && forceUpdate({ inst });
@@ -12660,7 +12660,7 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore5 = shim.useSyncExternalStore, useRef125 = React321.useRef, useEffect94 = React321.useEffect, useMemo72 = React321.useMemo, useDebugValue3 = React321.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore5 = shim.useSyncExternalStore, useRef125 = React321.useRef, useEffect95 = React321.useEffect, useMemo72 = React321.useMemo, useDebugValue3 = React321.useDebugValue;
       exports.useSyncExternalStoreWithSelector = function(subscribe3, getSnapshot, getServerSnapshot, selector, isEqual) {
         var instRef = useRef125(null);
         if (instRef.current === null) {
@@ -12695,7 +12695,7 @@ Error generating stack: ` + x.message + `
           [getSnapshot, getServerSnapshot, selector, isEqual]
         );
         var value = useSyncExternalStore5(subscribe3, instRef[0], instRef[1]);
-        return useEffect94(
+        return useEffect95(
           function() {
             inst.hasValue = !0, inst.value = value;
           },
@@ -13631,7 +13631,13 @@ Error generating stack: ` + x.message + `
     "historyRescue.restore": "Restore sessions",
     "historyRescue.restored": "Restored {count} sessions.",
     "historyRescue.scan": "Scan sources",
-    "historyRescue.sessions": "Session ids (comma-separated)",
+    "historyRescue.sessionRow": "#{id} {name} — {side}",
+    "historyRescue.sessions": "Sessions",
+    "historyRescue.sessionsEmpty": "Compare a source to list sessions.",
+    "historyRescue.sideDisagree": "disagree",
+    "historyRescue.sideOnlyLive": "only live",
+    "historyRescue.sideOnlySource": "only source",
+    "historyRescue.skippedLive": "Skipped {count} sessions already in live history.",
     "historyRescue.source": "Source",
     "historyRescue.status": "{only_source} only in source, {only_live} only live, {disagree} disagree.",
     "historyRescue.writeBlocked": "Write-back is not available. Rebuild as crates instead.",
@@ -14733,7 +14739,7 @@ Error generating stack: ` + x.message + `
     "tooltip.historyRescueCrates": "Create dated crates for the chosen sessions. Serato must be quit.",
     "tooltip.historyRescueRestore": "Write chosen sessions into live history. Refused when the schema is unprobed.",
     "tooltip.historyRescueScan": "List backups, snapshots, and any unchecked History folder.",
-    "tooltip.historyRescueSessions": "Source session ids to restore or rebuild, separated by commas.",
+    "tooltip.historyRescueSessions": "Sessions from the compare. Check only-source or disagree rows to restore or rebuild.",
     "tooltip.historyRescueSource": "Backup or snapshot to compare with live history.",
     "tooltip.hotLoops": "Copy loops onto a free hot-cue pad in the Rekordbox file.",
     "tooltip.iconFollowsTheme": "Match the Dock icon on Mac, or the window and taskbar icon on Windows, to the theme. On by default. The Finder icon and the Windows program icon stay the same.",
@@ -16004,7 +16010,13 @@ Error generating stack: ` + x.message + `
     "historyRescue.restore": "Restaurar sesiones",
     "historyRescue.restored": "Se restauraron {count} sesiones.",
     "historyRescue.scan": "Buscar fuentes",
-    "historyRescue.sessions": "Ids de sesión (separados por comas)",
+    "historyRescue.sessionRow": "#{id} {name} — {side}",
+    "historyRescue.sessions": "Sesiones",
+    "historyRescue.sessionsEmpty": "Compara una fuente para listar las sesiones.",
+    "historyRescue.sideDisagree": "no coinciden",
+    "historyRescue.sideOnlyLive": "solo en vivo",
+    "historyRescue.sideOnlySource": "solo en la fuente",
+    "historyRescue.skippedLive": "Se omitieron {count} sesiones que ya están en el historial en vivo.",
     "historyRescue.source": "Fuente",
     "historyRescue.status": "{only_source} solo en la fuente, {only_live} solo en vivo, {disagree} no coinciden.",
     "historyRescue.writeBlocked": "La escritura no está disponible. Reconstruye como crates en su lugar.",
@@ -17106,7 +17118,7 @@ Error generating stack: ` + x.message + `
     "tooltip.historyRescueCrates": "Crea crates con fecha para las sesiones elegidas. Serato debe estar cerrado.",
     "tooltip.historyRescueRestore": "Escribe las sesiones elegidas en el historial en vivo. Se rechaza si el esquema no está comprobado.",
     "tooltip.historyRescueScan": "Lista copias, instantáneas y cualquier carpeta History sin comprobar.",
-    "tooltip.historyRescueSessions": "Ids de sesión de la fuente para restaurar o reconstruir, separados por comas.",
+    "tooltip.historyRescueSessions": "Sesiones de la comparación. Marca solo-fuente o no coinciden para restaurar o reconstruir.",
     "tooltip.historyRescueSource": "Copia o instantánea para comparar con el historial en vivo.",
     "tooltip.hotLoops": "Copia los bucles a un pad de cue libre en el archivo de Rekordbox.",
     "tooltip.iconFollowsTheme": "Haz que el icono del Dock en Mac, o el de la ventana y la barra de tareas en Windows, coincida con el tema. Activado de forma predeterminada. El icono del Finder y el icono del programa en Windows no cambian.",
@@ -64838,10 +64850,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   var import_react39 = __toESM(require_react(), 1);
 
   // src/lib/gig/stick-backup.ts
-  async function fetchStickBackupPreview(source, dest) {
-    let response = await fetch(
-      `/api/stick-backup?source=${encodeURIComponent(source.trim())}&dest=${encodeURIComponent(dest.trim())}`
-    ), payload = await readJSON(response).catch(
+  async function getStickBackup(source, dest) {
+    let params = new URLSearchParams({ source: source.trim() });
+    dest && dest.trim() && params.set("dest", dest.trim());
+    let response = await fetch(`/api/stick-backup?${params.toString()}`), payload = await readJSON(response).catch(
       () => ({})
     );
     if (!response.ok) {
@@ -64849,6 +64861,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       throw error2.status = response.status, error2.payload = payload, error2;
     }
     return payload;
+  }
+  async function fetchStickBackupStatus(source) {
+    return await getStickBackup(source);
+  }
+  async function fetchStickBackupPreview(source, dest) {
+    return await getStickBackup(source, dest);
   }
   async function postStickBackup(action, source, dest, confirm) {
     return await postJSON("/api/stick-backup", {
@@ -64865,18 +64883,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function stickBackupStatusText(report) {
     if (!report) return "";
-    if (report.written && report.verified)
-      return t("stickBackup.verified");
-    if (report.written && report.verified === !1)
-      return t("stickBackup.failed");
-    let parts = [
+    let parts = [];
+    report.written && report.verified ? parts.push(t("stickBackup.verified")) : report.written && report.verified === !1 ? parts.push(t("stickBackup.failed")) : (typeof report.fat_tolerance == "boolean" || report.copy != null || report.mismatch != null) && parts.push(
       t("stickBackup.status", {
         copy: Number(report.copy_count) || 0,
         skip: Number(report.skip_count) || 0,
         mismatch: Number(report.mismatch_count) || 0
       })
-    ];
-    typeof report.warning == "string" && report.warning && parts.push(report.warning);
+    ), typeof report.warning == "string" && report.warning && parts.push(report.warning);
     let last = report.last_backup;
     return last && typeof last.dest == "string" && typeof last.at == "string" && parts.push(
       t("stickBackup.last", {
@@ -64892,6 +64906,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let [dest, setDest] = (0, import_react39.useState)(""), [report, setReport] = (0, import_react39.useState)(null), [error2, setError] = (0, import_react39.useState)(""), [busy7, setBusy] = (0, import_react39.useState)(!1), tokenRef = (0, import_react39.useRef)(0), source = portableDriveRoot(
       document.getElementById("portable-drive")?.value || ""
     ), ready = !!source && hasStickBackupDest(dest) && !busy7;
+    (0, import_react39.useEffect)(() => {
+      if (!source) {
+        setReport(null);
+        return;
+      }
+      let token4 = ++tokenRef.current;
+      setError(""), fetchStickBackupStatus(source).then((payload) => {
+        if (token4 !== tokenRef.current) return;
+        setReport(payload);
+        let remembered = payload.last_backup?.dest;
+        typeof remembered == "string" && remembered.trim() && setDest(remembered);
+      }).catch((caught) => {
+        token4 === tokenRef.current && setError(failureOf(caught).message);
+      });
+    }, [source]);
     async function run(action, confirm) {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -73783,13 +73812,34 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/history/history-rescue-view.ts
-  function parseSessionIds(raw) {
-    let ids = [];
-    for (let part of raw.split(/[,\s]+/)) {
-      let trimmed = part.trim();
-      trimmed && /^\d+$/.test(trimmed) && ids.push(Number(trimmed));
+  function asSession(raw) {
+    if (!raw || typeof raw != "object") return null;
+    let row = raw;
+    return typeof row.id != "number" || !Number.isFinite(row.id) ? null : {
+      id: row.id,
+      name: typeof row.name == "string" && row.name ? row.name : "Session"
+    };
+  }
+  function historyRescueSessionRows(report) {
+    if (!report) return [];
+    let rows = [], seen = /* @__PURE__ */ new Set();
+    for (let raw of report.only_source ?? []) {
+      let session = asSession(raw);
+      !session || seen.has(session.id) || (seen.add(session.id), rows.push({ ...session, side: "only_source", selectable: !0 }));
     }
-    return ids;
+    for (let raw of report.disagree ?? []) {
+      if (!raw || typeof raw != "object") continue;
+      let source = asSession(raw.source);
+      !source || seen.has(source.id) || (seen.add(source.id), rows.push({ ...source, side: "disagree", selectable: !0 }));
+    }
+    for (let raw of report.only_live ?? []) {
+      let session = asSession(raw);
+      !session || seen.has(session.id) || (seen.add(session.id), rows.push({ ...session, side: "only_live", selectable: !1 }));
+    }
+    return rows;
+  }
+  function historyRescueSideLabel(side) {
+    return side === "only_source" ? t("historyRescue.sideOnlySource") : side === "only_live" ? t("historyRescue.sideOnlyLive") : t("historyRescue.sideDisagree");
   }
   function historyRescueStatusText(report) {
     if (!report) return "";
@@ -73797,6 +73847,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       return t("historyRescue.cratesDone", { count: Number(report.crate_count) || 0 });
     if (report.written && report.action === "restore")
       return t("historyRescue.restored", { count: Number(report.restored_count) || 0 });
+    if (report.action === "restore" && report.written === !1 && (Number(report.skipped_count) || 0) > 0 && (Number(report.restored_count) || 0) === 0)
+      return t("historyRescue.skippedLive", { count: Number(report.skipped_count) || 0 });
     if (report.write_back && report.write_back.allowed === !1 && report.write_back.reason)
       return String(report.write_back.reason);
     if (report.only_source_count != null || report.only_live_count != null || report.disagree_count != null)
@@ -73812,13 +73864,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/HistoryRescuePanel.tsx
   var import_jsx_runtime294 = __toESM(require_jsx_runtime(), 1), BUTTON_SX18 = { textTransform: "none", minHeight: 44 };
   function HistoryRescuePanel() {
-    let [source, setSource] = (0, import_react78.useState)(""), [sessions, setSessions] = (0, import_react78.useState)(""), [sources, setSources] = (0, import_react78.useState)([]), [report, setReport] = (0, import_react78.useState)(null), [error2, setError] = (0, import_react78.useState)(""), [busy7, setBusy] = (0, import_react78.useState)(!1), tokenRef = (0, import_react78.useRef)(0), ids = parseSessionIds(sessions), readyCompare = !!source && !busy7, readyWrite = ids.length > 0 && !busy7;
+    let [source, setSource] = (0, import_react78.useState)(""), [selected, setSelected] = (0, import_react78.useState)([]), [sources, setSources] = (0, import_react78.useState)([]), [report, setReport] = (0, import_react78.useState)(null), [error2, setError] = (0, import_react78.useState)(""), [busy7, setBusy] = (0, import_react78.useState)(!1), tokenRef = (0, import_react78.useRef)(0), rows = historyRescueSessionRows(report), ids = selected.filter((id) => rows.some((row) => row.id === id && row.selectable)), readyCompare = !!source && !busy7, readyWrite = ids.length > 0 && !busy7;
+    function toggleSession(id, on) {
+      setSelected((prev2) => on ? prev2.includes(id) ? prev2 : [...prev2, id] : prev2.filter((value) => value !== id));
+    }
     async function run(action, confirm) {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
       try {
         let payload;
-        if (action === "scan" ? (payload = await fetchHistoryRescueCatalog(), setSources(Array.isArray(payload.sources) ? payload.sources : [])) : action === "preview" && source && ids.length === 0 ? payload = await fetchHistoryRescueCompare(source) : payload = await postHistoryRescue(action, source || "live", ids, confirm), token4 !== tokenRef.current) return;
+        if (action === "scan" ? (payload = await fetchHistoryRescueCatalog(), setSources(Array.isArray(payload.sources) ? payload.sources : []), setSelected([])) : action === "preview" && source && ids.length === 0 ? (payload = await fetchHistoryRescueCompare(source), setSelected([])) : payload = await postHistoryRescue(action, source || "live", ids, confirm), token4 !== tokenRef.current) return;
         if (isQueuedWrite(payload)) {
           setNotice(t("gigLock.queued"));
           return;
@@ -73856,18 +73911,45 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
               }
             )
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(
-            TextField_default,
+          /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(
+            "div",
             {
               id: "history-rescue-sessions",
-              label: t("historyRescue.sessions"),
-              size: "small",
-              fullWidth: !0,
-              value: sessions,
-              autoComplete: "off",
-              inputRef: tooltipRef5(tips.historyRescueSessions),
-              onChange: (event) => setSessions(event.target.value),
-              sx: { mt: 1 }
+              className: "history-rescue-sessions",
+              role: "group",
+              "aria-label": t("historyRescue.sessions"),
+              ref: tooltipRef5(tips.historyRescueSessions),
+              children: [
+                /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("p", { className: "field-label", children: t("historyRescue.sessions") }),
+                rows.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("p", { className: "notice", children: t("historyRescue.sessionsEmpty") }) : /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("ul", { className: "history-rescue-session-list", children: rows.map((row) => /* @__PURE__ */ (0, import_jsx_runtime294.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(
+                  FormControlLabel_default,
+                  {
+                    control: /* @__PURE__ */ (0, import_jsx_runtime294.jsx)(
+                      Checkbox_default,
+                      {
+                        size: "small",
+                        checked: selected.includes(row.id),
+                        disabled: !row.selectable || busy7,
+                        onChange: (event) => toggleSession(row.id, event.target.checked),
+                        slotProps: {
+                          input: {
+                            "aria-label": t("historyRescue.sessionRow", {
+                              id: row.id,
+                              name: row.name,
+                              side: historyRescueSideLabel(row.side)
+                            })
+                          }
+                        }
+                      }
+                    ),
+                    label: t("historyRescue.sessionRow", {
+                      id: row.id,
+                      name: row.name,
+                      side: historyRescueSideLabel(row.side)
+                    })
+                  }
+                ) }, `${row.side}-${row.id}`)) })
+              ]
             }
           ),
           /* @__PURE__ */ (0, import_jsx_runtime294.jsxs)(Stack_default, { direction: "row", spacing: 1, sx: { mt: 1, flexWrap: "wrap", gap: 1 }, children: [

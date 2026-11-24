@@ -1031,6 +1031,8 @@ export interface HistoryRescueReport {
   crate_count?: number;
   restored?: unknown[];
   restored_count?: number;
+  skipped?: unknown[];
+  skipped_count?: number;
   snapshot_id?: string | null;
   error?: string;
   code?: string;

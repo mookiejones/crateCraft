@@ -121,6 +121,16 @@ class HistoryRescueTests(unittest.TestCase):
                     "SELECT name FROM history_session WHERE name = 'Rescue me'"
                 ).fetchone()
                 self.assertIsNotNone(row)
+            again = history_rescue.restore_sessions(
+                "backup:serato-web-test", [9], confirm=True
+            )
+            self.assertFalse(again["written"])
+            self.assertEqual(again["restored_count"], 0)
+            self.assertEqual(again["skipped_count"], 1)
+            with open_database(temp.db) as conn:
+                final = conn.execute("SELECT COUNT(*) FROM history_session").fetchone()
+                assert final is not None
+                self.assertEqual(int(final[0]), before_count + 1)
 
     def test_restore_refuses_when_unprobed(self) -> None:
         with TempLibrary() as temp:

@@ -142,8 +142,10 @@ def files_match(
 ) -> bool:
     """True when dest can be treated as already backed up from source.
 
-    Size must match. Then either the hashes match, or on a FAT/exFAT
-    volume the mtimes are within :data:`MTIME_TOLERANCE` seconds.
+    Size and SHA-256 must both match. A hash mismatch never skips, even
+    on FAT/exFAT when mtimes are within :data:`MTIME_TOLERANCE`. When
+    hashes match on a FAT volume, mtimes must also sit inside that
+    window so a same-hash rewrite with a drifted stamp is recopied.
 
     Args:
         source: Stick file.
@@ -159,12 +161,13 @@ def files_match(
     if source_size is None or dest_size is None or source_size != dest_size:
         return False
     before = source_hash if source_hash is not None else _hash_file(source)
-    if before is not None:
-        after = _hash_file(dest)
-        if after == before:
-            return True
-    if not fat:
+    if before is None:
         return False
+    after = _hash_file(dest)
+    if after is None or after != before:
+        return False
+    if not fat:
+        return True
     source_mtime = _mtime(source)
     dest_mtime = _mtime(dest)
     if source_mtime is None or dest_mtime is None:
@@ -570,6 +573,35 @@ def _plan(
     body["copied"] = copied
     body["verified"] = verified
     return body
+
+
+def status(source: object) -> dict[str, object]:
+    """Remembered last backup and stale-database warning for a stick.
+
+    Does not require a dest folder. Does not write.
+
+    Args:
+        source: Stick root with ``_Serato_``.
+
+    Returns:
+        Report with ``last_backup`` and optional ``warning``.
+    """
+    stick = _open_source(source)
+    remembered = last_backup(stick)
+    dest = None
+    if isinstance(remembered, dict) and isinstance(remembered.get("dest"), str):
+        dest = remembered["dest"]
+    return {
+        "preview": True,
+        "written": False,
+        "source": str(stick),
+        "dest": dest,
+        "warning": stale_database_warning(stick),
+        "last_backup": remembered,
+        "copy_count": 0,
+        "skip_count": 0,
+        "mismatch_count": 0,
+    }
 
 
 def preview(source: object, dest: object) -> dict[str, object]:

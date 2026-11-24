@@ -12,16 +12,13 @@ import type { StickBackupAction } from "./stick-backup-view";
 
 export type { StickBackupAction } from "./stick-backup-view";
 
-/**
- * Read-only classification of stick files against dest.
- */
-export async function fetchStickBackupPreview(
+async function getStickBackup(
   source: string,
-  dest: string,
+  dest?: string,
 ): Promise<StickBackupReport> {
-  const response = await fetch(
-    `/api/stick-backup?source=${encodeURIComponent(source.trim())}&dest=${encodeURIComponent(dest.trim())}`,
-  );
+  const params = new URLSearchParams({ source: source.trim() });
+  if (dest && dest.trim()) params.set("dest", dest.trim());
+  const response = await fetch(`/api/stick-backup?${params.toString()}`);
   const payload = await readJSON<StickBackupReport & ErrorBody>(response).catch(
     (): StickBackupReport & ErrorBody => ({}),
   );
@@ -32,6 +29,23 @@ export async function fetchStickBackupPreview(
     throw error;
   }
   return payload;
+}
+
+/**
+ * Remembered last backup and stale-database warning for a stick.
+ */
+export async function fetchStickBackupStatus(source: string): Promise<StickBackupReport> {
+  return await getStickBackup(source);
+}
+
+/**
+ * Read-only classification of stick files against dest.
+ */
+export async function fetchStickBackupPreview(
+  source: string,
+  dest: string,
+): Promise<StickBackupReport> {
+  return await getStickBackup(source, dest);
 }
 
 /**

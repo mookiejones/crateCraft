@@ -2,14 +2,18 @@
  * Back up this Serato stick on Check drive (#481).
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import type { StickBackupReport } from "../lib/api-types";
 import { failureOf } from "../lib/api";
 import { t } from "../lib/i18n";
-import { fetchStickBackupPreview, postStickBackup } from "../lib/gig/stick-backup";
+import {
+  fetchStickBackupPreview,
+  fetchStickBackupStatus,
+  postStickBackup,
+} from "../lib/gig/stick-backup";
 import {
   hasStickBackupDest,
   stickBackupStatusText,
@@ -34,6 +38,28 @@ export function StickBackupPanel() {
     (document.getElementById("portable-drive") as HTMLSelectElement | null)?.value || "",
   );
   const ready = Boolean(source) && hasStickBackupDest(dest) && !busy;
+
+  useEffect(() => {
+    if (!source) {
+      setReport(null);
+      return;
+    }
+    const token = ++tokenRef.current;
+    setError("");
+    void fetchStickBackupStatus(source)
+      .then((payload) => {
+        if (token !== tokenRef.current) return;
+        setReport(payload);
+        const remembered = payload.last_backup?.dest;
+        if (typeof remembered === "string" && remembered.trim()) {
+          setDest(remembered);
+        }
+      })
+      .catch((caught) => {
+        if (token !== tokenRef.current) return;
+        setError(failureOf(caught).message);
+      });
+  }, [source]);
 
   async function run(action: StickBackupAction, confirm: boolean): Promise<void> {
     const token = ++tokenRef.current;

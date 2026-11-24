@@ -16,22 +16,30 @@ export function hasStickBackupDest(dest: string): boolean {
 
 /**
  * Status line from a stick-backup report.
+ *
+ * Keeps the stale-database warning and last-backup line after a verified
+ * copy so Check drive still shows them.
  */
 export function stickBackupStatusText(report: StickBackupReport | null): string {
   if (!report) return "";
+  const parts: string[] = [];
   if (report.written && report.verified) {
-    return t("stickBackup.verified");
+    parts.push(t("stickBackup.verified"));
+  } else if (report.written && report.verified === false) {
+    parts.push(t("stickBackup.failed"));
+  } else if (
+    typeof report.fat_tolerance === "boolean" ||
+    report.copy != null ||
+    report.mismatch != null
+  ) {
+    parts.push(
+      t("stickBackup.status", {
+        copy: Number(report.copy_count) || 0,
+        skip: Number(report.skip_count) || 0,
+        mismatch: Number(report.mismatch_count) || 0,
+      }),
+    );
   }
-  if (report.written && report.verified === false) {
-    return t("stickBackup.failed");
-  }
-  const parts = [
-    t("stickBackup.status", {
-      copy: Number(report.copy_count) || 0,
-      skip: Number(report.skip_count) || 0,
-      mismatch: Number(report.mismatch_count) || 0,
-    }),
-  ];
   if (typeof report.warning === "string" && report.warning) {
     parts.push(report.warning);
   }

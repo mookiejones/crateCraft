@@ -366,10 +366,23 @@ def preview_restore(source_id: str, session_ids: Sequence[object]) -> dict[str, 
     status = write_back_status()
     temp: Path | None = None
     source_conn, temp = _open_source_conn(source_id)
+    live_conn = gig_check.open_read_only(Path(library.MASTER))
     try:
+        live_keys = {str(item["key"]) for item in _sessions_from_conn(live_conn)}
         sessions = _resolve_session_ids(source_conn, session_ids)
         plans: list[dict[str, object]] = []
+        skipped: list[dict[str, object]] = []
         for session in sessions:
+            key = _session_key(session)
+            if key in live_keys:
+                skipped.append(
+                    {
+                        "session": session,
+                        "key": key,
+                        "reason": "already_live",
+                    }
+                )
+                continue
             entries = _entries_from_conn(source_conn, int(session["id"]))
             plans.append(
                 {
@@ -391,10 +404,13 @@ def preview_restore(source_id: str, session_ids: Sequence[object]) -> dict[str, 
             "source": source_id,
             "sessions": plans,
             "session_count": len(plans),
+            "skipped": skipped,
+            "skipped_count": len(skipped),
             "write_back": status,
         }
     finally:
         source_conn.close()
+        live_conn.close()
         if temp is not None:
             try:
                 temp.unlink()
@@ -408,7 +424,11 @@ def restore_sessions(
     *,
     confirm: bool,
 ) -> dict[str, object]:
-    """Restore chosen source sessions into live history through safe_write."""
+    """Restore chosen source sessions into live history through safe_write.
+
+    A source session whose compare key is already live is skipped so a
+    second restore does not duplicate it.
+    """
     if not confirm:
         return preview_restore(source_id, session_ids)
     status = write_back_status()
@@ -416,27 +436,60 @@ def restore_sessions(
         raise LibraryError(str(status.get("reason") or WRITE_UNPROBED), 409)
     temp: Path | None = None
     source_conn, temp = _open_source_conn(source_id)
+    live_conn = gig_check.open_read_only(Path(library.MASTER))
     try:
+        live_keys = {
+            str(row["key"]): row for row in _sessions_from_conn(live_conn)
+        }
         sessions = _resolve_session_ids(source_conn, session_ids)
         payloads: list[dict[str, object]] = []
+        skipped: list[dict[str, object]] = []
         for session in sessions:
+            key = _session_key(session)
+            if key in live_keys:
+                existing = live_keys[key]
+                skipped.append(
+                    {
+                        "id": existing.get("id"),
+                        "key": key,
+                        "name": session.get("name") or "Session",
+                        "reason": "already_live",
+                    }
+                )
+                continue
             entries = _entries_from_conn(source_conn, int(session["id"]))
             payloads.append({"session": dict(session), "entries": list(entries)})
-        if not payloads:
+        if not payloads and not skipped:
             raise LibraryError(NOTHING, 400)
-
-        expected_keys = [
-            _session_key(item["session"])  # type: ignore[arg-type]
-            for item in payloads
-        ]
+        if not payloads:
+            return {
+                "preview": False,
+                "written": False,
+                "action": "restore",
+                "source": source_id,
+                "sessions": [],
+                "session_count": 0,
+                "restored": [],
+                "restored_count": 0,
+                "skipped": skipped,
+                "skipped_count": len(skipped),
+                "write_back": status,
+                "snapshot_id": None,
+            }
 
         def apply(conn: sqlite3.Connection, write: safe_write.Session) -> dict[str, object]:
+            seen = {
+                str(row["key"]): row for row in _sessions_from_conn(conn)
+            }
             created: list[dict[str, object]] = []
             for item in payloads:
                 session = item["session"]
                 entries = item["entries"]
                 assert isinstance(session, dict)
                 assert isinstance(entries, list)
+                key = _session_key(session)
+                if key in seen:
+                    continue
                 cursor = conn.execute(
                     """
                     INSERT INTO history_session (name, start_time, end_time, notes)
@@ -453,41 +506,38 @@ def restore_sessions(
                 for entry in entries:
                     assert isinstance(entry, dict)
                     _insert_entry(conn, new_id, entry)
-                created.append(
-                    {
-                        "id": new_id,
-                        "key": _session_key(session),
-                        "name": session.get("name") or "Session",
-                        "entries": len(entries),
-                    }
-                )
+                created_row = {
+                    "id": new_id,
+                    "key": key,
+                    "name": session.get("name") or "Session",
+                    "entries": len(entries),
+                }
+                created.append(created_row)
+                seen[key] = created_row
 
             def check(verify_conn: sqlite3.Connection) -> None:
                 live = {
                     str(row["key"]): row for row in _sessions_from_conn(verify_conn)
                 }
-                for key in expected_keys:
+                for item in payloads:
+                    session = item["session"]
+                    assert isinstance(session, dict)
+                    key = _session_key(session)
                     if key not in live:
                         raise safe_write.VerifyMismatch(
                             "Restored history sessions did not stick."
                         )
                     row = live[key]
                     got = _entries_from_conn(verify_conn, int(row["id"]))
-                    want: list[dict[str, object]] | None = None
-                    for payload in payloads:
-                        session = payload["session"]
-                        assert isinstance(session, dict)
-                        if _session_key(session) == key:
-                            raw_entries = payload["entries"]
-                            assert isinstance(raw_entries, list)
-                            want = [dict(entry) for entry in raw_entries if isinstance(entry, dict)]
-                            break
-                    if want is None:
-                        raise safe_write.VerifyMismatch(
-                            "Restored history sessions did not stick."
-                        )
-                    if [_entry_fingerprint(row) for row in got] != [
-                        _entry_fingerprint(row) for row in want
+                    raw_entries = item["entries"]
+                    assert isinstance(raw_entries, list)
+                    want = [
+                        dict(entry)
+                        for entry in raw_entries
+                        if isinstance(entry, dict)
+                    ]
+                    if [_entry_fingerprint(entry) for entry in got] != [
+                        _entry_fingerprint(entry) for entry in want
                     ]:
                         raise safe_write.VerifyMismatch(
                             "Restored history entries did not match the source."
@@ -497,6 +547,8 @@ def restore_sessions(
             return {
                 "restored": created,
                 "restored_count": len(created),
+                "skipped": skipped,
+                "skipped_count": len(skipped),
                 "snapshot_id": write.snapshot_id,
             }
 
@@ -508,6 +560,7 @@ def restore_sessions(
         return body
     finally:
         source_conn.close()
+        live_conn.close()
         if temp is not None:
             try:
                 temp.unlink()
