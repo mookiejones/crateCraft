@@ -69,6 +69,7 @@
           <button type="button" id="lost-tab" data-view="lost" role="tab" hidden aria-controls="lost-panel" data-i18n="view.lost">Lost tags</button>
           <button type="button" id="energy-tab" data-view="energy" role="tab" hidden aria-controls="energy-panel" data-i18n="view.energy">Energy</button>
           <button type="button" id="audio-tab" data-view="audio" role="tab" hidden aria-controls="audio-panel" data-i18n="view.audio">Audio changed</button>
+          <button type="button" id="gain-tab" data-view="gain" role="tab" hidden aria-controls="gain-panel" data-i18n="view.gain">Gain changed</button>
           <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
           <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
           <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
@@ -435,6 +436,20 @@
         <p id="audio-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="audio-report" class="gig-report" tabindex="-1"></div>
       </section>
+
+      <section id="gain-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="gain-heading" aria-busy="false">
+        <h2 id="gain-heading" class="visually-hidden" data-i18n="gain.heading">Gain changed</h2>
+        <div class="files-toolbar">
+          <p id="gain-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="gain-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+          <button id="gain-save" type="button" data-i18n="gain.saveCrate">Save crate</button>
+          <button id="gain-reset" type="button" data-i18n="gain.reset">Reset to 0 dB</button>
+        </div>
+        <p id="gain-hint" class="gig-note" data-i18n="gain.intro">Tracks whose Autotags Gain dB is not 0. Reset writes only that field. Quit Serato first.</p>
+        <p id="gain-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="gain-report" class="gig-report" tabindex="-1"></div>
+      </section>
+
       <div id="player-bar" class="player-bar"></div>
     </main>
     <dialog id="settings-dialog" aria-labelledby="settings-title">

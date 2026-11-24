@@ -50,6 +50,7 @@ const VIEWS: Record<string, string> = {
   "view-lost": "lost",
   "view-energy": "energy",
   "view-audio": "audio",
+  "view-gain": "gain",
   "view-snapshots": "snapshots",
   "view-gig": "gig",
   "view-portable": "portable",
