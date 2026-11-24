@@ -312,7 +312,7 @@ a:focus-visible,
   margin: 0;
 }
 
-.app-bar-lock:has(#folder-access:not([hidden])) {
+.app-bar-lock:has(#status:not([hidden]), #folder-access:not([hidden])) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -323,6 +323,7 @@ a:focus-visible,
   margin: 0;
 }
 
+.app-bar-lock #status-refresh,
 .app-bar-lock #folder-access-allow {
   color: inherit;
   min-height: 44px;

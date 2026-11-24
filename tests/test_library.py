@@ -112,12 +112,42 @@ class LibraryTests(unittest.TestCase):
                 info = library.status()
             self.assertTrue(info["open"])
             self.assertFalse(info["writable"])
-            failed = mock.Mock(returncode=1, stdout="")
+            failed = mock.Mock(returncode=1, stdout="", stderr="")
             with mock.patch("library.subprocess.run", return_value=failed):
-                self.assertTrue(library._process_is_serato(99))
+                self.assertFalse(library._process_is_serato(99))
             backups = temp.db.resolve().parent / "Backups"
             stamped = list(backups.glob("serato-web-*")) if backups.is_dir() else []
             self.assertEqual(stamped, [])
+
+    def test_dead_lock_pid_is_not_running(self) -> None:
+        """A stale lock row for a gone process does not block edits.
+
+        ``ps`` exits non-zero when the PID is gone. That is not Serato
+        running. A timeout still counts as running so a write stops.
+
+        Returns:
+            None.
+        """
+        gone = mock.Mock(returncode=1, stdout="", stderr="")
+        with mock.patch("library.subprocess.run", return_value=gone):
+            with mock.patch("library.sys.platform", "darwin"):
+                self.assertFalse(library._unix_process_is_serato(4242))
+        with mock.patch(
+            "library.subprocess.run",
+            side_effect=subprocess.TimeoutExpired("ps", 2),
+        ):
+            with mock.patch("library.sys.platform", "darwin"):
+                self.assertTrue(library._unix_process_is_serato(4242))
+        with TempLibrary():
+            with open_database(library.MASTER) as conn:
+                conn.execute(
+                    "INSERT INTO lock (owner_process_id, owner_process_name) VALUES (4242, 'Serato DJ Pro')"
+                )
+            with mock.patch.object(library, "_process_is_serato", return_value=False):
+                with mock.patch("snapshots.serato_dj_running", return_value=False):
+                    info = library.status()
+            self.assertFalse(info["open"])
+            self.assertTrue(info["writable"])
 
     def test_save_track_updates_the_row_and_backs_up(self) -> None:
         """Save a title and BPM without adding files beside the library.
