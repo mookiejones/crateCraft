@@ -457,6 +457,18 @@ class PreviewApplyTests(unittest.TestCase):
         posix = library._parse_db_path("file:///Users/dj/Library/location.sqlite")
         self.assertEqual(posix, Path("/Users/dj/Library/location.sqlite"))
 
+    def test_public_plan_omits_paths(self) -> None:
+        """Preview JSON names the file, not the absolute path."""
+        with TempLibrary() as temp:
+            path = temp.root / "ready.mp3"
+            _audio(path)
+            _seed(temp.db, [(21, path, 4, 0)])
+            plan = reanalyze.preview(library.LIBRARY_SPACE, 5)
+            self.assertEqual(plan["count"], 1)
+            row = plan["tracks"][0]
+            self.assertEqual(row["file"], "ready.mp3")
+            self.assertNotIn("path", row)
+
 
 class RouteTests(unittest.TestCase):
     """GET and POST /api/reanalyze."""

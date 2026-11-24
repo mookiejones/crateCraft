@@ -1347,7 +1347,6 @@ export interface ReanalyzeTrack {
   name: string;
   artist: string;
   file: string;
-  path: string;
   analysis_flags: number;
   locked: boolean;
   cleared: string[];

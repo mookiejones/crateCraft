@@ -378,7 +378,6 @@ def _public(
                 "name": item.name,
                 "artist": item.artist,
                 "file": item.file,
-                "path": str(item.path) if item.path is not None else "",
                 "analysis_flags": item.analysis_flags,
                 "locked": item.locked,
                 "has_beatgrid": item.has_beatgrid,
@@ -480,14 +479,11 @@ class _LocationUndo:
         """Write the previous flags and lock. A missing file is left alone."""
 
         def apply(conn: sqlite3.Connection) -> str | None:
-            """Restore the two columns inside the location transaction."""
-            library._assign(
-                conn,
-                "asset",
-                {"analysis_flags": self.flags, "is_beatgrid_locked": self.lock},
-                "id = ?",
-                self.external_id,
-            )
+            """Restore the columns that this write changed."""
+            values: dict[str, object] = {"analysis_flags": self.flags}
+            if self.lock is not None and "is_beatgrid_locked" in library._columns(conn, "asset"):
+                values["is_beatgrid_locked"] = self.lock
+            library._assign(conn, "asset", values, "id = ?", self.external_id)
             return None
 
         library._with_location(self.path, apply)
@@ -532,8 +528,10 @@ def _push_location(
         if "analysis_flags" not in present:
             saved["status"] = "skip"
             return None
+        has_lock = "is_beatgrid_locked" in present
+        select_cols = "analysis_flags, is_beatgrid_locked" if has_lock else "analysis_flags"
         before = conn.execute(
-            "SELECT analysis_flags, is_beatgrid_locked FROM asset WHERE id = ?",
+            f"SELECT {select_cols} FROM asset WHERE id = ?",
             (external_id,),
         ).fetchone()
         if before is None:
@@ -541,21 +539,21 @@ def _push_location(
             return None
         new_flags = clear_analyzed_bit(before[0])
         saved["before_flags"] = before[0]
-        saved["before_lock"] = before[1]
+        saved["before_lock"] = before[1] if has_lock else None
         values: dict[str, object] = {"analysis_flags": new_flags}
-        if unlock and "is_beatgrid_locked" in present:
+        if unlock and has_lock:
             values["is_beatgrid_locked"] = 0
         revision = library._next_revision(conn)
         if "revision" in present:
             values["revision"] = revision
         library._assign(conn, "asset", values, "id = ?", external_id)
         row = conn.execute(
-            "SELECT analysis_flags, is_beatgrid_locked FROM asset WHERE id = ?",
+            f"SELECT {select_cols} FROM asset WHERE id = ?",
             (external_id,),
         ).fetchone()
         if row is None or analyzed_bit_set(row[0]):
             raise _LocationMiss()
-        if unlock and "is_beatgrid_locked" in present and int(row[1] or 0):
+        if unlock and has_lock and int(row[1] or 0):
             raise _LocationMiss()
         saved["status"] = "ok"
         return None
