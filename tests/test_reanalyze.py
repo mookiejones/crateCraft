@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import base64
 import json
+import sqlite3
 import struct
 import tempfile
 import threading
@@ -76,6 +77,25 @@ def _audio(path: Path, *, with_grid: bool = True, with_auto: bool = True) -> byt
         frames.append(_geob("Serato Autotags", _autotags()))
     path.write_bytes(_id3(frames, audio))
     return audio
+
+
+def _file_uri(path: Path) -> str:
+    """Return a connection URI, using the Windows ``file:///C:/...`` form.
+
+    A path with a drive letter is spelled ``file:///C:/...``. Any other
+    path uses ``Path.as_uri``. That Windows form is what hid the location
+    file when the slash before the drive letter was kept.
+
+    Args:
+        path: Location database file.
+
+    Returns:
+        The URI stored in ``connection.database_uri``.
+    """
+    posix = path.resolve().as_posix()
+    if len(posix) >= 2 and posix[1] == ":":
+        return "file:///" + posix
+    return path.resolve().as_uri()
 
 
 def _seed(db: Path, rows: list[tuple[int, Path, int, int]]) -> None:
@@ -437,7 +457,7 @@ class PreviewApplyTests(unittest.TestCase):
                 conn.execute("UPDATE asset SET location_id = 9, external_id = 201 WHERE id = 17")
                 conn.execute(
                     "INSERT INTO connection (location_id, database_uri) VALUES (9, ?)",
-                    (bad.resolve().as_uri(),),
+                    (_file_uri(bad),),
                 )
             with self.assertRaises(library.LibraryError) as raised:
                 reanalyze.apply(library.LIBRARY_SPACE, 5)
@@ -449,13 +469,69 @@ class PreviewApplyTests(unittest.TestCase):
 
     def test_parse_db_path_keeps_windows_drive_letter(self) -> None:
         """A file:///C:/ URI must not keep the slash urlparse puts before C:."""
-        parsed = library._parse_db_path("file:///C:/Music/location.sqlite")
-        self.assertIsNotNone(parsed)
-        text = parsed.as_posix()
-        self.assertTrue(text.startswith("C:/"), text)
-        self.assertFalse(text.startswith("/C:"), text)
-        posix = library._parse_db_path("file:///Users/dj/Library/location.sqlite")
-        self.assertEqual(posix, Path("/Users/dj/Library/location.sqlite"))
+        cases = (
+            ("file:///C:/Music/location.sqlite", "C:/Music/location.sqlite"),
+            ("file:///Z:/Music/My%20Library/location.sqlite", "Z:/Music/My Library/location.sqlite"),
+            ("file:///Volumes/GIG%20DRIVE/location.sqlite", "/Volumes/GIG DRIVE/location.sqlite"),
+            ("file:///Users/dj/Library/location.sqlite", "/Users/dj/Library/location.sqlite"),
+        )
+        for uri, expected in cases:
+            with self.subTest(uri=uri):
+                parsed = library._parse_db_path(uri)
+                self.assertIsNotNone(parsed)
+                assert parsed is not None
+                self.assertEqual(parsed.as_posix(), expected)
+
+    def test_location_paths_follows_a_windows_uri(self) -> None:
+        """A Windows file URI names the location file that is on disk."""
+        with TempLibrary() as temp:
+            loc = temp.db.parent / "drive.sqlite"
+            loc.write_bytes(b"")
+            resolved = loc.resolve()
+            found_uri = _file_uri(resolved)
+            with open_database(temp.db) as conn:
+                conn.execute(
+                    "INSERT INTO connection (location_id, database_uri) VALUES (9, ?)",
+                    (found_uri,),
+                )
+                conn.row_factory = sqlite3.Row
+                found = library._location_paths(conn)
+            self.assertIn(9, found)
+            self.assertEqual(found[9].resolve(), resolved)
+
+    def test_location_without_lock_column_still_marks(self) -> None:
+        """A location table without is_beatgrid_locked still takes the flag clear."""
+        with TempLibrary() as temp:
+            path = temp.root / "ready.mp3"
+            _audio(path)
+            markers = snapshot_frames.read_stored_frames(path)["Markers2"]
+            _seed(temp.db, [(19, path, 4, 0)])
+            root = temp.db.parent / "root.sqlite"
+            with open_database(root) as conn:
+                conn.executescript(
+                    """
+                    CREATE TABLE serato (revision INTEGER);
+                    CREATE TABLE asset (
+                        id INTEGER PRIMARY KEY,
+                        analysis_flags INTEGER,
+                        revision INTEGER
+                    );
+                    INSERT INTO serato (revision) VALUES (1);
+                    INSERT INTO asset (id, analysis_flags, revision) VALUES (201, 4, 1);
+                    """
+                )
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET location_id = 3, external_id = 201 WHERE id = 19")
+                conn.execute(
+                    "INSERT INTO connection (location_id, database_uri) VALUES (3, ?)",
+                    (_file_uri(root),),
+                )
+            result = reanalyze.apply(library.LIBRARY_SPACE, 5)
+            self.assertTrue(result["written"])
+            with open_database(root) as conn:
+                flags = conn.execute("SELECT analysis_flags FROM asset WHERE id = 201").fetchone()[0]
+            self.assertFalse(reanalyze.analyzed_bit_set(flags))
+            self.assertEqual(snapshot_frames.read_stored_frames(path).get("Markers2"), markers)
 
     def test_public_plan_omits_paths(self) -> None:
         """Preview JSON names the file, not the absolute path."""
