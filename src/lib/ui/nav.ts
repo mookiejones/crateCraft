@@ -27,6 +27,7 @@ export type ViewMode =
   | "tags"
   | "lost"
   | "energy"
+  | "reanalyze"
   | "audio"
   | "snapshots"
   | "gig"
@@ -43,7 +44,7 @@ export interface NavGroup {
 export const NAV_GROUPS: readonly NavGroup[] = [
   { id: "library", labelKey: "view.group.library", modes: ["crates", "history", "stats", "compare"] },
   { id: "files", labelKey: "view.files", modes: ["files"] },
-  { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags", "lost", "energy", "audio"] },
+  { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags", "lost", "energy", "reanalyze", "audio"] },
   { id: "backups", labelKey: "view.snapshots", modes: ["snapshots"] },
   { id: "gig", labelKey: "view.group.gig", modes: ["gig", "portable", "drift", "octave"] },
 ];

@@ -18,6 +18,7 @@ import { repaintBitrate } from "../health/bitrate";
 import { repaintTags } from "../health/tags";
 import { repaintLostTags } from "../health/lost-tags";
 import { repaintEnergy } from "../health/energy";
+import { repaintReanalyze } from "../health/reanalyze";
 import { repaintAudioChanged } from "../health/audio-changed";
 import { repaintCrateCompare } from "../crates/crate-compare";
 import { repaintPortable } from "../gig/portable";
@@ -55,6 +56,7 @@ export function repaintAll(): void {
   if (state.mode === "tags") repaintTags();
   if (state.mode === "lost") repaintLostTags();
   if (state.mode === "energy") repaintEnergy();
+  if (state.mode === "reanalyze") repaintReanalyze();
   if (state.mode === "audio") repaintAudioChanged();
   if (state.mode === "compare") repaintCrateCompare();
   repaintPortable();

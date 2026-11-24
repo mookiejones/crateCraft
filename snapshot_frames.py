@@ -22,6 +22,12 @@ import tags
 
 FRAME_KINDS = ("Markers2", "BeatGrid", "Autotags")
 
+# BeatGrid and Autotags are what Serato rebuilds for grids and BPM/gain.
+# Markers2 (cues) is never in this set. Overview is not a FRAME_KINDS
+# snapshot kind — adding it would change restore for older snapshots —
+# so clear_analysis_frames leaves Overview for Serato to overwrite.
+ANALYSIS_CLEAR_KINDS = ("BeatGrid", "Autotags")
+
 _KIND_BY_DESCRIPTION = {
     "Serato Markers2": "Markers2",
     "Serato BeatGrid": "BeatGrid",
@@ -247,6 +253,47 @@ def restore_stored_frames(path: str | Path, frames: Mapping[str, bytes]) -> None
         if temp is not None:
             temp.unlink(missing_ok=True)
         backup.unlink(missing_ok=True)
+
+
+def clear_analysis_frames(path: str | Path) -> dict[str, bytes]:
+    """Remove BeatGrid and Autotags; keep Markers2 and every other tag.
+
+    Overview stays in the file. Serato overwrites it when Analyze Files
+    runs. Markers2 cues are never deleted. The whole-file preimage from
+    ``safe_write`` is what puts Overview bytes back on undo.
+
+    Args:
+        path: Audio file to update. Shortcuts are refused.
+
+    Returns:
+        The FRAME_KINDS map from before the write, for verify and for a
+        frame-level undo via :func:`restore_stored_frames`.
+
+    Raises:
+        FrameRewriteError: The file cannot be rewritten safely.
+        OSError: The file cannot be read or replaced.
+    """
+    file = Path(path)
+    before = read_stored_frames(file)
+    keep: dict[str, bytes] = {}
+    markers = before.get("Markers2")
+    if isinstance(markers, bytes):
+        keep["Markers2"] = markers
+    restore_stored_frames(file, keep)
+    return before
+
+
+def analysis_frames_cleared(path: str | Path) -> bool:
+    """Return whether BeatGrid and Autotags are absent after a clear.
+
+    Args:
+        path: Audio file just rewritten.
+
+    Returns:
+        True when neither analysis kind is stored. Markers2 may remain.
+    """
+    found = read_stored_frames(path)
+    return all(kind not in found for kind in ANALYSIS_CLEAR_KINDS)
 
 
 def _frames_landed(path: Path, wanted: Mapping[str, bytes]) -> bool:

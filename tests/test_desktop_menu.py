@@ -302,6 +302,7 @@ class DesktopMenuTests(unittest.TestCase):
                     catalog["view.tags"],
                     catalog["view.lost"],
                     catalog["view.energy"],
+                    catalog["view.reanalyze"],
                     catalog["view.audio"],
                 ],
             )

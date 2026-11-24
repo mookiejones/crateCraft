@@ -23322,7 +23322,54 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.forceWrite": "Write even though the library files changed after they were loaded.",
     "write.forceTitle": "Library changed",
     "write.forceConfirm": "The library files changed on disk since they were loaded. Write anyway?",
-    "write.forceWrite": "Write anyway"
+    "write.forceWrite": "Write anyway",
+    "view.reanalyze": "Re-analyze",
+    "mode.reanalyze": "Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids. Cues stay. Quit Serato first.",
+    "reanalyze.heading": "Re-analyze",
+    "reanalyze.intro": "Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids and overviews. Cues stay. Quit Serato first.",
+    "reanalyze.preview": "Preview",
+    "reanalyze.confirm": "Confirm re-analyze",
+    "reanalyze.confirmHint": "Quit Serato first. Then open the tracks in Serato to rebuild.",
+    "reanalyze.clearFrames": "Also clear BeatGrid and Autotags",
+    "reanalyze.includeLocked": "Include locked beatgrids (unlocks them)",
+    "reanalyze.checking": "Checking…",
+    "reanalyze.previewing": "Preparing preview…",
+    "reanalyze.applying": "Marking tracks…",
+    "reanalyze.loadFailed": "The re-analyze plan could not be read.",
+    "reanalyze.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+    "reanalyze.summary": {
+      one: "1 track ready for Serato to re-analyze.",
+      other: "{count} tracks ready for Serato to re-analyze."
+    },
+    "reanalyze.summaryClear": "No tracks need a re-analyze mark.",
+    "reanalyze.empty": "Nothing to mark. Pick a crate that still has analysis.",
+    "reanalyze.markersNote": "Markers2 cues stay. BeatGrid and Autotags clear when that option is on. Open the tracks in Serato to rebuild.",
+    "reanalyze.lockedNote": {
+      one: "1 track has a locked beatgrid and was skipped.",
+      other: "{count} tracks have locked beatgrids and were skipped."
+    },
+    "reanalyze.column.cleared": "Will clear",
+    "reanalyze.previewReady": {
+      one: "Preview ready: 1 track. Confirm to mark it.",
+      other: "Preview ready: {count} tracks. Confirm to mark them."
+    },
+    "reanalyze.previewEmpty": "Nothing to mark. No write will run.",
+    "reanalyze.optionsChanged": "Preview again before Confirm. The options changed.",
+    "reanalyze.driveAbsent": "A track's drive is not connected. Serato may put the analyzed mark back when that drive returns.",
+    "reanalyze.written": {
+      one: "Marked 1 track. Open it in Serato to rebuild.",
+      other: "Marked {count} tracks. Open them in Serato to rebuild."
+    },
+    "tooltip.viewReanalyze": "Mark tracks unanalyzed so Serato rebuilds grids and overviews. Needs a crate. Cues stay. Quit Serato first.",
+    "tooltip.reanalyzeRefresh": "Check again which tracks still need a re-analyze mark.",
+    "tooltip.reanalyzePreview": "Preview the mark without writing. Quit Serato before Confirm.",
+    "tooltip.reanalyzeConfirm": "Mark the listed tracks unanalyzed. Takes a snapshot first. Quit Serato first.",
+    "tooltip.reanalyzeClearFrames": "Remove BeatGrid and Autotags from the files. Markers2 cues stay. Off marks the database only.",
+    "tooltip.reanalyzeIncludeLocked": "Also unlock locked beatgrids so Serato can rebuild them.",
+    "error.reanalyze_needs_confirm": "Confirm before tracks are marked for re-analyze.",
+    "error.reanalyze_needs_crate": "Choose a crate for re-analyze.",
+    "error.reanalyze_did_not_stick": "The unanalyzed mark did not stick. The library was put back.",
+    "error.reanalyze_locked": "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them."
   };
 
   // locales/es.json
@@ -25660,7 +25707,54 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.forceWrite": "Escribir aunque los archivos de la biblioteca cambiaron después de cargarse.",
     "write.forceTitle": "Biblioteca cambiada",
     "write.forceConfirm": "Los archivos de la biblioteca cambiaron en disco desde que se cargaron. ¿Escribir de todos modos?",
-    "write.forceWrite": "Escribir de todos modos"
+    "write.forceWrite": "Escribir de todos modos",
+    "view.reanalyze": "Reanalizar",
+    "mode.reanalyze": "Necesita una caja. Marca pistas sin analizar para que Serato reconstruya las rejillas. Las cues se quedan. Cierra Serato primero.",
+    "reanalyze.heading": "Reanalizar",
+    "reanalyze.intro": "Necesita una caja. Marca pistas sin analizar para que Serato reconstruya rejillas y overviews. Las cues se quedan. Cierra Serato primero.",
+    "reanalyze.preview": "Vista previa",
+    "reanalyze.confirm": "Confirmar reanalizar",
+    "reanalyze.confirmHint": "Cierra Serato primero. Luego abre las pistas en Serato para reconstruir.",
+    "reanalyze.clearFrames": "También borrar BeatGrid y Autotags",
+    "reanalyze.includeLocked": "Incluir rejillas bloqueadas (las desbloquea)",
+    "reanalyze.checking": "Comprobando…",
+    "reanalyze.previewing": "Preparando vista previa…",
+    "reanalyze.applying": "Marcando pistas…",
+    "reanalyze.loadFailed": "No se pudo leer el plan de reanalizar.",
+    "reanalyze.unreachable": "No se pudo alcanzar el servidor. Comprueba que esté en marcha y pulsa Comprobar de nuevo",
+    "reanalyze.summary": {
+      one: "1 pista lista para que Serato la reanalice.",
+      other: "{count} pistas listas para que Serato las reanalice."
+    },
+    "reanalyze.summaryClear": "Ninguna pista necesita marca de reanalizar.",
+    "reanalyze.empty": "Nada que marcar. Elige una caja que aún tenga análisis.",
+    "reanalyze.markersNote": "Las cues de Markers2 se quedan. BeatGrid y Autotags se borran si esa opción está activa. Abre las pistas en Serato para reconstruir.",
+    "reanalyze.lockedNote": {
+      one: "1 pista tiene la rejilla bloqueada y se omitió.",
+      other: "{count} pistas tienen la rejilla bloqueada y se omitieron."
+    },
+    "reanalyze.column.cleared": "Se borrará",
+    "reanalyze.previewReady": {
+      one: "Vista previa lista: 1 pista. Confirma para marcarla.",
+      other: "Vista previa lista: {count} pistas. Confirma para marcarlas."
+    },
+    "reanalyze.previewEmpty": "Nada que marcar. No se escribe nada.",
+    "reanalyze.optionsChanged": "Vuelve a la vista previa antes de confirmar. Las opciones cambiaron.",
+    "reanalyze.driveAbsent": "La unidad de una pista no está conectada. Serato puede volver a poner la marca de analizada cuando esa unidad regrese.",
+    "reanalyze.written": {
+      one: "Se marcó 1 pista. Ábrela en Serato para reconstruir.",
+      other: "Se marcaron {count} pistas. Ábrelas en Serato para reconstruir."
+    },
+    "tooltip.viewReanalyze": "Marca pistas sin analizar para que Serato reconstruya rejillas y overviews. Necesita una caja. Las cues se quedan. Cierra Serato primero.",
+    "tooltip.reanalyzeRefresh": "Comprobar de nuevo qué pistas aún necesitan marca de reanalizar.",
+    "tooltip.reanalyzePreview": "Vista previa de la marca sin escribir. Cierra Serato antes de Confirmar.",
+    "tooltip.reanalyzeConfirm": "Marca las pistas listadas como sin analizar. Primero toma una instantánea. Cierra Serato primero.",
+    "tooltip.reanalyzeClearFrames": "Quita BeatGrid y Autotags de los archivos. Las cues de Markers2 se quedan. Si está desactivado, solo marca la base de datos.",
+    "tooltip.reanalyzeIncludeLocked": "También desbloquea rejillas bloqueadas para que Serato pueda reconstruirlas.",
+    "error.reanalyze_needs_confirm": "Confirma antes de marcar pistas para reanalizar.",
+    "error.reanalyze_needs_crate": "Elige una caja para reanalizar.",
+    "error.reanalyze_did_not_stick": "La marca de sin analizar no se guardó. Se restauró la biblioteca.",
+    "error.reanalyze_locked": "Esas rejillas están bloqueadas. Activa Incluir rejillas bloqueadas para desbloquearlas."
   };
 
   // src/lib/i18n.ts
@@ -26311,11 +26405,17 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     viewTags: spec("tooltip.viewTags"),
     viewLost: spec("tooltip.viewLost"),
     viewEnergy: spec("tooltip.viewEnergy"),
+    viewReanalyze: spec("tooltip.viewReanalyze"),
     viewAudio: spec("tooltip.viewAudio"),
     lostApply: spec("tooltip.lostApply"),
     lostRefresh: spec("tooltip.lostRefresh"),
     energyApply: spec("tooltip.energyApply"),
     energyRefresh: spec("tooltip.energyRefresh"),
+    reanalyzeRefresh: spec("tooltip.reanalyzeRefresh"),
+    reanalyzePreview: spec("tooltip.reanalyzePreview"),
+    reanalyzeConfirm: spec("tooltip.reanalyzeConfirm"),
+    reanalyzeClearFrames: spec("tooltip.reanalyzeClearFrames"),
+    reanalyzeIncludeLocked: spec("tooltip.reanalyzeIncludeLocked"),
     audioRefresh: spec("tooltip.audioRefresh"),
     audioSave: spec("tooltip.audioSave"),
     audioReanalyze: spec("tooltip.audioReanalyze"),
