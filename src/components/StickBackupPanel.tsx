@@ -2,7 +2,7 @@
  * Back up this Serato stick on Check drive (#481).
  */
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -19,7 +19,7 @@ import {
   stickBackupStatusText,
   type StickBackupAction,
 } from "../lib/gig/stick-backup-view";
-import { portableDriveRoot } from "../lib/gig/portable";
+import { portableDriveRoot, portableSnapshot, subscribePortable } from "../lib/gig/portable";
 import { tooltipRef } from "./tooltip-ref";
 import { tips } from "../lib/ui/tooltip-strings";
 
@@ -29,14 +29,13 @@ const BUTTON_SX = { textTransform: "none" as const, minHeight: 44 };
  * Hash-checked stick backup. Never writes the source stick.
  */
 export function StickBackupPanel() {
+  const live = useSyncExternalStore(subscribePortable, portableSnapshot, portableSnapshot);
+  const source = portableDriveRoot(live.stickDrive || "");
   const [dest, setDest] = useState("");
   const [report, setReport] = useState<StickBackupReport | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const tokenRef = useRef(0);
-  const source = portableDriveRoot(
-    (document.getElementById("portable-drive") as HTMLSelectElement | null)?.value || "",
-  );
   const ready = Boolean(source) && hasStickBackupDest(dest) && !busy;
 
   useEffect(() => {
@@ -51,9 +50,7 @@ export function StickBackupPanel() {
         if (token !== tokenRef.current) return;
         setReport(payload);
         const remembered = payload.last_backup?.dest;
-        if (typeof remembered === "string" && remembered.trim()) {
-          setDest(remembered);
-        }
+        setDest(typeof remembered === "string" ? remembered : "");
       })
       .catch((caught) => {
         if (token !== tokenRef.current) return;

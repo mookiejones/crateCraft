@@ -79,6 +79,7 @@ class StickBackupTests(unittest.TestCase):
                 report = stick_backup.copy_files(str(stick), str(dest))
             self.assertTrue(report["written"])
             self.assertTrue(report["verified"])
+            self.assertEqual(report["warning"], stick_backup.STALE_DB)
             self.assertGreater(int(report["copied"]), 0)
             self.assertEqual(int(report["mismatch_count"]), 0)
             self.assertTrue((dest / "Music" / "track.mp3").is_file())
@@ -99,7 +100,7 @@ class StickBackupTests(unittest.TestCase):
             dest = Path(raw) / "backup"
             dest.mkdir()
 
-            def _bad_copy(source: Path, dest_path: Path) -> str:
+            def _bad_copy(source: Path, dest_path: Path, *, fat: bool = False) -> str:
                 dest_path.parent.mkdir(parents=True, exist_ok=True)
                 dest_path.write_bytes(b"wrong")
                 return "mismatch"
@@ -185,6 +186,27 @@ class StickBackupTests(unittest.TestCase):
                 stick_backup.files_match(source, dest, fat=False, source_hash=None)
             )
 
+    def test_fat_drifted_mtime_same_hash_is_copied_again(self) -> None:
+        """A matching hash with a FAT stamp outside 2 seconds is recopied."""
+        with tempfile.TemporaryDirectory() as raw:
+            stick = _stick(Path(raw) / "stick")
+            dest = Path(raw) / "backup"
+            with self._separate_disks():
+                first = stick_backup.copy_files(str(stick), str(dest))
+            self.assertTrue(first["verified"])
+            for path in dest.rglob("*"):
+                if path.is_file():
+                    stamp = path.stat().st_mtime + 5
+                    os.utime(path, (stamp, stamp))
+            with self._separate_disks(), mock.patch(
+                "stick_backup.fat_family", return_value=True
+            ):
+                again = stick_backup.copy_files(str(stick), str(dest))
+            self.assertGreater(int(again["copied"]), 0)
+            self.assertTrue(again["verified"])
+            self.assertEqual(again["warning"], stick_backup.STALE_DB)
+            self.assertEqual(int(again["mismatch_count"]), 0)
+
     def test_status_returns_last_backup(self) -> None:
         with tempfile.TemporaryDirectory() as raw:
             stick = _stick(Path(raw) / "stick")
@@ -198,6 +220,7 @@ class StickBackupTests(unittest.TestCase):
             last = body["last_backup"]
             assert isinstance(last, dict)
             self.assertEqual(Path(str(last.get("dest") or "")).name, "backup")
+            self.assertEqual(body["warning"], stick_backup.STALE_DB)
 
     def test_nfc_rel_key(self) -> None:
         nfd = "Music/cafe\u0301.mp3"

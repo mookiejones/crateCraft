@@ -844,12 +844,12 @@
       });
       var localPerformance, localDate, initialTime, taskQueue = [], timerQueue = [], taskIdCounter = 1, currentTask = null, currentPriorityLevel = 3, isPerformingWork = !1, isHostCallbackScheduled = !1, isHostTimeoutScheduled = !1, needsPaint = !1, localSetTimeout = typeof setTimeout == "function" ? setTimeout : null, localClearTimeout = typeof clearTimeout == "function" ? clearTimeout : null, localSetImmediate = typeof setImmediate < "u" ? setImmediate : null;
       function advanceTimers(currentTime2) {
-        for (var timer3 = peek2(timerQueue); timer3 !== null; ) {
-          if (timer3.callback === null) pop(timerQueue);
-          else if (timer3.startTime <= currentTime2)
-            pop(timerQueue), timer3.sortIndex = timer3.expirationTime, push(taskQueue, timer3);
+        for (var timer4 = peek2(timerQueue); timer4 !== null; ) {
+          if (timer4.callback === null) pop(timerQueue);
+          else if (timer4.startTime <= currentTime2)
+            pop(timerQueue), timer4.sortIndex = timer4.expirationTime, push(taskQueue, timer4);
           else break;
-          timer3 = peek2(timerQueue);
+          timer4 = peek2(timerQueue);
         }
       }
       function handleTimeout(currentTime2) {
@@ -12660,7 +12660,7 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore5 = shim.useSyncExternalStore, useRef125 = React321.useRef, useEffect95 = React321.useEffect, useMemo72 = React321.useMemo, useDebugValue3 = React321.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore6 = shim.useSyncExternalStore, useRef125 = React321.useRef, useEffect95 = React321.useEffect, useMemo72 = React321.useMemo, useDebugValue3 = React321.useDebugValue;
       exports.useSyncExternalStoreWithSelector = function(subscribe3, getSnapshot, getServerSnapshot, selector, isEqual) {
         var instRef = useRef125(null);
         if (instRef.current === null) {
@@ -12694,7 +12694,7 @@ Error generating stack: ` + x.message + `
           },
           [getSnapshot, getServerSnapshot, selector, isEqual]
         );
-        var value = useSyncExternalStore5(subscribe3, instRef[0], instRef[1]);
+        var value = useSyncExternalStore6(subscribe3, instRef[0], instRef[1]);
         return useEffect95(
           function() {
             inst.hasValue = !0, inst.value = value;
@@ -13286,6 +13286,7 @@ Error generating stack: ` + x.message + `
     "error.tree_bad_bands": "Choose BPM bands between 1 and 400, 1 to 50 wide, starting no further apart than their width, and at most 60 bands.",
     "error.tree_bad_genres": "Choose at least 1 track per genre and up to 100 genres.",
     "error.tree_empty": "No tracks fit that crate tree.",
+    "error.tonight_empty": "No tracks fit tonight crates.",
     "error.tree_unknown": "That crate tree is not available.",
     "error.undo_needs_confirm": "Confirm undo before it is saved.",
     "error.upload_too_large": "That upload is too large.",
@@ -13498,6 +13499,11 @@ Error generating stack: ` + x.message + `
     "gig.wholeSpaceInline": "the whole space",
     "gig.wordNotReady": "not ready",
     "gig.wordReady": "ready",
+    "gig.tonight": "Tonight crates",
+    "gig.tonightBusy": "Building tonight crates…",
+    "gig.tonightConfirm": "Create {count} crates under {folder} / {tonight}? Re-running replaces only that Tonight folder. Quit Serato first.",
+    "gig.tonightEmpty": "No tracks fit tonight crates.",
+    "gig.tonightWritten": "Tonight crates ready under {folder} / {tonight} ({count} crates).",
     "gigLock.apply": "Apply queued writes",
     "gigLock.conflict": "Kept both: {layer}",
     "gigLock.count": "{count} queued",
@@ -14460,8 +14466,10 @@ Error generating stack: ` + x.message + `
       one: "Created crate {name} with {count} track.",
       other: "Created crate {name} with {count} tracks."
     },
+    "status.checkAgain": "Check again",
     "status.checking": "Checking Serato",
     "status.library": "Library",
+    "status.refreshFailed": "The Serato status could not be refreshed.",
     "stick.cueLine": "{file} · pad {index} · {time}",
     "stick.different": "This stick has crates from another library. Confirm before those crates are replaced.",
     "stick.empty": "No cues are only on the stick.",
@@ -14631,6 +14639,7 @@ Error generating stack: ` + x.message + `
     "tooltip.crateTreeScope": "Look only at tracks in the selected crate and the crates inside it.",
     "tooltip.crateTreeStep": "How far the next band starts. Smaller than the width overlaps bands.",
     "tooltip.crateTreeWidth": "How wide each BPM band is.",
+    "tooltip.statusRefresh": "Ask whether Serato is still open, and show the real reason edits stay off.",
     "tooltip.cratesReplaceCancel": "Close without changing crates.",
     "tooltip.cratesReplaceConfirm": "Put the replacement in those crates.",
     "tooltip.cratesReplaceKeep": "Keep both tracks in those crates. The replacement sits at the same position.",
@@ -14706,6 +14715,7 @@ Error generating stack: ` + x.message + `
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigRevert": "Open the restore plan for the snapshot this check compared. Confirm stays off while Serato is running. Nothing is written until you confirm.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.gigTonight": "Build Newest adds, Most played, and by-decade crates under _crateCraft generated / Tonight. Re-run replaces only that Tonight folder. Quit Serato first.",
     "tooltip.gridCell": "Select this row.",
     "tooltip.gridPagination": "Show the next or previous hundred tracks.",
     "tooltip.healthArtCancel": "Close the album art dialog without writing. Esc.",
@@ -14739,6 +14749,7 @@ Error generating stack: ` + x.message + `
     "tooltip.historyRescueCrates": "Create dated crates for the chosen sessions. Serato must be quit.",
     "tooltip.historyRescueRestore": "Write chosen sessions into live history. Refused when the schema is unprobed.",
     "tooltip.historyRescueScan": "List backups, snapshots, and any unchecked History folder.",
+    "tooltip.historyRescueSession": "Include this session when restoring or rebuilding. A row that is only live is listed and cannot be selected.",
     "tooltip.historyRescueSessions": "Sessions from the compare. Check only-source or disagree rows to restore or rebuild.",
     "tooltip.historyRescueSource": "Backup or snapshot to compare with live history.",
     "tooltip.hotLoops": "Copy loops onto a free hot-cue pad in the Rekordbox file.",
@@ -15665,6 +15676,7 @@ Error generating stack: ` + x.message + `
     "error.tree_bad_bands": "Elige bandas de BPM entre 1 y 400, de 1 a 50 de ancho, que empiecen como mucho a su ancho de distancia, y como máximo 60 bandas.",
     "error.tree_bad_genres": "Elige al menos 1 pista por género y hasta 100 géneros.",
     "error.tree_empty": "Ninguna pista encaja en ese árbol de cajas.",
+    "error.tonight_empty": "Ninguna pista encaja en las cajas de esta noche.",
     "error.tree_unknown": "Ese árbol de cajas no está disponible.",
     "error.undo_needs_confirm": "Confirma la acción de deshacer antes de guardarla.",
     "error.upload_too_large": "Ese archivo es demasiado grande.",
@@ -15877,6 +15889,11 @@ Error generating stack: ` + x.message + `
     "gig.wholeSpaceInline": "todo el espacio",
     "gig.wordNotReady": "no listo",
     "gig.wordReady": "listo",
+    "gig.tonight": "Cajas de esta noche",
+    "gig.tonightBusy": "Creando las cajas de esta noche…",
+    "gig.tonightConfirm": "¿Crear {count} cajas bajo {folder} / {tonight}? Al repetirlo solo se sustituye esa carpeta Tonight. Cierra Serato primero.",
+    "gig.tonightEmpty": "Ninguna pista encaja en las cajas de esta noche.",
+    "gig.tonightWritten": "Cajas de esta noche listas bajo {folder} / {tonight} ({count} cajas).",
     "gigLock.apply": "Aplicar escrituras en cola",
     "gigLock.conflict": "Se conservaron ambas: {layer}",
     "gigLock.count": "{count} en cola",
@@ -16839,8 +16856,10 @@ Error generating stack: ` + x.message + `
       one: "Se creó la caja {name} con {count} pista.",
       other: "Se creó la caja {name} con {count} pistas."
     },
+    "status.checkAgain": "Comprobar de nuevo",
     "status.checking": "Comprobando Serato",
     "status.library": "Biblioteca",
+    "status.refreshFailed": "No se pudo actualizar el estado de Serato.",
     "stick.cueLine": "{file} · pad {index} · {time}",
     "stick.different": "Este pendrive tiene cajas de otra biblioteca. Confirma antes de reemplazarlas.",
     "stick.empty": "No hay cues solo en el pendrive.",
@@ -17010,6 +17029,7 @@ Error generating stack: ` + x.message + `
     "tooltip.crateTreeScope": "Mira solo las pistas de la caja seleccionada y las cajas que hay dentro.",
     "tooltip.crateTreeStep": "Dónde empieza la siguiente banda. Más pequeño que el ancho solapa las bandas.",
     "tooltip.crateTreeWidth": "Ancho de cada banda de BPM.",
+    "tooltip.statusRefresh": "Comprueba si Serato sigue abierto y muestra el motivo real por el que las ediciones siguen desactivadas.",
     "tooltip.cratesReplaceCancel": "Cierra sin cambiar las cajas.",
     "tooltip.cratesReplaceConfirm": "Pon la pista de reemplazo en esas cajas.",
     "tooltip.cratesReplaceKeep": "Deja las dos pistas en esas cajas. La de reemplazo queda en la misma posición.",
@@ -17085,6 +17105,7 @@ Error generating stack: ` + x.message + `
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigRevert": "Abre el plan de restauración de la instantánea que comparó esta comprobación. Confirmar queda desactivado mientras Serato está abierto. No se escribe nada hasta que confirmes.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.gigTonight": "Crea cajas de Añadidos recientes, Más reproducidas y por década bajo _crateCraft generated / Tonight. Al repetirlo solo se sustituye esa carpeta Tonight. Cierra Serato primero.",
     "tooltip.gridCell": "Selecciona esta fila.",
     "tooltip.gridPagination": "Muestra las cien pistas siguientes o anteriores.",
     "tooltip.healthArtCancel": "Cierra el diálogo de carátula sin escribir. Esc.",
@@ -17118,6 +17139,7 @@ Error generating stack: ` + x.message + `
     "tooltip.historyRescueCrates": "Crea crates con fecha para las sesiones elegidas. Serato debe estar cerrado.",
     "tooltip.historyRescueRestore": "Escribe las sesiones elegidas en el historial en vivo. Se rechaza si el esquema no está comprobado.",
     "tooltip.historyRescueScan": "Lista copias, instantáneas y cualquier carpeta History sin comprobar.",
+    "tooltip.historyRescueSession": "Incluye esta sesión al restaurar o reconstruir. Una fila que solo está en vivo se muestra y no se puede marcar.",
     "tooltip.historyRescueSessions": "Sesiones de la comparación. Marca solo-fuente o no coinciden para restaurar o reconstruir.",
     "tooltip.historyRescueSource": "Copia o instantánea para comparar con el historial en vivo.",
     "tooltip.hotLoops": "Copia los bucles a un pad de cue libre en el archivo de Rekordbox.",
@@ -18304,6 +18326,7 @@ Error generating stack: ` + x.message + `
     historyRescueSource: spec("tooltip.historyRescueSource"),
     historyRescueScan: spec("tooltip.historyRescueScan"),
     historyRescueCompare: spec("tooltip.historyRescueCompare"),
+    historyRescueSession: spec("tooltip.historyRescueSession"),
     historyRescueSessions: spec("tooltip.historyRescueSessions"),
     historyRescueCrates: spec("tooltip.historyRescueCrates"),
     historyRescueRestore: spec("tooltip.historyRescueRestore"),
@@ -18411,6 +18434,7 @@ Error generating stack: ` + x.message + `
     batchDestination: spec("tooltip.batchDestination"),
     libraryGeneration: spec("tooltip.libraryGeneration"),
     folderAccessAllow: spec("tooltip.folderAccessAllow"),
+    statusRefresh: spec("tooltip.statusRefresh"),
     linkMutual: spec("tooltip.linkMutual"),
     versionLink: spec("tooltip.versionLink"),
     versionPlay: spec("tooltip.versionPlay"),
@@ -18501,6 +18525,7 @@ Error generating stack: ` + x.message + `
     tagsSpelling: spec("tooltip.tagsSpelling"),
     tagsWriteFiles: spec("tooltip.tagsWriteFiles"),
     gigRefresh: spec("tooltip.gigRefresh"),
+    gigTonight: spec("tooltip.gigTonight"),
     scanQuick: spec("tooltip.scanQuick"),
     scanFull: spec("tooltip.scanFull"),
     bitrateRefresh: spec("tooltip.bitrateRefresh"),
@@ -18670,6 +18695,7 @@ Error generating stack: ` + x.message + `
       "operations-list": tips.operationsList,
       "snapshots-refresh": tips.snapshotsRefresh,
       "gig-refresh": tips.gigRefresh,
+      "tonight-build": tips.gigTonight,
       "drift-refresh": tips.driftRefresh,
       "octave-refresh": tips.octaveRefresh,
       "health-refresh": tips.healthRefresh,
@@ -18748,6 +18774,7 @@ Error generating stack: ` + x.message + `
       "untrusted-volumes": tips.untrustedVolumes,
       "library-generation": tips.libraryGeneration,
       "folder-access-allow": tips.folderAccessAllow,
+      "status-refresh": tips.statusRefresh,
       "merge-trash": tips.mergeTrash,
       "merge-cancel": tips.mergeCancel,
       "merge-confirm": tips.mergeConfirm,
@@ -22953,15 +22980,15 @@ try {
           }
         }
       }, [colorScheme, colorSchemeSelector, colorSchemeNode, allColorSchemes]), React18.useEffect(() => {
-        let timer3;
+        let timer4;
         if (disableTransitionOnChange && hasMounted.current && documentNode) {
           let css2 = documentNode.createElement("style");
-          css2.appendChild(documentNode.createTextNode(DISABLE_CSS_TRANSITION)), documentNode.head.appendChild(css2), window.getComputedStyle(documentNode.body), timer3 = setTimeout(() => {
+          css2.appendChild(documentNode.createTextNode(DISABLE_CSS_TRANSITION)), documentNode.head.appendChild(css2), window.getComputedStyle(documentNode.body), timer4 = setTimeout(() => {
             documentNode.head.removeChild(css2);
           }, 1);
         }
         return () => {
-          clearTimeout(timer3);
+          clearTimeout(timer4);
         };
       }, [colorScheme, disableTransitionOnChange, documentNode]), React18.useEffect(() => (hasMounted.current = !0, () => {
         hasMounted.current = !1;
@@ -35805,8 +35832,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function delay(ms) {
     return new Promise((resolve) => {
-      let timer3 = setTimeout(resolve, ms);
-      polls.set(String(timer3), timer3);
+      let timer4 = setTimeout(resolve, ms);
+      polls.set(String(timer4), timer4);
     });
   }
 
@@ -61205,20 +61232,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     isActive: isActive2,
     shouldResume = () => !0
   }) => {
-    let pollingIntervalRef = React288.useRef(null), pollingCallbackRef = React288.useRef(null), isPollingAllowed = React288.useRef(!0), stopPolling = React288.useCallback(() => {
+    let pollingIntervalRef = React288.useRef(null), pollingCallbackRef = React288.useRef(null), isPollingAllowed = React288.useRef(!0), stopPolling2 = React288.useCallback(() => {
       pollingIntervalRef.current !== null && (clearInterval(pollingIntervalRef.current), pollingIntervalRef.current = null);
-    }, []), startPolling = useEventCallback_default((callback) => {
-      stopPolling(), pollingCallbackRef.current = callback, !(!isPollingAllowed.current || !isActive2 || revalidateMs <= 0) && (pollingIntervalRef.current = setInterval(callback, revalidateMs));
+    }, []), startPolling2 = useEventCallback_default((callback) => {
+      stopPolling2(), pollingCallbackRef.current = callback, !(!isPollingAllowed.current || !isActive2 || revalidateMs <= 0) && (pollingIntervalRef.current = setInterval(callback, revalidateMs));
     });
     React288.useEffect(() => {
-      (!isActive2 || revalidateMs <= 0) && stopPolling();
-    }, [isActive2, revalidateMs, stopPolling]);
+      (!isActive2 || revalidateMs <= 0) && stopPolling2();
+    }, [isActive2, revalidateMs, stopPolling2]);
     let canResume = useEventCallback_default(shouldResume);
-    return React288.useEffect(() => (isPollingAllowed.current = !0, pollingCallbackRef.current && canResume() && startPolling(pollingCallbackRef.current), () => {
-      isPollingAllowed.current = !1, stopPolling();
-    }), [startPolling, stopPolling, canResume]), {
-      startPolling,
-      stopPolling
+    return React288.useEffect(() => (isPollingAllowed.current = !0, pollingCallbackRef.current && canResume() && startPolling2(pollingCallbackRef.current), () => {
+      isPollingAllowed.current = !1, stopPolling2();
+    }), [startPolling2, stopPolling2, canResume]), {
+      startPolling: startPolling2,
+      stopPolling: stopPolling2
     };
   };
 
@@ -61381,13 +61408,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     }), {
       startPolling: startPollingWith,
-      stopPolling
+      stopPolling: stopPolling2
     } = useGridDataSourcePolling({
       revalidateMs: props.dataSourceRevalidateMs,
       isActive: standardRowsUpdateStrategyActive,
       // Rows that are still loading start the polling when they arrive.
       shouldResume: () => rowsAreUpToDate.current
-    }), startPolling = React289.useCallback(() => startPollingWith(revalidate), [startPollingWith, revalidate]), handleDataUpdate = React289.useCallback((params) => {
+    }), startPolling2 = React289.useCallback(() => startPollingWith(revalidate), [startPollingWith, revalidate]), handleDataUpdate = React289.useCallback((params) => {
       if ("error" in params) {
         apiRef.current.setRows([]);
         return;
@@ -61398,8 +61425,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       response.rowCount !== void 0 && apiRef.current.setRowCount(response.rowCount), apiRef.current.setRows(response.rows), apiRef.current.unstable_applyPipeProcessors("processDataSourceRows", {
         params: params.fetchParams,
         response
-      }, !0), startPolling();
-    }, [apiRef, startPolling]), dataSourceUpdateRow = props.dataSource?.updateRow, handleEditRowOption = options.handleEditRow, editRow = React289.useCallback(async (params) => {
+      }, !0), startPolling2();
+    }, [apiRef, startPolling2]), dataSourceUpdateRow = props.dataSource?.updateRow, handleEditRowOption = options.handleEditRow, editRow = React289.useCallback(async (params) => {
       if (dataSourceUpdateRow)
         try {
           let finalRowUpdate = await dataSourceUpdateRow(params), updatedRow = finalRowUpdate && isReplaceUpdate(finalRowUpdate) ? getReplaceRow(finalRowUpdate) : finalRowUpdate;
@@ -61419,8 +61446,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     }, debouncedFetchRows = React289.useMemo(() => debounce(fetchRows, 0), [fetchRows]), handleFetchRowsOnParamsChange = React289.useCallback(() => {
       let activeStrategy = apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource);
-      props.dataSourceKeepPreviousData && activeStrategy === DataSourceRowsUpdateStrategy.Default || apiRef.current.setRows([]), apiRef.current.setLoading(!0), stopPolling(), debouncedFetchRows();
-    }, [apiRef, props.dataSourceKeepPreviousData, stopPolling, debouncedFetchRows]), hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef), handleFetchRowsOnFilterModelChange = React289.useCallback((newFilterModel) => {
+      props.dataSourceKeepPreviousData && activeStrategy === DataSourceRowsUpdateStrategy.Default || apiRef.current.setRows([]), apiRef.current.setLoading(!0), stopPolling2(), debouncedFetchRows();
+    }, [apiRef, props.dataSourceKeepPreviousData, stopPolling2, debouncedFetchRows]), hasFilterModelChanged = useGridDataSourceFilterModelChange(apiRef), handleFetchRowsOnFilterModelChange = React289.useCallback((newFilterModel) => {
       hasFilterModelChanged(newFilterModel) && handleFetchRowsOnParamsChange();
     }, [hasFilterModelChanged, handleFetchRowsOnParamsChange]), isFirstRender = React289.useRef(!0);
     React289.useEffect(() => {
@@ -61441,8 +61468,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (currentStrategy !== DataSourceRowsUpdateStrategy.Default && currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoading && currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData && currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoadedGroupedData)
         return;
       let dependenciesChanged = lastApiRef.current !== apiRef || lastStrategy.current !== currentStrategy || lastDataSource.current !== props.dataSource;
-      return lastApiRef.current = apiRef, lastStrategy.current = currentStrategy, lastDataSource.current = props.dataSource, !dependenciesChanged && (rowsAreUpToDate.current || pendingRequestCount.current > 0) || props.dataSource && (stopPolling(), (!props.dataSourceKeepPreviousData || currentStrategy !== DataSourceRowsUpdateStrategy.Default) && apiRef.current.setRows([]), apiRef.current.dataSource.cache.clear(), apiRef.current.dataSource.fetchRows()), ignoreInFlightRequest;
-    }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling]), React289.useEffect(() => {
+      return lastApiRef.current = apiRef, lastStrategy.current = currentStrategy, lastDataSource.current = props.dataSource, !dependenciesChanged && (rowsAreUpToDate.current || pendingRequestCount.current > 0) || props.dataSource && (stopPolling2(), (!props.dataSourceKeepPreviousData || currentStrategy !== DataSourceRowsUpdateStrategy.Default) && apiRef.current.setRows([]), apiRef.current.dataSource.cache.clear(), apiRef.current.dataSource.fetchRows()), ignoreInFlightRequest;
+    }, [apiRef, props.dataSource, props.dataSourceKeepPreviousData, currentStrategy, stopPolling2]), React289.useEffect(() => {
     }, [props.dataSourceKeepPreviousData, currentStrategy]), {
       api: {
         public: dataSourceApi
@@ -61454,8 +61481,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         processor: handleDataUpdate
       },
       setStrategyAvailability,
-      startPolling,
-      stopPolling,
+      startPolling: startPolling2,
+      stopPolling: stopPolling2,
       cacheChunkManager,
       cache,
       events: {
@@ -62594,8 +62621,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function fieldEditFingerprint(request) {
     return `${request.ids.join(",")}|${request.field}|${request.value}|${request.files ? "1" : "0"}`;
   }
-  function fieldEditApplyReady(plan, previewed, current4, writable, busy7) {
-    return !plan || !previewed || !writable || busy7 || plan.changes.length === 0 ? !1 : fieldEditFingerprint(previewed) === fieldEditFingerprint(current4);
+  function fieldEditApplyReady(plan, previewed, current4, writable, busy8) {
+    return !plan || !previewed || !writable || busy8 || plan.changes.length === 0 ? !1 : fieldEditFingerprint(previewed) === fieldEditFingerprint(current4);
   }
   function fieldEditSelectedText(count) {
     return t("fieldEdit.selected", { count });
@@ -63970,7 +63997,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return EDIT_FIELDS.includes(value) ? value : "genre";
   }
   function FieldEditorBar({ selectedIds }) {
-    let list = useTrackList(), [field2, setField] = (0, import_react34.useState)("genre"), [value, setValue] = (0, import_react34.useState)(""), [plan, setPlan] = (0, import_react34.useState)(null), [previewed, setPreviewed] = (0, import_react34.useState)(null), [busy7, setBusy] = (0, import_react34.useState)(!1), [status4, setStatus] = (0, import_react34.useState)(""), [writeFiles, setWriteFiles] = (0, import_react34.useState)(!1), idsKey = selectedIds.join(",");
+    let list = useTrackList(), [field2, setField] = (0, import_react34.useState)("genre"), [value, setValue] = (0, import_react34.useState)(""), [plan, setPlan] = (0, import_react34.useState)(null), [previewed, setPreviewed] = (0, import_react34.useState)(null), [busy8, setBusy] = (0, import_react34.useState)(!1), [status4, setStatus] = (0, import_react34.useState)(""), [writeFiles, setWriteFiles] = (0, import_react34.useState)(!1), idsKey = selectedIds.join(",");
     (0, import_react34.useEffect)(() => {
       let count = idsKey === "" ? 0 : idsKey.split(",").filter(Boolean).length;
       setPlan(null), setPreviewed(null), setBusy(!1), setStatus(fieldEditShows(count) ? fieldEditSelectedText(count) : "");
@@ -63978,7 +64005,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let current4 = (0, import_react34.useMemo)(
       () => ({ ids: [...selectedIds], field: field2, value, files: writeFiles }),
       [selectedIds, field2, value, writeFiles]
-    ), applyReady = fieldEditApplyReady(plan, previewed, current4, list.writable, busy7);
+    ), applyReady = fieldEditApplyReady(plan, previewed, current4, list.writable, busy8);
     if (!fieldEditShows(selectedIds.length)) return null;
     async function onPreview() {
       let fieldNode = document.querySelector("#field-edit-field"), valueNode = document.querySelector("#field-edit-value"), nextField = asEditField(fieldNode?.value ?? field2), nextValue = valueNode?.value ?? value;
@@ -64005,7 +64032,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     }
     async function onApply() {
-      if (fieldEditApplyReady(plan, previewed, current4, list.writable, busy7)) {
+      if (fieldEditApplyReady(plan, previewed, current4, list.writable, busy8)) {
         setBusy(!0);
         try {
           await applyFieldEdit(current4.ids, current4.field, current4.value, writeFiles);
@@ -64024,7 +64051,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "field-edit-field",
             value: field2,
-            disabled: busy7,
+            disabled: busy8,
             ref: tooltipRef5(tips.fieldEditField),
             onChange: (event) => setField(asEditField(event.currentTarget.value)),
             children: EDIT_FIELDS.map((name) => /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("option", { value: name, children: fieldEditLabel(name) }, name))
@@ -64039,7 +64066,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "field-edit-value",
             type: "text",
             value,
-            disabled: busy7,
+            disabled: busy8,
             ref: tooltipRef5(tips.fieldEditValue),
             onChange: (event) => setValue(event.currentTarget.value),
             onInput: (event) => setValue(event.currentTarget.value)
@@ -64053,7 +64080,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "field-edit-write-files",
             type: "checkbox",
             checked: writeFiles,
-            disabled: busy7,
+            disabled: busy8,
             ref: tooltipRef5(tips.fieldEditWriteFiles),
             onChange: (event) => setWriteFiles(event.currentTarget.checked)
           }
@@ -64069,7 +64096,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           variant: "outlined",
           sx: BUTTON_SX,
           ref: tooltipRef5(tips.fieldEditPreview),
-          disabled: busy7,
+          disabled: busy8,
           onClick: () => {
             onPreview();
           },
@@ -64903,9 +64930,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/StickBackupPanel.tsx
   var import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 };
   function StickBackupPanel() {
-    let [dest, setDest] = (0, import_react39.useState)(""), [report, setReport] = (0, import_react39.useState)(null), [error2, setError] = (0, import_react39.useState)(""), [busy7, setBusy] = (0, import_react39.useState)(!1), tokenRef = (0, import_react39.useRef)(0), source = portableDriveRoot(
-      document.getElementById("portable-drive")?.value || ""
-    ), ready = !!source && hasStickBackupDest(dest) && !busy7;
+    let live = (0, import_react39.useSyncExternalStore)(subscribePortable, portableSnapshot, portableSnapshot), source = portableDriveRoot(live.stickDrive || ""), [dest, setDest] = (0, import_react39.useState)(""), [report, setReport] = (0, import_react39.useState)(null), [error2, setError] = (0, import_react39.useState)(""), [busy8, setBusy] = (0, import_react39.useState)(!1), tokenRef = (0, import_react39.useRef)(0), ready = !!source && hasStickBackupDest(dest) && !busy8;
     (0, import_react39.useEffect)(() => {
       if (!source) {
         setReport(null);
@@ -64916,7 +64941,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         if (token4 !== tokenRef.current) return;
         setReport(payload);
         let remembered = payload.last_backup?.dest;
-        typeof remembered == "string" && remembered.trim() && setDest(remembered);
+        setDest(typeof remembered == "string" ? remembered : "");
       }).catch((caught) => {
         token4 === tokenRef.current && setError(failureOf(caught).message);
       });
@@ -65128,6 +65153,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function portableSnapshot() {
     return snapshot3;
   }
+  function setStickDrive(drive) {
+    stickDrive = portableDriveRoot(drive), emitPortable();
+  }
   function setStickCueState(report, status4) {
     stickReport = report, stickStatus = status4, emitPortable();
   }
@@ -65250,7 +65278,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function runPortableCheck(path) {
     wirePortable();
     let drive = portableDriveRoot(path), mine = ++token2;
-    if (latest3 = null, lastDrive = drive, showConfirm = !1, showOverwrite = !1, stickDrive = drive, stickReport = null, stickStatus = "", clearReport(), paintStatus(t("portable.checking")), paintSmartButtons(), !drive) {
+    if (latest3 = null, lastDrive = drive, showConfirm = !1, showOverwrite = !1, setStickDrive(drive), stickReport = null, stickStatus = "", clearReport(), paintStatus(t("portable.checking")), paintSmartButtons(), !drive) {
       fail(t("portable.unreadable"));
       return;
     }
@@ -67233,7 +67261,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     section,
     onReload
   }) {
-    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react45.useState)(""), [busy7, setBusy] = (0, import_react45.useState)(!1), [canApply, setCanApply] = (0, import_react45.useState)(!1);
+    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react45.useState)(""), [busy8, setBusy] = (0, import_react45.useState)(!1), [canApply, setCanApply] = (0, import_react45.useState)(!1);
     async function review() {
       setBusy(!0), setCanApply(!1);
       try {
@@ -67275,7 +67303,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX4,
                 ref: tooltipRef5(tips.suspiciousCues),
                 "data-health-action": "cues-preview",
-                disabled: busy7,
+                disabled: busy8,
                 onClick: () => {
                   review();
                 },
@@ -67291,7 +67319,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX4,
                 ref: tooltipRef5(tips.suspiciousCues),
                 "data-health-action": "cues-apply",
-                disabled: busy7 || !canApply,
+                disabled: busy8 || !canApply,
                 onClick: () => {
                   removeDuplicates();
                 },
@@ -67377,7 +67405,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     section,
     onReload
   }) {
-    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react45.useState)(""), [busy7, setBusy] = (0, import_react45.useState)(!1), [canApply, setCanApply] = (0, import_react45.useState)(!1);
+    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react45.useState)(""), [busy8, setBusy] = (0, import_react45.useState)(!1), [canApply, setCanApply] = (0, import_react45.useState)(!1);
     async function review() {
       setBusy(!0), setCanApply(!1);
       try {
@@ -67421,7 +67449,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX4,
                 ref: tooltipRef5(tips.healthPathFormsReview),
                 "data-health-action": "path-forms-preview",
-                disabled: busy7,
+                disabled: busy8,
                 onClick: () => {
                   review();
                 },
@@ -67437,7 +67465,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX4,
                 ref: tooltipRef5(tips.healthPathFormsConfirm),
                 "data-health-action": "path-forms-apply",
-                disabled: busy7 || !canApply,
+                disabled: busy8 || !canApply,
                 onClick: () => {
                   keepOne();
                 },
@@ -68350,7 +68378,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     paused,
     revision
   }) {
-    let space = state.space, [report, setReport] = (0, import_react52.useState)(null), [status4, setStatus] = (0, import_react52.useState)(() => t("families.loading")), [drag, setDrag] = (0, import_react52.useState)(""), [drop, setDrop] = (0, import_react52.useState)(""), [genre, setGenre] = (0, import_react52.useState)(""), [parent, setParent] = (0, import_react52.useState)(""), [field2, setField] = (0, import_react52.useState)("grouping"), [overwrite, setOverwrite] = (0, import_react52.useState)(!1), [plan, setPlan] = (0, import_react52.useState)(null), [busy7, setBusy] = (0, import_react52.useState)(!1);
+    let space = state.space, [report, setReport] = (0, import_react52.useState)(null), [status4, setStatus] = (0, import_react52.useState)(() => t("families.loading")), [drag, setDrag] = (0, import_react52.useState)(""), [drop, setDrop] = (0, import_react52.useState)(""), [genre, setGenre] = (0, import_react52.useState)(""), [parent, setParent] = (0, import_react52.useState)(""), [field2, setField] = (0, import_react52.useState)("grouping"), [overwrite, setOverwrite] = (0, import_react52.useState)(!1), [plan, setPlan] = (0, import_react52.useState)(null), [busy8, setBusy] = (0, import_react52.useState)(!1);
     (0, import_react52.useEffect)(() => {
       let controller = new AbortController(), alive = !0;
       return (async () => {
@@ -68366,7 +68394,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         alive = !1, controller.abort();
       };
     }, [revision, space]);
-    let names = report ? Object.keys(report.parents).sort((left2, right2) => left2.localeCompare(right2)) : [], selected = names.includes(genre) ? genre : names[0] ?? "", targets = report && selected ? moveTargets(report.parents, selected) : [], parentValue = parent !== "" && targets.includes(parent) ? parent : "", locked = paused || busy7;
+    let names = report ? Object.keys(report.parents).sort((left2, right2) => left2.localeCompare(right2)) : [], selected = names.includes(genre) ? genre : names[0] ?? "", targets = report && selected ? moveTargets(report.parents, selected) : [], parentValue = parent !== "" && targets.includes(parent) ? parent : "", locked = paused || busy8;
     async function move(name, nextParent) {
       if (!(!name || locked)) {
         setBusy(!0);
@@ -68443,7 +68471,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       }
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)("section", { className: "genre-families", "aria-labelledby": "genre-families-heading", "aria-busy": busy7, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime259.jsxs)("section", { className: "genre-families", "aria-labelledby": "genre-families-heading", "aria-busy": busy8, children: [
       /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("h3", { id: "genre-families-heading", children: t("families.heading") }),
       /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { className: "gig-note", children: t("families.intro") }),
       /* @__PURE__ */ (0, import_jsx_runtime259.jsx)("p", { id: "genre-families-status", className: "gig-status", role: "status", "aria-live": "polite", children: status4 }),
@@ -68795,7 +68823,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     group,
     chosen,
     plan,
-    busy: busy7,
+    busy: busy8,
     canApply,
     onPreview,
     onApply,
@@ -68812,7 +68840,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             name: `tags-${group.key}`,
             value: spelling.value,
             checked: spelling.value === chosen,
-            disabled: busy7,
+            disabled: busy8,
             onChange: (event) => onSelect(event.currentTarget.value)
           }
         ),
@@ -68830,7 +68858,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ref: tooltipRef5(tips.tagsPreview),
             "data-tags-action": "preview",
             "data-key": group.key,
-            disabled: busy7 || !chosen,
+            disabled: busy8 || !chosen,
             onClick: onPreview,
             children: t("tags.preview")
           }
@@ -68846,7 +68874,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             "data-tags-action": "apply",
             "data-key": group.key,
             disabled: !canApply || !!(plan && plan.value === chosen && !plan.changes.length),
-            startIcon: busy7 ? /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(CircularProgress_default, { size: 16, color: "inherit" }) : void 0,
+            startIcon: busy8 ? /* @__PURE__ */ (0, import_jsx_runtime261.jsx)(CircularProgress_default, { size: 16, color: "inherit" }) : void 0,
             onClick: onApply,
             children: t("tags.apply")
           }
@@ -69916,7 +69944,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/MusicMirrorPanel.tsx
   var import_jsx_runtime268 = __toESM(require_jsx_runtime(), 1), BUTTON_SX10 = { textTransform: "none", minHeight: 44 };
   function MusicMirrorPanel() {
-    let [dest, setDest] = (0, import_react57.useState)(""), [report, setReport] = (0, import_react57.useState)(null), [error2, setError] = (0, import_react57.useState)(""), [busy7, setBusy] = (0, import_react57.useState)(!1), tokenRef = (0, import_react57.useRef)(0), ready = hasMirrorDest(dest) && !busy7;
+    let [dest, setDest] = (0, import_react57.useState)(""), [report, setReport] = (0, import_react57.useState)(null), [error2, setError] = (0, import_react57.useState)(""), [busy8, setBusy] = (0, import_react57.useState)(!1), tokenRef = (0, import_react57.useRef)(0), ready = hasMirrorDest(dest) && !busy8;
     async function run(action, confirm) {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -70137,7 +70165,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/GigLockPanel.tsx
   var import_jsx_runtime270 = __toESM(require_jsx_runtime(), 1), BUTTON_SX11 = { textTransform: "none", minHeight: 44 };
   function GigLockPanel() {
-    let [listing, setListing] = (0, import_react58.useState)(null), [error2, setError] = (0, import_react58.useState)(""), [busy7, setBusy] = (0, import_react58.useState)(!1), tokenRef = (0, import_react58.useRef)(0);
+    let [listing, setListing] = (0, import_react58.useState)(null), [error2, setError] = (0, import_react58.useState)(""), [busy8, setBusy] = (0, import_react58.useState)(!1), tokenRef = (0, import_react58.useRef)(0);
     async function load() {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -70182,7 +70210,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX11,
-            disabled: busy7 || !hasPending,
+            disabled: busy8 || !hasPending,
             ref: tooltipRef5(tips.gigLockPreview),
             onClick: () => {
               run("preview");
@@ -70198,7 +70226,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX11,
-            disabled: busy7 || locked || !hasPending,
+            disabled: busy8 || locked || !hasPending,
             ref: tooltipRef5(tips.gigLockApply),
             onClick: () => {
               run("apply", !0);
@@ -70214,7 +70242,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX11,
-            disabled: busy7 || !hasPending,
+            disabled: busy8 || !hasPending,
             ref: tooltipRef5(tips.gigLockDrop),
             onClick: () => {
               run("drop");
@@ -70236,7 +70264,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: { ...BUTTON_SX11, ml: 1 },
-            disabled: busy7 || locked || !item.id,
+            disabled: busy8 || locked || !item.id,
             ref: tooltipRef5(tips.gigLockUndo),
             onClick: () => {
               item.id && run("undo", !0, item.id);
@@ -70255,7 +70283,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function BatchPanel() {
     let batch = useBatch();
     useCrates();
-    let [error2, setError] = (0, import_react59.useState)(""), [busy7, setBusy] = (0, import_react59.useState)(!1), listing = batch.listing, queued = listing.queue.length > 0, canDest = canQueueActiveCrate();
+    let [error2, setError] = (0, import_react59.useState)(""), [busy8, setBusy] = (0, import_react59.useState)(!1), listing = batch.listing, queued = listing.queue.length > 0, canDest = canQueueActiveCrate();
     (0, import_react59.useEffect)(() => {
       refreshBatch().catch(() => {
       });
@@ -70284,7 +70312,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX12,
-            disabled: busy7 || !canDest,
+            disabled: busy8 || !canDest,
             ref: tooltipRef5(tips.batchDestination),
             onClick: () => {
               let id = activeCrateId();
@@ -70301,7 +70329,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX12,
-            disabled: busy7 || !queued || listing.destination === null,
+            disabled: busy8 || !queued || listing.destination === null,
             ref: tooltipRef5(tips.batchPreview),
             onClick: () => {
               run({ action: "preview" });
@@ -70317,7 +70345,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX12,
-            disabled: busy7 || preview === null,
+            disabled: busy8 || preview === null,
             ref: tooltipRef5(tips.batchApply),
             onClick: () => {
               run({ action: "apply", confirm: !0 });
@@ -70333,7 +70361,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX12,
-            disabled: busy7 || !queued && listing.destination === null && preview === null,
+            disabled: busy8 || !queued && listing.destination === null && preview === null,
             ref: tooltipRef5(tips.batchCancel),
             onClick: () => {
               run({ action: "cancel" });
@@ -70349,7 +70377,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX12,
-            disabled: busy7 || !listing.can_undo,
+            disabled: busy8 || !listing.can_undo,
             ref: tooltipRef5(tips.batchUndo),
             onClick: () => {
               run({ action: "undo", confirm: !0 });
@@ -71370,6 +71398,66 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
 
+  // src/lib/gig/tonight.ts
+  init_shared_dialog();
+  var busy6 = !1;
+  async function buildTonightCrates() {
+    if (busy6) return;
+    busy6 = !0;
+    let button = el("tonight-build");
+    button.disabled = !0, button.setAttribute("aria-busy", "true"), el("gig-status").textContent = t("gig.tonightBusy");
+    try {
+      let preview = await postJSON("/api/tonight", {
+        action: "preview",
+        space: state.space
+      });
+      if (isQueuedWrite(preview)) {
+        el("gig-status").textContent = t("gigLock.queued");
+        return;
+      }
+      let crateCount = (preview.children ?? []).length;
+      if (!crateCount) {
+        el("gig-status").textContent = t("gig.tonightEmpty");
+        return;
+      }
+      let folder = String(preview.folder || "_crateCraft generated"), tonight = String(preview.tonight || "Tonight");
+      if (!await openConfirm({
+        title: t("gig.tonight"),
+        message: t("gig.tonightConfirm", { count: crateCount, folder, tonight }),
+        confirmLabel: t("gig.tonight")
+      })) {
+        el("gig-status").textContent = "";
+        return;
+      }
+      let created = await postJSON("/api/tonight", {
+        action: "create",
+        confirm: !0,
+        space: state.space
+      });
+      if (isQueuedWrite(created)) {
+        el("gig-status").textContent = t("gigLock.queued");
+        return;
+      }
+      if (!created.written) {
+        el("gig-status").textContent = t("gig.tonightEmpty");
+        return;
+      }
+      await bridge.reloadLibrary(), el("gig-status").textContent = created.warning || t("gig.tonightWritten", {
+        folder: String(created.folder || folder),
+        tonight: String(created.tonight || tonight),
+        count: created.children?.length ?? crateCount
+      });
+    } catch (error2) {
+      if (failureOf(error2).status === 409) {
+        bridge.lockDown(error2);
+        return;
+      }
+      el("gig-status").textContent = failureOf(error2).message;
+    } finally {
+      busy6 = !1, button.disabled = !1, button.setAttribute("aria-busy", "false");
+    }
+  }
+
   // src/lib/gig/gig.ts
   var listeners18 = /* @__PURE__ */ new Set(), stepIndex = 0, latest9 = null, checkedAt = null, exitGig = () => {
   };
@@ -71417,6 +71505,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("gig-panel");
     panel.dataset.gigWired !== "true" && (panel.dataset.gigWired = "true", el("gig-refresh").addEventListener("click", () => {
       loadGigCheck(!0);
+    }), el("tonight-build").addEventListener("click", () => {
+      buildTonightCrates();
     }), mountIsland(el("gig-report"), (0, import_react64.createElement)(GigReport)));
   }
   async function loadGigCheck(keepStep = !1) {
@@ -72242,7 +72332,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     label,
     tracks,
     writable,
-    busy: busy7
+    busy: busy8
   }) {
     let accordion = useSectionOpen3(tracks.length > 0), columns = (0, import_react73.useMemo)(() => [
       {
@@ -72277,7 +72367,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX15,
                 ref: tooltipRef5(tips.compareSave),
                 "data-compare-set": setKey,
-                disabled: busy7 || !writable || tracks.length === 0,
+                disabled: busy8 || !writable || tracks.length === 0,
                 children: t("compare.save")
               }
             ),
@@ -72290,7 +72380,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function CrateComparePanel({
     payload,
     writable,
-    busy: busy7
+    busy: busy8
   }) {
     let both = payload.both || [], onlyA = payload.only_a || [], onlyB = payload.only_b || [], smart = payload.a.smart || payload.b.smart;
     return /* @__PURE__ */ (0, import_jsx_runtime281.jsxs)(import_jsx_runtime281.Fragment, { children: [
@@ -72302,7 +72392,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.both"),
           tracks: both,
           writable,
-          busy: busy7
+          busy: busy8
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
@@ -72312,7 +72402,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.onlyA", { name: payload.a.name }),
           tracks: onlyA,
           writable,
-          busy: busy7
+          busy: busy8
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime281.jsx)(
@@ -72322,14 +72412,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.onlyB", { name: payload.b.name }),
           tracks: onlyB,
           writable,
-          busy: busy7
+          busy: busy8
         }
       )
     ] });
   }
 
   // src/lib/crates/crate-compare.ts
-  var latest14 = null, busy6 = !1, reportRoot5, reportHost6 = null;
+  var latest14 = null, busy7 = !1, reportRoot5, reportHost6 = null;
   function wireCrateCompare() {
     let panel = el("compare-panel");
     panel.dataset.compareWired !== "true" && (panel.dataset.compareWired = "true", el("compare-refresh").addEventListener("click", () => {
@@ -72381,7 +72471,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       (0, import_react74.createElement)(CrateComparePanel, {
         payload,
         writable: state.writable,
-        busy: busy6
+        busy: busy7
       }),
       reportRoot5
     );
@@ -72431,12 +72521,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
   function beginBusy13(kind2) {
-    busy6 = !0;
+    busy7 = !0;
     let refresh = el("compare-refresh");
     refresh.disabled = !0, refresh.setAttribute("aria-busy", "true"), el("compare-panel").setAttribute("aria-busy", "true"), el("compare-status").textContent = kind2 === "save" ? t("compare.saving") : t("compare.checking"), latest14 && renderCrateCompareReport(latest14);
   }
   function endBusy13() {
-    busy6 = !1;
+    busy7 = !1;
     let refresh = el("compare-refresh");
     refresh.disabled = !1, refresh.setAttribute("aria-busy", "false"), el("compare-panel").setAttribute("aria-busy", "false"), latest14 && renderCrateCompareReport(latest14);
   }
@@ -73149,7 +73239,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/PortableDialog.tsx
   var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
-    let files = useFiles(), report = files.portableReport, busy7 = files.portableSmartBusy, verdict = "";
+    let files = useFiles(), report = files.portableReport, busy8 = files.portableSmartBusy, verdict = "";
     report && (report.missing_drive ? verdict = t("portable.missing") : report.ready ? verdict = t("portable.ready") : verdict = t("portable.notReady"));
     let shown = report ? report.findings.slice(0, FINDING_CAP) : [], hidden = report ? report.findings.length - shown.length : 0;
     return /* @__PURE__ */ (0, import_jsx_runtime287.jsxs)(import_jsx_runtime287.Fragment, { children: [
@@ -73177,7 +73267,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "portable-dialog-smart-copy",
             type: "button",
-            disabled: busy7,
+            disabled: busy8,
             ref: (element) => {
               element && setTooltip(element, tips.portableSmartCopy);
             },
@@ -73192,7 +73282,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "portable-dialog-smart-restore",
             type: "button",
-            disabled: busy7,
+            disabled: busy8,
             ref: (element) => {
               element && setTooltip(element, tips.portableSmartRestore);
             },
@@ -73208,7 +73298,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "portable-dialog-smart-confirm",
             type: "button",
             hidden: !files.portableSmartConfirm,
-            disabled: busy7,
+            disabled: busy8,
             ref: (element) => {
               element && setTooltip(element, tips.portableSmartConfirm);
             },
@@ -73224,7 +73314,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "portable-dialog-smart-overwrite",
             type: "button",
             hidden: !files.portableSmartOverwrite,
-            disabled: busy7,
+            disabled: busy8,
             ref: (element) => {
               element && setTooltip(element, tips.portableSmartOverwrite);
             },
@@ -73864,7 +73954,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/HistoryRescuePanel.tsx
   var import_jsx_runtime294 = __toESM(require_jsx_runtime(), 1), BUTTON_SX18 = { textTransform: "none", minHeight: 44 };
   function HistoryRescuePanel() {
-    let [source, setSource] = (0, import_react78.useState)(""), [selected, setSelected] = (0, import_react78.useState)([]), [sources, setSources] = (0, import_react78.useState)([]), [report, setReport] = (0, import_react78.useState)(null), [error2, setError] = (0, import_react78.useState)(""), [busy7, setBusy] = (0, import_react78.useState)(!1), tokenRef = (0, import_react78.useRef)(0), rows = historyRescueSessionRows(report), ids = selected.filter((id) => rows.some((row) => row.id === id && row.selectable)), readyCompare = !!source && !busy7, readyWrite = ids.length > 0 && !busy7;
+    let [source, setSource] = (0, import_react78.useState)(""), [selected, setSelected] = (0, import_react78.useState)([]), [sources, setSources] = (0, import_react78.useState)([]), [report, setReport] = (0, import_react78.useState)(null), [error2, setError] = (0, import_react78.useState)(""), [busy8, setBusy] = (0, import_react78.useState)(!1), tokenRef = (0, import_react78.useRef)(0), rows = historyRescueSessionRows(report), ids = selected.filter((id) => rows.some((row) => row.id === id && row.selectable)), readyCompare = !!source && !busy8, readyWrite = ids.length > 0 && !busy8;
     function toggleSession(id, on) {
       setSelected((prev2) => on ? prev2.includes(id) ? prev2 : [...prev2, id] : prev2.filter((value) => value !== id));
     }
@@ -73929,7 +74019,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                       {
                         size: "small",
                         checked: selected.includes(row.id),
-                        disabled: !row.selectable || busy7,
+                        disabled: !row.selectable || busy8,
                         onChange: (event) => toggleSession(row.id, event.target.checked),
                         slotProps: {
                           input: {
@@ -73937,7 +74027,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                               id: row.id,
                               name: row.name,
                               side: historyRescueSideLabel(row.side)
-                            })
+                            }),
+                            ref: tooltipRef5(tips.historyRescueSession)
                           }
                         }
                       }
@@ -73961,7 +74052,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 size: "small",
                 variant: "outlined",
                 sx: BUTTON_SX18,
-                disabled: busy7,
+                disabled: busy8,
                 ref: tooltipRef5(tips.historyRescueScan),
                 onClick: () => {
                   run("scan", !1);
@@ -74403,7 +74494,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     embedded = !1,
     onSavedCount
   }) {
-    let list = useTrackList(), path = relatedPath(track), [busy7, setBusy] = (0, import_react80.useState)(!!path), [loadError, setLoadError] = (0, import_react80.useState)(""), [payload, setPayload] = (0, import_react80.useState)(null), [query, setQuery] = (0, import_react80.useState)(""), [chosen, setChosen] = (0, import_react80.useState)(null), [note, setNote] = (0, import_react80.useState)(""), [rating, setRating] = (0, import_react80.useState)(""), [mutual, setMutual] = (0, import_react80.useState)(!0), [versionOf, setVersionOf] = (0, import_react80.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react80.useState)(null), [versionBusy, setVersionBusy] = (0, import_react80.useState)(!1), [saving2, setSaving] = (0, import_react80.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react80.useState)(!1);
+    let list = useTrackList(), path = relatedPath(track), [busy8, setBusy] = (0, import_react80.useState)(!!path), [loadError, setLoadError] = (0, import_react80.useState)(""), [payload, setPayload] = (0, import_react80.useState)(null), [query, setQuery] = (0, import_react80.useState)(""), [chosen, setChosen] = (0, import_react80.useState)(null), [note, setNote] = (0, import_react80.useState)(""), [rating, setRating] = (0, import_react80.useState)(""), [mutual, setMutual] = (0, import_react80.useState)(!0), [versionOf, setVersionOf] = (0, import_react80.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react80.useState)(null), [versionBusy, setVersionBusy] = (0, import_react80.useState)(!1), [saving2, setSaving] = (0, import_react80.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react80.useState)(!1);
     (0, import_react80.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
@@ -74431,13 +74522,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onSavedCount(0);
         return;
       }
-      if (busy7) {
+      if (busy8) {
         onSavedCount(null);
         return;
       }
       let savedNow = Array.isArray(payload?.saved) ? payload.saved.length : 0;
       onSavedCount(savedNow);
-    }, [onSavedCount, path, busy7, payload]), (0, import_react80.useEffect)(() => {
+    }, [onSavedCount, path, busy8, payload]), (0, import_react80.useEffect)(() => {
       setVersionGroups(null), setVersionOf(!1);
     }, [track.id]);
     let hits2 = (0, import_react80.useMemo)(() => {
@@ -74506,7 +74597,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failureOf(error2).status === 409 ? bridge.lockDown(error2) : (list.setNotice(failureOf(error2).message, "error"), setSaving(!1));
       }
     }
-    let saved = Array.isArray(payload?.saved) ? payload.saved : [], suggested = Array.isArray(payload?.suggested) ? payload.suggested : [], crateName = payload?.crate_name || "Related", headingId = `related-heading-${track.id}`, status4 = path ? loadError || (busy7 ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved")) : t("related.noPath");
+    let saved = Array.isArray(payload?.saved) ? payload.saved : [], suggested = Array.isArray(payload?.suggested) ? payload.suggested : [], crateName = payload?.crate_name || "Related", headingId = `related-heading-${track.id}`, status4 = path ? loadError || (busy8 ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved")) : t("related.noPath");
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
@@ -74515,7 +74606,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       {
         className: "group",
         "data-track-id": String(track.id),
-        "aria-busy": busy7,
+        "aria-busy": busy8,
         "aria-labelledby": embedded ? void 0 : headingId,
         children: [
           embedded ? null : /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("h3", { id: headingId, children: t("related.heading") }),
@@ -75174,6 +75265,61 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/lib/ui/views.ts
   init_shared_dialog();
 
+  // src/lib/ui/status-poll.ts
+  var POLL_MS2 = 5e3, applyStatus = () => {
+  }, setNotice2 = () => {
+  }, timer2 = null, inFlight = null, wired2 = !1;
+  async function refreshStatus() {
+    return inFlight || (inFlight = (async () => {
+      try {
+        let response = await fetch("/api/status"), info = await readJSONOr(response, {});
+        if (!response.ok)
+          throw new Error(t("status.refreshFailed"));
+        applyStatus(info);
+      } catch (error2) {
+        setNotice2(failureOf(error2).message, "error");
+      } finally {
+        inFlight = null;
+      }
+    })(), inFlight);
+  }
+  function pageVisible() {
+    return typeof document < "u" && document.visibilityState !== "hidden";
+  }
+  function stopPolling() {
+    timer2 != null && (clearInterval(timer2), timer2 = null);
+  }
+  function startPolling() {
+    timer2 != null || !pageVisible() || (timer2 = setInterval(() => {
+      if (!pageVisible()) {
+        stopPolling();
+        return;
+      }
+      refreshStatus();
+    }, POLL_MS2));
+  }
+  function onVisibilityOrFocus() {
+    if (!pageVisible()) {
+      stopPolling();
+      return;
+    }
+    refreshStatus(), startPolling();
+  }
+  function paintStatusRefresh(info) {
+    let button = document.getElementById("status-refresh");
+    if (!(button instanceof HTMLButtonElement)) return;
+    let show2 = info?.writable === !1;
+    button.hidden = !show2, button.textContent = t("status.checkAgain"), button.setAttribute("aria-label", t("status.checkAgain")), setTooltip(button, tips.statusRefresh);
+  }
+  function wireStatusPoll(hooks2) {
+    if (applyStatus = hooks2.applyStatus, setNotice2 = hooks2.setNotice, wired2) return;
+    wired2 = !0;
+    let button = document.getElementById("status-refresh");
+    button instanceof HTMLButtonElement && button.addEventListener("click", () => {
+      refreshStatus();
+    }), document.addEventListener("visibilitychange", onVisibilityOrFocus), window.addEventListener("focus", onVisibilityOrFocus), pageVisible() && startPolling();
+  }
+
   // src/lib/ui/virtual-scroll.ts
   var import_react82 = __toESM(require_react(), 1);
   var paneRoots = /* @__PURE__ */ new WeakMap();
@@ -75684,9 +75830,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       expanded: state.expanded.has(id),
       space: state.space
     }).then((result) => {
-      result.warning && setNotice2(result.warning);
+      result.warning && setNotice3(result.warning);
     }).catch((error2) => {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }));
   }
   function selectCrate(id, event) {
@@ -75709,7 +75855,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let response = await fetch(`/api/track?id=${id}&space=${encodeURIComponent(state.space)}`), payload = await readJSONOr(response, {});
       if (!response.ok) throw new Error(serverMessage(payload, t("detail.readFailed", { status: String(response.status) })));
       if (token4 !== state.request) return;
-      payload.serato && applyStatus(payload.serato), setTrackDetail({ kind: "track", track: payload }), paintDetailIsland();
+      payload.serato && applyStatus2(payload.serato), setTrackDetail({ kind: "track", track: payload }), paintDetailIsland();
     } catch (error2) {
       if (token4 !== state.request) return;
       setTrackDetail({ kind: "error", message: failureOf(error2).message }), paintDetailIsland();
@@ -75724,13 +75870,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), historyDetailHost = host;
   }
   function repaintViews() {
-    if (state.serato && (el("status").textContent = statusLine(state.serato)), paintGeneration(state.serato), paintFolderAccess(state.serato), renderList(), state.mode === "history") {
+    if (state.serato && (el("status").textContent = statusLine(state.serato)), paintStatusRefresh(state.serato), paintGeneration(state.serato), paintFolderAccess(state.serato), renderList(), state.mode === "history") {
       renderSessions(), state.selectedId != null && selectEntry(state.selectedId);
       return;
     }
     detailRoot && paintDetailIsland();
   }
-  function setNotice2(text2, severity = "info") {
+  function setNotice3(text2, severity = "info") {
     setNotice(text2, severity);
   }
   function statusLine(info) {
@@ -75791,53 +75937,53 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let key = FOLDER_ACCESS_COPY[stateName];
     key && (note.textContent = t(key), button.textContent = t("folderAccess.allow"), setTooltip(button, tips.folderAccessAllow), button.dataset.bound !== "1" && (button.dataset.bound = "1", button.addEventListener("click", () => {
       postJSON("/api/folder-access", { action: "open" }).catch((error2) => {
-        setNotice2(failureOf(error2).message, "error");
+        setNotice3(failureOf(error2).message, "error");
       });
     })));
   }
-  function applyStatus(info) {
+  function applyStatus2(info) {
     state.serato = info, state.writable = !!info?.writable;
     let status4 = el("status");
-    status4.textContent = statusLine(info), status4.hidden = info?.writable !== !1, paintGeneration(info), paintFolderAccess(info), renderShell();
+    status4.textContent = statusLine(info), status4.hidden = info?.writable !== !1, paintStatusRefresh(info), paintGeneration(info), paintFolderAccess(info), renderShell();
   }
   function lockDown(error2) {
     let failed = failureOf(error2);
-    applyStatus(failed.payload?.serato || { writable: !1, message: failed.message }), setNotice2(failed.message, "error");
+    applyStatus2(failed.payload?.serato || { writable: !1, message: failed.message }), setNotice3(failed.message, "error");
   }
   async function saveTrack(id, fields) {
     if (fields.bpm != null && Number.isNaN(fields.bpm)) {
-      setNotice2(t("detail.bpmNumber"), "error");
+      setNotice3(t("detail.bpmNumber"), "error");
       return;
     }
     try {
       let result = await postJSON("/api/track", { id, space: state.space, fields });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let restored = Array.isArray(result.restored) ? result.restored : [];
-      restored.length > 0 ? setNotice2(t("detail.restored", { fields: restored.join(", ") })) : setNotice2(result.warning || t("common.saved")), await loadLibrary(), selectTrack(id);
+      restored.length > 0 ? setNotice3(t("detail.restored", { fields: restored.join(", ") })) : setNotice3(result.warning || t("common.saved")), await loadLibrary(), selectTrack(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function revealTrack(id) {
     try {
       await postJSON("/api/reveal", { id });
     } catch (error2) {
-      setNotice2(failureOf(error2).message, "error");
+      setNotice3(failureOf(error2).message, "error");
     }
   }
   async function prepareTrack(id, add) {
     try {
       let result = await postJSON("/api/crate", { action: "prepare", asset: id, add, space: state.space });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || (add ? t("detail.sentPrepare") : t("detail.removedPrepare"))), await loadLibrary(), selectTrack(id);
+      setNotice3(result.warning || (add ? t("detail.sentPrepare") : t("detail.removedPrepare"))), await loadLibrary(), selectTrack(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function relocateTrack(track) {
@@ -75855,12 +76001,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           fields: { portable_id: path }
         });
         if (isQueuedWrite(result)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        setNotice2(result.warning || t("detail.relocated")), await loadLibrary(), selectTrack(track.id);
+        setNotice3(result.warning || t("detail.relocated")), await loadLibrary(), selectTrack(track.id);
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
       }
   }
   async function removeTrack(id) {
@@ -75872,12 +76018,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         let result = await postJSON("/api/crate", { action: "remove_library", asset: id, space: state.space });
         if (isQueuedWrite(result)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        setNotice2(result.warning || t("detail.removed")), state.selectedId = null, await loadLibrary();
+        setNotice3(result.warning || t("detail.removed")), state.selectedId = null, await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
       }
   }
   async function setMembership(assetId, crateId, add, input) {
@@ -75888,9 +76034,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         asset: assetId,
         space: state.space
       });
-      return isQueuedWrite(result) ? (setNotice2(t("gigLock.queued")), !0) : (result.warning && setNotice2(result.warning), await loadLibrary(), selectTrack(assetId), !0);
+      return isQueuedWrite(result) ? (setNotice3(t("gigLock.queued")), !0) : (result.warning && setNotice3(result.warning), await loadLibrary(), selectTrack(assetId), !0);
     } catch (error2) {
-      return input && (input.checked = !add), failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error"), !1;
+      return input && (input.checked = !add), failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error"), !1;
     }
   }
   async function saveRules(id, text2) {
@@ -75898,18 +76044,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       rules = JSON.parse(text2);
     } catch {
-      setNotice2(t("error.smart_rules_json"), "error");
+      setNotice3(t("error.smart_rules_json"), "error");
       return;
     }
     try {
       let result = await postJSON("/api/crate", { action: "rules", id, rules, space: state.space });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("rules.saved")), await loadLibrary(), selectCrate(id);
+      setNotice3(result.warning || t("rules.saved")), await loadLibrary(), selectCrate(id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function createCrate3() {
@@ -75934,12 +76080,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stick_confirm: stickConfirm
       });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("crates.created")), await loadLibrary(), selectCrate(result.id);
+      setNotice3(result.warning || t("crates.created")), await loadLibrary(), selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function renameCrate() {
@@ -75955,12 +76101,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         let result = await postJSON("/api/crate", { action: "rename", id: crate.id, name: name.trim(), space: state.space });
         if (isQueuedWrite(result)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        setNotice2(result.warning || t("crates.renamed")), await loadLibrary(), selectCrate(crate.id);
+        setNotice3(result.warning || t("crates.renamed")), await loadLibrary(), selectCrate(crate.id);
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
       }
   }
   function colorFromName(choice) {
@@ -75979,7 +76125,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (choice == null) return;
     let color2 = colorFromName(choice);
     if (color2 == null) {
-      setNotice2(t("crates.colorUnknown"), "error");
+      setNotice3(t("crates.colorUnknown"), "error");
       return;
     }
     try {
@@ -75990,12 +76136,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         space: state.space
       });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("crates.colorSaved")), await loadLibrary();
+      setNotice3(result.warning || t("crates.colorSaved")), await loadLibrary();
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   async function deleteCrate() {
@@ -76008,12 +76154,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         let result = await postJSON("/api/crate", { action: "delete", id: crate.id, space: state.space });
         if (isQueuedWrite(result)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        state.activeCrate = "all", setNotice2(result.warning || t("crates.deleted")), await loadLibrary();
+        state.activeCrate = "all", setNotice3(result.warning || t("crates.deleted")), await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
       }
   }
   async function importPlaylist(file) {
@@ -76021,13 +76167,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       let result = await postJSON("/api/import.m3u", { space: state.space, parent, name, text: text2 });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let missed = result.unmatched_count ? ` ${t("import.unmatched", { count: Number(result.unmatched_count) })}` : "";
-      setNotice2(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`), await loadLibrary(), selectCrate(result.id);
+      setNotice3(`${t("import.added", { count: Number(result.added) || 0 })}${missed}${result.warning ? ` ${result.warning}` : ""}`), await loadLibrary(), selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     }
   }
   function renderSessions() {
@@ -76063,7 +76209,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     state.historyId = id, state.selectedId = null, notifyHistory(), renderSessions();
     let response = await fetch(`/api/history?session=${id}`), payload = await readJSONOr(response, {});
     if (!response.ok) {
-      setNotice2(serverMessage(payload, t("history.sessionFailed")), "error");
+      setNotice3(serverMessage(payload, t("history.sessionFailed")), "error");
       return;
     }
     state.entries = payload.entries || [], notifyHistory(), el("list").scrollTop = 0, renderList();
@@ -76085,10 +76231,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let response = await fetch(`/api/library?space=${encodeURIComponent(state.space)}`), library = await readJSONOr(response, {});
     if (!response.ok) throw new Error(serverMessage(library, t("library.readFailed", { status: String(response.status) })));
     let selected = state.selectedId, active2 = state.activeCrate;
-    state.tracks = library.tracks, state.byId = new Map(library.tracks.map((track) => [track.id, track])), state.crates = library.crates, state.rootId = library.root_id, state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)])), state.presets = library.presets ?? {}, state.copies = library.copies ?? null, state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id)), state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all", state.selectedId = selected, state.duplicateSpace !== state.space && (state.duplicateIds = null, state.duplicateGroups = []), applyStatus(library.serato), renderList();
+    state.tracks = library.tracks, state.byId = new Map(library.tracks.map((track) => [track.id, track])), state.crates = library.crates, state.rootId = library.root_id, state.crateTracks = new Map(library.crates.map((crate) => [crate.id, new Set(crate.tracks)])), state.presets = library.presets ?? {}, state.copies = library.copies ?? null, state.expanded = new Set(library.crates.filter((crate) => crate.expanded).map((crate) => crate.id)), state.activeCrate = active2 === "all" || library.crates.some((crate) => crate.id === active2) ? active2 : "all", state.selectedId = selected, state.duplicateSpace !== state.space && (state.duplicateIds = null, state.duplicateGroups = []), applyStatus2(library.serato), renderList();
   }
   function setMode(mode) {
-    if (rememberMode(mode), state.mode = mode, el("list").scrollTop = 0, mode === "history" ? (state.sort = "start", state.sortDir = -1, state.historySessions.length || loadHistory().catch((error2) => setNotice2(failureOf(error2).message, "error"))) : (state.sort === "start" || state.sort === "deck" || state.sort === "played") && (state.sort = "name", state.sortDir = 1), mode === "duplicates" && state.duplicateSpace !== state.space && loadDuplicates().catch((error2) => setNotice2(failureOf(error2).message, "error")), mode === "files") {
+    if (rememberMode(mode), state.mode = mode, el("list").scrollTop = 0, mode === "history" ? (state.sort = "start", state.sortDir = -1, state.historySessions.length || loadHistory().catch((error2) => setNotice3(failureOf(error2).message, "error"))) : (state.sort === "start" || state.sort === "deck" || state.sort === "played") && (state.sort = "name", state.sortDir = 1), mode === "duplicates" && state.duplicateSpace !== state.space && loadDuplicates().catch((error2) => setNotice3(failureOf(error2).message, "error")), mode === "files") {
       state.filesLoading = !0;
       let path = state.filesAtRoots ? "" : state.filesPath || "";
       loadFolder(path, { elsewhere: state.filesElsewhere && !state.filesAtRoots }).catch((error2) => failFiles(error2));
@@ -76156,14 +76302,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("export-m3u").addEventListener("click", () => exportPlaylistM3u()), el("import-m3u").addEventListener("click", () => {
       if (playlistCrate() != null) {
         if (!state.writable) {
-          setNotice2(el("status").textContent);
+          setNotice3(el("status").textContent);
           return;
         }
         el("import-file").click();
       }
     }), el("import-file").addEventListener("change", (event) => {
       let file = event.target.files?.[0];
-      event.target.value = "", file && importPlaylist(file).catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      event.target.value = "", file && importPlaylist(file).catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("space").addEventListener("change", () => {
       state.space = el("space").value, state.activeCrate = "all", state.selectedId = null, state.duplicateIds = null, state.duplicateGroups = [], syncHash(), loadLibrary().then(() => state.mode === "duplicates" ? loadDuplicates() : state.mode === "gig" ? loadGigCheck().catch(showGigFailure) : state.mode === "portable" ? loadPortableView().catch(showPortableFailure) : state.mode === "drift" ? loadDrift().catch(showDriftFailure) : state.mode === "octave" ? loadOctave().catch(showOctaveFailure) : state.mode === "health" ? loadHealth().catch(showHealthFailure) : state.mode === "stats" ? loadHistoryStats().catch(showHistoryStatsFailure) : state.mode === "scan" ? loadScan().catch(showScanFailure) : state.mode === "bitrate" ? loadBitrate().catch(showBitrateFailure) : state.mode === "tags" ? loadTags().catch(showTagsFailure) : state.mode === "lost" ? loadLostTags().catch(showLostTagsFailure) : state.mode === "energy" ? loadEnergy().catch(showEnergyFailure) : state.mode === "audio" ? loadAudioChanged().catch(showAudioChangedFailure) : state.mode === "compare" ? loadCrateCompare().catch(showCrateCompareFailure) : null).catch(showFailure);
     }), el("views").addEventListener("click", (event) => {
@@ -76177,7 +76323,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), document.querySelector(".sort-crates").addEventListener("click", (event) => {
       let button = event.target.closest("button");
       button?.dataset.crateSort && (state.crateSort = button.dataset.crateSort, renderCrates(), renderShell());
-    }), el("crate-new").addEventListener("click", () => createCrate3().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-rename").addEventListener("click", () => renameCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"))), el("crate-list").addEventListener("keydown", (event) => {
+    }), el("crate-new").addEventListener("click", () => createCrate3().catch((error2) => setNotice3(failureOf(error2).message, "error"))), el("crate-rename").addEventListener("click", () => renameCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"))), el("crate-color").addEventListener("click", () => colorCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"))), el("crate-delete").addEventListener("click", () => deleteCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"))), el("crate-list").addEventListener("keydown", (event) => {
       let item = event.target.closest(".crate");
       if (!item || !el("crate-list").contains(item)) return;
       let items = [...el("crate-list").querySelectorAll(".crate")], index = items.indexOf(item), id = item.dataset.id === "all" ? "all" : Number(item.dataset.id);
@@ -76203,7 +76349,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     openInLibrary: (id) => {
       openInLibrary(id);
     },
-    setNotice: setNotice2,
+    setNotice: setNotice3,
     setSort: (key) => {
       state.sort === key ? state.sortDir *= -1 : (state.sort = key, state.sortDir = isNumericSort(key) ? -1 : 1), renderColumns(), renderList();
     }
@@ -76212,16 +76358,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     select: selectCrate,
     toggle: toggleCrate,
     create: () => {
-      createCrate3().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      createCrate3().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     rename: () => {
-      renameCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      renameCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     color: () => {
-      colorCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      colorCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     remove: () => {
-      deleteCrate().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      deleteCrate().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     exportM3u: exportPlaylistM3u
   });
@@ -76229,9 +76375,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   historyActions.openSession = openSession;
   historyActions.selectEntry = selectEntry;
   historyActions.openInLibrary = openInLibrary;
-  bridge.applyStatus = applyStatus;
+  bridge.applyStatus = applyStatus2;
   bridge.renderShell = renderShell;
-  bridge.setNotice = setNotice2;
+  bridge.setNotice = setNotice3;
 
   // src/lib/ui/layout.ts
   var TRACK_LIST_MIN_WIDTH = 360;
@@ -76244,7 +76390,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function save(width2) {
     changedHere = !0, clearTimeout(saveTimer), saveTimer = setTimeout(() => {
       postJSON("/api/settings", { layout: { track_list_width: width2 } }).catch(() => {
-        setNotice2(t("layout.widthNotSaved"), "error");
+        setNotice3(t("layout.widthNotSaved"), "error");
       });
     }, SAVE_DELAY_MS);
   }
@@ -76266,7 +76412,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function saveDrawerOpen(open) {
     postJSON("/api/settings", { layout: { drawer_open: open } }).catch(() => {
-      setNotice2(t("layout.widthNotSaved"), "error");
+      setNotice3(t("layout.widthNotSaved"), "error");
     });
   }
   function applyLayout(payload) {
@@ -76319,7 +76465,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       if (token4 === rekordboxReportToken) {
         if (!ok || typeof body2.xml != "string" || !body2.xml.startsWith("<?xml")) {
           let message = serverMessage(body2, t("rekordbox.failed"));
-          el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice2(message, "error");
+          el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice3(message, "error");
           return;
         }
         rekordboxXml = body2.xml, fillRekordboxReport(body2.report || []), el("rekordbox-status").textContent = "", el("rekordbox-dialog").open || el("rekordbox-dialog").showModal();
@@ -76327,7 +76473,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }).catch((error2) => {
       if (token4 !== rekordboxReportToken) return;
       let message = failureOf(error2).message;
-      el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice2(message, "error");
+      el("rekordbox-dialog").open ? el("rekordbox-status").textContent = message : setNotice3(message, "error");
     });
   }
   function selectedMergeKeepId() {
@@ -76440,7 +76586,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         label.className = "merge-choice", label.htmlFor = `merge-keep-${id}`;
         let input = inputEl(keepCopy(track.file || `Track ${id}`));
         input.type = "radio", input.name = "merge-keep", input.id = `merge-keep-${id}`, input.value = String(id), input.checked = id === state.selectedId, input.addEventListener("change", () => {
-          input.checked && refreshMergePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+          input.checked && refreshMergePreview().catch((error2) => setNotice3(failureOf(error2).message, "error"));
         });
         let text2 = document.createElement("span"), name = document.createElement("span");
         name.textContent = track.file || t("track.numbered", { id: String(id) });
@@ -76469,14 +76615,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         confirm_delete_files: trash
       });
       if (isQueuedWrite(result)) {
-        el("merge-dialog").close(), setNotice2(t("gigLock.queued"));
+        el("merge-dialog").close(), setNotice3(t("gigLock.queued"));
         return;
       }
       el("merge-dialog").close();
       let count = (result.removed || []).length, name = result.kept?.file || t("merge.keptCopy"), message = t("merge.merged", { count, name });
       result.warning && (message = `${message} ${result.warning}`);
       let copy2 = result.cue_copy;
-      copy2 && (copy2.markers || copy2.beatgrid) && copy2.status === "copied" && (message = `${message} ${mergeCopyLine(copy2, !0)}`), result.cue_warning && (message = `${message} ${result.cue_warning}`), setNotice2(message), state.selectedId = keepId, await loadLibrary(), state.mode === "duplicates" && await loadDuplicates(), state.byId.has(keepId) && selectTrack(keepId);
+      copy2 && (copy2.markers || copy2.beatgrid) && copy2.status === "copied" && (message = `${message} ${mergeCopyLine(copy2, !0)}`), result.cue_warning && (message = `${message} ${result.cue_warning}`), setNotice3(message), state.selectedId = keepId, await loadLibrary(), state.mode === "duplicates" && await loadDuplicates(), state.byId.has(keepId) && selectTrack(keepId);
     } catch (error2) {
       el("merge-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("merge-dialog").close());
     } finally {
@@ -76533,7 +76679,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       label.className = "merge-choice", label.htmlFor = `crates-replace-to-${track.id}`;
       let input = inputEl(openReplaceCopy(track.file || `Track ${track.id}`));
       input.type = "radio", input.name = "crates-replace-to", input.id = `crates-replace-to-${track.id}`, input.value = String(track.id), input.checked = track.id === replaceToId, input.addEventListener("change", () => {
-        input.checked && (replaceToId = track.id, refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error")));
+        input.checked && (replaceToId = track.id, refreshReplacePreview().catch((error2) => setNotice3(failureOf(error2).message, "error")));
       });
       let text2 = document.createElement("span"), name = document.createElement("span");
       name.textContent = track.file || t("track.numbered", { id: String(track.id) });
@@ -76585,12 +76731,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           retire: el("crates-replace-retire").checked
         });
         if (isQueuedWrite(result)) {
-          el("crates-replace-dialog").close(), setNotice2(t("gigLock.queued"));
+          el("crates-replace-dialog").close(), setNotice3(t("gigLock.queued"));
           return;
         }
         el("crates-replace-dialog").close();
         let added = (result.crates_added || []).length, removed = (result.crates_removed || []).length, name = result.to?.file || result.to?.name || t("cratesReplace.title"), message = added ? t("cratesReplace.placed", { count: added, name }) : t("cratesReplace.nothingToDo");
-        result.retire && removed && (message = `${message} ${t("cratesReplace.retired", { name: result.from?.file || result.from?.name || "" })}`), !added && removed && result.retire && (message = t("cratesReplace.updated")), result.warning && (message = `${message} ${result.warning}`), setNotice2(message), await loadLibrary(), state.byId.has(fromId) && selectTrack(fromId);
+        result.retire && removed && (message = `${message} ${t("cratesReplace.retired", { name: result.from?.file || result.from?.name || "" })}`), !added && removed && result.retire && (message = t("cratesReplace.updated")), result.warning && (message = `${message} ${result.warning}`), setNotice3(message), await loadLibrary(), state.byId.has(fromId) && selectTrack(fromId);
       } catch (error2) {
         el("crates-replace-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("crates-replace-dialog").close());
       } finally {
@@ -76626,7 +76772,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         applyPrivacy(payload);
       },
       onStatus(info) {
-        applyStatus({
+        applyStatus2({
           message: info.message,
           writable: info.writable,
           open: info.open
@@ -76672,9 +76818,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }));
     typeof relinkPlan?.scanned == "number" && parts.push(t("relink.scanned", { count: relinkPlan.scanned })), banner.textContent = parts.join(" "), banner.hidden = parts.length === 0;
   }
-  function syncRelinkConfirm(refreshStatus = !0) {
+  function syncRelinkConfirm(refreshStatus2 = !0) {
     let confirm = el("relink-confirm"), accept = el("relink-accept-high"), find = el("relink-find"), selected = selectedRelinkMatches();
-    confirm.disabled = relinkLoading || !state.writable || selected.length === 0, accept.disabled = relinkLoading || !relinkPlan, find.disabled = relinkLoading || !state.writable, refreshStatus && !relinkLoading && selected.length && (el("relink-status").textContent = t("relink.selected", { count: selected.length }));
+    confirm.disabled = relinkLoading || !state.writable || selected.length === 0, accept.disabled = relinkLoading || !relinkPlan, find.disabled = relinkLoading || !state.writable, refreshStatus2 && !relinkLoading && selected.length && (el("relink-status").textContent = t("relink.selected", { count: selected.length }));
   }
   function renderRelinkRows() {
     let body2 = el("relink-rows");
@@ -76748,19 +76894,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       relinkLoading = !0, el("relink-confirm").disabled = !0, el("relink-status").textContent = t("relink.previewing");
       try {
         let preview = await postJSON("/api/files", { action: "relink", matches });
-        if (preview.serato && applyStatus(preview.serato), !preview.ok) {
+        if (preview.serato && applyStatus2(preview.serato), !preview.ok) {
           el("relink-status").textContent = preview.error || t("files.notSaved");
           return;
         }
         el("relink-status").textContent = preview.summary || t("relink.relinking");
         let result = await postJSON("/api/files", { action: "relink", matches, confirm: !0 });
         if (isQueuedWrite(result)) {
-          el("relink-dialog").close(), setNotice2(t("gigLock.queued"));
+          el("relink-dialog").close(), setNotice3(t("gigLock.queued"));
           return;
         }
-        result.serato && applyStatus(result.serato), el("relink-dialog").close();
+        result.serato && applyStatus2(result.serato), el("relink-dialog").close();
         let message = t("relink.done", { count: matches.length });
-        result.summary && (message = result.summary), result.warning && (message = `${message} ${result.warning}`), setNotice2(message), await loadLibrary();
+        result.summary && (message = result.summary), result.warning && (message = `${message} ${result.warning}`), setNotice3(message), await loadLibrary();
       } catch (error2) {
         el("relink-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("relink-dialog").close());
       } finally {
@@ -76775,7 +76921,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }), el("rekordbox-dialog").open && requestRekordboxReport();
     };
     el("rekordbox-hot-loops").addEventListener("change", saveExportBar), el("rekordbox-memory").addEventListener("change", saveExportBar), el("rekordbox-key").addEventListener("change", saveExportBar), loadPrivacy().catch((error2) => {
-      setNotice2(failureOf(error2).message || t("sharing.loadFailedOff"), "error");
+      setNotice3(failureOf(error2).message || t("sharing.loadFailedOff"), "error");
     }), el("export-rekordbox").addEventListener("click", () => {
       playlistCrate() != null && requestRekordboxReport();
     }), el("rekordbox-cancel").addEventListener("click", () => {
@@ -76790,26 +76936,26 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("health-list-chrome").addEventListener("click", (event) => {
       let button = event.target.closest("button");
       if (button?.id === "merge-duplicates") {
-        openMergeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+        openMergeDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
         return;
       }
-      button?.id === "open-relink" && openRelinkDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      button?.id === "open-relink" && openRelinkDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("relink-cancel").addEventListener("click", () => el("relink-dialog").close()), el("relink-find").addEventListener("click", () => {
       scanRelink().catch((error2) => {
         el("relink-status").textContent = failureOf(error2).message;
       });
     }), el("relink-accept-high").addEventListener("click", () => acceptRelinkHigh()), el("relink-confirm").addEventListener("click", () => {
-      confirmRelink().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      confirmRelink().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("merge-cancel").addEventListener("click", () => el("merge-dialog").close()), el("merge-confirm").addEventListener("click", () => {
-      confirmMerge().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      confirmMerge().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("merge-trash").addEventListener("change", () => syncTrashChoice()), el("crates-replace-cancel").addEventListener("click", () => el("crates-replace-dialog").close()), el("crates-replace-confirm").addEventListener("click", () => {
-      confirmReplaceInCrates().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      confirmReplaceInCrates().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crates-replace-search").addEventListener("input", () => {
       renderReplaceChoices();
     }), el("crates-replace-keep").addEventListener("change", () => {
-      el("crates-replace-keep").checked && refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      el("crates-replace-keep").checked && refreshReplacePreview().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crates-replace-retire").addEventListener("change", () => {
-      el("crates-replace-retire").checked && refreshReplacePreview().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      el("crates-replace-retire").checked && refreshReplacePreview().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("consent-decline").addEventListener("click", () => {
       saveConsent(!1, el("consent-status")).then((ok) => {
         ok && (consentSettled = !0, el("consent-dialog").close());
@@ -77026,7 +77172,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/quick-open.ts
-  var QUICK_OPEN_MS = 200, LIMIT = 8, KIND_RANK = { view: 0, crate: 1, track: 2, file: 3 }, returnFocus = null, timer2 = 0, requestToken = 0, hits = [], active = 0, phase = "idle", truncated = !1, pendingQuery = "";
+  var QUICK_OPEN_MS = 200, LIMIT = 8, KIND_RANK = { view: 0, crate: 1, track: 2, file: 3 }, returnFocus = null, timer3 = 0, requestToken = 0, hits = [], active = 0, phase = "idle", truncated = !1, pendingQuery = "";
   function parentDirectory(path) {
     let slash = Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\"));
     if (slash < 0) return path;
@@ -77095,7 +77241,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function openQuickOpen() {
     let dialog = el("quick-open");
-    dialog.open || (returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null, pendingQuery = "", hits = [], active = 0, phase = "idle", truncated = !1, window.clearTimeout(timer2), el("quick-open-query").value = "", labelQuickOpen(), paint2(), dialog.showModal(), el("quick-open-query").focus());
+    dialog.open || (returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null, pendingQuery = "", hits = [], active = 0, phase = "idle", truncated = !1, window.clearTimeout(timer3), el("quick-open-query").value = "", labelQuickOpen(), paint2(), dialog.showModal(), el("quick-open-query").focus());
   }
   function closeQuickOpen() {
     let dialog = el("quick-open");
@@ -77108,7 +77254,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function wireQuickOpen() {
     let dialog = el("quick-open");
     dialog.addEventListener("keydown", onDialogKey), dialog.addEventListener("close", () => {
-      window.clearTimeout(timer2);
+      window.clearTimeout(timer3);
       let node2 = returnFocus;
       returnFocus = null, node2 && node2.isConnected && !node2.closest("[hidden]") && node2.focus();
     }), window.addEventListener("hashchange", closeQuickOpenOnHash), window.addEventListener("popstate", closeQuickOpenOnHash), el("quick-open-query").addEventListener("input", () => schedule2()), el("quick-open-close").addEventListener("click", () => closeQuickOpen()), el("quick-open-retry").addEventListener("click", () => {
@@ -77128,7 +77274,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
   function schedule2() {
-    window.clearTimeout(timer2);
+    window.clearTimeout(timer3);
     let query = el("quick-open-query").value;
     pendingQuery = query;
     let local = localHits(query);
@@ -77136,7 +77282,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       phase = "idle", requestToken += 1, paint2();
       return;
     }
-    phase = "loading", paint2(), timer2 = window.setTimeout(() => {
+    phase = "loading", paint2(), timer3 = window.setTimeout(() => {
       loadFiles(query.trim(), local);
     }, QUICK_OPEN_MS);
   }
@@ -77745,7 +77891,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/update.ts
-  var UPDATE_CHOICE_EVENT = "serato-update-choice", latest15 = null, dismissed = !1, token3 = 0, wired2 = !1;
+  var UPDATE_CHOICE_EVENT = "serato-update-choice", latest15 = null, dismissed = !1, token3 = 0, wired3 = !1;
   function parseUpdateStatus(value) {
     if (typeof value != "object" || value === null || Array.isArray(value)) return null;
     let body2 = value, enabled = body2.enabled;
@@ -77795,7 +77941,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     paintUpdate();
   }
   function wireUpdate() {
-    wired2 || (wired2 = !0, bindUpdateSaves(
+    wired3 || (wired3 = !0, bindUpdateSaves(
       (on) => save2({ enabled: on }),
       (on) => save2({ include_prereleases: on })
     ), el("update-download").addEventListener("click", () => {
@@ -77947,7 +78093,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openFolderSyncDialog() {
     if (mountSharedDialogs(), !state.writable || typeof state.activeCrate != "number") {
-      setNotice2(el("status").textContent || "");
+      setNotice3(el("status").textContent || "");
       return;
     }
     el("folder-sync-status").textContent = "", el("folder-sync-dialog").open || el("folder-sync-dialog").showModal(), el("folder-sync-path").focus(), await previewFolderSync();
@@ -77967,10 +78113,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           full: form.full
         });
         if (el("folder-sync-dialog").close(), isQueuedWrite(reply)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
-        setNotice2(folderSyncDoneText(reply)), await loadLibrary();
+        setNotice3(folderSyncDoneText(reply)), await loadLibrary();
       } catch (error2) {
         el("folder-sync-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("folder-sync-dialog").close());
       } finally {
@@ -77980,18 +78126,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wireFolderSync() {
     mountSharedDialogs(), el("crate-folder-sync").addEventListener("click", () => {
-      openFolderSyncDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openFolderSyncDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("folder-sync-path").addEventListener("input", schedulePreview), el("folder-sync-subcrates").addEventListener("change", () => {
       previewFolderSync();
     }), el("folder-sync-full").addEventListener("change", () => {
       previewFolderSync();
     }), el("folder-sync-cancel").addEventListener("click", () => el("folder-sync-dialog").close()), el("folder-sync-run").addEventListener("click", () => {
-      runFolderSync().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      runFolderSync().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     });
   }
   bindCrateActions({
     folderSync: () => {
-      openFolderSyncDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openFolderSyncDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }
   });
 
@@ -78023,7 +78169,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openPresetDialog() {
     if (mountSharedDialogs(), !state.writable) {
-      setNotice2(el("status").textContent || "");
+      setNotice3(el("status").textContent || "");
       return;
     }
     let track = state.selectedId == null ? void 0 : state.byId.get(state.selectedId);
@@ -78042,11 +78188,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       let reply = await postJSON("/api/smart-preset", { action: "create", space: state.space, preset, name });
       if (el("preset-dialog").close(), isQueuedWrite(reply)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let message = t("presets.created", { name: reply.name || name, count: Number(reply.added) || 0 });
-      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
+      setNotice3(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
     } catch (error2) {
       el("preset-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("preset-dialog").close());
     } finally {
@@ -78060,7 +78206,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     try {
       let reply = await postJSON("/api/smart-preset", { action: "refresh", id });
       if (isQueuedWrite(reply)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let message = t("presets.refreshed", {
@@ -78068,9 +78214,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         added: Number(reply.added) || 0,
         removed: Number(reply.removed) || 0
       });
-      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
+      setNotice3(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error"), failureOf(error2).status === 404 && await loadLibrary();
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error"), failureOf(error2).status === 404 && await loadLibrary();
     }
   }
   async function refreshPresetsOnOpen() {
@@ -78078,22 +78224,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       try {
         let reply = await postJSON("/api/smart-preset", { action: "refresh_all" });
         if (isQueuedWrite(reply)) {
-          setNotice2(t("gigLock.queued"));
+          setNotice3(t("gigLock.queued"));
           return;
         }
         let changed = reply.changed?.length ?? 0;
         if (!changed) return;
         let message = t("presets.refreshedOnOpen", { count: changed });
-        setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
+        setNotice3(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary();
       } catch (error2) {
-        failureOf(error2).status !== 409 && setNotice2(failureOf(error2).message, "error");
+        failureOf(error2).status !== 409 && setNotice3(failureOf(error2).message, "error");
       }
   }
   function wirePresets() {
     mountSharedDialogs(), el("crate-preset").addEventListener("click", () => {
-      openPresetDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openPresetDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crate-refresh").addEventListener("click", () => {
-      refreshActivePreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      refreshActivePreset().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("preset-kind").addEventListener("change", () => {
       syncPresetFields(), previewPreset();
     });
@@ -78110,15 +78256,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("preset-scope").addEventListener("change", () => {
       previewPreset();
     }), el("preset-cancel").addEventListener("click", () => el("preset-dialog").close()), el("preset-create").addEventListener("click", () => {
-      createPreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      createPreset().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     });
   }
   bindCrateActions({
     preset: () => {
-      openPresetDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openPresetDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     },
     refresh: () => {
-      refreshActivePreset().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      refreshActivePreset().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }
   });
 
@@ -78203,7 +78349,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   async function openCrateTreeDialog() {
     if (mountSharedDialogs(), !state.writable) {
-      setNotice2(el("status").textContent || "");
+      setNotice3(el("status").textContent || "");
       return;
     }
     let scope = scopeCrate();
@@ -78223,11 +78369,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         name
       });
       if (el("crate-tree-dialog").close(), isQueuedWrite(reply)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
       let count = Array.isArray(reply.children) ? reply.children.length : 0, message = t("crateTree.created", { name: reply.name || name, count });
-      setNotice2(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
+      setNotice3(reply.warning ? `${message} ${reply.warning}` : message), await loadLibrary(), typeof reply.id == "number" && selectCrate(reply.id);
     } catch (error2) {
       el("crate-tree-status").textContent = failureOf(error2).message, failureOf(error2).status === 409 && (lockDown(error2), el("crate-tree-dialog").close());
     } finally {
@@ -78238,7 +78384,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wireCrateTrees() {
     mountSharedDialogs(), el("crate-tree").addEventListener("click", () => {
-      openCrateTreeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openCrateTreeDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crate-tree-kind").addEventListener("change", () => {
       syncTreeFields(), previewCrateTree();
     });
@@ -78254,12 +78400,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     el("crate-tree-scope").addEventListener("change", () => {
       previewCrateTree();
     }), el("crate-tree-cancel").addEventListener("click", () => el("crate-tree-dialog").close()), el("crate-tree-create").addEventListener("click", () => {
-      createCrateTree().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      createCrateTree().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     });
   }
   bindCrateActions({
     tree: () => {
-      openCrateTreeDialog().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      openCrateTreeDialog().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }
   });
 
@@ -79692,7 +79838,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       postedOpen.current = !0, setSavedOpen(next3), saveDrawerOpen(next3);
     }
     return (0, import_react85.useLayoutEffect)(() => {
-      adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(lockSlot.current, "folder-access"), adopt(lockSlot.current, "folder-access-allow"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
+      adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(lockSlot.current, "status-refresh"), adopt(lockSlot.current, "folder-access"), adopt(lockSlot.current, "folder-access-allow"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
     }, [open]), /* @__PURE__ */ (0, import_jsx_runtime321.jsxs)(
       Box_default,
       {
@@ -79984,7 +80130,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (saving || !state.writable) return;
     let assets = saveViewIds(focusedView());
     if (!assets.length) {
-      setNotice2(t("crates.saveViewEmpty"), "error");
+      setNotice3(t("crates.saveViewEmpty"), "error");
       return;
     }
     mountSharedDialogs();
@@ -80005,19 +80151,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         space: state.space
       });
       if (isQueuedWrite(result)) {
-        setNotice2(t("gigLock.queued"));
+        setNotice3(t("gigLock.queued"));
         return;
       }
-      setNotice2(result.warning || t("crates.saveViewCreated", { count: Number(result.added) || assets.length })), await loadLibrary(), typeof result.id == "number" && selectCrate(result.id);
+      setNotice3(result.warning || t("crates.saveViewCreated", { count: Number(result.added) || assets.length })), await loadLibrary(), typeof result.id == "number" && selectCrate(result.id);
     } catch (error2) {
-      failureOf(error2).status === 409 ? lockDown(error2) : setNotice2(failureOf(error2).message, "error");
+      failureOf(error2).status === 409 ? lockDown(error2) : setNotice3(failureOf(error2).message, "error");
     } finally {
       saving = !1;
     }
   }
   function wireDualCrates() {
     el("crate-split").addEventListener("click", () => toggleSplit()), el("crate-save-view").addEventListener("click", () => {
-      saveFocusedView().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      saveFocusedView().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }), el("crate-pane-a").addEventListener("focusin", () => {
       !state.splitCrates || state.focusedPane === "a" || (state.focusedPane = "a", paintDualChrome());
     }), el("crate-pane-b").addEventListener("focusin", () => {
@@ -80027,7 +80173,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   bindCrateActions({
     split: toggleSplit,
     saveView: () => {
-      saveFocusedView().catch((error2) => setNotice2(failureOf(error2).message, "error"));
+      saveFocusedView().catch((error2) => setNotice3(failureOf(error2).message, "error"));
     }
   });
 
@@ -80072,6 +80218,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   wireCrateCompare();
   wirePortable();
   wireLayout();
+  wireStatusPoll({ applyStatus: applyStatus2, setNotice: setNotice3 });
   wireVersion();
   loadVersion();
   wireUpdate();

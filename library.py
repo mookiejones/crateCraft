@@ -603,8 +603,10 @@ def _unix_process_is_serato(pid: int) -> bool:
         pid: Process id from the lock table.
 
     Returns:
-        True when ps reports a command name that contains serato. An error,
-        a timeout, or a non-zero exit counts as running, so a write stops.
+        True when ps reports a command name that contains serato. A missing
+        process (non-zero exit, empty command) is not running, so a stale
+        lock row after a crash does not block edits forever. A timeout or
+        OS error still counts as running, so a write stops.
     """
     try:
         result = subprocess.run(
@@ -617,7 +619,8 @@ def _unix_process_is_serato(pid: int) -> bool:
     except (OSError, subprocess.TimeoutExpired):
         return True
     if result.returncode != 0:
-        return True
+        # Dead PID: ps exits non-zero with an empty command name.
+        return False
     return "serato" in result.stdout.lower()
 
 
@@ -628,8 +631,10 @@ def _windows_process_is_serato(pid: int) -> bool:
         pid: Process id from the lock table.
 
     Returns:
-        True when the tasklist image name contains serato. An error, a
-        timeout, or a non-zero exit counts as running, so a write stops.
+        True when the tasklist image name contains serato. A missing
+        process (no matching task, or non-zero exit with no image) is not
+        running. A timeout or OS error still counts as running, so a write
+        stops.
     """
     try:
         result = subprocess.run(
@@ -642,8 +647,11 @@ def _windows_process_is_serato(pid: int) -> bool:
     except (OSError, subprocess.TimeoutExpired):
         return True
     if result.returncode != 0:
-        return True
-    return "serato" in result.stdout.lower()
+        return False
+    text = result.stdout.lower()
+    if "no tasks are running which match" in text:
+        return False
+    return "serato" in text
 
 
 def _status_rows(conn: sqlite3.Connection) -> dict[str, object]:

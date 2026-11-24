@@ -65,12 +65,13 @@ The list under that line names each problem. Fix it on the laptop. The check doe
 **Back up this stick** sits under **Check drive**. It copies the stick's music and `_Serato_` folder to another drive or a mounted disk image. The source stick is never written. This is not **Music files** on Backups (that mirrors the laptop library).
 
 1. Click **Gig**, then **Check drive**, and pick the stick.
-2. Type a backup folder on another drive or a mounted disk image.
-3. Click **Preview**. A stick whose Serato database is older than the tracks on it shows a warning. That warning is not a pass.
-4. Click **Back up**. Each file is hash-checked. A failed verify is shown and the stick is not marked backed up.
-5. The line remembers **Last backed up to … on …** for that stick.
+2. The line shows the last backup for that stick, or **Not backed up yet**. A stick whose Serato database is older than the tracks on it shows that warning. The warning stays after a verified copy.
+3. Type a backup folder on another drive or a mounted disk image. When a backup is already remembered, that folder is filled in.
+4. Click **Preview**.
+5. Click **Back up**. Each file is hash-checked. A failed verify is shown and the stick is not marked backed up.
+6. The line remembers **Last backed up to … on …** for that stick.
 
-Dest cannot be the source stick, the same disk as the stick, a `_Serato_` folder, or the Serato library. A later run skips files that already match (size and hash, or size and a 2-second mtime tolerance on FAT/exFAT).
+Dest cannot be the source stick, the same disk as the stick, a `_Serato_` folder, or the Serato library. A later run skips a file only when the size and the SHA-256 match. On a FAT or exFAT stick, a clock difference of up to 2 seconds still counts as the same file when the hash matches. Different bytes are copied again.
 
 ## Copy smart crates to the drive
 

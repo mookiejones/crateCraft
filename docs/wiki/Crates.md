@@ -45,6 +45,8 @@ There is no drag and drop. This app does not move an existing crate to a new par
 
 A smart crate shows **smart**. You cannot tick it in the track's crate list. Putting a crate inside it says **A smart crate cannot contain another crate.** Adding a track by hand says **Smart crates choose their tracks from rules.**
 
+**Tonight crates** on **Ready** (under Gig) builds **Newest adds**, **Most played**, and by-decade crates under `_crateCraft generated` / `Tonight`. Quit Serato first. A re-run replaces only that Tonight folder. Crates you made yourself stay put.
+
 **Copy smart crates** on **Check drive** writes the rules and the current tracks into that drive's `_Serato_` folder. On another computer, click **Restore smart crates**, then **Restore**. A rule that cannot be rebuilt becomes a normal crate named in the preview. Quit Serato first.
 
 To put a song in a crate, open the track, find **Crates**, and tick a normal crate. The audio file stays where it is. Moving, renaming, or trashing the file is [Organizing files](Organizing-Files).

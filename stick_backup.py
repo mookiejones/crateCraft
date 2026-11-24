@@ -6,9 +6,11 @@ user-chosen folder, drive, or mounted disk image. The source stick is
 never written. Dest cannot be the source, the same physical disk as the
 source, ``_Serato_``, or the live Serato library. Each copied file is
 hash-checked. A stick is marked backed up only when every intended file
-verified. Incremental compare uses NFC path keys and a 2-second mtime
-tolerance on FAT and exFAT. A stick database older than the newest track
-is warned about before backup.
+verified. Incremental compare uses NFC path keys. A same-size file
+is skipped only when SHA-256 matches. On FAT and exFAT the 2-second mtime
+window applies only after that hash match, so a changed same-size file is
+copied again. A stick database older than the newest track is warned about
+before backup and again after a verified copy.
 
 ``python3 stick_backup.py SOURCE DEST`` prints the preview as JSON.
 ``--copy`` writes after confirm.
@@ -619,21 +621,22 @@ def preview(source: object, dest: object) -> dict[str, object]:
     return _plan(_scan(stick, path), written=False)
 
 
-def _copy_one(source: Path, dest_path: Path) -> str:
+def _copy_one(source: Path, dest_path: Path, *, fat: bool) -> str:
     """Copy one file and verify hashes.
+
+    Skip uses :func:`files_match`, so a hash mismatch is never left in
+    place and a FAT mtime window cannot hide different bytes.
 
     Returns:
         ``copied``, ``skip``, or ``mismatch``.
     """
     before = _hash_file(source)
-    source_size = _size(source)
-    if before is None or source_size is None:
+    if before is None or _size(source) is None:
         return "mismatch"
-    if _is_file(dest_path):
-        existing = _hash_file(dest_path)
-        dest_size = _size(dest_path)
-        if existing == before and dest_size == source_size:
-            return "skip"
+    if _is_file(dest_path) and files_match(
+        source, dest_path, fat=fat, source_hash=before
+    ):
+        return "skip"
     try:
         dest_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, dest_path)
@@ -671,6 +674,7 @@ def copy_files(source: object, dest: object) -> dict[str, object]:
     # Re-check same-disk now that dest exists.
     _refuse_dest(path, stick)
     scan = _scan(stick, path)
+    fat = scan.get("fat_tolerance") is True
     copied = 0
     mismatch = list(scan["mismatch"]) if isinstance(scan["mismatch"], list) else []
     remaining: list[dict[str, object]] = []
@@ -691,7 +695,7 @@ def copy_files(source: object, dest: object) -> dict[str, object]:
             continue
         src = Path(src_text)
         dest_path = Path(dest_text)
-        result = _copy_one(src, dest_path)
+        result = _copy_one(src, dest_path, fat=fat)
         if result == "copied":
             copied += 1
         elif result == "mismatch":

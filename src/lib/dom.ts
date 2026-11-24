@@ -132,6 +132,7 @@ export interface ElementIds {
   "gig-status": HTMLParagraphElement;
   "gig-report": HTMLDivElement;
   "gig-refresh": HTMLButtonElement;
+  "tonight-build": HTMLButtonElement;
   "portable-panel": HTMLElement;
   "portable-drive": HTMLSelectElement;
   "portable-check": HTMLButtonElement;

@@ -148,6 +148,7 @@ export function HistoryRescuePanel() {
                             name: row.name,
                             side: historyRescueSideLabel(row.side),
                           }),
+                          ref: tooltipRef(tips.historyRescueSession),
                         },
                       }}
                     />

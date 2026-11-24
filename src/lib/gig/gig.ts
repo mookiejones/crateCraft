@@ -22,6 +22,7 @@ import { el } from "../dom";
 import { GIG_STEP_COUNT, gigScopeLabel } from "./gig-view";
 import { serverMessage, t } from "../i18n";
 import { state } from "../state";
+import { buildTonightCrates } from "./tonight";
 
 type GigListener = (snapshot: GigSnapshot) => void;
 
@@ -138,6 +139,9 @@ export function wireGigCheck(exit: () => void): void {
   panel.dataset.gigWired = "true";
   el("gig-refresh").addEventListener("click", () => {
     void loadGigCheck(true);
+  });
+  el("tonight-build").addEventListener("click", () => {
+    void buildTonightCrates();
   });
   mountIsland(el("gig-report"), createElement(GigReportView));
 }
