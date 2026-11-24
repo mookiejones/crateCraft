@@ -7,6 +7,7 @@
 
 import { postJSON } from "../api";
 import type { Marker } from "../api-types";
+import { hasKey, t } from "../i18n";
 import { CUE_SLOT_COUNT, cueSlots, formatCueTime, isCueColor } from "../ui/cue-view";
 
 export type CuePad = {
@@ -35,7 +36,6 @@ export type CueEditPlan = {
   file: string;
   editable: boolean;
   reason: string | null;
-  reason_text: string | null;
   fingerprint: CueFingerprint | null;
   beat_ms: number | null;
   palette: string[];
@@ -119,6 +119,19 @@ export function padSummary(pad: CuePad | null, empty: string): string {
   const named = pad.name.trim();
   const time = formatCueTime(pad.start_ms);
   return named ? `${time} ${named}` : time;
+}
+
+/**
+ * Translate a cue-edit reason code for the detail pane.
+ *
+ * @param reason Machine code from `/api/cue-edit`, or null.
+ * @returns Localized sentence, or null when there is no known code.
+ */
+export function cueEditReasonMessage(reason: string | null | undefined): string | null {
+  if (!reason) return null;
+  const key = `error.cue_edit_${reason}`;
+  if (!hasKey(key)) return null;
+  return t(key);
 }
 
 /**

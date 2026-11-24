@@ -14,6 +14,7 @@ import {
 import type { Track } from "../lib/api-types";
 import {
   applyCueEdit,
+  cueEditReasonMessage,
   nudgePad,
   padAtPlayhead,
   padsDirty,
@@ -100,7 +101,7 @@ export function CueEditor({ track, writable }: CueEditorProps) {
       .then((plan) => {
         if (cancelled) return;
         setEditable(plan.editable);
-        setReasonText(plan.reason_text);
+        setReasonText(cueEditReasonMessage(plan.reason));
         setFingerprint(plan.fingerprint);
         setPalette(plan.palette.length ? plan.palette : DEFAULT_PALETTE);
         setBeatMs(typeof plan.beat_ms === "number" ? plan.beat_ms : null);
@@ -145,8 +146,9 @@ export function CueEditor({ track, writable }: CueEditorProps) {
       const result = await applyCueEdit(track.id, space, pending, fingerprint);
       if (!result.written) {
         setEditable(result.editable);
-        setReasonText(result.reason_text);
-        setStatus(result.reason_text || t("markers.cueEdit.noChange"));
+        const blocked = cueEditReasonMessage(result.reason);
+        setReasonText(blocked);
+        setStatus(blocked || t("markers.cueEdit.noChange"));
         return;
       }
       const next = padsFromCues(result.cues);
@@ -180,7 +182,7 @@ export function CueEditor({ track, writable }: CueEditorProps) {
       setPending(next);
       setFingerprint(plan.fingerprint);
       setEditable(plan.editable);
-      setReasonText(plan.reason_text);
+      setReasonText(cueEditReasonMessage(plan.reason));
       setStatus(t("markers.cueEdit.undone"));
       list.setNotice(t("markers.cueEdit.undone"), "success");
       list.selectTrack(track.id);

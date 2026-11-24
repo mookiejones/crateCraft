@@ -6,7 +6,8 @@ rewrites only Markers2 CUE entries for indexes 0–7 through
 flips, COLOR, BPMLOCK, cues past pad 8, BeatGrid, Autotags, and every
 other tag frame stay byte-identical. Unknown entry kinds pass through.
 Read-back verify restores the original frames when the pads do not match.
-Undo puts those pre-write frame bytes back via the write preimage.
+Undo puts that audio file's pre-write Markers2 bytes back from the
+write preimage and leaves ``master.sqlite`` alone.
 
 Supported containers: ID3 (MP3/WAV), AIFF, FLAC, and MP4/M4A. A missing,
 unsupported, corrupt, or cue-protected file returns a clear reason and
@@ -222,7 +223,7 @@ def apply(
 
 
 def undo(snapshot_id: str) -> dict[str, object]:
-    """Put the pre-write audio frames back through the write preimage.
+    """Put pre-write Markers2 back on the edited audio; leave the library DB.
 
     Args:
         snapshot_id: Id returned from a successful ``apply``.
@@ -237,7 +238,9 @@ def undo(snapshot_id: str) -> dict[str, object]:
     """
     import safe_write
 
-    safe_write.undo_preimage(snapshot_id, operation="cue_edit", target="cue points")
+    safe_write.restore_extra_markers2(
+        snapshot_id, operation="cue_edit", target="cue points"
+    )
     return {"preview": False, "written": True, "undone": snapshot_id}
 
 
@@ -713,7 +716,6 @@ def _public(
     if editable and fingerprint is not None and state.get("fingerprint") != fingerprint:
         editable = False
         reason = "outside_change"
-    reason_text = _reason_text(reason if isinstance(reason, str) else None)
     return {
         "preview": preview,
         "written": written,
@@ -722,7 +724,6 @@ def _public(
         "file": state["file"],
         "editable": editable,
         "reason": reason,
-        "reason_text": reason_text,
         "fingerprint": state.get("fingerprint"),
         "beat_ms": state.get("beat_ms"),
         "palette": palette(),
@@ -734,20 +735,6 @@ def _public(
         "flips": state["flips"],
         "snapshot_id": snapshot_id,
     }
-
-
-def _reason_text(reason: str | None) -> str | None:
-    """Map a reason code to the English sentence the page can show."""
-    if reason is None:
-        return None
-    mapping = {
-        "protected": PROTECTED,
-        "missing": MISSING_FILE,
-        "unsupported": UNSUPPORTED,
-        "corrupt": CORRUPT,
-        "outside_change": OUTSIDE_CHANGE,
-    }
-    return mapping.get(reason)
 
 
 def _slots_from_cues(cues: object) -> list[dict[str, object] | None]:

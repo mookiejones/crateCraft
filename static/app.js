@@ -73750,6 +73750,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let named = pad.name.trim(), time = formatCueTime(pad.start_ms);
     return named ? `${time} ${named}` : time;
   }
+  function cueEditReasonMessage(reason) {
+    if (!reason) return null;
+    let key = `error.cue_edit_${reason}`;
+    return hasKey(key) ? t(key) : null;
+  }
   function nudgePad(pad, deltaMs) {
     return { ...pad, start_ms: Math.max(0, Math.round(pad.start_ms + deltaMs)) };
   }
@@ -73848,7 +73853,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let cancelled = !1;
       return setBaseline(padsFromCues(track.cues)), setPending(padsFromCues(track.cues)), setSwapFrom(null), setStatus(""), previewCueEdit(track.id, space).then((plan) => {
         if (cancelled) return;
-        setEditable(plan.editable), setReasonText(plan.reason_text), setFingerprint(plan.fingerprint), setPalette(plan.palette.length ? plan.palette : DEFAULT_PALETTE), setBeatMs(typeof plan.beat_ms == "number" ? plan.beat_ms : null);
+        setEditable(plan.editable), setReasonText(cueEditReasonMessage(plan.reason)), setFingerprint(plan.fingerprint), setPalette(plan.palette.length ? plan.palette : DEFAULT_PALETTE), setBeatMs(typeof plan.beat_ms == "number" ? plan.beat_ms : null);
         let loaded = plan.before.map((pad) => pad);
         setBaseline(loaded), setPending(loaded);
       }).catch((error2) => {
@@ -73876,7 +73881,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         try {
           let result = await applyCueEdit(track.id, space, pending, fingerprint);
           if (!result.written) {
-            setEditable(result.editable), setReasonText(result.reason_text), setStatus(result.reason_text || t("markers.cueEdit.noChange"));
+            setEditable(result.editable);
+            let blocked = cueEditReasonMessage(result.reason);
+            setReasonText(blocked), setStatus(blocked || t("markers.cueEdit.noChange"));
             return;
           }
           let next3 = padsFromCues(result.cues);
@@ -73895,7 +73902,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         try {
           await undoCueEdit(undoId), lastUndoSnapshot = null, setUndoId(null);
           let plan = await previewCueEdit(track.id, space), next3 = plan.before.map((pad) => pad);
-          setBaseline(next3), setPending(next3), setFingerprint(plan.fingerprint), setEditable(plan.editable), setReasonText(plan.reason_text), setStatus(t("markers.cueEdit.undone")), list.setNotice(t("markers.cueEdit.undone"), "success"), list.selectTrack(track.id);
+          setBaseline(next3), setPending(next3), setFingerprint(plan.fingerprint), setEditable(plan.editable), setReasonText(cueEditReasonMessage(plan.reason)), setStatus(t("markers.cueEdit.undone")), list.setNotice(t("markers.cueEdit.undone"), "success"), list.selectTrack(track.id);
         } catch (error2) {
           let message = failureOf(error2).message;
           setStatus(message), list.setNotice(message, "error");

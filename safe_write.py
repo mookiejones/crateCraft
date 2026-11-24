@@ -20,6 +20,8 @@ under the Serato library. A write does not add a ``Backups`` directory, a
 snapshot directory, a journal, or a log beside ``master.sqlite``. The only
 change in that folder is the library edit itself.
 ``undo_preimage`` puts one kept preimage back and does not take another.
+``restore_extra_markers2`` puts only Markers2 from ``extra-*`` copies back
+and leaves ``master.sqlite`` alone.
 """
 
 from __future__ import annotations
@@ -1031,6 +1033,92 @@ def undo_preimage(snapshot_id: str, *, operation: str, target: str) -> dict[str,
         )
         raise
     except (OSError, VerifyMismatch) as exc:
+        append_entry(
+            operation,
+            target,
+            snapshot_before=snapshot_id,
+            snapshot_after=None,
+            verified=False,
+            rolled_back=False,
+            result="rollback_failed",
+            rollback="failed",
+        )
+        raise library.LibraryError(
+            "The write did not match, and putting the library back failed."
+        ) from exc
+    return append_entry(
+        operation,
+        target,
+        snapshot_before=snapshot_id,
+        snapshot_after=None,
+        verified=True,
+        rolled_back=True,
+        result="verified",
+        rollback="verified",
+    )
+
+
+def restore_extra_markers2(
+    snapshot_id: str, *, operation: str, target: str
+) -> dict[str, object]:
+    """Put Markers2 from ``extra-*`` preimage copies back; leave databases.
+
+    BeatGrid, Autotags, and every other live tag stay. ``master.sqlite`` and
+    ``root.sqlite`` in the preimage are not copied. The Serato gate runs
+    before any file is replaced.
+
+    Args:
+        snapshot_id: Id from the write that captured the preimage.
+        operation: Short machine name stored in the operation log.
+        target: Human-readable name. Not a path.
+
+    Returns:
+        The operation record that was appended.
+
+    Raises:
+        LibraryError: If Serato or the version gate refuses, the preimage
+            is missing, has no extra audio, or Markers2 did not land.
+    """
+    import library
+    import snapshot_frames
+
+    _refuse_rollback()
+    if not isinstance(snapshot_id, str) or not snapshot_id:
+        raise library.LibraryError("The pre-write snapshot is missing.", 409)
+    directory = _image_dir(snapshot_id)
+    if directory is None or directory.is_symlink() or not directory.is_dir():
+        raise library.LibraryError("The pre-write snapshot is missing.", 409)
+    preimage = _load_preimage(directory, snapshot_id)
+    extras = [entry for entry in preimage.files if entry.stored.startswith("extra-")]
+    if not extras:
+        raise library.LibraryError("The pre-write snapshot is missing.", 409)
+    try:
+        for entry in extras:
+            copy_path = preimage.directory / entry.stored
+            before_frames = snapshot_frames.read_stored_frames(copy_path)
+            live_frames = snapshot_frames.read_stored_frames(entry.dest)
+            merged = dict(live_frames)
+            if "Markers2" in before_frames:
+                merged["Markers2"] = before_frames["Markers2"]
+            else:
+                merged.pop("Markers2", None)
+            snapshot_frames.restore_stored_frames(entry.dest, merged)
+            landed = snapshot_frames.read_stored_frames(entry.dest).get("Markers2")
+            if landed != before_frames.get("Markers2"):
+                raise VerifyMismatch("The cue points did not match after undo.")
+    except library.LibraryError:
+        append_entry(
+            operation,
+            target,
+            snapshot_before=snapshot_id,
+            snapshot_after=None,
+            verified=False,
+            rolled_back=False,
+            result="rollback_failed",
+            rollback="failed",
+        )
+        raise
+    except (OSError, VerifyMismatch, snapshot_frames.FrameRewriteError) as exc:
         append_entry(
             operation,
             target,

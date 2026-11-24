@@ -4,6 +4,7 @@
 
 import { describe, expect, it } from "vitest";
 import {
+  cueEditReasonMessage,
   nudgePad,
   padAtPlayhead,
   padsDirty,
@@ -15,6 +16,17 @@ import {
 import { parseCueTime } from "../components/CueEditor";
 
 describe("cue-edit helpers", () => {
+  it("translates cue-edit reason codes", () => {
+    expect(cueEditReasonMessage("protected")).toBe(
+      "Cue points are protected in Settings.",
+    );
+    expect(cueEditReasonMessage("outside_change")).toBe(
+      "The audio file changed since you started editing.",
+    );
+    expect(cueEditReasonMessage(null)).toBeNull();
+    expect(cueEditReasonMessage("unknown_code")).toBeNull();
+  });
+
   it("maps cues onto eight pads and reports dirty diffs", () => {
     const pads = padsFromCues([
       { index: 0, start_ms: 1000, name: "Drop", color: "#C02626" },

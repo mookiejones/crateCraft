@@ -291,6 +291,53 @@ class EditTests(unittest.TestCase):
             self.assertEqual(raised.exception.message, cue_edit.NEEDS_CONFIRM)
             self.assertEqual(path.read_bytes(), original)
 
+    def test_undo_restores_markers_only_keeps_later_library_edit(self) -> None:
+        """Undo puts Markers2 back and leaves a later library row alone."""
+        with TempLibrary() as temp:
+            path = temp.root / "undo.mp3"
+            _audio_mp3(path, _payload([(0, 1000, b"\xcc\x00\x00", "Drop")]))
+            markers_before = snapshot_frames.read_stored_frames(path)["Markers2"]
+            grid_before = snapshot_frames.read_stored_frames(path)["BeatGrid"]
+            with open_database(temp.db) as conn:
+                _add_track(conn, 55, name="Before")
+                _point(conn, 55, path)
+            status = cue_edit.preview(55, library.LIBRARY_SPACE)
+            pads = list(status["before"])
+            pads[0] = {
+                "index": 0,
+                "start_ms": 2222,
+                "name": "Moved",
+                "color": "#C02626",
+            }
+            result = cue_edit.apply(55, library.LIBRARY_SPACE, pads, status["fingerprint"])
+            self.assertTrue(result["written"])
+            snapshot_id = result["snapshot_id"]
+            self.assertIsInstance(snapshot_id, str)
+            self.assertNotEqual(
+                snapshot_frames.read_stored_frames(path)["Markers2"], markers_before
+            )
+            with open_database(temp.db) as conn:
+                conn.execute("UPDATE asset SET name = ? WHERE id = ?", ("After edit", 55))
+                conn.commit()
+                row = conn.execute("SELECT name FROM asset WHERE id = 55").fetchone()
+                self.assertEqual(row[0], "After edit")
+            undone = cue_edit.action(
+                {
+                    "action": "undo",
+                    "confirm": True,
+                    "snapshot_id": snapshot_id,
+                }
+            )
+            self.assertTrue(undone["written"])
+            self.assertEqual(undone["undone"], snapshot_id)
+            frames = snapshot_frames.read_stored_frames(path)
+            self.assertEqual(frames["Markers2"], markers_before)
+            self.assertEqual(frames["BeatGrid"], grid_before)
+            self.assertEqual(tags.read_serato_tags(str(path))["cues"][0]["name"], "Drop")
+            with open_database(temp.db) as conn:
+                row = conn.execute("SELECT name FROM asset WHERE id = 55").fetchone()
+                self.assertEqual(row[0], "After edit")
+
 
 class RouteTests(unittest.TestCase):
     """``POST /api/cue-edit``."""
