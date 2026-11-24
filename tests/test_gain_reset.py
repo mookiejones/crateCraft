@@ -332,18 +332,68 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(body.get("code"), "gain_needs_confirm")
         self.assertEqual(body.get("error"), gain_reset.NEEDS_CONFIRM)
 
-    def test_parallel_feature_routes_are_absent(self) -> None:
-        """Unmerged parallel features stay 404; tonight from main stays."""
-        for path in ("/api/reanalyze", "/api/cue-edit"):
-            with self.subTest(path=path):
-                try:
-                    with urllib.request.urlopen(self.base + path) as response:
-                        status = response.status
-                except urllib.error.HTTPError as exc:
-                    status = exc.code
-                self.assertEqual(status, 404)
-        status, _body = self._get("/api/tonight?space=Serato%20Library")
+    def _exchange(
+        self, method: str, path: str, body: dict[str, object] | None = None
+    ) -> tuple[int, bytes]:
+        """Return the status and raw body for one request."""
+        data = None if body is None else json.dumps(body).encode("utf-8")
+        headers = {"Content-Type": "application/json"} if data is not None else {}
+        request = urllib.request.Request(
+            self.base + path,
+            data=data,
+            headers=headers,
+            method=method,
+        )
+        try:
+            with urllib.request.urlopen(request) as response:
+                return response.status, response.read()
+        except urllib.error.HTTPError as exc:
+            return exc.code, exc.read()
+
+    def test_server_exposes_gain_and_not_removed_routes(self) -> None:
+        """GET and POST /api/gain list the scan and do not write.
+
+        GET and POST /api/reanalyze and /api/cue-edit answer 404. Those
+        handlers are not imported, so a live route would be a 500 NameError.
+        /api/tonight stays: it is #429 on main, and server.py imports
+        tonight_crates.
+        """
+        path = self.temp.root / "route.mp3"
+        _audio(path, gain="0.750")
+        with open_database(self.temp.db) as conn:
+            _add_track(conn, 101, name="Route")
+            _point(conn, 101, path)
+        status, raw = self._exchange("GET", "/api/gain?space=Serato%20Library")
         self.assertEqual(status, 200)
+        listed = json.loads(raw.decode("utf-8"))
+        self.assertEqual([row["id"] for row in listed["changed"]], [101])
+        status, raw = self._exchange(
+            "POST",
+            "/api/gain",
+            {"action": "preview", "space": "Serato Library"},
+        )
+        self.assertEqual(status, 200)
+        preview = json.loads(raw.decode("utf-8"))
+        self.assertTrue(preview["preview"])
+        self.assertFalse(preview["written"])
+        self.assertEqual([row["id"] for row in preview["changed"]], [101])
+        source = Path(server.__file__).read_text(encoding="utf-8")
+        self.assertIn("import gain_reset", source)
+        self.assertIn("import tonight_crates", source)
+        self.assertNotIn("import reanalyze", source)
+        self.assertNotIn("import cue_edit", source)
+        for route in ("/api/reanalyze", "/api/cue-edit"):
+            self.assertNotIn(route, source)
+            for method in ("GET", "POST"):
+                with self.subTest(method=method, route=route):
+                    code, payload = self._exchange(
+                        method,
+                        route,
+                        None if method == "GET" else {"action": "preview"},
+                    )
+                    self.assertEqual(code, 404)
+                    self.assertNotIn(b"Something went wrong", payload)
+                    self.assertNotIn(b"NameError", payload)
 
 
 if __name__ == "__main__":
