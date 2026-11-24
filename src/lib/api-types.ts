@@ -1341,6 +1341,38 @@ export interface EnergyPlan {
   code?: string;
 }
 
+export interface GainChangedTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  path: string;
+  gain_db: number;
+  gain_text: string;
+  auto_gain: number;
+  bpm: string;
+}
+
+export interface GainChangedReport {
+  checked: number;
+  offline: number;
+  not_found: number;
+  unreadable: number;
+  tracks: GainChangedTrack[];
+  folder: string;
+  name: string;
+  note: string;
+  preview?: boolean;
+  written?: boolean;
+  added?: number;
+  reset?: number;
+  id?: number;
+  snapshot_id?: string;
+  undone?: boolean;
+  error?: string;
+  code?: string;
+}
+
 export interface AudioChangedTrack {
   id: number;
   name: string;

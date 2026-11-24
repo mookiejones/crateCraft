@@ -32,6 +32,14 @@ _FLAC_KEYS = {
     "SERATO_MARKERS2": "Markers2",
     "SERATO_BEATGRID": "BeatGrid",
     "SERATO_AUTOTAGS": "Autotags",
+    # Serato's own FLAC comment. SERATO_AUTOTAGS is the name this app's
+    # older snapshots wrote. When both exist, SERATO_AUTOGAIN is the one
+    # Serato reads.
+    "SERATO_AUTOGAIN": "Autotags",
+}
+_FLAC_AUTOTAGS_RANK = {
+    "SERATO_AUTOGAIN": 0,
+    "SERATO_AUTOTAGS": 1,
 }
 _FLAC_KEY_FOR_KIND = {
     "Markers2": b"SERATO_MARKERS_V2",
@@ -42,7 +50,14 @@ _MP4_NAMES = {
     "markersv2": "Markers2",
     "markers2": "Markers2",
     "beatgrid": "BeatGrid",
+    # Serato's freeform name. ``autotags`` is the name this app's older
+    # snapshots wrote. When both exist, ``autgain`` is the one Serato reads.
+    "autgain": "Autotags",
     "autotags": "Autotags",
+}
+_MP4_AUTOTAGS_RANK = {
+    "autgain": 0,
+    "autotags": 1,
 }
 _B64_ALPHABET = set(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
 _MP4_CONTAINERS = {b"moov", b"trak", b"mdia", b"minf", b"stbl", b"udta", b"ilst"}
@@ -129,7 +144,9 @@ def read_stored_frames(path: str | Path | None) -> dict[str, bytes]:
         A map of Markers2, BeatGrid, and Autotags to the bytes stored in
         that container. Missing frames are omitted. A shortcut, a missing
         file, or an unreadable file returns an empty map. The file is not
-        modified.
+        modified. FLAC Autotags prefer the ``SERATO_AUTOGAIN`` comment
+        Serato reads, then ``SERATO_AUTOTAGS``. MP4 Autotags prefer the
+        ``autgain`` atom, then ``autotags``.
     """
     if not path:
         return {}
@@ -557,13 +574,24 @@ def _read_flac_frames(path: Path) -> dict[str, bytes]:
     except FrameRewriteError:
         return {}
     found: dict[str, bytes] = {}
+    autotags_rank: int | None = None
     for _last, block_type, data in blocks:
         if block_type != 4:
             continue
         _vendor, comments = _parse_vorbis_comments(data)
         for key, value in comments:
-            kind = _FLAC_KEYS.get(key.decode("ascii", "replace").upper())
-            if kind and kind not in found:
+            label = key.decode("ascii", "replace").upper()
+            kind = _FLAC_KEYS.get(label)
+            if not kind:
+                continue
+            if kind == "Autotags":
+                rank = _FLAC_AUTOTAGS_RANK.get(label, 9)
+                if autotags_rank is not None and rank >= autotags_rank:
+                    continue
+                found["Autotags"] = value
+                autotags_rank = rank
+                continue
+            if kind not in found:
                 found[kind] = value
     return found
 
@@ -616,13 +644,35 @@ def _rewrite_vorbis(data: bytes, wanted: Mapping[str, bytes]) -> bytes:
         wanted: Stored values keyed by kind.
 
     Returns:
-        A new Vorbis comment payload.
+        A new Vorbis comment payload. When both Autotags comments are
+        present, only ``SERATO_AUTOGAIN`` is replaced. ``SERATO_AUTOTAGS``
+        stays byte for byte. A file with only ``SERATO_AUTOTAGS`` is
+        updated on that key.
     """
     vendor, comments = _parse_vorbis_comments(data)
     kept: list[tuple[bytes, bytes]] = []
     replaced: set[str] = set()
+    autotags_key: bytes | None = None
+    autotags_rank: int | None = None
+    if "Autotags" in wanted:
+        for key, _value in comments:
+            label = key.decode("ascii", "replace").upper()
+            rank = _FLAC_AUTOTAGS_RANK.get(label)
+            if rank is None:
+                continue
+            if autotags_rank is None or rank < autotags_rank:
+                autotags_key = key
+                autotags_rank = rank
     for key, value in comments:
-        kind = _FLAC_KEYS.get(key.decode("ascii", "replace").upper())
+        label = key.decode("ascii", "replace").upper()
+        if label in _FLAC_AUTOTAGS_RANK:
+            if "Autotags" in wanted and key == autotags_key:
+                kept.append((key, wanted["Autotags"]))
+                replaced.add("Autotags")
+            else:
+                kept.append((key, value))
+            continue
+        kind = _FLAC_KEYS.get(label)
         if kind is None:
             kept.append((key, value))
             continue
@@ -961,8 +1011,10 @@ def _read_mp4_frames(path: Path) -> dict[str, bytes]:
         Kind to the exact ``data`` atom body.
     """
     found: dict[str, bytes] = {}
+    autotags_rank: int | None = None
 
     def visit(blob: bytes) -> None:
+        nonlocal autotags_rank
         for atom in _parse_atom_list(blob):
             if atom.typ == b"mdat":
                 continue
@@ -979,7 +1031,16 @@ def _read_mp4_frames(path: Path) -> dict[str, bytes]:
                     elif child.typ == b"data":
                         data = child.body
                 kind = _MP4_NAMES.get(name)
-                if mean == b"com.serato.dj" and kind and kind not in found:
+                if mean != b"com.serato.dj" or not kind:
+                    continue
+                if kind == "Autotags":
+                    rank = _MP4_AUTOTAGS_RANK.get(name, 9)
+                    if autotags_rank is not None and rank >= autotags_rank:
+                        continue
+                    found["Autotags"] = data
+                    autotags_rank = rank
+                    continue
+                if kind not in found:
                     found[kind] = data
             elif atom.typ == b"meta" and len(atom.body) >= 4:
                 visit(atom.body[4:])

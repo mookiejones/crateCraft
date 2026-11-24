@@ -45,6 +45,7 @@ import history_stats
 import jobs
 import legacy_library
 import audio_changed
+import stored_gain
 import lost_tags
 import library
 import library_health
@@ -2137,6 +2138,10 @@ class Handler(BaseHTTPRequestHandler):
                 space = require_space(query_text(query, "space"))
                 self.send_json(audio_changed.scan(Path(library.MASTER), space))
                 return
+            if parsed.path == "/api/gain-changed":
+                space = require_space(query_text(query, "space"))
+                self.send_json(stored_gain.scan(Path(library.MASTER), space))
+                return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
@@ -2357,6 +2362,7 @@ class Handler(BaseHTTPRequestHandler):
                     losting = parsed.path == "/api/lost-tags"
                     energizing = parsed.path == "/api/energy"
                     swapping = parsed.path == "/api/audio-changed"
+                    gaining = parsed.path == "/api/gain-changed"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     bpm_check = parsed.path == "/api/bpm-sanity"
@@ -2408,6 +2414,16 @@ class Handler(BaseHTTPRequestHandler):
                                 payload.get("action") in ("preview", "reanalyze")
                                 or (
                                     payload.get("action") == "create"
+                                    and payload.get("confirm") is not True
+                                )
+                            )
+                        )
+                        or (
+                            gaining
+                            and (
+                                payload.get("action") == "preview"
+                                or (
+                                    payload.get("action") in ("create", "reset", "undo")
                                     and payload.get("confirm") is not True
                                 )
                             )
@@ -2524,6 +2540,16 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = audio_changed.action(request)
+                        if (
+                            request.get("action") == "create"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif gaining:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = stored_gain.action(request)
                         if (
                             request.get("action") == "create"
                             and request.get("confirm") is True

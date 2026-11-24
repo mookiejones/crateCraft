@@ -4,7 +4,7 @@
  *
  * The markup is index.html. Each tab still has a tooltip. The view ids
  * stay crates, history, stats, files, health, missing, duplicates, stems,
- * scan, bitrate, tags, lost, energy, audio, snapshots, gig, portable, and drift.
+ * scan, bitrate, tags, lost, energy, audio, gain, snapshots, gig, portable, and drift.
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
@@ -52,6 +52,7 @@ describe("rail groups", () => {
       "lost",
       "energy",
       "audio",
+      "gain",
       "snapshots",
       "gig",
       "portable",
@@ -68,6 +69,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='lost']")?.textContent).toBe("Lost tags");
     expect(document.querySelector("[data-view='energy']")?.textContent).toBe("Energy");
     expect(document.querySelector("[data-view='audio']")?.textContent).toBe("Audio changed");
+    expect(document.querySelector("[data-view='gain']")?.textContent).toBe("Gain changed");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Ready");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");

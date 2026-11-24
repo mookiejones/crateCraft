@@ -37,6 +37,7 @@ RAIL_KEYS = (
     "view.lost",
     "view.energy",
     "view.audio",
+    "view.gain",
     "view.snapshots",
     "view.group.gig",
     "view.gig",
@@ -303,6 +304,7 @@ class DesktopMenuTests(unittest.TestCase):
                     catalog["view.lost"],
                     catalog["view.energy"],
                     catalog["view.audio"],
+                    catalog["view.gain"],
                 ],
             )
             gig = _child_menu(tools, catalog["view.group.gig"])
