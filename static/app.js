@@ -13259,6 +13259,7 @@ Error generating stack: ` + x.message + `
     "error.tree_bad_bands": "Choose BPM bands between 1 and 400, 1 to 50 wide, starting no further apart than their width, and at most 60 bands.",
     "error.tree_bad_genres": "Choose at least 1 track per genre and up to 100 genres.",
     "error.tree_empty": "No tracks fit that crate tree.",
+    "error.tonight_empty": "No tracks fit tonight crates.",
     "error.tree_unknown": "That crate tree is not available.",
     "error.undo_needs_confirm": "Confirm undo before it is saved.",
     "error.upload_too_large": "That upload is too large.",
@@ -13441,6 +13442,11 @@ Error generating stack: ` + x.message + `
     "gig.wholeSpaceInline": "the whole space",
     "gig.wordNotReady": "not ready",
     "gig.wordReady": "ready",
+    "gig.tonight": "Tonight crates",
+    "gig.tonightBusy": "Building tonight crates…",
+    "gig.tonightConfirm": "Create {count} crates under {folder} / {tonight}? Re-running replaces only that Tonight folder. Quit Serato first.",
+    "gig.tonightEmpty": "No tracks fit tonight crates.",
+    "gig.tonightWritten": "Tonight crates ready under {folder} / {tonight} ({count} crates).",
     "gigLock.apply": "Apply queued writes",
     "gigLock.conflict": "Kept both: {layer}",
     "gigLock.count": "{count} queued",
@@ -14652,6 +14658,7 @@ Error generating stack: ` + x.message + `
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigRevert": "Open the restore plan for the snapshot this check compared. Confirm stays off while Serato is running. Nothing is written until you confirm.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.gigTonight": "Build Newest adds, Most played, and by-decade crates under _crateCraft generated / Tonight. Re-run replaces only that Tonight folder. Quit Serato first.",
     "tooltip.gridCell": "Select this row.",
     "tooltip.gridPagination": "Show the next or previous hundred tracks.",
     "tooltip.healthArtCancel": "Close the album art dialog without writing. Esc.",
@@ -15590,6 +15597,7 @@ Error generating stack: ` + x.message + `
     "error.tree_bad_bands": "Elige bandas de BPM entre 1 y 400, de 1 a 50 de ancho, que empiecen como mucho a su ancho de distancia, y como máximo 60 bandas.",
     "error.tree_bad_genres": "Elige al menos 1 pista por género y hasta 100 géneros.",
     "error.tree_empty": "Ninguna pista encaja en ese árbol de cajas.",
+    "error.tonight_empty": "Ninguna pista encaja en las cajas de esta noche.",
     "error.tree_unknown": "Ese árbol de cajas no está disponible.",
     "error.undo_needs_confirm": "Confirma la acción de deshacer antes de guardarla.",
     "error.upload_too_large": "Ese archivo es demasiado grande.",
@@ -15772,6 +15780,11 @@ Error generating stack: ` + x.message + `
     "gig.wholeSpaceInline": "todo el espacio",
     "gig.wordNotReady": "no listo",
     "gig.wordReady": "listo",
+    "gig.tonight": "Cajas de esta noche",
+    "gig.tonightBusy": "Creando las cajas de esta noche…",
+    "gig.tonightConfirm": "¿Crear {count} cajas bajo {folder} / {tonight}? Al repetirlo solo se sustituye esa carpeta Tonight. Cierra Serato primero.",
+    "gig.tonightEmpty": "Ninguna pista encaja en las cajas de esta noche.",
+    "gig.tonightWritten": "Cajas de esta noche listas bajo {folder} / {tonight} ({count} cajas).",
     "gigLock.apply": "Aplicar escrituras en cola",
     "gigLock.conflict": "Se conservaron ambas: {layer}",
     "gigLock.count": "{count} en cola",
@@ -16983,6 +16996,7 @@ Error generating stack: ` + x.message + `
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigRevert": "Abre el plan de restauración de la instantánea que comparó esta comprobación. Confirmar queda desactivado mientras Serato está abierto. No se escribe nada hasta que confirmes.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.gigTonight": "Crea cajas de Añadidos recientes, Más reproducidas y por década bajo _crateCraft generated / Tonight. Al repetirlo solo se sustituye esa carpeta Tonight. Cierra Serato primero.",
     "tooltip.gridCell": "Selecciona esta fila.",
     "tooltip.gridPagination": "Muestra las cien pistas siguientes o anteriores.",
     "tooltip.healthArtCancel": "Cierra el diálogo de carátula sin escribir. Esc.",
@@ -18397,6 +18411,7 @@ Error generating stack: ` + x.message + `
     tagsSpelling: spec("tooltip.tagsSpelling"),
     tagsWriteFiles: spec("tooltip.tagsWriteFiles"),
     gigRefresh: spec("tooltip.gigRefresh"),
+    gigTonight: spec("tooltip.gigTonight"),
     scanQuick: spec("tooltip.scanQuick"),
     scanFull: spec("tooltip.scanFull"),
     bitrateRefresh: spec("tooltip.bitrateRefresh"),
@@ -18566,6 +18581,7 @@ Error generating stack: ` + x.message + `
       "operations-list": tips.operationsList,
       "snapshots-refresh": tips.snapshotsRefresh,
       "gig-refresh": tips.gigRefresh,
+      "tonight-build": tips.gigTonight,
       "drift-refresh": tips.driftRefresh,
       "octave-refresh": tips.octaveRefresh,
       "health-refresh": tips.healthRefresh,
@@ -62482,8 +62498,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function fieldEditFingerprint(request) {
     return `${request.ids.join(",")}|${request.field}|${request.value}|${request.files ? "1" : "0"}`;
   }
-  function fieldEditApplyReady(plan, previewed, current4, writable, busy7) {
-    return !plan || !previewed || !writable || busy7 || plan.changes.length === 0 ? !1 : fieldEditFingerprint(previewed) === fieldEditFingerprint(current4);
+  function fieldEditApplyReady(plan, previewed, current4, writable, busy8) {
+    return !plan || !previewed || !writable || busy8 || plan.changes.length === 0 ? !1 : fieldEditFingerprint(previewed) === fieldEditFingerprint(current4);
   }
   function fieldEditSelectedText(count) {
     return t("fieldEdit.selected", { count });
@@ -63858,7 +63874,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return EDIT_FIELDS.includes(value) ? value : "genre";
   }
   function FieldEditorBar({ selectedIds }) {
-    let list = useTrackList(), [field2, setField] = (0, import_react34.useState)("genre"), [value, setValue] = (0, import_react34.useState)(""), [plan, setPlan] = (0, import_react34.useState)(null), [previewed, setPreviewed] = (0, import_react34.useState)(null), [busy7, setBusy] = (0, import_react34.useState)(!1), [status4, setStatus] = (0, import_react34.useState)(""), [writeFiles, setWriteFiles] = (0, import_react34.useState)(!1), idsKey = selectedIds.join(",");
+    let list = useTrackList(), [field2, setField] = (0, import_react34.useState)("genre"), [value, setValue] = (0, import_react34.useState)(""), [plan, setPlan] = (0, import_react34.useState)(null), [previewed, setPreviewed] = (0, import_react34.useState)(null), [busy8, setBusy] = (0, import_react34.useState)(!1), [status4, setStatus] = (0, import_react34.useState)(""), [writeFiles, setWriteFiles] = (0, import_react34.useState)(!1), idsKey = selectedIds.join(",");
     (0, import_react34.useEffect)(() => {
       let count = idsKey === "" ? 0 : idsKey.split(",").filter(Boolean).length;
       setPlan(null), setPreviewed(null), setBusy(!1), setStatus(fieldEditShows(count) ? fieldEditSelectedText(count) : "");
@@ -63866,7 +63882,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let current4 = (0, import_react34.useMemo)(
       () => ({ ids: [...selectedIds], field: field2, value, files: writeFiles }),
       [selectedIds, field2, value, writeFiles]
-    ), applyReady = fieldEditApplyReady(plan, previewed, current4, list.writable, busy7);
+    ), applyReady = fieldEditApplyReady(plan, previewed, current4, list.writable, busy8);
     if (!fieldEditShows(selectedIds.length)) return null;
     async function onPreview() {
       let fieldNode = document.querySelector("#field-edit-field"), valueNode = document.querySelector("#field-edit-value"), nextField = asEditField(fieldNode?.value ?? field2), nextValue = valueNode?.value ?? value;
@@ -63893,7 +63909,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     }
     async function onApply() {
-      if (fieldEditApplyReady(plan, previewed, current4, list.writable, busy7)) {
+      if (fieldEditApplyReady(plan, previewed, current4, list.writable, busy8)) {
         setBusy(!0);
         try {
           await applyFieldEdit(current4.ids, current4.field, current4.value, writeFiles);
@@ -63912,7 +63928,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "field-edit-field",
             value: field2,
-            disabled: busy7,
+            disabled: busy8,
             ref: tooltipRef5(tips.fieldEditField),
             onChange: (event) => setField(asEditField(event.currentTarget.value)),
             children: EDIT_FIELDS.map((name) => /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("option", { value: name, children: fieldEditLabel(name) }, name))
@@ -63927,7 +63943,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "field-edit-value",
             type: "text",
             value,
-            disabled: busy7,
+            disabled: busy8,
             ref: tooltipRef5(tips.fieldEditValue),
             onChange: (event) => setValue(event.currentTarget.value),
             onInput: (event) => setValue(event.currentTarget.value)
@@ -63941,7 +63957,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "field-edit-write-files",
             type: "checkbox",
             checked: writeFiles,
-            disabled: busy7,
+            disabled: busy8,
             ref: tooltipRef5(tips.fieldEditWriteFiles),
             onChange: (event) => setWriteFiles(event.currentTarget.checked)
           }
@@ -63957,7 +63973,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           variant: "outlined",
           sx: BUTTON_SX,
           ref: tooltipRef5(tips.fieldEditPreview),
-          disabled: busy7,
+          disabled: busy8,
           onClick: () => {
             onPreview();
           },
@@ -66976,7 +66992,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     section,
     onReload
   }) {
-    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react44.useState)(""), [busy7, setBusy] = (0, import_react44.useState)(!1), [canApply, setCanApply] = (0, import_react44.useState)(!1);
+    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react44.useState)(""), [busy8, setBusy] = (0, import_react44.useState)(!1), [canApply, setCanApply] = (0, import_react44.useState)(!1);
     async function review() {
       setBusy(!0), setCanApply(!1);
       try {
@@ -67018,7 +67034,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX3,
                 ref: tooltipRef5(tips.suspiciousCues),
                 "data-health-action": "cues-preview",
-                disabled: busy7,
+                disabled: busy8,
                 onClick: () => {
                   review();
                 },
@@ -67034,7 +67050,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX3,
                 ref: tooltipRef5(tips.suspiciousCues),
                 "data-health-action": "cues-apply",
-                disabled: busy7 || !canApply,
+                disabled: busy8 || !canApply,
                 onClick: () => {
                   removeDuplicates();
                 },
@@ -67120,7 +67136,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     section,
     onReload
   }) {
-    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react44.useState)(""), [busy7, setBusy] = (0, import_react44.useState)(!1), [canApply, setCanApply] = (0, import_react44.useState)(!1);
+    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react44.useState)(""), [busy8, setBusy] = (0, import_react44.useState)(!1), [canApply, setCanApply] = (0, import_react44.useState)(!1);
     async function review() {
       setBusy(!0), setCanApply(!1);
       try {
@@ -67164,7 +67180,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX3,
                 ref: tooltipRef5(tips.healthPathFormsReview),
                 "data-health-action": "path-forms-preview",
-                disabled: busy7,
+                disabled: busy8,
                 onClick: () => {
                   review();
                 },
@@ -67180,7 +67196,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX3,
                 ref: tooltipRef5(tips.healthPathFormsConfirm),
                 "data-health-action": "path-forms-apply",
-                disabled: busy7 || !canApply,
+                disabled: busy8 || !canApply,
                 onClick: () => {
                   keepOne();
                 },
@@ -68093,7 +68109,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     paused,
     revision
   }) {
-    let space = state.space, [report, setReport] = (0, import_react51.useState)(null), [status4, setStatus] = (0, import_react51.useState)(() => t("families.loading")), [drag, setDrag] = (0, import_react51.useState)(""), [drop, setDrop] = (0, import_react51.useState)(""), [genre, setGenre] = (0, import_react51.useState)(""), [parent, setParent] = (0, import_react51.useState)(""), [field2, setField] = (0, import_react51.useState)("grouping"), [overwrite, setOverwrite] = (0, import_react51.useState)(!1), [plan, setPlan] = (0, import_react51.useState)(null), [busy7, setBusy] = (0, import_react51.useState)(!1);
+    let space = state.space, [report, setReport] = (0, import_react51.useState)(null), [status4, setStatus] = (0, import_react51.useState)(() => t("families.loading")), [drag, setDrag] = (0, import_react51.useState)(""), [drop, setDrop] = (0, import_react51.useState)(""), [genre, setGenre] = (0, import_react51.useState)(""), [parent, setParent] = (0, import_react51.useState)(""), [field2, setField] = (0, import_react51.useState)("grouping"), [overwrite, setOverwrite] = (0, import_react51.useState)(!1), [plan, setPlan] = (0, import_react51.useState)(null), [busy8, setBusy] = (0, import_react51.useState)(!1);
     (0, import_react51.useEffect)(() => {
       let controller = new AbortController(), alive = !0;
       return (async () => {
@@ -68109,7 +68125,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         alive = !1, controller.abort();
       };
     }, [revision, space]);
-    let names = report ? Object.keys(report.parents).sort((left2, right2) => left2.localeCompare(right2)) : [], selected = names.includes(genre) ? genre : names[0] ?? "", targets = report && selected ? moveTargets(report.parents, selected) : [], parentValue = parent !== "" && targets.includes(parent) ? parent : "", locked = paused || busy7;
+    let names = report ? Object.keys(report.parents).sort((left2, right2) => left2.localeCompare(right2)) : [], selected = names.includes(genre) ? genre : names[0] ?? "", targets = report && selected ? moveTargets(report.parents, selected) : [], parentValue = parent !== "" && targets.includes(parent) ? parent : "", locked = paused || busy8;
     async function move(name, nextParent) {
       if (!(!name || locked)) {
         setBusy(!0);
@@ -68186,7 +68202,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       }
     }
-    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("section", { className: "genre-families", "aria-labelledby": "genre-families-heading", "aria-busy": busy7, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime258.jsxs)("section", { className: "genre-families", "aria-labelledby": "genre-families-heading", "aria-busy": busy8, children: [
       /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("h3", { id: "genre-families-heading", children: t("families.heading") }),
       /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { className: "gig-note", children: t("families.intro") }),
       /* @__PURE__ */ (0, import_jsx_runtime258.jsx)("p", { id: "genre-families-status", className: "gig-status", role: "status", "aria-live": "polite", children: status4 }),
@@ -68538,7 +68554,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     group,
     chosen,
     plan,
-    busy: busy7,
+    busy: busy8,
     canApply,
     onPreview,
     onApply,
@@ -68555,7 +68571,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             name: `tags-${group.key}`,
             value: spelling.value,
             checked: spelling.value === chosen,
-            disabled: busy7,
+            disabled: busy8,
             onChange: (event) => onSelect(event.currentTarget.value)
           }
         ),
@@ -68573,7 +68589,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             ref: tooltipRef5(tips.tagsPreview),
             "data-tags-action": "preview",
             "data-key": group.key,
-            disabled: busy7 || !chosen,
+            disabled: busy8 || !chosen,
             onClick: onPreview,
             children: t("tags.preview")
           }
@@ -68589,7 +68605,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             "data-tags-action": "apply",
             "data-key": group.key,
             disabled: !canApply || !!(plan && plan.value === chosen && !plan.changes.length),
-            startIcon: busy7 ? /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(CircularProgress_default, { size: 16, color: "inherit" }) : void 0,
+            startIcon: busy8 ? /* @__PURE__ */ (0, import_jsx_runtime260.jsx)(CircularProgress_default, { size: 16, color: "inherit" }) : void 0,
             onClick: onApply,
             children: t("tags.apply")
           }
@@ -69659,7 +69675,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/MusicMirrorPanel.tsx
   var import_jsx_runtime267 = __toESM(require_jsx_runtime(), 1), BUTTON_SX9 = { textTransform: "none", minHeight: 44 };
   function MusicMirrorPanel() {
-    let [dest, setDest] = (0, import_react56.useState)(""), [report, setReport] = (0, import_react56.useState)(null), [error2, setError] = (0, import_react56.useState)(""), [busy7, setBusy] = (0, import_react56.useState)(!1), tokenRef = (0, import_react56.useRef)(0), ready = hasMirrorDest(dest) && !busy7;
+    let [dest, setDest] = (0, import_react56.useState)(""), [report, setReport] = (0, import_react56.useState)(null), [error2, setError] = (0, import_react56.useState)(""), [busy8, setBusy] = (0, import_react56.useState)(!1), tokenRef = (0, import_react56.useRef)(0), ready = hasMirrorDest(dest) && !busy8;
     async function run(action, confirm) {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -69880,7 +69896,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/GigLockPanel.tsx
   var import_jsx_runtime269 = __toESM(require_jsx_runtime(), 1), BUTTON_SX10 = { textTransform: "none", minHeight: 44 };
   function GigLockPanel() {
-    let [listing, setListing] = (0, import_react57.useState)(null), [error2, setError] = (0, import_react57.useState)(""), [busy7, setBusy] = (0, import_react57.useState)(!1), tokenRef = (0, import_react57.useRef)(0);
+    let [listing, setListing] = (0, import_react57.useState)(null), [error2, setError] = (0, import_react57.useState)(""), [busy8, setBusy] = (0, import_react57.useState)(!1), tokenRef = (0, import_react57.useRef)(0);
     async function load() {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -69925,7 +69941,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX10,
-            disabled: busy7 || !hasPending,
+            disabled: busy8 || !hasPending,
             ref: tooltipRef5(tips.gigLockPreview),
             onClick: () => {
               run("preview");
@@ -69941,7 +69957,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX10,
-            disabled: busy7 || locked || !hasPending,
+            disabled: busy8 || locked || !hasPending,
             ref: tooltipRef5(tips.gigLockApply),
             onClick: () => {
               run("apply", !0);
@@ -69957,7 +69973,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX10,
-            disabled: busy7 || !hasPending,
+            disabled: busy8 || !hasPending,
             ref: tooltipRef5(tips.gigLockDrop),
             onClick: () => {
               run("drop");
@@ -69979,7 +69995,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: { ...BUTTON_SX10, ml: 1 },
-            disabled: busy7 || locked || !item.id,
+            disabled: busy8 || locked || !item.id,
             ref: tooltipRef5(tips.gigLockUndo),
             onClick: () => {
               item.id && run("undo", !0, item.id);
@@ -69998,7 +70014,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function BatchPanel() {
     let batch = useBatch();
     useCrates();
-    let [error2, setError] = (0, import_react58.useState)(""), [busy7, setBusy] = (0, import_react58.useState)(!1), listing = batch.listing, queued = listing.queue.length > 0, canDest = canQueueActiveCrate();
+    let [error2, setError] = (0, import_react58.useState)(""), [busy8, setBusy] = (0, import_react58.useState)(!1), listing = batch.listing, queued = listing.queue.length > 0, canDest = canQueueActiveCrate();
     (0, import_react58.useEffect)(() => {
       refreshBatch().catch(() => {
       });
@@ -70027,7 +70043,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX11,
-            disabled: busy7 || !canDest,
+            disabled: busy8 || !canDest,
             ref: tooltipRef5(tips.batchDestination),
             onClick: () => {
               let id = activeCrateId();
@@ -70044,7 +70060,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX11,
-            disabled: busy7 || !queued || listing.destination === null,
+            disabled: busy8 || !queued || listing.destination === null,
             ref: tooltipRef5(tips.batchPreview),
             onClick: () => {
               run({ action: "preview" });
@@ -70060,7 +70076,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX11,
-            disabled: busy7 || preview === null,
+            disabled: busy8 || preview === null,
             ref: tooltipRef5(tips.batchApply),
             onClick: () => {
               run({ action: "apply", confirm: !0 });
@@ -70076,7 +70092,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX11,
-            disabled: busy7 || !queued && listing.destination === null && preview === null,
+            disabled: busy8 || !queued && listing.destination === null && preview === null,
             ref: tooltipRef5(tips.batchCancel),
             onClick: () => {
               run({ action: "cancel" });
@@ -70092,7 +70108,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             size: "small",
             variant: "outlined",
             sx: BUTTON_SX11,
-            disabled: busy7 || !listing.can_undo,
+            disabled: busy8 || !listing.can_undo,
             ref: tooltipRef5(tips.batchUndo),
             onClick: () => {
               run({ action: "undo", confirm: !0 });
@@ -71113,6 +71129,66 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
 
+  // src/lib/gig/tonight.ts
+  init_shared_dialog();
+  var busy6 = !1;
+  async function buildTonightCrates() {
+    if (busy6) return;
+    busy6 = !0;
+    let button = el("tonight-build");
+    button.disabled = !0, button.setAttribute("aria-busy", "true"), el("gig-status").textContent = t("gig.tonightBusy");
+    try {
+      let preview = await postJSON("/api/tonight", {
+        action: "preview",
+        space: state.space
+      });
+      if (isQueuedWrite(preview)) {
+        el("gig-status").textContent = t("gigLock.queued");
+        return;
+      }
+      let crateCount = (preview.children ?? []).length;
+      if (!crateCount) {
+        el("gig-status").textContent = t("gig.tonightEmpty");
+        return;
+      }
+      let folder = String(preview.folder || "_crateCraft generated"), tonight = String(preview.tonight || "Tonight");
+      if (!await openConfirm({
+        title: t("gig.tonight"),
+        message: t("gig.tonightConfirm", { count: crateCount, folder, tonight }),
+        confirmLabel: t("gig.tonight")
+      })) {
+        el("gig-status").textContent = "";
+        return;
+      }
+      let created = await postJSON("/api/tonight", {
+        action: "create",
+        confirm: !0,
+        space: state.space
+      });
+      if (isQueuedWrite(created)) {
+        el("gig-status").textContent = t("gigLock.queued");
+        return;
+      }
+      if (!created.written) {
+        el("gig-status").textContent = t("gig.tonightEmpty");
+        return;
+      }
+      await bridge.reloadLibrary(), el("gig-status").textContent = created.warning || t("gig.tonightWritten", {
+        folder: String(created.folder || folder),
+        tonight: String(created.tonight || tonight),
+        count: created.children?.length ?? crateCount
+      });
+    } catch (error2) {
+      if (failureOf(error2).status === 409) {
+        bridge.lockDown(error2);
+        return;
+      }
+      el("gig-status").textContent = failureOf(error2).message;
+    } finally {
+      busy6 = !1, button.disabled = !1, button.setAttribute("aria-busy", "false");
+    }
+  }
+
   // src/lib/gig/gig.ts
   var listeners18 = /* @__PURE__ */ new Set(), stepIndex = 0, latest9 = null, checkedAt = null, exitGig = () => {
   };
@@ -71160,6 +71236,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("gig-panel");
     panel.dataset.gigWired !== "true" && (panel.dataset.gigWired = "true", el("gig-refresh").addEventListener("click", () => {
       loadGigCheck(!0);
+    }), el("tonight-build").addEventListener("click", () => {
+      buildTonightCrates();
     }), mountIsland(el("gig-report"), (0, import_react63.createElement)(GigReport)));
   }
   async function loadGigCheck(keepStep = !1) {
@@ -71985,7 +72063,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     label,
     tracks,
     writable,
-    busy: busy7
+    busy: busy8
   }) {
     let accordion = useSectionOpen3(tracks.length > 0), columns = (0, import_react72.useMemo)(() => [
       {
@@ -72020,7 +72098,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
                 sx: BUTTON_SX14,
                 ref: tooltipRef5(tips.compareSave),
                 "data-compare-set": setKey,
-                disabled: busy7 || !writable || tracks.length === 0,
+                disabled: busy8 || !writable || tracks.length === 0,
                 children: t("compare.save")
               }
             ),
@@ -72033,7 +72111,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function CrateComparePanel({
     payload,
     writable,
-    busy: busy7
+    busy: busy8
   }) {
     let both = payload.both || [], onlyA = payload.only_a || [], onlyB = payload.only_b || [], smart = payload.a.smart || payload.b.smart;
     return /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)(import_jsx_runtime280.Fragment, { children: [
@@ -72045,7 +72123,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.both"),
           tracks: both,
           writable,
-          busy: busy7
+          busy: busy8
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
@@ -72055,7 +72133,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.onlyA", { name: payload.a.name }),
           tracks: onlyA,
           writable,
-          busy: busy7
+          busy: busy8
         }
       ),
       /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
@@ -72065,14 +72143,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           label: t("compare.onlyB", { name: payload.b.name }),
           tracks: onlyB,
           writable,
-          busy: busy7
+          busy: busy8
         }
       )
     ] });
   }
 
   // src/lib/crates/crate-compare.ts
-  var latest14 = null, busy6 = !1, reportRoot5, reportHost6 = null;
+  var latest14 = null, busy7 = !1, reportRoot5, reportHost6 = null;
   function wireCrateCompare() {
     let panel = el("compare-panel");
     panel.dataset.compareWired !== "true" && (panel.dataset.compareWired = "true", el("compare-refresh").addEventListener("click", () => {
@@ -72124,7 +72202,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       (0, import_react73.createElement)(CrateComparePanel, {
         payload,
         writable: state.writable,
-        busy: busy6
+        busy: busy7
       }),
       reportRoot5
     );
@@ -72174,12 +72252,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }
   }
   function beginBusy13(kind2) {
-    busy6 = !0;
+    busy7 = !0;
     let refresh = el("compare-refresh");
     refresh.disabled = !0, refresh.setAttribute("aria-busy", "true"), el("compare-panel").setAttribute("aria-busy", "true"), el("compare-status").textContent = kind2 === "save" ? t("compare.saving") : t("compare.checking"), latest14 && renderCrateCompareReport(latest14);
   }
   function endBusy13() {
-    busy6 = !1;
+    busy7 = !1;
     let refresh = el("compare-refresh");
     refresh.disabled = !1, refresh.setAttribute("aria-busy", "false"), el("compare-panel").setAttribute("aria-busy", "false"), latest14 && renderCrateCompareReport(latest14);
   }
@@ -72892,7 +72970,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/PortableDialog.tsx
   var import_jsx_runtime286 = __toESM(require_jsx_runtime(), 1);
   function PortableDialog() {
-    let files = useFiles(), report = files.portableReport, busy7 = files.portableSmartBusy, verdict = "";
+    let files = useFiles(), report = files.portableReport, busy8 = files.portableSmartBusy, verdict = "";
     report && (report.missing_drive ? verdict = t("portable.missing") : report.ready ? verdict = t("portable.ready") : verdict = t("portable.notReady"));
     let shown = report ? report.findings.slice(0, FINDING_CAP) : [], hidden = report ? report.findings.length - shown.length : 0;
     return /* @__PURE__ */ (0, import_jsx_runtime286.jsxs)(import_jsx_runtime286.Fragment, { children: [
@@ -72920,7 +72998,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "portable-dialog-smart-copy",
             type: "button",
-            disabled: busy7,
+            disabled: busy8,
             ref: (element) => {
               element && setTooltip(element, tips.portableSmartCopy);
             },
@@ -72935,7 +73013,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           {
             id: "portable-dialog-smart-restore",
             type: "button",
-            disabled: busy7,
+            disabled: busy8,
             ref: (element) => {
               element && setTooltip(element, tips.portableSmartRestore);
             },
@@ -72951,7 +73029,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "portable-dialog-smart-confirm",
             type: "button",
             hidden: !files.portableSmartConfirm,
-            disabled: busy7,
+            disabled: busy8,
             ref: (element) => {
               element && setTooltip(element, tips.portableSmartConfirm);
             },
@@ -72967,7 +73045,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             id: "portable-dialog-smart-overwrite",
             type: "button",
             hidden: !files.portableSmartOverwrite,
-            disabled: busy7,
+            disabled: busy8,
             ref: (element) => {
               element && setTooltip(element, tips.portableSmartOverwrite);
             },
@@ -73897,7 +73975,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     embedded = !1,
     onSavedCount
   }) {
-    let list = useTrackList(), path = relatedPath(track), [busy7, setBusy] = (0, import_react78.useState)(!!path), [loadError, setLoadError] = (0, import_react78.useState)(""), [payload, setPayload] = (0, import_react78.useState)(null), [query, setQuery] = (0, import_react78.useState)(""), [chosen, setChosen] = (0, import_react78.useState)(null), [note, setNote] = (0, import_react78.useState)(""), [rating, setRating] = (0, import_react78.useState)(""), [mutual, setMutual] = (0, import_react78.useState)(!0), [versionOf, setVersionOf] = (0, import_react78.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react78.useState)(null), [versionBusy, setVersionBusy] = (0, import_react78.useState)(!1), [saving2, setSaving] = (0, import_react78.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react78.useState)(!1);
+    let list = useTrackList(), path = relatedPath(track), [busy8, setBusy] = (0, import_react78.useState)(!!path), [loadError, setLoadError] = (0, import_react78.useState)(""), [payload, setPayload] = (0, import_react78.useState)(null), [query, setQuery] = (0, import_react78.useState)(""), [chosen, setChosen] = (0, import_react78.useState)(null), [note, setNote] = (0, import_react78.useState)(""), [rating, setRating] = (0, import_react78.useState)(""), [mutual, setMutual] = (0, import_react78.useState)(!0), [versionOf, setVersionOf] = (0, import_react78.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react78.useState)(null), [versionBusy, setVersionBusy] = (0, import_react78.useState)(!1), [saving2, setSaving] = (0, import_react78.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react78.useState)(!1);
     (0, import_react78.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
@@ -73925,13 +74003,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         onSavedCount(0);
         return;
       }
-      if (busy7) {
+      if (busy8) {
         onSavedCount(null);
         return;
       }
       let savedNow = Array.isArray(payload?.saved) ? payload.saved.length : 0;
       onSavedCount(savedNow);
-    }, [onSavedCount, path, busy7, payload]), (0, import_react78.useEffect)(() => {
+    }, [onSavedCount, path, busy8, payload]), (0, import_react78.useEffect)(() => {
       setVersionGroups(null), setVersionOf(!1);
     }, [track.id]);
     let hits2 = (0, import_react78.useMemo)(() => {
@@ -74000,7 +74078,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         failureOf(error2).status === 409 ? bridge.lockDown(error2) : (list.setNotice(failureOf(error2).message, "error"), setSaving(!1));
       }
     }
-    let saved = Array.isArray(payload?.saved) ? payload.saved : [], suggested = Array.isArray(payload?.suggested) ? payload.suggested : [], crateName = payload?.crate_name || "Related", headingId = `related-heading-${track.id}`, status4 = path ? loadError || (busy7 ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved")) : t("related.noPath");
+    let saved = Array.isArray(payload?.saved) ? payload.saved : [], suggested = Array.isArray(payload?.suggested) ? payload.suggested : [], crateName = payload?.crate_name || "Related", headingId = `related-heading-${track.id}`, status4 = path ? loadError || (busy8 ? t("related.loading") : saved.length ? t("related.savedCount", { count: saved.length }) : t("related.noneSaved")) : t("related.noPath");
     function onSearch(event) {
       setQuery(event.currentTarget.value), setChosen(null);
     }
@@ -74009,7 +74087,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       {
         className: "group",
         "data-track-id": String(track.id),
-        "aria-busy": busy7,
+        "aria-busy": busy8,
         "aria-labelledby": embedded ? void 0 : headingId,
         children: [
           embedded ? null : /* @__PURE__ */ (0, import_jsx_runtime301.jsx)("h3", { id: headingId, children: t("related.heading") }),

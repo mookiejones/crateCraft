@@ -66,6 +66,7 @@ import suspicious_cues
 import tag_cleanup
 import tempo_drift
 import telemetry
+import tonight_crates
 import update_check
 import version_info
 import volumes
@@ -2142,6 +2143,30 @@ class Handler(BaseHTTPRequestHandler):
                 report = gig_check.run_gig_check(space=space, crate_id=crate_query(raw_crate))
                 self.send_json(gig_check.report_to_dict(report))
                 return
+            if parsed.path == "/api/tonight":
+                space = require_space(query_text(query, "space"))
+                number = history_stats.number
+                self.send_json(
+                    tonight_crates.preview(
+                        Path(library.MASTER),
+                        space,
+                        newest=number(
+                            query_text(query, "newest"),
+                            tonight_crates.NEWEST_LIMIT,
+                            1,
+                            tonight_crates.LIMIT_MAX,
+                        )
+                        or tonight_crates.NEWEST_LIMIT,
+                        played=number(
+                            query_text(query, "played"),
+                            tonight_crates.PLAYED_LIMIT,
+                            1,
+                            tonight_crates.LIMIT_MAX,
+                        )
+                        or tonight_crates.PLAYED_LIMIT,
+                    )
+                )
+                return
             if parsed.path == "/api/export.rekordbox.xml":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
@@ -2340,6 +2365,7 @@ class Handler(BaseHTTPRequestHandler):
                     porting = parsed.path == "/api/portable-smart"
                     sticking = parsed.path == "/api/stick-cues"
                     history = parsed.path == "/api/history-stats"
+                    tonight = parsed.path == "/api/tonight"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
                     versioning = parsed.path == "/api/version-family"
@@ -2350,6 +2376,16 @@ class Handler(BaseHTTPRequestHandler):
                         or (tree and payload.get("action") == "preview")
                         or (foldering and payload.get("action") == "preview")
                         or (history and payload.get("action") == "preview")
+                        or (
+                            tonight
+                            and (
+                                payload.get("action") == "preview"
+                                or (
+                                    payload.get("action") == "create"
+                                    and payload.get("confirm") is not True
+                                )
+                            )
+                        )
                         or (
                             clustering
                             and payload.get("action")
@@ -2457,6 +2493,16 @@ class Handler(BaseHTTPRequestHandler):
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = history_stats.action(request)
                         if request.get("action") == "create" and result.get("written"):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif tonight:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = tonight_crates.action(request)
+                        if (
+                            request.get("action") == "create"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
                     elif clustering:
                         request = dict(payload)
