@@ -86,8 +86,14 @@ def _atom(tag: bytes, body: bytes) -> bytes:
     return (8 + len(body)).to_bytes(4, "big") + tag + body
 
 
-def _m4a(gain: str) -> bytes:
-    """M4A whose Serato freeform name is ``autgain``, plus markers and overview."""
+def _m4a(gain: str, *, alias: bytes | None = None) -> bytes:
+    """M4A whose Serato freeform name is ``autgain``, plus markers and overview.
+
+    Args:
+        gain: Manual gain text stored in ``autgain``.
+        alias: Payload of an extra ``autotags`` atom. It is written
+            before ``autgain`` so a first-match rewrite would hit it.
+    """
     audio = b"MDAT-AUDIO-STAYS"
 
     def freeform(name: str, payload: bytes) -> bytes:
@@ -97,13 +103,15 @@ def _m4a(gain: str) -> bytes:
         data = _atom(b"data", b"\x00" * 8 + wrapped)
         return _atom(b"----", mean + title + data)
 
-    ilst = _atom(
-        b"ilst",
+    atoms = (
         freeform("markersv2", b"\x01\x01MARKERS-STAY")
         + freeform("beatgrid", b"\x01GRID-STAY")
         + freeform("overview", b"OVERVIEW-STAY")
-        + freeform("autgain", _gain_payload(gain)),
     )
+    if alias is not None:
+        atoms += freeform("autotags", alias)
+    atoms += freeform("autgain", _gain_payload(gain))
+    ilst = _atom(b"ilst", atoms)
     meta = _atom(b"meta", b"\x00\x00\x00\x00" + ilst)
     moov = _atom(b"moov", _atom(b"udta", meta))
     return _atom(b"ftyp", b"M4A ") + moov + _atom(b"mdat", audio)
@@ -335,6 +343,23 @@ class ResetTests(unittest.TestCase):
             self.assertEqual(stored_gain.guarded_bytes(path), markers)
             self.assertIn(b"autgain", path.read_bytes())
             self.assertIn(b"markersv2", path.read_bytes())
+
+    def test_mp4_alias_atom_stays_when_autgain_is_reset(self) -> None:
+        with TempLibrary() as temp:
+            alias = b"ALIAS-STAY-NOT-GAIN"
+            wrapped = _envelope("autotags", alias)
+            body = _m4a("-2.500", alias=alias)
+            path = temp.root / "tunes" / "both.m4a"
+            _point(temp, 1, path, body)
+            _point(temp, 2, temp.root / "tunes" / "quiet.mp3", _marked("0.000")[0])
+            before = path.read_bytes()
+            self.assertIn(wrapped, before)
+            guard = stored_gain.guarded_bytes(path)
+            stored_gain.reset(temp.db, library.LIBRARY_SPACE)
+            self.assertEqual(stored_gain.read_gain_db(path), 0.0)
+            after = path.read_bytes()
+            self.assertIn(wrapped, after)
+            self.assertEqual(stored_gain.guarded_bytes(path), guard)
 
     def test_flac_autogain_resets_and_other_comments_stay(self) -> None:
         with TempLibrary() as temp:

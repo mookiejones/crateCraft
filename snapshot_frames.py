@@ -916,16 +916,25 @@ def _mp4_text(body: bytes) -> bytes:
     return body[4:].split(b"\x00", 1)[0] if len(body) >= 4 else b""
 
 
-def _edit_freeform(body: bytes, wanted: Mapping[str, bytes]) -> bytes | None:
+def _edit_freeform(
+    body: bytes,
+    wanted: Mapping[str, bytes],
+    autotags_name: str | None = None,
+) -> bytes | None:
     """Replace the ``data`` body of one Serato freeform atom.
 
     Args:
         body: Body of a ``----`` atom.
         wanted: Stored data-atom bodies keyed by kind.
+        autotags_name: Freeform name to rewrite when the file has more
+            than one Autotags atom. ``autgain`` wins over ``autotags``.
+            None rewrites whichever Autotags atom this is. A file with
+            only ``autotags`` still updates that atom.
 
     Returns:
         A new body when this atom is a Serato frame we restore or remove.
-        None when the atom should be copied unchanged.
+        None when the atom should be copied unchanged, including an
+        ``autotags`` atom left beside ``autgain``.
     """
     children = _parse_atom_list(body)
     mean = b""
@@ -937,6 +946,8 @@ def _edit_freeform(body: bytes, wanted: Mapping[str, bytes]) -> bytes | None:
             name = _mp4_text(child.body).decode("latin-1", "replace").lower()
     kind = _MP4_NAMES.get(name)
     if mean != b"com.serato.dj" or kind is None:
+        return None
+    if kind == "Autotags" and autotags_name is not None and name != autotags_name:
         return None
     if kind not in wanted:
         return b""
@@ -953,12 +964,18 @@ def _edit_freeform(body: bytes, wanted: Mapping[str, bytes]) -> bytes | None:
     return b"".join(rebuilt)
 
 
-def _rewrite_atom_sequence(blob: bytes, wanted: Mapping[str, bytes]) -> bytes:
+def _rewrite_atom_sequence(
+    blob: bytes,
+    wanted: Mapping[str, bytes],
+    autotags_name: str | None = None,
+) -> bytes:
     """Copy an atom sequence, replacing Serato freeform atoms.
 
     Args:
         blob: Bytes that begin on an atom boundary.
         wanted: Stored ``data`` atom bodies keyed by kind.
+        autotags_name: Autotags freeform name to rewrite. Other Autotags
+            names are copied unchanged.
 
     Returns:
         The sequence to write. Unchanged atoms are copied as raw slices.
@@ -968,26 +985,32 @@ def _rewrite_atom_sequence(blob: bytes, wanted: Mapping[str, bytes]) -> bytes:
     for atom in _parse_atom_list(blob):
         if atom.start > cursor:
             pieces.append(blob[cursor:atom.start])
-        pieces.append(_rewrite_one_atom(blob[atom.start:atom.end], atom, wanted))
+        pieces.append(_rewrite_one_atom(blob[atom.start:atom.end], atom, wanted, autotags_name))
         cursor = atom.end
     if cursor < len(blob):
         pieces.append(blob[cursor:])
     return b"".join(pieces)
 
 
-def _rewrite_one_atom(raw: bytes, atom: _Atom, wanted: Mapping[str, bytes]) -> bytes:
+def _rewrite_one_atom(
+    raw: bytes,
+    atom: _Atom,
+    wanted: Mapping[str, bytes],
+    autotags_name: str | None = None,
+) -> bytes:
     """Return one atom, edited when it contains Serato frames.
 
     Args:
         raw: Original atom bytes, header included.
         atom: Parsed atom.
         wanted: Stored ``data`` atom bodies keyed by kind.
+        autotags_name: Autotags freeform name to rewrite.
 
     Returns:
         Replacement bytes. An empty result drops the atom.
     """
     if atom.typ == b"----":
-        edited = _edit_freeform(atom.body, wanted)
+        edited = _edit_freeform(atom.body, wanted, autotags_name)
         if edited is None:
             return raw
         if not edited:
@@ -995,9 +1018,12 @@ def _rewrite_one_atom(raw: bytes, atom: _Atom, wanted: Mapping[str, bytes]) -> b
         return _pack_atom(b"----", edited)
     if atom.typ == b"meta":
         prefix = atom.body[:4]
-        return _pack_atom(b"meta", prefix + _rewrite_atom_sequence(atom.body[4:], wanted))
+        return _pack_atom(
+            b"meta",
+            prefix + _rewrite_atom_sequence(atom.body[4:], wanted, autotags_name),
+        )
     if atom.typ in _MP4_CONTAINERS:
-        return _pack_atom(atom.typ, _rewrite_atom_sequence(atom.body, wanted))
+        return _pack_atom(atom.typ, _rewrite_atom_sequence(atom.body, wanted, autotags_name))
     return raw
 
 
@@ -1115,8 +1141,86 @@ def _mp4_mdat(path: Path) -> bytes:
     return b"".join(pieces)
 
 
+def _preferred_mp4_autotags(path: Path) -> str | None:
+    """Return the Autotags freeform name a rewrite should edit.
+
+    Args:
+        path: MP4 file.
+
+    Returns:
+        ``autgain`` when that atom is present, otherwise ``autotags``
+        when only that name is present. None when the file has neither.
+        The file is not modified.
+    """
+    chosen: str | None = None
+    rank: int | None = None
+
+    def visit(blob: bytes) -> None:
+        nonlocal chosen, rank
+        for atom in _parse_atom_list(blob):
+            if atom.typ == b"mdat":
+                continue
+            if atom.typ == b"----":
+                mean = b""
+                name = ""
+                for child in _parse_atom_list(atom.body):
+                    if child.typ == b"mean":
+                        mean = _mp4_text(child.body)
+                    elif child.typ == b"name":
+                        name = _mp4_text(child.body).decode("latin-1", "replace").lower()
+                if mean != b"com.serato.dj" or name not in _MP4_AUTOTAGS_RANK:
+                    continue
+                this = _MP4_AUTOTAGS_RANK[name]
+                if rank is None or this < rank:
+                    chosen = name
+                    rank = this
+            elif atom.typ == b"meta" and len(atom.body) >= 4:
+                visit(atom.body[4:])
+            elif atom.typ in _MP4_CONTAINERS:
+                visit(atom.body)
+
+    try:
+        with path.open("rb") as handle:
+            end = path.stat().st_size
+            while handle.tell() + 8 <= end:
+                pos = handle.tell()
+                head = handle.read(8)
+                if len(head) < 8:
+                    break
+                size = int.from_bytes(head[:4], "big")
+                typ = head[4:8]
+                header = 8
+                if size == 1:
+                    large = handle.read(8)
+                    if len(large) < 8:
+                        break
+                    size = int.from_bytes(large, "big")
+                    header = 16
+                elif size == 0:
+                    size = end - pos
+                if size < header or pos + size > end:
+                    break
+                if typ == b"mdat":
+                    handle.seek(pos + size)
+                    continue
+                body = handle.read(size - header)
+                if typ == b"meta" and len(body) >= 4:
+                    visit(body[4:])
+                elif typ in _MP4_CONTAINERS or typ == b"moov":
+                    visit(body)
+                elif typ == b"----":
+                    visit(_pack_atom(typ, body))
+    except OSError:
+        return None
+    return chosen
+
+
 def _write_mp4(source: Path, dest: Path, wanted: Mapping[str, bytes]) -> None:
     """Write an MP4 file with restored Serato atoms and the original ``mdat``.
+
+    When both ``autgain`` and ``autotags`` are present, only ``autgain``
+    is replaced. ``autotags`` stays byte for byte. A file with only
+    ``autotags`` updates that atom.
 
     Args:
         source: MP4 file to read.
@@ -1126,6 +1230,7 @@ def _write_mp4(source: Path, dest: Path, wanted: Mapping[str, bytes]) -> None:
     Raises:
         FrameRewriteError: If an atom size is not usable.
     """
+    autotags_name = _preferred_mp4_autotags(source)
     with dest.open("wb") as out, source.open("rb") as src:
         end = source.stat().st_size
         while src.tell() + 8 <= end:
@@ -1159,10 +1264,10 @@ def _write_mp4(source: Path, dest: Path, wanted: Mapping[str, bytes]) -> None:
             body = src.read(size - header)
             if typ == b"meta":
                 prefix = body[:4]
-                edited = prefix + _rewrite_atom_sequence(body[4:], wanted)
+                edited = prefix + _rewrite_atom_sequence(body[4:], wanted, autotags_name)
                 out.write(_pack_atom(typ, edited))
             elif typ in _MP4_CONTAINERS:
-                out.write(_pack_atom(typ, _rewrite_atom_sequence(body, wanted)))
+                out.write(_pack_atom(typ, _rewrite_atom_sequence(body, wanted, autotags_name)))
             else:
                 out.write(header_bytes)
                 out.write(body)
