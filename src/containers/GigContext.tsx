@@ -1,13 +1,13 @@
 /**
- * Shared Before a gig state for the gig check, Tempo drift, and BPM check.
+ * Shared Before a gig state for the gig check, Cloud-only, Tempo drift, and BPM check.
  *
- * Fetch stays in `gig.ts`, `drift.ts`, and `octave.ts`. This context is the one React
+ * Fetch stays in `gig.ts`, `cloud.ts`, `drift.ts`, and `octave.ts`. This context is the one React
  * read path. Providers subscribe to those engines so both screens see
  * the same snapshots.
  */
 
 import { createContext, useContext, type ReactNode } from "react";
-import type { BpmSanityReport, GigReport, TempoDriftReport } from "../lib/api-types";
+import type { BpmSanityReport, CloudFilesReport, GigReport, TempoDriftReport } from "../lib/api-types";
 import type { PortableSnapshot } from "../lib/gig/portable";
 
 export type GigSnapshot = {
@@ -27,10 +27,16 @@ export type OctaveSnapshot = {
   busy: boolean;
 };
 
+export type CloudSnapshot = {
+  report: CloudFilesReport | null;
+  scope: string;
+};
+
 export type { PortableSnapshot };
 
 export type GigContextValue = {
   gig: GigSnapshot;
+  cloud: CloudSnapshot;
   drift: DriftSnapshot;
   octave: OctaveSnapshot;
   portable: PortableSnapshot;

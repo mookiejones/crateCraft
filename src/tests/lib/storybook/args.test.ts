@@ -223,6 +223,7 @@ describe("gigValueFromArgs", () => {
       emptyPortable: true,
       emptyDrift: true,
       emptyOctave: true,
+      emptyCloud: true,
     });
     expect(value.gig.report?.ready).toBe(true);
     expect(value.gig.report?.score).toBe(100);

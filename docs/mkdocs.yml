@@ -74,6 +74,7 @@ nav:
       - Missing files: guide/missing.md
       - Library health: guide/library-health.md
       - Ready: guide/gig-check.md
+      - Cloud-only: guide/cloud-only.md
       - Tempo drift: guide/tempo-drift.md
       - BPM check: guide/bpm-check.md
       - Duplicates: guide/duplicates.md

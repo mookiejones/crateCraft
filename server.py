@@ -1882,7 +1882,7 @@ class Handler(BaseHTTPRequestHandler):
         Health, version, and the portable-drive check are answered before the library is opened.
         Settings and logs are answered before the library routes. Library,
         status, track, history, duplicate, file, related-track, gig-check,
-        tempo-drift, bpm-sanity, M3U, and rekordbox XML paths return data. Every other path is a file
+        cloud-files, tempo-drift, bpm-sanity, M3U, and rekordbox XML paths return data. Every other path is a file
         under static/. A Host or Origin that is not this computer is refused first.
         """
         try:
@@ -1896,7 +1896,7 @@ class Handler(BaseHTTPRequestHandler):
         """Answer a GET request.
 
         Health, version, and the portable-drive check do not open the library.
-        Library, status, track, history, duplicate, file, related-track, gig-check, tempo-drift, bpm-sanity, M3U, and rekordbox
+        Library, status, track, history, duplicate, file, related-track, gig-check, cloud-files, tempo-drift, bpm-sanity, M3U, and rekordbox
         XML paths return data. Every other path is a file under static/.
         """
         parsed = urlparse(self.path)
@@ -2168,6 +2168,11 @@ class Handler(BaseHTTPRequestHandler):
                 raw_crate = query_text(query, "crate", "all") or "all"
                 report = gig_check.run_gig_check(space=space, crate_id=crate_query(raw_crate))
                 self.send_json(gig_check.report_to_dict(report))
+                return
+            if parsed.path == "/api/cloud-files":
+                space = require_space(query_text(query, "space"))
+                raw_crate = query_text(query, "crate", "all") or "all"
+                self.send_json(gig_check.cloud_report(space=space, crate_id=crate_query(raw_crate)))
                 return
             if parsed.path == "/api/reanalyze":
                 space = require_space(query_text(query, "space"))

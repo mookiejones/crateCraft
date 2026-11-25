@@ -56,6 +56,7 @@ describe("rail groups", () => {
       "gain",
       "snapshots",
       "gig",
+      "cloud",
       "portable",
       "drift",
       "octave",
@@ -74,6 +75,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='gain']")?.textContent).toBe("Gain changed");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Ready");
+    expect(document.querySelector("[data-view='cloud']")?.textContent).toBe("Cloud-only");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo drift");
   });
@@ -107,6 +109,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='lost']")?.textContent).toBe("Etiquetas perdidas");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Listo");
+    expect(document.querySelector("[data-view='cloud']")?.textContent).toBe("Solo en la nube");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Comprobar unidad");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo inestable");
   });

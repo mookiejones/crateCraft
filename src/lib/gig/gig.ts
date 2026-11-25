@@ -3,7 +3,7 @@
  *
  * Typed against the fields GET /api/gig-check returns. The request does
  * not write. A newer selection ignores a late response. The report is
- * painted by `GigReport` on `GigContext`. Five steps lead to a done
+ * painted by `GigReport` on `GigContext`. Six steps lead to a done
  * screen. #gig-ready-art is the empty slot for the done artwork Pixel
  * supplies.
  *
