@@ -17,6 +17,7 @@
 [Export to Rekordbox](Export-to-Rekordbox)
 [Organizing files](Organizing-Files)
 [Related tracks](Related-Tracks)
+[Re-analyze](Re-analyze)
 [Audio changed](Audio-Changed)
 [Gain changed](Gain-Changed)
 [BPM check](BPM-Check)

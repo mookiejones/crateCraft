@@ -68,6 +68,7 @@ import tag_cleanup
 import tempo_drift
 import telemetry
 import tonight_crates
+import reanalyze
 import update_check
 import version_info
 import volumes
@@ -2148,6 +2149,21 @@ class Handler(BaseHTTPRequestHandler):
                 report = gig_check.run_gig_check(space=space, crate_id=crate_query(raw_crate))
                 self.send_json(gig_check.report_to_dict(report))
                 return
+            if parsed.path == "/api/reanalyze":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                reanalyze.require_crate(crate_id)
+                clear_frames = (query_text(query, "clear_frames", "1") or "1") != "0"
+                include_locked = (query_text(query, "include_locked", "0") or "0") == "1"
+                self.send_json(
+                    reanalyze.preview(
+                        space,
+                        crate_id,
+                        clear_frames=clear_frames,
+                        include_locked=include_locked,
+                    )
+                )
+                return
             if parsed.path == "/api/tonight":
                 space = require_space(query_text(query, "space"))
                 number = history_stats.number
@@ -2372,6 +2388,7 @@ class Handler(BaseHTTPRequestHandler):
                     sticking = parsed.path == "/api/stick-cues"
                     history = parsed.path == "/api/history-stats"
                     tonight = parsed.path == "/api/tonight"
+                    reanalyzing = parsed.path == "/api/reanalyze"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
                     versioning = parsed.path == "/api/version-family"
@@ -2388,6 +2405,16 @@ class Handler(BaseHTTPRequestHandler):
                                 payload.get("action") == "preview"
                                 or (
                                     payload.get("action") == "create"
+                                    and payload.get("confirm") is not True
+                                )
+                            )
+                        )
+                        or (
+                            reanalyzing
+                            and (
+                                payload.get("action") == "preview"
+                                or (
+                                    payload.get("action") == "apply"
                                     and payload.get("confirm") is not True
                                 )
                             )
@@ -2510,6 +2537,10 @@ class Handler(BaseHTTPRequestHandler):
                         result = history_stats.action(request)
                         if request.get("action") == "create" and result.get("written"):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif reanalyzing:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = reanalyze.action(request)
                     elif tonight:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

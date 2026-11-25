@@ -24,6 +24,7 @@ export const VIEW_LABEL_KEYS: Record<ViewMode, MessageKey> = {
   tags: "view.tags",
   lost: "view.lost",
   energy: "view.energy",
+  reanalyze: "view.reanalyze",
   audio: "view.audio",
   gain: "view.gain",
   snapshots: "view.snapshots",
@@ -42,6 +43,7 @@ export const CRATE_SCOPED_MODES: readonly ViewMode[] = [
   "scan",
   "bitrate",
   "energy",
+  "reanalyze",
 ];
 
 /**

@@ -2391,5 +2391,52 @@
   "tooltip.forceWrite": "Write even though the library files changed after they were loaded.",
   "write.forceTitle": "Library changed",
   "write.forceConfirm": "The library files changed on disk since they were loaded. Write anyway?",
-  "write.forceWrite": "Write anyway"
+  "write.forceWrite": "Write anyway",
+  "view.reanalyze": "Re-analyze",
+  "mode.reanalyze": "Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids. Cues stay. Quit Serato first.",
+  "reanalyze.heading": "Re-analyze",
+  "reanalyze.intro": "Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids and overviews. Cues stay. Quit Serato first.",
+  "reanalyze.preview": "Preview",
+  "reanalyze.confirm": "Confirm re-analyze",
+  "reanalyze.confirmHint": "Quit Serato first. Then open the tracks in Serato to rebuild.",
+  "reanalyze.clearFrames": "Also clear BeatGrid and Autotags",
+  "reanalyze.includeLocked": "Include locked beatgrids (unlocks them)",
+  "reanalyze.checking": "Checking…",
+  "reanalyze.previewing": "Preparing preview…",
+  "reanalyze.applying": "Marking tracks…",
+  "reanalyze.loadFailed": "The re-analyze plan could not be read.",
+  "reanalyze.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+  "reanalyze.summary": {
+    "one": "1 track ready for Serato to re-analyze.",
+    "other": "{count} tracks ready for Serato to re-analyze."
+  },
+  "reanalyze.summaryClear": "No tracks need a re-analyze mark.",
+  "reanalyze.empty": "Nothing to mark. Pick a crate that still has analysis.",
+  "reanalyze.markersNote": "Markers2 cues stay. BeatGrid and Autotags clear when that option is on. Open the tracks in Serato to rebuild.",
+  "reanalyze.lockedNote": {
+    "one": "1 track has a locked beatgrid and was skipped.",
+    "other": "{count} tracks have locked beatgrids and were skipped."
+  },
+  "reanalyze.column.cleared": "Will clear",
+  "reanalyze.previewReady": {
+    "one": "Preview ready: 1 track. Confirm to mark it.",
+    "other": "Preview ready: {count} tracks. Confirm to mark them."
+  },
+  "reanalyze.previewEmpty": "Nothing to mark. No write will run.",
+  "reanalyze.optionsChanged": "Preview again before Confirm. The options changed.",
+  "reanalyze.driveAbsent": "A track's drive is not connected. Serato may put the analyzed mark back when that drive returns.",
+  "reanalyze.written": {
+    "one": "Marked 1 track. Open it in Serato to rebuild.",
+    "other": "Marked {count} tracks. Open them in Serato to rebuild."
+  },
+  "tooltip.viewReanalyze": "Mark tracks unanalyzed so Serato rebuilds grids and overviews. Needs a crate. Cues stay. Quit Serato first.",
+  "tooltip.reanalyzeRefresh": "Check again which tracks still need a re-analyze mark.",
+  "tooltip.reanalyzePreview": "Preview the mark without writing. Quit Serato before Confirm.",
+  "tooltip.reanalyzeConfirm": "Mark the listed tracks unanalyzed. Takes a snapshot first. Quit Serato first.",
+  "tooltip.reanalyzeClearFrames": "Remove BeatGrid and Autotags from the files. Markers2 cues stay. Off marks the database only.",
+  "tooltip.reanalyzeIncludeLocked": "Also unlock locked beatgrids so Serato can rebuild them.",
+  "error.reanalyze_needs_confirm": "Confirm before tracks are marked for re-analyze.",
+  "error.reanalyze_needs_crate": "Choose a crate for re-analyze.",
+  "error.reanalyze_did_not_stick": "The unanalyzed mark did not stick. The library was put back.",
+  "error.reanalyze_locked": "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them."
 }

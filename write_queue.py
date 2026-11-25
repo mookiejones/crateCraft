@@ -34,6 +34,7 @@ import history_stats
 import library
 import lost_tags
 import energy_level
+import reanalyze
 import music_mirror
 import smart_presets
 import snapshots
@@ -79,6 +80,7 @@ QUEUEABLE = frozenset(
         "/api/tag-clusters",
         "/api/lost-tags",
         "/api/energy",
+        "/api/reanalyze",
         "/api/audio-changed",
         "/api/gain-changed",
         "/api/crate-compare",
@@ -525,6 +527,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return lost_tags.action(request)
     if path == "/api/energy":
         return energy_level.action(request)
+    if path == "/api/reanalyze":
+        return reanalyze.action(request)
     if path == "/api/audio-changed":
         return audio_changed.action(request)
     if path == "/api/gain-changed":

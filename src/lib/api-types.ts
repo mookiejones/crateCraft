@@ -1341,6 +1341,43 @@ export interface EnergyPlan {
   code?: string;
 }
 
+/** One track on a re-analyze plan (#473). */
+export interface ReanalyzeTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  analysis_flags: number;
+  locked: boolean;
+  cleared: string[];
+  has_markers2: boolean;
+}
+
+/** Locked beatgrid row skipped unless include_locked. */
+export interface ReanalyzeLockedTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+}
+
+/** GET/POST /api/reanalyze plan. */
+export interface ReanalyzePlan {
+  preview: boolean;
+  written: boolean;
+  count: number;
+  tracks: ReanalyzeTrack[];
+  locked: ReanalyzeLockedTrack[];
+  clear_frames: boolean;
+  include_locked: boolean;
+  markers2: string;
+  message?: string;
+  /** A location file for one of these tracks is not on disk. */
+  drive_absent?: boolean;
+  error?: string;
+  code?: string;
+}
+
 export interface GainChangedTrack {
   id: number;
   name: string;

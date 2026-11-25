@@ -215,6 +215,16 @@ export interface ElementIds {
   "energy-status": HTMLParagraphElement;
   "energy-report": HTMLDivElement;
   "energy-heading": HTMLHeadingElement;
+  "reanalyze-panel": HTMLElement;
+  "reanalyze-scope": HTMLParagraphElement;
+  "reanalyze-hint": HTMLParagraphElement;
+  "reanalyze-refresh": HTMLButtonElement;
+  "reanalyze-preview": HTMLButtonElement;
+  "reanalyze-clear-frames": HTMLInputElement;
+  "reanalyze-include-locked": HTMLInputElement;
+  "reanalyze-status": HTMLParagraphElement;
+  "reanalyze-report": HTMLDivElement;
+  "reanalyze-heading": HTMLHeadingElement;
   "audio-panel": HTMLElement;
   "audio-scope": HTMLParagraphElement;
   "audio-hint": HTMLParagraphElement;

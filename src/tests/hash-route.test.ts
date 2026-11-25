@@ -87,6 +87,7 @@ describe("parseHash", () => {
       "tags",
       "lost",
       "energy",
+      "reanalyze",
       "audio",
       "gain",
       "snapshots",
