@@ -34,6 +34,8 @@ Track titles, artists, crate names, file paths, playlist text, and the rows in `
 
 Settings → About shows **Your library never leaves your machine**. The tip says update checks and crash reports are separate, opt-in, and do not upload the library. The page's `Content-Security-Policy` uses `connect-src 'self'`, so the browser may call this computer and may not call another machine. That does not upload `master.sqlite`. A cover lookup still sends a title and artist only when you ask.
 
+**Backup Mac** can send selected crates and their audio to another computer running crateCraft on the same local network. The browser still only talks to this computer. The app opens that connection after you confirm a preview. It is a one-time staged copy. It does not start a sync, and it does not upload the library to a cloud account. Adding those crates on the receiving computer writes that computer's library only after a separate confirm, and only while Serato is quit.
+
 A missing `SENTRY_DSN` keeps crash reports off even after you opt in. A missing `POSTHOG_KEY` keeps usage counts off. `POSTHOG_HOST` defaults to `https://us.i.posthog.com` when a project key is set and no host is configured.
 
 ## Where the choice is stored

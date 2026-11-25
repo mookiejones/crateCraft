@@ -50,6 +50,7 @@ import lost_tags
 import library
 import library_health
 import history_rescue
+import lan_stage
 import music_mirror
 import quality_line
 import music_roots
@@ -2020,6 +2021,9 @@ class Handler(BaseHTTPRequestHandler):
                     raise library.LibraryError(folder_sync.CHOOSE_FOLDER)
                 self.send_json(music_mirror.preview(dest, space))
                 return
+            if parsed.path == "/api/lan-stage":
+                self.send_json(lan_stage.status())
+                return
             if parsed.path == "/api/stick-backup":
                 source = query_text(query, "source", "") or ""
                 dest = query_text(query, "dest", "") or ""
@@ -2427,6 +2431,7 @@ class Handler(BaseHTTPRequestHandler):
                     reanalyzing = parsed.path == "/api/reanalyze"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
+                    staging = parsed.path == "/api/lan-stage"
                     sticking_backup = parsed.path == "/api/stick-backup"
                     rescuing = parsed.path == "/api/history-rescue"
                     versioning = parsed.path == "/api/version-family"
@@ -2522,6 +2527,13 @@ class Handler(BaseHTTPRequestHandler):
                             mirroring
                             and (
                                 payload.get("action") in ("preview", "copy")
+                                or payload.get("confirm") is not True
+                            )
+                        )
+                        or (
+                            staging
+                            and (
+                                payload.get("action") not in ("accept", "undo")
                                 or payload.get("confirm") is not True
                             )
                         )
@@ -2699,6 +2711,17 @@ class Handler(BaseHTTPRequestHandler):
                         result = music_mirror.action(request)
                         if (
                             request.get("action") == "crate"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif staging:
+                        request = dict(payload)
+                        if request.get("action") in ("preview", "send", "accept"):
+                            request["space"] = require_space(optional_text(payload.get("space")))
+                        result = lan_stage.action(request)
+                        if (
+                            request.get("action") == "accept"
                             and request.get("confirm") is True
                             and result.get("written")
                         ):
