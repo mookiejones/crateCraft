@@ -38,6 +38,7 @@ import reanalyze
 import music_mirror
 import smart_presets
 import snapshots
+import stored_gain
 import tag_cleanup
 import tonight_crates
 
@@ -81,6 +82,7 @@ QUEUEABLE = frozenset(
         "/api/energy",
         "/api/reanalyze",
         "/api/audio-changed",
+        "/api/gain-changed",
         "/api/crate-compare",
         "/api/album-art",
         "/api/bitrate-check",
@@ -529,6 +531,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return reanalyze.action(request)
     if path == "/api/audio-changed":
         return audio_changed.action(request)
+    if path == "/api/gain-changed":
+        return stored_gain.action(request)
     if path == "/api/crate-compare":
         return crate_compare.action(request)
     if path == "/api/album-art":

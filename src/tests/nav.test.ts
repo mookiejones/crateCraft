@@ -62,7 +62,7 @@ describe("nav collapse", () => {
 
     paintNav("missing");
     expect(document.querySelector<HTMLButtonElement>("[data-nav='health']")?.getAttribute("aria-selected")).toBe("true");
-    expect(visibleChildren()).toEqual(["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags", "lost", "energy", "reanalyze", "audio"]);
+    expect(visibleChildren()).toEqual(["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags", "lost", "energy", "reanalyze", "audio", "gain"]);
     expect(document.querySelector("[data-view='missing']")?.getAttribute("aria-selected")).toBe("true");
     expect(document.querySelector<HTMLButtonElement>("[data-view='crates']")?.hidden).toBe(true);
   });

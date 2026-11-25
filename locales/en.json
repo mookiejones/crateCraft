@@ -411,6 +411,10 @@
   "error.bpm_fix_mismatch": "That fix does not match this track.",
   "error.bpm_needs_confirm": "Confirm the BPM change before it is saved.",
   "error.bpm_did_not_stick": "The BPM did not stick. The library was put back.",
+  "error.gain_cannot_rewrite": "Stored gain could not be rewritten, so nothing was kept.",
+  "error.gain_did_not_stick": "The gain did not read back as 0 dB, so the files were put back.",
+  "error.gain_frames_moved": "Other Serato tags would have changed, so the files were put back.",
+  "error.gain_needs_confirm": "Confirm before stored gain is reset to 0 dB.",
   "error.body_not_json": "The request body is not JSON.",
   "error.body_not_object": "The request body is not an object.",
   "error.choose_copy": "Choose the copy to keep.",
@@ -896,6 +900,52 @@
   "logs.empty": "No log entries yet.",
   "logs.openFailed": "Couldn't open the logs folder.",
   "logs.opened": "Opened the logs folder.",
+  "gain.checking": "Checking…",
+  "gain.column.gain": "Stored gain",
+  "gain.confirmCrate": "Confirm crate",
+  "gain.confirmReset": "Confirm reset",
+  "gain.empty": "No track has a stored gain other than 0 dB.",
+  "gain.heading": "Gain changed",
+  "gain.intro": "Lists tracks whose stored gain is not 0 dB. Saving a crate writes the library. Reset to 0 dB writes that gain in the audio file and leaves cues, the beatgrid, overview, and analysis alone. Quit Serato first.",
+  "gain.loadFailed": "The gain report could not be read.",
+  "gain.note": "Only the stored gain changes. Auto gain, cues, the beatgrid, overview, and analysis stay.",
+  "gain.offline": {
+    "one": "An unplugged drive is not a gain change. {count} file is on an unplugged drive.",
+    "other": "An unplugged drive is not a gain change. {count} files are on unplugged drives."
+  },
+  "gain.previewCrate": {
+    "one": "Save {count} track in {name}, inside {folder}. Nothing is written until you confirm.",
+    "other": "Save {count} tracks in {name}, inside {folder}. Nothing is written until you confirm."
+  },
+  "gain.previewEmpty": "Nothing to change. No crate is written and no gain is reset.",
+  "gain.previewReset": {
+    "one": "Reset stored gain to 0 dB on {count} track. Quit Serato first. Nothing is written until you confirm.",
+    "other": "Reset stored gain to 0 dB on {count} tracks. Quit Serato first. Nothing is written until you confirm."
+  },
+  "gain.reset": "Reset to 0 dB",
+  "gain.resetDone": {
+    "one": "Reset stored gain to 0 dB on {count} track. Undo puts that file back.",
+    "other": "Reset stored gain to 0 dB on {count} tracks. Undo puts those files back."
+  },
+  "gain.resetting": "Resetting stored gain…",
+  "gain.saveCrate": "Save crate",
+  "gain.saving": "Saving the crate…",
+  "gain.summary": {
+    "one": "{checked} files checked. {count} track has a stored gain other than 0 dB.",
+    "other": "{checked} files checked. {count} tracks have a stored gain other than 0 dB."
+  },
+  "gain.summaryClear": "{checked} files checked. None have a stored gain other than 0 dB.",
+  "gain.undo": "Undo reset",
+  "gain.undone": "The reset was undone. Stored gain is back.",
+  "gain.undoing": "Putting the files back…",
+  "gain.unreadable": {
+    "one": "{count} file has stored gain this app cannot read, so it was left as it was.",
+    "other": "{count} files have stored gain this app cannot read, so they were left as they were."
+  },
+  "gain.writtenCrate": {
+    "one": "Saved {count} track in {name}, inside {folder}.",
+    "other": "Saved {count} tracks in {name}, inside {folder}."
+  },
   "audio.checking": "Checking…",
   "audio.column.changed": "What changed",
   "audio.confirmCrate": "Confirm crate",
@@ -1071,6 +1121,7 @@
   "merge.trashLabel": "Move the other audio files to the Trash",
   "merge.trashNote": "Off by default. Files go to the crateCraft trash for 7 days. Restore them from Backups. They are not permanently deleted until that window ends.",
   "mode.audio": "Notices a replaced file. Creating a crate writes the library. Cues and the beatgrid stay put. Quit Serato first.",
+  "mode.gain": "Lists tracks whose stored gain is not 0 dB. Reset writes that gain only. Cues, the beatgrid, overview, and analysis stay. Quit Serato first.",
   "mode.bitrate": "Needs a crate. Saving a crate writes the library. Quit Serato first.",
   "mode.compare": "Pick two crates. Saving a crate writes the library. Quit Serato first.",
   "mode.drift": "Read-only. This check does not change the library.",
@@ -1996,6 +2047,12 @@
   "tooltip.audioConfirm": "Save the Audio changed crate. Quit Serato first. Cues stay put.",
   "tooltip.audioReanalyze": "Preview only. Cues and the beatgrid stay put. crateCraft does not rewrite them.",
   "tooltip.audioRefresh": "Check again for a file replaced under the same name.",
+  "tooltip.gainConfirmCrate": "Save the Gain changed crate inside the crateCraft folder. Quit Serato first. The audio file stays.",
+  "tooltip.gainConfirmReset": "Set stored gain to 0 dB. Quit Serato first. Cues, the beatgrid, overview, and analysis stay. Undo puts the files back.",
+  "tooltip.gainRefresh": "Check again for tracks whose stored gain is not 0 dB. Nothing is written.",
+  "tooltip.gainReset": "Show the reset plan. Nothing is written until you confirm.",
+  "tooltip.gainSave": "Show the crate plan. Nothing is written until you confirm.",
+  "tooltip.gainUndo": "Put the last gain reset back from its snapshot. Quit Serato first.",
   "tooltip.audioSave": "Preview a crate of files whose audio changed. Nothing is written until you confirm.",
   "tooltip.lostRefresh": "Check again for blank titles and artists.",
   "tooltip.energyApply": "Write Energy 1–10 into a blank Grouping field. Quit Serato first. Audio files do not change.",
@@ -2191,6 +2248,7 @@
   "tooltip.viewHealth": "One-page counts of missing files, missing BPM or key, empty genre, tracks in no crate, and duplicates. Read-only.",
   "tooltip.viewHistory": "Show history. Ctrl/Cmd+4.",
   "tooltip.viewAudio": "Notice a file replaced under the same name. Cues and the beatgrid may not fit. Saving a crate writes the library.",
+  "tooltip.viewGain": "List tracks whose stored gain is not 0 dB. Reset writes that gain only, after you confirm. Quit Serato first.",
   "tooltip.viewLost": "Fill a blank title or artist from the file. Writes the library, not the audio.",
   "tooltip.viewEnergy": "Write Energy 1–10 into a blank Grouping field. Needs a crate. Writes the library, not the audio.",
   "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
@@ -2241,6 +2299,7 @@
   "version.copyFailed": "Couldn't copy the version.",
   "version.unavailable": "Version unavailable",
   "view.audio": "Audio changed",
+  "view.gain": "Gain changed",
   "view.bitrate": "Suspect quality",
   "view.compare": "Compare crates",
   "view.crates": "Crates",
