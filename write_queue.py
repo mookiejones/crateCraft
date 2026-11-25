@@ -85,12 +85,14 @@ QUEUEABLE = frozenset(
         "/api/reanalyze",
         "/api/audio-changed",
         "/api/gain-changed",
+        "/api/streaming-swap",
         "/api/crate-compare",
         "/api/album-art",
         "/api/bitrate-check",
         "/api/duplicates/merge",
         "/api/replace-in-crates",
         "/api/music-mirror",
+        "/api/lan-stage",
         "/api/history-rescue",
     }
 )
@@ -136,6 +138,8 @@ def should_queue(path: str, payload: Mapping[str, object], *, is_preview: bool =
     if path == "/api/crate" and payload.get("action") == "expanded":
         return False
     if path == "/api/music-mirror" and payload.get("action") == "copy":
+        return False
+    if path == "/api/lan-stage" and payload.get("action") not in ("accept", "undo"):
         return False
     if path == "/api/stick-backup":
         return False
@@ -542,6 +546,10 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return audio_changed.action(request)
     if path == "/api/gain-changed":
         return stored_gain.action(request)
+    if path == "/api/streaming-swap":
+        import streaming_swap
+
+        return streaming_swap.action(request)
     if path == "/api/crate-compare":
         return crate_compare.action(request)
     if path == "/api/album-art":
@@ -554,6 +562,10 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return library.replace_in_crates(body)
     if path == "/api/music-mirror":
         return music_mirror.action(request)
+    if path == "/api/lan-stage":
+        import lan_stage
+
+        return lan_stage.action(request)
     if path == "/api/history-rescue":
         return history_rescue.action(request)
     raise library.LibraryError("That action is not available.", 404)
@@ -634,6 +646,21 @@ def _reverse_for(item: Mapping[str, Any], outcome: Mapping[str, object]) -> dict
             "payload": {
                 "id": payload.get("id"),
                 "fields": before.get("fields") or {},
+                "space": space,
+            },
+        }
+    if path == "/api/lan-stage" and payload.get("action") == "accept":
+        result = outcome.get("result")
+        snapshot_id = result.get("snapshot_id") if isinstance(result, dict) else None
+        if not isinstance(snapshot_id, str) or not snapshot_id:
+            return None
+        return {
+            "path": "/api/lan-stage",
+            "payload": {
+                "action": "undo",
+                "confirm": True,
+                "snapshot_id": snapshot_id,
+                "id": payload.get("id"),
                 "space": space,
             },
         }

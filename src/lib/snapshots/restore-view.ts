@@ -20,6 +20,8 @@ export const OPERATION_ACTIONS: Record<string, MessageKey> = {
   crate_remove_library: "operations.action.crateRemoveLibrary",
   save_track: "operations.action.saveTrack",
   import_m3u: "operations.action.importM3u",
+  lan_stage: "operations.action.lanStage",
+  lan_stage_undo: "operations.action.lanStageUndo",
   merge_duplicates: "operations.action.mergeDuplicates",
   rename: "operations.action.rename",
   rename_from_tags: "operations.action.renameFromTags",

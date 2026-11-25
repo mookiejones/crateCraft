@@ -127,8 +127,10 @@ export interface PageState {
   seratoRunning: boolean;
   snapshotPlanId: string;
   gigToken: number;
+  cloudToken: number;
   driftToken: number;
   octaveToken: number;
+  playersToken: number;
   healthToken: number;
   statsToken: number;
   scanToken: number;
@@ -140,6 +142,7 @@ export interface PageState {
   audioToken: number;
   gainToken: number;
   brokenToken: number;
+  streamsToken: number;
   compareToken: number;
   view: Track[];
   viewB: Track[];
@@ -214,8 +217,10 @@ export const state: PageState = {
   seratoRunning: false,
   snapshotPlanId: "",
   gigToken: 0,
+  cloudToken: 0,
   driftToken: 0,
   octaveToken: 0,
+  playersToken: 0,
   healthToken: 0,
   statsToken: 0,
   scanToken: 0,
@@ -227,6 +232,7 @@ export const state: PageState = {
   audioToken: 0,
   gainToken: 0,
   brokenToken: 0,
+  streamsToken: 0,
   compareToken: 0,
   view: [],
   viewB: [],

@@ -62,6 +62,7 @@ nav:
       - First install: first-install.md
       - Install: guide/install.md
       - Safety and backups: guide/safety.md
+      - Backup Mac: guide/backup-mac.md
       - Is my library safe?: is-my-library-safe.md
       - Panic: panic.md
   - Your library:
@@ -74,8 +75,10 @@ nav:
       - Missing files: guide/missing.md
       - Library health: guide/library-health.md
       - Ready: guide/gig-check.md
+      - Cloud-only: guide/cloud-only.md
       - Tempo drift: guide/tempo-drift.md
       - BPM check: guide/bpm-check.md
+      - Won't play: guide/wont-play.md
       - Duplicates: guide/duplicates.md
       - Stems: guide/stems.md
       - Damaged files: guide/file-scan.md
@@ -87,6 +90,7 @@ nav:
       - Audio changed: guide/audio-changed.md
       - Gain changed: guide/gain-changed.md
       - Broken smart crates: guide/broken-smart.md
+      - Streaming repair: guide/streaming-repair.md
       - Prepare: guide/prepare.md
       - Playlists: guide/playlists.md
       - From Rekordbox: coming-from-rekordbox.md

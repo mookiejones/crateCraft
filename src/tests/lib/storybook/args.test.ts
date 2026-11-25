@@ -223,12 +223,16 @@ describe("gigValueFromArgs", () => {
       emptyPortable: true,
       emptyDrift: true,
       emptyOctave: true,
+      emptyCloud: true,
+      emptyPlayers: true,
     });
     expect(value.gig.report?.ready).toBe(true);
     expect(value.gig.report?.score).toBe(100);
     expect(value.portable.report).toBeNull();
     expect(value.drift.report).toBeNull();
     expect(value.octave.report).toBeNull();
+    expect(value.cloud.report).toBeNull();
+    expect(value.players.report).toBeNull();
   });
 });
 

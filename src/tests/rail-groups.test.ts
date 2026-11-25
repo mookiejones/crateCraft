@@ -4,7 +4,7 @@
  *
  * The markup is index.html. Each tab still has a tooltip. The view ids
  * stay crates, history, stats, files, health, missing, duplicates, stems,
- * scan, bitrate, tags, lost, energy, reanalyze, audio, gain, snapshots, gig, portable, and drift.
+ * scan, bitrate, tags, lost, energy, reanalyze, audio, gain, snapshots, gig, portable, drift, and players.
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
@@ -55,11 +55,14 @@ describe("rail groups", () => {
       "audio",
       "gain",
       "broken",
+      "streams",
       "snapshots",
       "gig",
+      "cloud",
       "portable",
       "drift",
       "octave",
+      "players",
     ]);
     expect(document.querySelector("[data-view='stats']")?.textContent).toBe("Play stats");
     expect(document.querySelector("[data-view='compare']")?.textContent).toBe("Compare crates");
@@ -74,8 +77,10 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='audio']")?.textContent).toBe("Audio changed");
     expect(document.querySelector("[data-view='gain']")?.textContent).toBe("Gain changed");
     expect(document.querySelector("[data-view='broken']")?.textContent).toBe("Broken smart crates");
+    expect(document.querySelector("[data-view='streams']")?.textContent).toBe("Streaming repair");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Ready");
+    expect(document.querySelector("[data-view='cloud']")?.textContent).toBe("Cloud-only");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Check drive");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo drift");
   });
@@ -109,7 +114,9 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='lost']")?.textContent).toBe("Etiquetas perdidas");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Copias de seguridad");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Listo");
+    expect(document.querySelector("[data-view='cloud']")?.textContent).toBe("Solo en la nube");
     expect(document.querySelector("[data-view='portable']")?.textContent).toBe("Comprobar unidad");
     expect(document.querySelector("[data-view='drift']")?.textContent).toBe("Tempo inestable");
+    expect(document.querySelector("[data-view='players']")?.textContent).toBe("No suena");
   });
 });

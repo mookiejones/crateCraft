@@ -93,6 +93,8 @@ describe("desktop menu actions", () => {
     expect(state.mode).toBe("gain");
     runDesktopAction("view-broken");
     expect(state.mode).toBe("broken");
+    runDesktopAction("view-streams");
+    expect(state.mode).toBe("streams");
     runDesktopAction("view-compare");
     expect(state.mode).toBe("compare");
     runDesktopAction("view-all");

@@ -833,6 +833,40 @@ export interface GigChanges {
   tag_diffs?: GigTagDiff[];
 }
 
+export interface CloudTrack {
+  path: string;
+  title: string;
+  artist: string;
+  crate: string;
+  provider: string;
+  status: string;
+  reason: string;
+}
+
+export interface CloudLocation {
+  role: string;
+  provider: string;
+  path: string;
+  optimize_storage: boolean | null;
+}
+
+export interface CloudCounts {
+  local: number;
+  cloud: number;
+  missing: number;
+  unknown: number;
+  offline: number;
+}
+
+export interface CloudFilesReport {
+  counts?: CloudCounts;
+  cloud_files?: CloudTrack[];
+  unknown_files?: CloudTrack[];
+  cloud_locations?: CloudLocation[];
+  scope?: { space: string; crate_id: number | null; crate_name: string | null };
+  error?: string;
+}
+
 export interface GigReport {
   ready: boolean;
   score: number;
@@ -842,6 +876,10 @@ export interface GigReport {
   unavailable_drives?: Array<{ name: string; track_count: number; crates: string[] }>;
   streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string }>;
   empty_crates?: Array<{ name: string; warning: string }>;
+  cloud_files?: CloudTrack[];
+  unknown_files?: CloudTrack[];
+  cloud_locations?: CloudLocation[];
+  counts?: CloudCounts;
   snapshot_note?: string;
   snapshot_id?: string;
   changes?: GigChanges | null;
@@ -932,6 +970,60 @@ export interface BpmSanityWrite {
   beatgrid: string;
 }
 
+export interface PlayerCompatDocument {
+  code: string;
+  url: string;
+}
+
+export interface PlayerCompatLimit {
+  kind: string;
+  rates: number[];
+  depths: number[];
+  versions: string[];
+  min_kbps: number | null;
+  max_kbps: number | null;
+}
+
+export interface PlayerCompatCounts {
+  will_play: number;
+  check_first: number;
+  wont_play: number;
+  unknown: number;
+}
+
+export interface PlayerCompatTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  extension: string;
+  codec: string;
+  rate_hz: number | null;
+  depth: number | null;
+  bitrate_kbps: number | null;
+  version: string;
+  verdict: "will_play" | "check_first" | "wont_play" | "unknown";
+  reasons: string[];
+  fix: string;
+}
+
+export interface PlayerCompatReport {
+  player: string;
+  documents: PlayerCompatDocument[];
+  filesystems: string[];
+  filesystems_not_supported: string[];
+  notes: string[];
+  limits: PlayerCompatLimit[];
+  read_only: boolean;
+  scope: string;
+  crate: number | null;
+  checked: number;
+  counts: PlayerCompatCounts;
+  tracks: PlayerCompatTrack[];
+  error?: string;
+  code?: string;
+}
+
 export interface BitrateSuspect {
   id: number;
   name: string;
@@ -962,6 +1054,76 @@ export interface BitrateCratePlan extends BitrateCheckReport {
   added: number;
   saved: { id: number; name: string } | null;
   warning?: string | null;
+}
+
+export interface LanStageFile {
+  file?: string;
+  name?: string;
+  artist?: string;
+  rel?: string;
+  size?: number;
+  reason_code?: string;
+  reason?: string;
+}
+
+export interface LanStageCrate {
+  id?: number;
+  name?: string;
+  color?: number | null;
+  smart?: boolean;
+  ancestry?: string[];
+  tracks?: number;
+  matched?: number;
+}
+
+export interface LanStageInbox {
+  id?: string;
+  label?: string;
+  status?: string;
+  file_count?: number;
+  byte_count?: number;
+  skipped_count?: number;
+  failed_count?: number;
+  crates?: number;
+  snapshot_id?: string | null;
+  auto_mirror?: boolean;
+}
+
+export interface LanStageReport {
+  ok?: boolean;
+  preview?: boolean;
+  written?: boolean;
+  library_written?: boolean;
+  staged?: boolean;
+  removed?: boolean;
+  undone?: boolean;
+  auto_mirror?: boolean;
+  listening?: boolean;
+  code?: string;
+  port?: number | null;
+  host?: string;
+  addresses?: string[];
+  inbox?: LanStageInbox[];
+  id?: string;
+  label?: string;
+  status?: string;
+  space?: string;
+  crates?: LanStageCrate[];
+  files?: LanStageFile[];
+  skipped?: LanStageFile[];
+  failed?: LanStageFile[];
+  file_count?: number;
+  byte_count?: number;
+  skipped_count?: number;
+  failed_count?: number;
+  fingerprint?: string;
+  sent?: number;
+  matched?: number;
+  unmatched?: LanStageFile[];
+  unmatched_count?: number;
+  snapshot_id?: string | null;
+  queued?: boolean;
+  error?: string;
 }
 
 export interface MusicMirrorRow {
@@ -1573,6 +1735,45 @@ export interface CrateComparePlan extends CrateCompareReport {
   id?: number;
   added?: number;
   warning?: string;
+}
+
+export interface StreamingCandidate {
+  path: string;
+  confidence: string;
+  reason: string;
+  usable: boolean;
+}
+
+export interface StreamingCratePlace {
+  id: number;
+  name: string;
+  list_order: number | null;
+}
+
+export interface StreamingTrack {
+  asset_id: number;
+  service: string;
+  title: string;
+  artist: string;
+  color: number | null;
+  stored: string;
+  cues: string;
+  crates: StreamingCratePlace[];
+  match: StreamingCandidate | null;
+  candidates: StreamingCandidate[];
+}
+
+export interface StreamingSwapPlan {
+  tracks: StreamingTrack[];
+  truncated: boolean;
+  cues: string;
+  note: string;
+  roots: string[];
+  preview: boolean;
+  written: boolean;
+  swaps?: Array<{ asset_id: number; path: string }>;
+  error?: string;
+  code?: string;
 }
 
 export interface ErrorBody {

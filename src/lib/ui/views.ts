@@ -1,5 +1,5 @@
 /**
- * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, energy, re-analyze, audio changed, tempo drift, BPM check, and the portable drive check.
+ * Crates, history, play stats, compare crates, missing tracks, duplicates, stems, library health, damaged files, suspect quality, tag spellings, lost tags, energy, re-analyze, audio changed, tempo drift, BPM check, Won't play, and the portable drive check.
  *
  * Files is React on FilesContext. This module re-exports that store so
  * existing callers keep one import. Play stats fetch is history-stats.ts;
@@ -28,8 +28,10 @@ import { isQueuedWrite } from "../crates/queue-notice";
 import { clickPane, paintDualChrome } from "../crates/dual-crate-view";
 import { colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "../format";
 import { loadGigCheck, showGigFailure } from "../gig/gig";
+import { loadCloud, showCloudFailure } from "../gig/cloud";
 import { loadDrift, showDriftFailure } from "../gig/drift";
 import { loadOctave, showOctaveFailure } from "../gig/octave";
+import { loadPlayers, showPlayersFailure } from "../gig/players";
 import { loadHealth, mountHealthListChrome, showHealthFailure } from "../health/health";
 import { healthListNote } from "../health/health-list";
 import { loadHistoryStats, showHistoryStatsFailure } from "../history/history-stats";
@@ -42,6 +44,7 @@ import { loadReanalyze, showReanalyzeFailure } from "../health/reanalyze";
 import { loadAudioChanged, showAudioChangedFailure } from "../health/audio-changed";
 import { loadGainChanged, showGainChangedFailure } from "../health/gain-changed";
 import { loadBrokenSmart, showBrokenSmartFailure } from "../health/broken-smart";
+import { loadStreamingSwap, showStreamingSwapFailure } from "../health/streaming-swap";
 import { loadCrateCompare, showCrateCompareFailure } from "../crates/crate-compare";
 import { loadPortableView, showPortableFailure } from "../gig/portable";
 import { mountFilesIslands } from "../files/files-mount";
@@ -520,9 +523,11 @@ export function renderShell() {
   markHistoryColumns();
   const cratesMode = state.mode === "crates";
   const gigMode = state.mode === "gig";
+  const cloudMode = state.mode === "cloud";
   const portableMode = state.mode === "portable";
   const driftMode = state.mode === "drift";
   const octaveMode = state.mode === "octave";
+  const playersMode = state.mode === "players";
   const healthMode = state.mode === "health";
   const statsMode = state.mode === "stats";
   const compareMode = state.mode === "compare";
@@ -535,8 +540,9 @@ export function renderShell() {
   const audioMode = state.mode === "audio";
   const gainMode = state.mode === "gain";
   const brokenMode = state.mode === "broken";
+  const streamsMode = state.mode === "streams";
   const historyMode = state.mode === "history";
-  const showCrates = cratesMode || gigMode || driftMode || octaveMode || healthMode || scanMode || bitrateMode || energyMode || reanalyzeMode;
+  const showCrates = cratesMode || gigMode || cloudMode || driftMode || octaveMode || playersMode || healthMode || scanMode || bitrateMode || energyMode || reanalyzeMode;
   el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
   el("crate-list").hidden = !showCrates;
@@ -556,16 +562,18 @@ export function renderShell() {
   }
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || octaveMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || reanalyzeMode || audioMode || gainMode || brokenMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || cloudMode || portableMode || driftMode || octaveMode || playersMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || reanalyzeMode || audioMode || gainMode || brokenMode || streamsMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
   el("files-panel").hidden = !filesMode;
   el("snapshots-panel").hidden = !snapshotsMode;
   el("gig-panel").hidden = !gigMode;
+  el("cloud-panel").hidden = !cloudMode;
   el("portable-panel").hidden = !portableMode;
   el("drift-panel").hidden = !driftMode;
   el("octave-panel").hidden = !octaveMode;
+  el("players-panel").hidden = !playersMode;
   el("health-panel").hidden = !healthMode;
   el("stats-panel").hidden = !statsMode;
   el("compare-panel").hidden = !compareMode;
@@ -578,11 +586,16 @@ export function renderShell() {
   el("audio-panel").hidden = !audioMode;
   el("gain-panel").hidden = !gainMode;
   el("broken-panel").hidden = !brokenMode;
+  el("streams-panel").hidden = !streamsMode;
   const listNote = healthListNote();
   if (listNote) el("mode-note").textContent = listNote;
   if (filesMode) el("mode-note").textContent = t("mode.files");
   if (gigMode) {
     el("mode-note").textContent = t("mode.gig");
+    document.querySelector(".rules")?.remove();
+  }
+  if (cloudMode) {
+    el("mode-note").textContent = t("mode.cloud");
     document.querySelector(".rules")?.remove();
   }
   if (portableMode) {
@@ -595,6 +608,10 @@ export function renderShell() {
   }
   if (octaveMode) {
     el("mode-note").textContent = t("mode.octave");
+    document.querySelector(".rules")?.remove();
+  }
+  if (playersMode) {
+    el("mode-note").textContent = t("mode.players");
     document.querySelector(".rules")?.remove();
   }
   if (healthMode) {
@@ -645,6 +662,10 @@ export function renderShell() {
     el("mode-note").textContent = t("mode.broken");
     document.querySelector(".rules")?.remove();
   }
+  if (streamsMode) {
+    el("mode-note").textContent = t("mode.streams");
+    document.querySelector(".rules")?.remove();
+  }
   if (snapshotsMode) {
     el("mode-note").textContent = t("mode.snapshots");
   }
@@ -688,7 +709,7 @@ export function renderShell() {
     el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
     return;
   }
-  if (tagsMode || lostMode || audioMode || gainMode || brokenMode || statsMode || compareMode) {
+  if (tagsMode || lostMode || audioMode || gainMode || brokenMode || streamsMode || statsMode || compareMode) {
     el("crate-foot").textContent = t("gig.wholeSpace");
     return;
   }
@@ -872,8 +893,10 @@ export function selectCrate(id: number | "all", event?: MouseEvent) {
   list.scrollTop = 0;
   renderList();
   if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
+  if (state.mode === "cloud") loadCloud().catch(showCloudFailure);
   if (state.mode === "drift") loadDrift().catch(showDriftFailure);
   if (state.mode === "octave") loadOctave().catch(showOctaveFailure);
+  if (state.mode === "players") loadPlayers().catch(showPlayersFailure);
   if (state.mode === "health") loadHealth().catch(showHealthFailure);
   if (state.mode === "scan") loadScan().catch(showScanFailure);
   if (state.mode === "bitrate") loadBitrate().catch(showBitrateFailure);
@@ -2676,9 +2699,11 @@ export function setMode(mode: string) {
     loadSnapshots().catch((error) => failSnapshots(error));
   }
   if (mode === "gig") loadGigCheck().catch(showGigFailure);
+  if (mode === "cloud") loadCloud().catch(showCloudFailure);
   if (mode === "portable") loadPortableView().catch(showPortableFailure);
   if (mode === "drift") loadDrift().catch(showDriftFailure);
   if (mode === "octave") loadOctave().catch(showOctaveFailure);
+  if (mode === "players") loadPlayers().catch(showPlayersFailure);
   if (mode === "health") loadHealth().catch(showHealthFailure);
   if (mode === "stats") loadHistoryStats().catch(showHistoryStatsFailure);
   if (mode === "scan") loadScan("quick").catch(showScanFailure);
@@ -2690,6 +2715,7 @@ export function setMode(mode: string) {
   if (mode === "audio") loadAudioChanged().catch(showAudioChangedFailure);
   if (mode === "gain") loadGainChanged().catch(showGainChangedFailure);
   if (mode === "broken") loadBrokenSmart().catch(showBrokenSmartFailure);
+  if (mode === "streams") loadStreamingSwap().catch(showStreamingSwapFailure);
   if (mode === "compare") loadCrateCompare().catch(showCrateCompareFailure);
   renderList();
   syncHash();
@@ -2879,9 +2905,11 @@ export function wireLibrary(): void {
     if (state.mode === "history") jobs.push(loadHistory());
     if (state.mode === "duplicates") jobs.push(loadDuplicates());
     if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
+    if (state.mode === "cloud") jobs.push(loadCloud().catch(showCloudFailure));
     if (state.mode === "portable") jobs.push(loadPortableView().catch(showPortableFailure));
     if (state.mode === "drift") jobs.push(loadDrift().catch(showDriftFailure));
     if (state.mode === "octave") jobs.push(loadOctave().catch(showOctaveFailure));
+    if (state.mode === "players") jobs.push(loadPlayers().catch(showPlayersFailure));
     if (state.mode === "health") jobs.push(loadHealth().catch(showHealthFailure));
     if (state.mode === "stats") jobs.push(loadHistoryStats().catch(showHistoryStatsFailure));
     if (state.mode === "scan") jobs.push(loadScan().catch(showScanFailure));
@@ -2893,6 +2921,7 @@ export function wireLibrary(): void {
     if (state.mode === "audio") jobs.push(loadAudioChanged().catch(showAudioChangedFailure));
     if (state.mode === "gain") jobs.push(loadGainChanged().catch(showGainChangedFailure));
     if (state.mode === "broken") jobs.push(loadBrokenSmart().catch(showBrokenSmartFailure));
+    if (state.mode === "streams") jobs.push(loadStreamingSwap().catch(showStreamingSwapFailure));
     if (state.mode === "compare") jobs.push(loadCrateCompare().catch(showCrateCompareFailure));
     Promise.all(jobs).catch(showFailure);
   });
@@ -2923,9 +2952,11 @@ export function wireLibrary(): void {
     loadLibrary().then(() => {
       if (state.mode === "duplicates") return loadDuplicates();
       if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
+      if (state.mode === "cloud") return loadCloud().catch(showCloudFailure);
       if (state.mode === "portable") return loadPortableView().catch(showPortableFailure);
       if (state.mode === "drift") return loadDrift().catch(showDriftFailure);
       if (state.mode === "octave") return loadOctave().catch(showOctaveFailure);
+      if (state.mode === "players") return loadPlayers().catch(showPlayersFailure);
       if (state.mode === "health") return loadHealth().catch(showHealthFailure);
       if (state.mode === "stats") return loadHistoryStats().catch(showHistoryStatsFailure);
       if (state.mode === "scan") return loadScan().catch(showScanFailure);
@@ -2937,6 +2968,7 @@ export function wireLibrary(): void {
       if (state.mode === "audio") return loadAudioChanged().catch(showAudioChangedFailure);
       if (state.mode === "gain") return loadGainChanged().catch(showGainChangedFailure);
       if (state.mode === "broken") return loadBrokenSmart().catch(showBrokenSmartFailure);
+      if (state.mode === "streams") return loadStreamingSwap().catch(showStreamingSwapFailure);
       if (state.mode === "compare") return loadCrateCompare().catch(showCrateCompareFailure);
       return null;
     }).catch(showFailure);

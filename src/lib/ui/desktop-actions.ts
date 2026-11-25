@@ -53,11 +53,14 @@ const VIEWS: Record<string, string> = {
   "view-audio": "audio",
   "view-gain": "gain",
   "view-broken": "broken",
+  "view-streams": "streams",
   "view-snapshots": "snapshots",
   "view-gig": "gig",
   "view-portable": "portable",
   "view-drift": "drift",
   "view-octave": "octave",
+  "view-cloud": "cloud",
+  "view-players": "players",
 };
 
 /**

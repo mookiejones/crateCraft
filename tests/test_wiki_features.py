@@ -16,6 +16,7 @@ WIKI = ROOT / "docs" / "wiki"
 FEATURE_PAGES = (
     "Hot-Loops-and-Cue-Points.md",
     "Backups-and-Restore.md",
+    "Backup-Mac.md",
     "Crates.md",
     "Export-to-Rekordbox.md",
     "Organizing-Files.md",
@@ -23,6 +24,7 @@ FEATURE_PAGES = (
     "Audio-Changed.md",
     "Gain-Changed.md",
     "Broken-Smart-Crates.md",
+    "Streaming-Repair.md",
     "First-Run-Wizard.md",
     "Settings.md",
     "Where-Serato-Data-Lives.md",
@@ -31,6 +33,7 @@ FEATURE_PAGES = (
 FEATURE_IMAGES = {
     "Hot-Loops-and-Cue-Points.md": "images/features/hot-loops-and-cue-points.png",
     "Backups-and-Restore.md": "images/features/backups-and-restore.png",
+    "Backup-Mac.md": "images/features/backup-mac.png",
     "Crates.md": "images/features/crates.png",
     "Export-to-Rekordbox.md": "images/features/export-to-rekordbox.png",
     "Organizing-Files.md": "images/features/organizing-files.png",
@@ -38,6 +41,7 @@ FEATURE_IMAGES = {
     "Audio-Changed.md": "images/features/audio-changed.png",
     "Gain-Changed.md": "images/features/gain-changed.png",
     "Broken-Smart-Crates.md": "images/features/broken-smart-crates.png",
+    "Streaming-Repair.md": "images/features/streaming-repair.png",
     "First-Run-Wizard.md": "images/features/first-run-setup.png",
     "Settings.md": "images/features/settings.png",
     "Where-Serato-Data-Lives.md": "images/features/where-serato-data-lives.png",

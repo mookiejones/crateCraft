@@ -2,10 +2,12 @@
 """Read-only check a DJ can run before a gig.
 
 Opens the library through library.read_conn (copy then mode=ro) and audio with rb.
+A cloud placeholder is not opened, so the check does not download it.
 It never writes the database, a journal, or an audio file. The result is
 a frozen GigReport: a ready score and the Holding it back lines that
-explain each deduction. A missing drive, or missing files in the selected
-crate, is not ready no matter what the score would have been.
+explain each deduction. A missing drive, missing files in the selected
+crate, a cloud-only file, or a Serato folder inside a cloud folder is
+not ready no matter what the score would have been.
 """
 
 from __future__ import annotations
@@ -21,6 +23,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+import cloud_files
 import gig_snapshots
 import library
 import snapshots
@@ -79,6 +82,14 @@ EMPTY_POINTS = 4
 EMPTY_CAP = 12
 STALE_POINTS = 10
 CHANGE_POINTS = 5
+CLOUD_POINTS = 8
+CLOUD_CAP = 40
+UNKNOWN_POINTS = 4
+UNKNOWN_CAP = 16
+CLOUD_LIBRARY_POINTS = 20
+CLOUD_MUSIC_POINTS = 10
+CLOUD_MUSIC_CAP = 20
+CLOUD_GUIDANCE = "Download them before the gig. This check does not download them."
 READ_MODE = "rb"
 
 
@@ -171,8 +182,9 @@ class GigReport:
     Attributes:
         ready: True when the score is high enough and nothing is a hard red.
         score: Ready score from 0 to 100.
-        hard_red: True when a drive is absent or the selected crate has
-            missing files.
+        hard_red: True when a drive is absent, the selected crate has
+            missing files, a file is cloud-only, or the Serato folder is
+            inside a cloud folder.
         holding_it_back: Each deduction, hard reds first.
         missing_files: Files that are gone on a drive that is connected.
         unavailable_drives: Absent drives, one row per name.
@@ -186,6 +198,10 @@ class GigReport:
         scope_crate_id: Crate id, or None for the whole space.
         scope_crate: Crate label, or None for the whole space.
         checked_at: Time the check used for the seven-day snapshot window.
+        cloud_tracks: Files whose audio is a cloud placeholder.
+        unknown_tracks: Files this check could not prove are on this computer.
+        cloud_locations: Serato or music folders that sit in a cloud folder.
+        local_count: Tracks whose audio is on this computer.
     """
 
     ready: bool
@@ -203,6 +219,10 @@ class GigReport:
     scope_crate: str | None
     checked_at: datetime
     snapshot_id: str = ""
+    cloud_tracks: tuple[cloud_files.CloudTrack, ...] = ()
+    unknown_tracks: tuple[cloud_files.CloudTrack, ...] = ()
+    cloud_locations: tuple[cloud_files.CloudLocation, ...] = ()
+    local_count: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -255,6 +275,10 @@ class _Classified:
     streaming: tuple[StreamingTrack, ...]
     empty: tuple[EmptyCrate, ...]
     present_paths: Mapping[int, str]
+    cloud: tuple[cloud_files.CloudTrack, ...] = ()
+    unknown: tuple[cloud_files.CloudTrack, ...] = ()
+    locations: tuple[cloud_files.CloudLocation, ...] = ()
+    local_count: int = 0
 
 
 def open_read_only(path: Path) -> sqlite3.Connection:
@@ -617,22 +641,60 @@ def _scope_assets(library_rows: _Library) -> tuple[_Asset, ...]:
     return tuple(asset for asset in library_rows.assets if asset.asset_id in wanted)
 
 
-def _classify(library_rows: _Library) -> _Classified:
-    """Sort tracks into missing, unavailable, streaming, and present.
+def _track_row(
+    path: str,
+    asset: _Asset,
+    crate: str,
+    availability: cloud_files.Availability,
+) -> cloud_files.CloudTrack:
+    """Copy one classified track into the report row.
+
+    Args:
+        path: Path that was classified.
+        asset: Track row.
+        crate: Crate label.
+        availability: Cloud or unknown result.
+
+    Returns:
+        A frozen row. The audio file is not opened.
+    """
+    return cloud_files.CloudTrack(
+        path,
+        asset.title,
+        asset.artist,
+        crate,
+        availability.provider,
+        availability.status,
+        availability.reason,
+    )
+
+
+def _classify(library_rows: _Library, database: Path | None = None) -> _Classified:
+    """Sort tracks into missing, cloud-only, unknown, unavailable, streaming, and present.
 
     Args:
         library_rows: Loaded rows. The database is already closed.
+        database: ``master.sqlite``, used only to see whether its folder is
+            inside a cloud folder. None skips that warning.
 
     Returns:
         The groups the score reads. Tracks on an absent drive are unavailable
         and are not opened, so they cannot be counted as missing files.
+        A cloud placeholder and a file this check cannot prove is local are
+        not opened, so the check does not download them.
     """
     mounts = _Mounts()
+    roots = cloud_files.discover_roots()
+    optimize = cloud_files.optimize_mac_storage_enabled()
     crate_names = _asset_crates(library_rows)
     scope_name = library_rows.scope_crate
     missing: list[MissingFile] = []
     streaming: list[StreamingTrack] = []
+    cloud: list[cloud_files.CloudTrack] = []
+    unknown: list[cloud_files.CloudTrack] = []
     present: dict[int, str] = {}
+    seen_paths: list[str] = []
+    local_count = 0
     drive_tracks: dict[str, int] = {}
     drive_crates: dict[str, set[str]] = {}
 
@@ -669,12 +731,43 @@ def _classify(library_rows: _Library) -> _Classified:
         elif path_volume is not None and mounts.mounted(path_volume):
             external_root = path_volume.root
         candidates = _candidates(asset.portable_id, external_root)
-        opened = next((candidate for candidate in candidates if _opens_for_read(candidate)), None)
+        opened: Path | None = None
+        cloud_hit: tuple[Path, cloud_files.Availability] | None = None
+        unknown_hit: tuple[Path, cloud_files.Availability] | None = None
+        for candidate in candidates:
+            probe = cloud_files.probe_path(candidate)
+            provider = cloud_files.provider_for(str(candidate), roots)
+            availability = cloud_files.classify(probe, provider)
+            if availability.status == "cloud":
+                cloud_hit = (candidate, availability)
+                break
+            if availability.status == "unknown":
+                unknown_hit = (candidate, availability)
+                break
+            if availability.status != "local":
+                continue
+            if _opens_for_read(candidate):
+                opened = candidate
+                break
         if opened is not None:
             present[asset.asset_id] = str(opened)
+            seen_paths.append(str(opened))
+            local_count += 1
+            continue
+        if cloud_hit is not None:
+            path, availability = cloud_hit
+            cloud.append(_track_row(str(path), asset, crate, availability))
+            seen_paths.append(str(path))
+            continue
+        if unknown_hit is not None:
+            path, availability = unknown_hit
+            unknown.append(_track_row(str(path), asset, crate, availability))
+            seen_paths.append(str(path))
             continue
         reported = str(candidates[0]) if candidates else asset.portable_id
         missing.append(MissingFile(reported, asset.title, asset.artist, crate))
+        if reported:
+            seen_paths.append(reported)
 
     for crate in library_rows.crates:
         if library_rows.scope_ids is not None and crate.crate_id not in library_rows.scope_ids:
@@ -694,12 +787,23 @@ def _classify(library_rows: _Library) -> _Classified:
     # Crates on an absent drive are unavailable, not empty.
     absent_crates = {label for names in drive_crates.values() for label in names}
     empty = tuple(crate for crate in _empty_crates(library_rows) if crate.name not in absent_crates)
+    library_dirs: list[str] = []
+    if database is not None:
+        library_dirs.append(str(database.parent))
+        parent = database.parent.parent
+        if parent != database.parent:
+            library_dirs.append(str(parent))
+    locations = cloud_files.locations_for(library_dirs, seen_paths, roots, optimize=optimize)
     return _Classified(
         tuple(sorted(missing, key=lambda item: item.path)),
         drives,
         tuple(sorted(streaming, key=lambda item: (item.service, item.title, item.path))),
         empty,
         present,
+        tuple(sorted(cloud, key=lambda item: item.path)),
+        tuple(sorted(unknown, key=lambda item: item.path)),
+        locations,
+        local_count,
     )
 
 
@@ -1239,14 +1343,17 @@ def _score(
     """Turn the groups into a score and Holding it back.
 
     Args:
-        classified: Missing files, drives, streaming tracks, and empty crates.
+        classified: Missing files, drives, cloud files, streaming tracks, and empty crates.
         fresh: Whether a snapshot was taken in the last seven days.
         changes: Diff, or None when there was nothing to compare.
         scope_crate: Selected crate label. None means the whole space.
 
-    Returns:
+        Returns:
         Score, ready flag, hard-red flag, and deductions. A hard red is not
         ready even when the remaining points would pass ``READY_AT``.
+        Cloud-only files and a Serato folder in a cloud folder are hard reds.
+        A file that could not be checked is not counted as local and is not
+        a hard red.
     """
     lines: list[Deduction] = []
     hard = False
@@ -1260,16 +1367,57 @@ def _score(
                 _drive_summary(classified.drives),
             )
         )
+    place = "in the selected crate" if scope_crate else "in this space"
     if classified.missing:
         hard = True
         points = min(MISSING_CAP, MISSING_POINTS * len(classified.missing))
-        place = "in the selected crate" if scope_crate else "in this space"
         lines.append(
             Deduction(
                 "missing_files",
                 points,
                 True,
                 f"Not ready: {_count(len(classified.missing), 'missing file')} {place}.",
+            )
+        )
+    if classified.cloud:
+        hard = True
+        lines.append(
+            Deduction(
+                "cloud_only",
+                min(CLOUD_CAP, CLOUD_POINTS * len(classified.cloud)),
+                True,
+                f"Not ready: {_count(len(classified.cloud), 'cloud-only file')} {place}. {CLOUD_GUIDANCE}",
+            )
+        )
+    library_locations = tuple(item for item in classified.locations if item.role == "library")
+    if library_locations:
+        hard = True
+        lines.append(
+            Deduction(
+                "cloud_library",
+                CLOUD_LIBRARY_POINTS * len(library_locations),
+                True,
+                " ".join(cloud_files.location_summary(item) for item in library_locations),
+            )
+        )
+    if classified.unknown:
+        lines.append(
+            Deduction(
+                "cloud_unknown",
+                min(UNKNOWN_CAP, UNKNOWN_POINTS * len(classified.unknown)),
+                False,
+                f"{_count(len(classified.unknown), 'file')} {place} could not be checked. "
+                "They are not counted as on this computer.",
+            )
+        )
+    music_locations = tuple(item for item in classified.locations if item.role == "music")
+    if music_locations:
+        lines.append(
+            Deduction(
+                "cloud_music",
+                min(CLOUD_MUSIC_CAP, CLOUD_MUSIC_POINTS * len(music_locations)),
+                False,
+                " ".join(cloud_files.location_summary(item) for item in music_locations),
             )
         )
     if classified.streaming:
@@ -1355,8 +1503,9 @@ def run_gig_check(
         now: Clock for the seven-day window. None uses the current UTC time.
 
     Returns:
-        A frozen report. Missing files in the selected scope, and any absent
-        drive in that scope, set ``ready`` false.
+        A frozen report. Missing files in the selected scope, any absent
+        drive in that scope, a cloud-only file, and a Serato folder inside
+        a cloud folder set ``ready`` false.
 
     Raises:
         library.LibraryError: If the space name is not one this app reads,
@@ -1370,7 +1519,7 @@ def run_gig_check(
     reader = default_reader(path, space) if snapshots_reader is None else snapshots_reader
     with closing(open_read_only(path)) as conn:
         loaded = _read_library(conn, space, crate_id)
-    classified = _classify(loaded)
+    classified = _classify(loaded, path)
     note, changes, fresh, snapshot_id = _changes(reader, loaded, classified, moment)
     score, ready, hard, lines = _score(classified, fresh, changes, loaded.scope_crate)
     return GigReport(
@@ -1389,6 +1538,10 @@ def run_gig_check(
         loaded.scope_crate,
         moment,
         snapshot_id,
+        classified.cloud,
+        classified.unknown,
+        classified.locations,
+        classified.local_count,
     )
 
 
@@ -1458,6 +1611,10 @@ def report_to_dict(report: GigReport) -> dict[str, object]:
             for item in report.streaming_tracks
         ],
         "empty_crates": [{"name": item.name, "warning": item.warning} for item in report.empty_crates],
+        "cloud_files": [_cloud_track_dict(item) for item in report.cloud_tracks],
+        "unknown_files": [_cloud_track_dict(item) for item in report.unknown_tracks],
+        "cloud_locations": [_cloud_location_dict(item) for item in report.cloud_locations],
+        "counts": _cloud_counts(report),
         "snapshot_note": report.snapshot_note,
         "snapshot_id": report.snapshot_id,
         "changes": changes,
@@ -1467,6 +1624,129 @@ def report_to_dict(report: GigReport) -> dict[str, object]:
             "crate_name": report.scope_crate,
         },
         "checked_at": report.checked_at.isoformat(),
+    }
+
+
+def _cloud_track_dict(item: cloud_files.CloudTrack) -> dict[str, str]:
+    """Serialize one cloud or unknown track.
+
+    Args:
+        item: Classified row.
+
+    Returns:
+        JSON fields the Cloud-only view reads.
+    """
+    return {
+        "path": item.path,
+        "title": item.title,
+        "artist": item.artist,
+        "crate": item.crate,
+        "provider": item.provider,
+        "status": item.status,
+        "reason": item.reason,
+    }
+
+
+def _cloud_location_dict(item: cloud_files.CloudLocation) -> dict[str, object]:
+    """Serialize one cloud-folder warning.
+
+    Args:
+        item: Library or music location.
+
+    Returns:
+        JSON fields. ``optimize_storage`` is true only when that switch
+        was read as on, and null otherwise.
+    """
+    return {
+        "role": item.role,
+        "provider": item.provider,
+        "path": item.path,
+        "optimize_storage": item.optimize_storage,
+    }
+
+
+def _cloud_counts(report: GigReport) -> dict[str, int]:
+    """Count each availability the page explains.
+
+    Args:
+        report: Check result.
+
+    Returns:
+        Local, cloud, missing, unknown, and offline totals.
+    """
+    return {
+        "local": report.local_count,
+        "cloud": len(report.cloud_tracks),
+        "missing": len(report.missing_files),
+        "unknown": len(report.unknown_tracks),
+        "offline": sum(drive.track_count for drive in report.unavailable_drives),
+    }
+
+
+def cloud_section(report: GigReport) -> dict[str, object]:
+    """The cloud portion of a gig report.
+
+    Args:
+        report: Check result.
+
+    Returns:
+        Counts, cloud files, unknown files, locations, and scope.
+    """
+    return {
+        "counts": _cloud_counts(report),
+        "cloud_files": [_cloud_track_dict(item) for item in report.cloud_tracks],
+        "unknown_files": [_cloud_track_dict(item) for item in report.unknown_tracks],
+        "cloud_locations": [_cloud_location_dict(item) for item in report.cloud_locations],
+        "scope": {
+            "space": report.scope_space,
+            "crate_id": report.scope_crate_id,
+            "crate_name": report.scope_crate,
+        },
+    }
+
+
+def cloud_report(
+    database: Path | None = None,
+    space: str = library.LIBRARY_SPACE,
+    crate_id: int | None = None,
+) -> dict[str, object]:
+    """List cloud-only and unchecked files without the snapshot diff.
+
+    Args:
+        database: master.sqlite. None uses ``library.MASTER``.
+        space: Space name. The default is Serato Library.
+        crate_id: Crate id, including its subcrates. None checks the whole space.
+
+    Returns:
+        The same cloud fields as ``report_to_dict``. Nothing is written
+        and no audio file is read.
+
+    Raises:
+        library.LibraryError: If the space or crate cannot be read.
+    """
+    if space not in library.ALLOWED_SPACES:
+        raise library.LibraryError("That space is not available here.")
+    path = Path(library.MASTER) if database is None else Path(database)
+    with closing(open_read_only(path)) as conn:
+        loaded = _read_library(conn, space, crate_id)
+    classified = _classify(loaded, path)
+    offline = sum(drive.track_count for drive in classified.drives)
+    return {
+        "counts": {
+            "local": classified.local_count,
+            "cloud": len(classified.cloud),
+            "missing": len(classified.missing),
+            "unknown": len(classified.unknown),
+            "offline": offline,
+        },
+        "cloud_files": [_cloud_track_dict(item) for item in classified.cloud],
+        "unknown_files": [_cloud_track_dict(item) for item in classified.unknown],
+        "cloud_locations": [_cloud_location_dict(item) for item in classified.locations],
+        "scope": {
+            "space": space,
+            "crate_id": crate_id,
+            "crate_name": loaded.scope_crate,
+        },
     }
 
 
@@ -1559,6 +1839,19 @@ def format_report(report: GigReport) -> str:
         )
     )
     if report.missing_files:
+        blocks.append("")
+    cloud_lines = [item.path for item in report.cloud_tracks]
+    blocks.extend(_section("Cloud-only files", cloud_lines))
+    if cloud_lines:
+        blocks.append(CLOUD_GUIDANCE)
+        blocks.append("")
+    unknown_lines = [f"{item.path} ({item.reason})" for item in report.unknown_tracks]
+    blocks.extend(_section("Could not check", unknown_lines))
+    if unknown_lines:
+        blocks.append("")
+    location_lines = [cloud_files.location_summary(item) for item in report.cloud_locations]
+    blocks.extend(_section("Cloud folders", location_lines))
+    if location_lines:
         blocks.append("")
     drive_lines = [
         f"{drive.name}: {_count(drive.track_count, 'track')} unavailable"

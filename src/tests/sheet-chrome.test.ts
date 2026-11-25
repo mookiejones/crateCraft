@@ -36,8 +36,10 @@ describe("sheet chrome", () => {
   it("scopes Overview, Ready, Tempo drift, Damaged files, Suspect quality, and Energy", () => {
     expect(isCrateScopedMode("health")).toBe(true);
     expect(isCrateScopedMode("gig")).toBe(true);
+    expect(isCrateScopedMode("cloud")).toBe(true);
     expect(isCrateScopedMode("drift")).toBe(true);
     expect(isCrateScopedMode("octave")).toBe(true);
+    expect(isCrateScopedMode("players")).toBe(true);
     expect(isCrateScopedMode("scan")).toBe(true);
     expect(isCrateScopedMode("bitrate")).toBe(true);
     expect(isCrateScopedMode("energy")).toBe(true);
@@ -48,6 +50,7 @@ describe("sheet chrome", () => {
     expect(isCrateScopedMode("audio")).toBe(false);
     expect(isCrateScopedMode("gain")).toBe(false);
     expect(isCrateScopedMode("broken")).toBe(false);
+    expect(isCrateScopedMode("streams")).toBe(false);
     expect(isCrateScopedMode("compare")).toBe(false);
     expect(isCrateScopedMode("files")).toBe(false);
   });

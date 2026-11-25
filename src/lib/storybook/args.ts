@@ -25,9 +25,11 @@ import type { WizardContextValue } from "../../containers/WizardContext";
 import {
   crateRows,
   crateValue,
+  cloudReport,
   driveReport,
   driftReport,
   octaveReport,
+  playersReport,
   filesValue,
   gigReport,
   gigValue,
@@ -416,6 +418,8 @@ export type GigStoryArgs = {
   emptyPortable: boolean;
   emptyDrift: boolean;
   emptyOctave: boolean;
+  emptyCloud: boolean;
+  emptyPlayers: boolean;
 };
 
 export const gigStoryArgs: GigStoryArgs = {
@@ -424,6 +428,8 @@ export const gigStoryArgs: GigStoryArgs = {
   emptyPortable: false,
   emptyDrift: false,
   emptyOctave: false,
+  emptyCloud: false,
+  emptyPlayers: false,
 };
 
 export const gigArgTypes = {
@@ -432,6 +438,8 @@ export const gigArgTypes = {
   emptyPortable: { control: "boolean" as const, description: "No drive findings." },
   emptyDrift: { control: "boolean" as const, description: "No tempo-drift flags." },
   emptyOctave: { control: "boolean" as const, description: "No BPM-check flags." },
+  emptyCloud: { control: "boolean" as const, description: "No cloud-only report." },
+  emptyPlayers: { control: "boolean" as const, description: "Won't play has not been checked." },
 };
 
 /**
@@ -461,10 +469,14 @@ export function gigValueFromArgs(args: GigStoryArgs): GigContextValue {
         smartOverwrite: false,
         smartBusy: false,
       },
+    cloud: args.emptyCloud ? { report: null, scope: "" } : { report: cloudReport, scope: "Friday" },
     drift: args.emptyDrift ? { report: null, scope: "" } : { report: driftReport, scope: "Friday" },
     octave: args.emptyOctave
       ? { report: null, scope: "", busy: false }
       : { report: octaveReport, scope: "Friday", busy: false },
+    players: args.emptyPlayers
+      ? { report: null, scope: "", show: "problems" }
+      : { report: playersReport, scope: "Friday", show: "problems" },
   });
 }
 

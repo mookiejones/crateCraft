@@ -9,8 +9,10 @@
 
 import { repaintDialogs } from "./dialogs";
 import { repaintGig } from "../gig/gig";
+import { repaintCloud } from "../gig/cloud";
 import { repaintDrift } from "../gig/drift";
 import { repaintOctave } from "../gig/octave";
+import { repaintPlayers } from "../gig/players";
 import { repaintHealth } from "../health/health";
 import { repaintHistoryStats } from "../history/history-stats";
 import { repaintScan } from "../health/scan";
@@ -22,6 +24,7 @@ import { repaintReanalyze } from "../health/reanalyze";
 import { repaintAudioChanged } from "../health/audio-changed";
 import { repaintGainChanged } from "../health/gain-changed";
 import { repaintBrokenSmart } from "../health/broken-smart";
+import { repaintStreamingSwap } from "../health/streaming-swap";
 import { repaintCrateCompare } from "../crates/crate-compare";
 import { repaintPortable } from "../gig/portable";
 import { applyStatic, initialLocale, onLocaleChange, setLocale } from "../i18n";
@@ -49,8 +52,10 @@ export function repaintAll(): void {
   repaintViews();
   if (state.mode === "snapshots") renderSnapshots();
   if (state.mode === "gig") repaintGig();
+  if (state.mode === "cloud") repaintCloud();
   if (state.mode === "drift") repaintDrift();
   if (state.mode === "octave") repaintOctave();
+  if (state.mode === "players") repaintPlayers();
   if (state.mode === "health") repaintHealth();
   if (state.mode === "stats") repaintHistoryStats();
   if (state.mode === "scan") repaintScan();
@@ -62,6 +67,7 @@ export function repaintAll(): void {
   if (state.mode === "audio") repaintAudioChanged();
   if (state.mode === "gain") repaintGainChanged();
   if (state.mode === "broken") repaintBrokenSmart();
+  if (state.mode === "streams") repaintStreamingSwap();
   if (state.mode === "compare") repaintCrateCompare();
   repaintPortable();
   repaintSnapshotPlan();
