@@ -684,6 +684,31 @@ class TransferTests(unittest.TestCase):
         self.assertEqual(stopped["code"], "")
         self.assertNotIn("crateCraft-lan-stage", {thread.name for thread in threading.enumerate()})
 
+    def test_contained_path_cannot_climb_out_or_follow_a_shortcut(self) -> None:
+        """A request name cannot leave the stage folder or follow a shortcut.
+
+        Returns:
+            None.
+        """
+        root = Path(self._config.name) / "stage"
+        root.mkdir()
+        outside = Path(self._config.name) / "outside.txt"
+        outside.write_text("keep", encoding="utf-8")
+        for name in ("..", "../outside.txt", "..\\outside.txt", "", "a/b", "a\\b"):
+            with self.subTest(name=name):
+                with self.assertRaises(LibraryError):
+                    lan_stage._contained(root, name)
+        self.assertEqual(outside.read_text(encoding="utf-8"), "keep")
+        kept = lan_stage._contained(root, "keep.mp3")
+        self.assertEqual(kept.parent, root.resolve())
+        try:
+            (root / "link").symlink_to(outside)
+        except OSError:
+            return
+        with self.assertRaises(LibraryError):
+            lan_stage._contained(root, "link")
+        self.assertEqual(outside.read_text(encoding="utf-8"), "keep")
+
     def test_begin_forces_auto_mirror_off(self) -> None:
         """A sender that asks to mirror is stored as a one-time staged copy.
 

@@ -197,6 +197,47 @@ def assert_stage_root(root: Path) -> None:
         raise LibraryError(STAGE_LIBRARY)
 
 
+def _contained(root: Path, name: str) -> Path:
+    """Return one child of ``root`` that cannot climb out of it.
+
+    ``normpath`` collapses ``..`` before the prefix check. The separator
+    stops a sibling whose name only starts with the folder name. A
+    shortcut is refused before ``realpath`` follows it.
+
+    Args:
+        root: Directory the child must stay inside.
+        name: One path segment from the request or a fixed file name.
+
+    Returns:
+        The absolute path of that child.
+
+    Raises:
+        LibraryError: If ``name`` is not one segment, the path leaves
+            ``root``, or the child is a shortcut.
+    """
+    if (
+        not isinstance(name, str)
+        or not name
+        or name in {".", ".."}
+        or "/" in name
+        or "\\" in name
+        or "\x00" in name
+    ):
+        raise LibraryError(NOT_STAGED)
+    base = os.path.realpath(root)
+    joined = os.path.normpath(os.path.join(base, name))
+    # normpath collapses ".." before the prefix check. The separator
+    # stops a sibling such as "lan-stage-evil" from matching "lan-stage".
+    if not joined.startswith(base + os.sep):
+        raise LibraryError(NOT_STAGED)
+    if os.path.islink(joined):
+        raise LibraryError(NOT_STAGED)
+    candidate = os.path.realpath(joined)
+    if not candidate.startswith(base + os.sep):
+        raise LibraryError(NOT_STAGED)
+    return Path(candidate)
+
+
 def _finish(body: dict[str, object]) -> dict[str, object]:
     """Attach the auto-mirror flag. It is always false.
 
@@ -1338,17 +1379,7 @@ def _manifest_path(transfer_id: str) -> Path:
         raise LibraryError(NOT_STAGED)
     root = stage_root()
     assert_stage_root(root)
-    path = root / transfer_id / "manifest.json"
-    if path.is_symlink():
-        raise LibraryError(NOT_STAGED)
-    try:
-        resolved = path.resolve(strict=False)
-        root_resolved = root.resolve(strict=False)
-    except OSError as exc:
-        raise LibraryError(NOT_STAGED) from exc
-    if root_resolved not in resolved.parents:
-        raise LibraryError(NOT_STAGED)
-    return path
+    return _contained(_contained(root, transfer_id), "manifest.json")
 
 
 def _load(transfer_id: str) -> dict[str, object]:
@@ -1388,7 +1419,7 @@ def _save(manifest: Mapping[str, object]) -> None:
         raise LibraryError(NOT_STAGED)
     path = _manifest_path(transfer_id)
     path.parent.mkdir(parents=True, exist_ok=True)
-    temp = path.parent / "manifest.json.partial"
+    temp = _contained(path.parent, "manifest.json.partial")
     payload = dict(manifest)
     payload["auto_mirror"] = False
     try:
@@ -1505,10 +1536,10 @@ def begin_transfer(payload: Mapping[str, object]) -> dict[str, object]:
     if free < byte_count + 8 * 1024 * 1024:
         raise LibraryError(NO_SPACE)
     transfer_id = os.urandom(8).hex()
-    folder = root / transfer_id
+    folder = _contained(root, transfer_id)
     try:
         folder.mkdir(parents=False)
-        (folder / "files").mkdir()
+        _contained(folder, "files").mkdir()
     except OSError as exc:
         raise LibraryError(NOT_STAGED) from exc
     label = payload.get("label")
@@ -1586,17 +1617,8 @@ def _store_upload(
     if rel is None:
         raise LibraryError(NOT_STAGED)
     folder = _manifest_path(transfer_id).parent
-    files_dir = folder / "files"
-    dest = files_dir / rel
-    partial = folder / f"partial-{index}"
-    try:
-        if dest.is_symlink() or partial.is_symlink() or files_dir.is_symlink():
-            raise LibraryError(NOT_STAGED)
-        resolved = dest.resolve(strict=False)
-        if files_dir.resolve(strict=False) not in resolved.parents:
-            raise LibraryError(NOT_STAGED)
-    except OSError as exc:
-        raise LibraryError(NOT_STAGED) from exc
+    dest = _contained(_contained(folder, "files"), rel)
+    partial = _contained(folder, f"partial-{index}")
     digest = hashlib.sha256()
     remaining = length
     try:
@@ -1827,7 +1849,10 @@ def _accept_plan(conn: sqlite3.Connection, space: str, manifest: Mapping[str, ob
     }
     sizes = {int(item["size"]) for item in arrived.values() if isinstance(item.get("size"), int)}
     index = _library_hashes(conn, space, sizes)
-    folder = _manifest_path(str(manifest["id"])) .parent / "files"
+    try:
+        folder = _contained(_manifest_path(str(manifest["id"])).parent, "files")
+    except LibraryError:
+        folder = None
     unmatched: list[dict[str, object]] = []
     crates_out: list[dict[str, object]] = []
     raw_crates = manifest.get("crates") if isinstance(manifest.get("crates"), list) else []
@@ -1844,14 +1869,19 @@ def _accept_plan(conn: sqlite3.Connection, space: str, manifest: Mapping[str, ob
             digest = item.get("sha256")
             asset_id = index.get((int(size), str(digest))) if isinstance(size, int) and isinstance(digest, str) else None
             if asset_id is None:
-                staged = folder / str(rel)
+                on_disk = False
+                if folder is not None and isinstance(rel, str):
+                    try:
+                        on_disk = _contained(folder, rel).is_file()
+                    except LibraryError:
+                        on_disk = False
                 unmatched.append(
                     {
                         "file": rel,
                         "name": item.get("name") or "",
                         "artist": item.get("artist") or "",
                         "size": size,
-                        "on_disk": staged.is_file(),
+                        "on_disk": on_disk,
                         **_reason("not_in_library"),
                     }
                 )
@@ -2171,17 +2201,14 @@ def discard(transfer_id: object, confirm: object) -> dict[str, object]:
         raise LibraryError(NOT_STAGED)
     root = stage_root()
     assert_stage_root(root)
-    target = root / transfer_id
     try:
-        if target.is_symlink() or not target.is_dir():
-            raise LibraryError(NOT_STAGED)
-        resolved = target.resolve(strict=True)
-        if resolved.parent != root.resolve(strict=False):
-            raise LibraryError(NOT_STAGED)
+        target = _contained(root, transfer_id)
     except LibraryError:
         raise
     except OSError as exc:
         raise LibraryError(NOT_STAGED) from exc
+    if not target.is_dir():
+        raise LibraryError(NOT_STAGED)
     try:
         manifest = _load(transfer_id)
     except LibraryError:
@@ -2199,7 +2226,7 @@ def discard(transfer_id: object, confirm: object) -> dict[str, object]:
                 "id": transfer_id,
             }
         )
-    shutil.rmtree(resolved)
+    shutil.rmtree(target)
     return _finish(
         {
             "ok": True,
