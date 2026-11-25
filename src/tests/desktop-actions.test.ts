@@ -91,6 +91,8 @@ describe("desktop menu actions", () => {
     expect(state.mode).toBe("audio");
     runDesktopAction("view-gain");
     expect(state.mode).toBe("gain");
+    runDesktopAction("view-streams");
+    expect(state.mode).toBe("streams");
     runDesktopAction("view-compare");
     expect(state.mode).toBe("compare");
     runDesktopAction("view-all");

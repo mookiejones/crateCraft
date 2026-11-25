@@ -84,6 +84,7 @@ QUEUEABLE = frozenset(
         "/api/reanalyze",
         "/api/audio-changed",
         "/api/gain-changed",
+        "/api/streaming-swap",
         "/api/crate-compare",
         "/api/album-art",
         "/api/bitrate-check",
@@ -537,6 +538,10 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return audio_changed.action(request)
     if path == "/api/gain-changed":
         return stored_gain.action(request)
+    if path == "/api/streaming-swap":
+        import streaming_swap
+
+        return streaming_swap.action(request)
     if path == "/api/crate-compare":
         return crate_compare.action(request)
     if path == "/api/album-art":

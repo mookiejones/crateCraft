@@ -21,6 +21,7 @@ import { repaintEnergy } from "../health/energy";
 import { repaintReanalyze } from "../health/reanalyze";
 import { repaintAudioChanged } from "../health/audio-changed";
 import { repaintGainChanged } from "../health/gain-changed";
+import { repaintStreamingSwap } from "../health/streaming-swap";
 import { repaintCrateCompare } from "../crates/crate-compare";
 import { repaintPortable } from "../gig/portable";
 import { applyStatic, initialLocale, onLocaleChange, setLocale } from "../i18n";
@@ -60,6 +61,7 @@ export function repaintAll(): void {
   if (state.mode === "reanalyze") repaintReanalyze();
   if (state.mode === "audio") repaintAudioChanged();
   if (state.mode === "gain") repaintGainChanged();
+  if (state.mode === "streams") repaintStreamingSwap();
   if (state.mode === "compare") repaintCrateCompare();
   repaintPortable();
   repaintSnapshotPlan();

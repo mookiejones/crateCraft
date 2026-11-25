@@ -20,6 +20,7 @@
 [Re-analyze](Re-analyze)
 [Audio changed](Audio-Changed)
 [Gain changed](Gain-Changed)
+[Streaming repair](Streaming-Repair)
 [BPM check](BPM-Check)
 
 **The app**

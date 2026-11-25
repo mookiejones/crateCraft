@@ -46,6 +46,7 @@ import jobs
 import legacy_library
 import audio_changed
 import stored_gain
+import streaming_swap
 import lost_tags
 import library
 import library_health
@@ -2163,6 +2164,11 @@ class Handler(BaseHTTPRequestHandler):
                 space = require_space(query_text(query, "space"))
                 self.send_json(stored_gain.scan(Path(library.MASTER), space))
                 return
+            if parsed.path == "/api/streaming-swap":
+                space = require_space(query_text(query, "space"))
+                roots = streaming_swap._parse_roots(query.get("root"))
+                self.send_json(streaming_swap.plan(Path(library.MASTER), space, roots))
+                return
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
@@ -2399,6 +2405,7 @@ class Handler(BaseHTTPRequestHandler):
                     energizing = parsed.path == "/api/energy"
                     swapping = parsed.path == "/api/audio-changed"
                     gaining = parsed.path == "/api/gain-changed"
+                    streaming = parsed.path == "/api/streaming-swap"
                     covering = parsed.path == "/api/album-art"
                     bitrate_crate = parsed.path == "/api/bitrate-check"
                     bpm_check = parsed.path == "/api/bpm-sanity"
@@ -2477,6 +2484,12 @@ class Handler(BaseHTTPRequestHandler):
                                     and payload.get("confirm") is not True
                                 )
                             )
+                        )
+                        or (streaming and payload.get("action") == "preview")
+                        or (
+                            streaming
+                            and payload.get("action") == "apply"
+                            and payload.get("confirm") is not True
                         )
                         or (comparing and payload.get("action") == "preview")
                         or (covering and payload.get("action") == "preview")
@@ -2630,6 +2643,10 @@ class Handler(BaseHTTPRequestHandler):
                             and result.get("written")
                         ):
                             telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif streaming:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = streaming_swap.action(request)
                     elif comparing:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
