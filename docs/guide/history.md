@@ -1,6 +1,6 @@
 # History
 
-History is the record of tracks Serato has played. This view reads that record. It does not edit it.
+History is the record of tracks Serato has played. Browsing a session is read-only. **Rescue sessions** can restore chosen sessions from a backup or rebuild them as dated crates.
 
 ![History for a sample session named Friday. The row shows the deck, whether it played, and the start time.](../media/history.png)
 
@@ -19,3 +19,14 @@ The count above the list says **plays**, not tracks.
 **Open in library** switches to the Library space, selects **Crates** and **All tracks**, and opens that track. A history row with no library track has no **Open in library** button.
 
 If the sessions cannot be read, the page says **Could not read history.** If one session fails, it says **Could not read that session.** With no session selected, the list says **Choose a session.**
+
+## Rescue sessions
+
+Use this when a session disappeared after an upgrade or an accidental delete, or when Serato's history import left a gap.
+
+1. Under the session list, open **Rescue sessions**.
+2. Click **Scan sources** to list complete backups and snapshots. A Serato 3.x History folder is listed as **Not checked** and is not used for compare.
+3. Pick a source, then **Compare** for a per-session diff. Nothing is written.
+4. Check the sessions to restore or rebuild. Each row shows the session id, the name, and whether it is only in the source, only in live history, or the two sides disagree. Only-source and disagree rows can be selected.
+5. Prefer **Rebuild as crates**. Quit Serato first. Dated crates land under **History rescue (crateCraft)** and do not overwrite a crate you already made.
+6. **Restore sessions** writes the checked sessions back into live history only when this Serato version's history schema is checked. A session that is already in live history is skipped, so restoring the same session again does not duplicate it. A refused restore says to rebuild as crates instead. Restore takes a snapshot first and reads the sessions back; a failed verify rolls back.

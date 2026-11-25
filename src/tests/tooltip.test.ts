@@ -23,12 +23,20 @@ import {
   refreshTooltips,
   resetTooltipState,
   setTooltip,
+  tooltipRef,
   TOOLTIP_HOVER_MS,
   TOOLTIP_ID,
 } from "../lib/ui/tooltip";
 import { playTip, tipText, tips, wizardPrimaryTip, type TipSpec } from "../lib/ui/tooltip-strings";
 import { mountTrackList, paintRows, unmountTrackList } from "../lib/ui/virtual-scroll";
-import { renderCrates, renderFiles, renderSessions, selectEntry, selectTrack } from "../lib/ui/views";
+import {
+  renderCrates,
+  renderFiles,
+  renderSessions,
+  selectEntry,
+  selectTrack,
+  unmountHistoryRescue,
+} from "../lib/ui/views";
 
 function tip(): HTMLElement {
   const node = document.getElementById(TOOLTIP_ID);
@@ -139,6 +147,13 @@ describe("tooltip behavior", () => {
     expect(() => setTooltip(button, { key: "tooltip.missing" as TipSpec["key"] })).toThrow(/Unknown tooltip/);
   });
 
+  it("ignores a non-element ref from MUI useForkRef", () => {
+    const bind = tooltipRef(tips.historyRescueSource);
+    expect(() => bind({} as HTMLElement)).not.toThrow();
+    expect(() => bind(null)).not.toThrow();
+    expect(() => setTooltip({} as HTMLElement, tips.historyRescueSource)).not.toThrow();
+  });
+
   it("covers every static control and reports one whose sentence was removed", () => {
     expectCovered();
     const reload = document.getElementById("reload");
@@ -191,6 +206,7 @@ describe("rendered controls", () => {
   });
 
   afterEach(async () => {
+    unmountHistoryRescue();
     unmountTrackList();
     await drainReactScheduler();
     vi.unstubAllGlobals();

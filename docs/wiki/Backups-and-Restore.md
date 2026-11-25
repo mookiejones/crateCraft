@@ -31,6 +31,8 @@ Open **Backups**. **Take a backup** sits above a table of snapshots with **When*
 
 **Music files** on the same page copies library audio to a second drive or NAS. Type the backup folder, then **Preview**. **Copy** writes the files that are missing or whose size or hash differs. A same-name file is copied again when the size or hash does not match. Cue points stay in the audio because the copy is byte-for-byte. **Restore to this computer** copies dest files back and skips a laptop file that is newer. **Make crate** saves tracks that exist only on this laptop. **Relink missing** points missing rows at dest files. Dest cannot be the Serato folder, the Serato library, or a music folder.
 
+To back up an already-prepared gig stick (music plus `_Serato_`) without writing that stick, use **Back up this stick** under **Gig → Check drive**. That is a different job from **Music files**.
+
 **Protect BPM**, **Protect key**, and **Protect cues** in Settings keep those values when a save or a duplicate merge would change them. **Gig Lock** in Settings queues crate and track edits while you gig. The list sits on Backups. **Preview**, then **Apply**, after Serato is closed and Gig Lock is off. If Serato also changed that crate, both copies stay: the live crate as Serato left it, and a sibling named from crateCraft with the day and time. Each applied change can be undone for 30 days.
 
 **Batch** on Backups queues tracks and crates from more than one view. Preview shows the first item and writes nothing. Apply adds them to one crate under one snapshot. Undo puts that whole batch back. Quit Serato first.

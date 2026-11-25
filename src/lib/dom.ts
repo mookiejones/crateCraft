@@ -8,6 +8,7 @@
 export interface ElementIds {
   "crate-list": HTMLDivElement;
   "session-list": HTMLDivElement;
+  "history-rescue-host": HTMLDivElement;
   list: HTMLDivElement;
   "list-b": HTMLDivElement;
   "crate-panes": HTMLDivElement;

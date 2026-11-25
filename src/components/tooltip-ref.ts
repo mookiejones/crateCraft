@@ -13,6 +13,7 @@ import type { TipSpec } from "../lib/ui/tooltip-strings";
  */
 export function tooltipRef(spec: TipSpec) {
   return (element: HTMLElement | null) => {
-    if (element) setTooltip(element, spec);
+    // MUI Select/useForkRef can pass a non-element; only real hosts get tips.
+    if (element instanceof HTMLElement) setTooltip(element, spec);
   };
 }

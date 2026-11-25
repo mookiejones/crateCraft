@@ -138,6 +138,20 @@ export function portableSnapshot(): PortableSnapshot {
 }
 
 /**
+ * Remember which stick Check drive is looking at.
+ *
+ * The backup panel reads this so it can load the last backup when the
+ * drive is chosen, including before the drive-check response arrives.
+ *
+ * @param drive Volume root, or empty when no stick is selected.
+ * @returns {void}
+ */
+export function setStickDrive(drive: string): void {
+  stickDrive = portableDriveRoot(drive);
+  emitPortable();
+}
+
+/**
  * Store a stick-cue preview or the line under the buttons.
  *
  * @param report Parsed POST /api/stick-cues body, or null.
@@ -461,7 +475,7 @@ export async function runPortableCheck(path: string): Promise<void> {
   lastDrive = drive;
   showConfirm = false;
   showOverwrite = false;
-  stickDrive = drive;
+  setStickDrive(drive);
   stickReport = null;
   stickStatus = "";
   clearReport();
