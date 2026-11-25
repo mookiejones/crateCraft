@@ -45,6 +45,7 @@ RAIL_KEYS = (
     "view.portable",
     "view.drift",
     "view.octave",
+    "view.players",
 )
 
 
@@ -153,6 +154,7 @@ class DesktopMenuTests(unittest.TestCase):
             "Check drive",
             "Tempo drift",
             "BPM check",
+            "Won't play",
             "Take a backup",
             "Backups",
             "Review undo",
@@ -317,6 +319,7 @@ class DesktopMenuTests(unittest.TestCase):
                     catalog["view.portable"],
                     catalog["view.drift"],
                     catalog["view.octave"],
+                    catalog["view.players"],
                 ],
             )
             space = _child_menu(music, catalog["space.label"])

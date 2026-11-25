@@ -129,6 +129,7 @@ export interface PageState {
   gigToken: number;
   driftToken: number;
   octaveToken: number;
+  playersToken: number;
   healthToken: number;
   statsToken: number;
   scanToken: number;
@@ -215,6 +216,7 @@ export const state: PageState = {
   gigToken: 0,
   driftToken: 0,
   octaveToken: 0,
+  playersToken: 0,
   healthToken: 0,
   statsToken: 0,
   scanToken: 0,

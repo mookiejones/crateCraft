@@ -125,6 +125,7 @@ import {
 } from "../lib/gig/gig";
 import { getDriftSnapshot, subscribeDrift } from "../lib/gig/drift";
 import { getOctaveSnapshot, subscribeOctave } from "../lib/gig/octave";
+import { getPlayersSnapshot, subscribePlayers } from "../lib/gig/players";
 import { portableSnapshot, subscribePortable } from "../lib/gig/portable";
 import { subscribeHealth } from "../lib/health/health-events";
 import { getHealthListSnapshot } from "../lib/health/health-list";
@@ -283,6 +284,7 @@ function readGigValue(): GigContextValue {
     gig: getGigSnapshot(),
     drift: getDriftSnapshot(),
     octave: getOctaveSnapshot(),
+    players: getPlayersSnapshot(),
     portable: portableSnapshot(),
     nextStep: nextGigStep,
     backStep: backGigStep,
@@ -465,11 +467,13 @@ export function GigProvider({ children }: { children: ReactNode }) {
     const stopGig = subscribeGig(refresh);
     const stopDrift = subscribeDrift(refresh);
     const stopOctave = subscribeOctave(refresh);
+    const stopPlayers = subscribePlayers(refresh);
     const stopPortable = subscribePortable(refresh);
     return () => {
       stopGig();
       stopDrift();
       stopOctave();
+      stopPlayers();
       stopPortable();
     };
   }, []);

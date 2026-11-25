@@ -155,6 +155,13 @@ export interface ElementIds {
   "octave-status": HTMLParagraphElement;
   "octave-report": HTMLDivElement;
   "octave-refresh": HTMLButtonElement;
+  "players-panel": HTMLElement;
+  "players-scope": HTMLParagraphElement;
+  "players-target": HTMLSelectElement;
+  "players-show": HTMLSelectElement;
+  "players-status": HTMLParagraphElement;
+  "players-report": HTMLDivElement;
+  "players-refresh": HTMLButtonElement;
   "stats-panel": HTMLElement;
   "stats-scope": HTMLParagraphElement;
   "stats-period": HTMLSelectElement;

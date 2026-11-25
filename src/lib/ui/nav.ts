@@ -34,7 +34,8 @@ export type ViewMode =
   | "gig"
   | "portable"
   | "drift"
-  | "octave";
+  | "octave"
+  | "players";
 
 export interface NavGroup {
   id: NavGroupId;
@@ -47,7 +48,7 @@ export const NAV_GROUPS: readonly NavGroup[] = [
   { id: "files", labelKey: "view.files", modes: ["files"] },
   { id: "health", labelKey: "view.group.health", modes: ["health", "missing", "duplicates", "stems", "scan", "bitrate", "tags", "lost", "energy", "reanalyze", "audio", "gain"] },
   { id: "backups", labelKey: "view.snapshots", modes: ["snapshots"] },
-  { id: "gig", labelKey: "view.group.gig", modes: ["gig", "portable", "drift", "octave"] },
+  { id: "gig", labelKey: "view.group.gig", modes: ["gig", "portable", "drift", "octave", "players"] },
 ];
 
 const lastMode: Partial<Record<NavGroupId, ViewMode>> = {};

@@ -178,6 +178,7 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
                         item("view.portable", "view-portable"),
                         item("view.drift", "view-drift"),
                         item("view.octave", "view-octave"),
+                        item("view.players", "view-players"),
                     ],
                 ),
                 MenuSeparator(),

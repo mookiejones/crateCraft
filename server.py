@@ -54,6 +54,7 @@ import music_mirror
 import quality_line
 import music_roots
 import path_forms
+import player_compat
 import portable_smart
 import rekordbox
 import related
@@ -1882,7 +1883,7 @@ class Handler(BaseHTTPRequestHandler):
         Health, version, and the portable-drive check are answered before the library is opened.
         Settings and logs are answered before the library routes. Library,
         status, track, history, duplicate, file, related-track, gig-check,
-        tempo-drift, bpm-sanity, M3U, and rekordbox XML paths return data. Every other path is a file
+        tempo-drift, bpm-sanity, player-compat, M3U, and rekordbox XML paths return data. Every other path is a file
         under static/. A Host or Origin that is not this computer is refused first.
         """
         try:
@@ -1896,7 +1897,7 @@ class Handler(BaseHTTPRequestHandler):
         """Answer a GET request.
 
         Health, version, and the portable-drive check do not open the library.
-        Library, status, track, history, duplicate, file, related-track, gig-check, tempo-drift, bpm-sanity, M3U, and rekordbox
+        Library, status, track, history, duplicate, file, related-track, gig-check, tempo-drift, bpm-sanity, player-compat, M3U, and rekordbox
         XML paths return data. Every other path is a file under static/.
         """
         parsed = urlparse(self.path)
@@ -2118,6 +2119,15 @@ class Handler(BaseHTTPRequestHandler):
                 crate_id = crate_query(query_text(query, "crate", "all") or "all")
                 bpm_sanity.require_crate(crate_id)
                 self.send_json(bpm_sanity.scan(Path(library.MASTER), space, crate_id))
+                return
+            if parsed.path == "/api/player-compat":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                player = query_text(query, "player", "club") or "club"
+                scope = query_text(query, "scope", "") or None
+                self.send_json(player_compat.scan(
+                    Path(library.MASTER), space, crate_id, player, scope,
+                ))
                 return
             if parsed.path == "/api/file-scan":
                 space = require_space(query_text(query, "space"))

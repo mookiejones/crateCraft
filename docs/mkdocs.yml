@@ -76,6 +76,7 @@ nav:
       - Ready: guide/gig-check.md
       - Tempo drift: guide/tempo-drift.md
       - BPM check: guide/bpm-check.md
+      - Won't play: guide/wont-play.md
       - Duplicates: guide/duplicates.md
       - Stems: guide/stems.md
       - Damaged files: guide/file-scan.md
