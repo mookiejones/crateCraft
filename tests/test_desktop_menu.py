@@ -42,6 +42,7 @@ RAIL_KEYS = (
     "view.snapshots",
     "view.group.gig",
     "view.gig",
+    "view.cloud",
     "view.portable",
     "view.drift",
     "view.octave",
@@ -314,6 +315,7 @@ class DesktopMenuTests(unittest.TestCase):
                 _action_titles(gig),
                 [
                     catalog["view.gig"],
+                    catalog["view.cloud"],
                     catalog["view.portable"],
                     catalog["view.drift"],
                     catalog["view.octave"],

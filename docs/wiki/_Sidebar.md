@@ -22,6 +22,7 @@
 [Audio changed](Audio-Changed)
 [Gain changed](Gain-Changed)
 [BPM check](BPM-Check)
+[Cloud-only](Cloud-Only)
 
 **The app**
 
