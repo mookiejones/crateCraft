@@ -22,6 +22,7 @@ import {
 } from "../lib/gig/stick-cues";
 import { t } from "../lib/i18n";
 import { setNotice } from "../lib/ui/notice-store";
+import { StickBackupPanel } from "./StickBackupPanel";
 import { tooltipRef } from "./tooltip-ref";
 import { tips } from "../lib/ui/tooltip-strings";
 
@@ -162,6 +163,7 @@ export function PortableFindings() {
   return (
     <>
       <PortableReport />
+      <StickBackupPanel />
       <StickCuePanel surface="gig" />
     </>
   );

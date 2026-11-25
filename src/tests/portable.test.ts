@@ -17,6 +17,7 @@ import {
   portableSeratoRoots,
   renderPortableReport,
   repaintPortable,
+  setStickDrive,
   unmountPortable,
   wirePortable,
   type DriveReport,
@@ -133,6 +134,7 @@ describe("portable drive check", () => {
   beforeEach(() => {
     installPage();
     setLocale("en");
+    setStickDrive("");
     fetchMock.mockReset();
     vi.stubGlobal("fetch", fetchMock);
     state.mode = "files";
@@ -148,6 +150,11 @@ describe("portable drive check", () => {
     mountFilesIslands();
   });
 
+  afterEach(() => {
+    unmountPortable();
+    setStickDrive("");
+  });
+
   it("offers the check only on a removable Serato drive and does not write", async () => {
     renderFiles();
     const buttons = [...document.querySelectorAll<HTMLButtonElement>(".files-portable")];
@@ -158,15 +165,17 @@ describe("portable drive check", () => {
     expect(buttons).toHaveLength(2);
 
     const body = report();
-    fetchMock.mockResolvedValue(jsonResponse(body));
+    fetchMock.mockImplementation(() => Promise.resolve(jsonResponse(body)));
     buttons[0]?.click();
     await vi.waitFor(() => {
       expect(document.querySelector("#portable-verdict")?.textContent).toBe(
         "Not ready. Fix these on the laptop first.",
       );
     });
-    expect(fetchMock).toHaveBeenCalledOnce();
-    expect(fetchMock.mock.calls[0]).toEqual(["/api/drive-check?drive=%2FVolumes%2FGIGDRIVE"]);
+    expect(fetchMock.mock.calls.map((call) => call[0])).toEqual([
+      "/api/stick-backup?source=%2FVolumes%2FGIGDRIVE",
+      "/api/drive-check?drive=%2FVolumes%2FGIGDRIVE",
+    ]);
     expect((document.querySelector("#portable-dialog") as HTMLDialogElement).open).toBe(true);
     expect(document.querySelector("#portable-verdict")?.textContent).toBe("Not ready. Fix these on the laptop first.");
     expect(document.querySelector("#portable-summary")?.textContent).toBe(body.summary);
@@ -184,7 +193,7 @@ describe("portable drive check", () => {
   it("copies the checked drive from the dialog, not the Gig picker", async () => {
     renderFiles();
     const button = document.querySelector<HTMLButtonElement>(".files-portable");
-    fetchMock.mockResolvedValue(jsonResponse(report()));
+    fetchMock.mockImplementation(() => Promise.resolve(jsonResponse(report())));
     button?.click();
     await vi.waitFor(() => {
       expect(document.querySelector("#portable-verdict")?.textContent).toBe(
@@ -285,6 +294,7 @@ describe("portable drive view", () => {
   beforeEach(() => {
     installPage();
     setLocale("en");
+    setStickDrive("");
     applyStatic(document);
     applyStaticTooltips();
     fetchMock.mockReset();
@@ -318,6 +328,7 @@ describe("portable drive view", () => {
     expect(document.querySelector("#portable-offline")?.textContent).not.toContain("missing file");
     expect(fetchMock.mock.calls.map((call) => call[0])).toEqual([
       "/api/library-roots",
+      "/api/stick-backup?source=%2FVolumes%2FGIGDRIVE",
       "/api/drive-check?drive=%2FVolumes%2FGIGDRIVE",
     ]);
     expect(document.querySelector("#portable-view-verdict")?.textContent).toBe(

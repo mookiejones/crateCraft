@@ -999,6 +999,73 @@ export interface MusicMirrorReport {
   code?: string;
 }
 
+export interface StickBackupRow {
+  file?: string;
+  rel?: string;
+  source?: string;
+  dest?: string;
+}
+
+export interface StickBackupReport {
+  source?: string;
+  dest?: string;
+  preview?: boolean;
+  written?: boolean;
+  copied?: number;
+  verified?: boolean;
+  warning?: string | null;
+  last_backup?: { dest?: string; at?: string; verified?: boolean } | null;
+  copy?: StickBackupRow[];
+  copy_count?: number;
+  skip_count?: number;
+  mismatch?: StickBackupRow[];
+  mismatch_count?: number;
+  fat_tolerance?: boolean;
+  error?: string;
+  code?: string;
+}
+
+export interface HistoryRescueSource {
+  id?: string;
+  kind?: string;
+  label?: string;
+  status?: string;
+  detail?: string;
+  path?: string;
+  created?: string;
+}
+
+export interface HistoryRescueReport {
+  preview?: boolean;
+  written?: boolean;
+  action?: string;
+  source?: string;
+  space?: string;
+  sources?: HistoryRescueSource[];
+  write_back?: { allowed?: boolean; reason?: string | null; code?: string | null };
+  only_live?: unknown[];
+  only_live_count?: number;
+  only_source?: unknown[];
+  only_source_count?: number;
+  both?: unknown[];
+  both_count?: number;
+  disagree?: unknown[];
+  disagree_count?: number;
+  sessions?: unknown[];
+  session_count?: number;
+  parent?: { id?: number; name?: string } | null;
+  parent_name?: string;
+  crates?: unknown[];
+  crate_count?: number;
+  restored?: unknown[];
+  restored_count?: number;
+  skipped?: unknown[];
+  skipped_count?: number;
+  snapshot_id?: string | null;
+  error?: string;
+  code?: string;
+}
+
 export interface WriteQueueItem {
   id?: string;
   path?: string;

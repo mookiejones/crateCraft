@@ -78,6 +78,7 @@ import { CrateBrowserActions } from "../../pages/CrateBrowserActions";
 import { CrateTree } from "../../pages/CrateTree";
 import { HistoryDetail } from "../../pages/HistoryDetail";
 import { HistorySessions } from "../../pages/HistorySessions";
+import { HistoryRescuePanel } from "../../components/HistoryRescuePanel";
 import { PlayButton } from "../../components/PlayButton";
 import { TrackDetailPane } from "../../components/TrackDetail";
 import { bindCrateActions, emitCrates } from "../crates/crate-store";
@@ -148,6 +149,8 @@ let historyDetailRoot: IslandRoot | null = null;
 let historyDetailHost: HTMLElement | null = null;
 let sessionRoot: IslandRoot | null = null;
 let sessionHost: HTMLElement | null = null;
+let historyRescueRoot: IslandRoot | null = null;
+let historyRescueHost: HTMLElement | null = null;
 
 function clearDetailIslands(): void {
   detailRoot?.unmount();
@@ -539,7 +542,16 @@ export function renderShell() {
   el("export-rekordbox").hidden = !cratesMode;
   el("import-m3u").hidden = !cratesMode;
   el("session-list").hidden = !historyMode;
+  const rescueHost = document.getElementById("history-rescue-host");
+  if (rescueHost instanceof HTMLElement) {
+    rescueHost.hidden = !historyMode;
+  }
   el("mode-note").hidden = cratesMode || historyMode;
+  if (historyMode) {
+    renderHistoryRescue();
+  } else {
+    unmountHistoryRescue();
+  }
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
   const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || octaveMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || reanalyzeMode || audioMode || gainMode;
@@ -2470,6 +2482,37 @@ export function renderSessions() {
     root: sessionRoot,
   });
   sessionHost = host;
+  renderHistoryRescue();
+}
+
+/**
+ * Mount the history rescue panel under the session list.
+ */
+export function renderHistoryRescue() {
+  const node = document.getElementById("history-rescue-host");
+  if (!(node instanceof HTMLElement)) return;
+  historyRescueRoot = remountIsland(node, createElement(HistoryRescuePanel), {
+    host: historyRescueHost,
+    root: historyRescueRoot,
+  });
+  historyRescueHost = node;
+}
+
+/**
+ * Unmount the history rescue island.
+ *
+ * Tests replace ``document.body`` between cases. Unmount first so MUI
+ * refs do not run after jsdom drops the host.
+ */
+export function unmountHistoryRescue(): void {
+  if (!historyRescueRoot) return;
+  try {
+    historyRescueRoot.unmount();
+  } catch {
+    // Host may already be gone.
+  }
+  historyRescueRoot = null;
+  historyRescueHost = null;
 }
 
 /**
