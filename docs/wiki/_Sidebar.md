@@ -21,6 +21,7 @@
 [Re-analyze](Re-analyze)
 [Audio changed](Audio-Changed)
 [Gain changed](Gain-Changed)
+[Broken smart crates](Broken-Smart-Crates)
 [Streaming repair](Streaming-Repair)
 [BPM check](BPM-Check)
 [Cloud-only](Cloud-Only)

@@ -79,6 +79,8 @@ ERROR_CODES: dict[str, str] = {
     "Confirm before stored gain is reset to 0 dB.": "gain_needs_confirm",
     "That repair does not match the current list.": "streams_mismatch",
     "The gain did not read back as 0 dB, so the files were put back.": "gain_did_not_stick",
+    "The write did not match what was asked, so the library was put back. "
+    "The smart-crate rules are still missing.": "broken_rules_rolled_back",
     "Other Serato tags would have changed, so the files were put back.": "gain_frames_moved",
     "Stored gain could not be rewritten, so nothing was kept.": "gain_cannot_rewrite",
     path_forms.NEEDS_CONFIRM: "path_forms_needs_confirm",

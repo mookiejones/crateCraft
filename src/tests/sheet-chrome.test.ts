@@ -49,6 +49,7 @@ describe("sheet chrome", () => {
     expect(isCrateScopedMode("lost")).toBe(false);
     expect(isCrateScopedMode("audio")).toBe(false);
     expect(isCrateScopedMode("gain")).toBe(false);
+    expect(isCrateScopedMode("broken")).toBe(false);
     expect(isCrateScopedMode("streams")).toBe(false);
     expect(isCrateScopedMode("compare")).toBe(false);
     expect(isCrateScopedMode("files")).toBe(false);

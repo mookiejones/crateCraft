@@ -54,6 +54,7 @@ describe("rail groups", () => {
       "reanalyze",
       "audio",
       "gain",
+      "broken",
       "streams",
       "snapshots",
       "gig",
@@ -75,6 +76,7 @@ describe("rail groups", () => {
     expect(document.querySelector("[data-view='reanalyze']")?.textContent).toBe("Re-analyze");
     expect(document.querySelector("[data-view='audio']")?.textContent).toBe("Audio changed");
     expect(document.querySelector("[data-view='gain']")?.textContent).toBe("Gain changed");
+    expect(document.querySelector("[data-view='broken']")?.textContent).toBe("Broken smart crates");
     expect(document.querySelector("[data-view='streams']")?.textContent).toBe("Streaming repair");
     expect(document.querySelector("[data-view='snapshots']")?.textContent).toBe("Backups");
     expect(document.querySelector("[data-view='gig']")?.textContent).toBe("Ready");

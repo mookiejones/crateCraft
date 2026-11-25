@@ -39,6 +39,7 @@ RAIL_KEYS = (
     "view.reanalyze",
     "view.audio",
     "view.gain",
+    "view.broken",
     "view.streams",
     "view.snapshots",
     "view.group.gig",
@@ -311,6 +312,7 @@ class DesktopMenuTests(unittest.TestCase):
                     catalog["view.reanalyze"],
                     catalog["view.audio"],
                     catalog["view.gain"],
+                    catalog["view.broken"],
                     catalog["view.streams"],
                 ],
             )

@@ -257,6 +257,15 @@ export interface ElementIds {
   "gain-status": HTMLParagraphElement;
   "gain-report": HTMLDivElement;
   "gain-heading": HTMLHeadingElement;
+  "broken-panel": HTMLElement;
+  "broken-scope": HTMLParagraphElement;
+  "broken-hint": HTMLParagraphElement;
+  "broken-refresh": HTMLButtonElement;
+  "broken-repair": HTMLButtonElement;
+  "broken-undo": HTMLButtonElement;
+  "broken-status": HTMLParagraphElement;
+  "broken-report": HTMLDivElement;
+  "broken-heading": HTMLHeadingElement;
   "streams-panel": HTMLElement;
   "streams-scope": HTMLParagraphElement;
   "streams-hint": HTMLParagraphElement;
