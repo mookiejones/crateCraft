@@ -257,6 +257,14 @@ export interface ElementIds {
   "gain-status": HTMLParagraphElement;
   "gain-report": HTMLDivElement;
   "gain-heading": HTMLHeadingElement;
+  "streams-panel": HTMLElement;
+  "streams-scope": HTMLParagraphElement;
+  "streams-hint": HTMLParagraphElement;
+  "streams-refresh": HTMLButtonElement;
+  "streams-repair": HTMLButtonElement;
+  "streams-status": HTMLParagraphElement;
+  "streams-report": HTMLDivElement;
+  "streams-heading": HTMLHeadingElement;
   "crate-search": HTMLInputElement;
   reload: HTMLButtonElement;
   "export-m3u": HTMLButtonElement;

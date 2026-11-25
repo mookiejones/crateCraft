@@ -90,6 +90,7 @@ describe("parseHash", () => {
       "reanalyze",
       "audio",
       "gain",
+      "streams",
       "snapshots",
       "gig",
       "cloud",

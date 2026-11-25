@@ -368,6 +368,10 @@ export const tips = {
   viewReanalyze: spec("tooltip.viewReanalyze"),
   viewAudio: spec("tooltip.viewAudio"),
   viewGain: spec("tooltip.viewGain"),
+  viewStreams: spec("tooltip.viewStreams"),
+  streamsRefresh: spec("tooltip.streamsRefresh"),
+  streamsRepair: spec("tooltip.streamsRepair"),
+  streamsConfirm: spec("tooltip.streamsConfirm"),
   lostApply: spec("tooltip.lostApply"),
   lostRefresh: spec("tooltip.lostRefresh"),
   energyApply: spec("tooltip.energyApply"),
@@ -533,6 +537,7 @@ export function viewTip(view: string): TipSpec | undefined {
     reanalyze: tips.viewReanalyze,
     audio: tips.viewAudio,
     gain: tips.viewGain,
+    streams: tips.viewStreams,
   };
   return known[view];
 }
@@ -676,6 +681,8 @@ export function staticTip(id: string): TipSpec | undefined {
     "gain-save": tips.gainSave,
     "gain-reset": tips.gainReset,
     "gain-undo": tips.gainUndo,
+    "streams-refresh": tips.streamsRefresh,
+    "streams-repair": tips.streamsRepair,
     "snapshots-take": tips.snapshotsTake,
     "lan-stage-listen": tips.lanStageListen,
     "lan-stage-stop": tips.lanStageStop,

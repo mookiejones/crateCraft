@@ -77,6 +77,7 @@ ERROR_CODES: dict[str, str] = {
     cue_edit.OUTSIDE_CHANGE: "cue_edit_outside_change",
     cue_edit.BAD_PADS: "cue_edit_bad_pads",
     "Confirm before stored gain is reset to 0 dB.": "gain_needs_confirm",
+    "That repair does not match the current list.": "streams_mismatch",
     "The gain did not read back as 0 dB, so the files were put back.": "gain_did_not_stick",
     "Other Serato tags would have changed, so the files were put back.": "gain_frames_moved",
     "Stored gain could not be rewritten, so nothing was kept.": "gain_cannot_rewrite",

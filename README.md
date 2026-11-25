@@ -47,6 +47,7 @@ The first launch of crateCraft copies the old app folder (`Serato Library` on ma
 These are on `main` (1.1.0).
 
 - Browse crates, history, missing files, stems, and Prepare.
+- **Streaming repair** under **Health** points a greyed-out Beatport or Beatsource track at a local file with the same artist and title. The library row stays, so its colour and its place in each crate stay. Cue points already in the file are left as they are. Quit Serato first. See [Streaming repair](docs/guide/streaming-repair.md).
 - Play a track in the window. Double-click a row, or use Play. The player bar has pause, seek, and volume. Only files already in the library are streamed, and playback does not write to them.
 - Merge duplicate copies into the file you keep. Cue points stay in the audio file.
 - Import and export M3U from Crates. Export `rekordbox.xml` from the Rekordbox dialog. **Hot loops** starts off, and the app remembers that checkbox in its settings. Uses a free hot-cue pad. The loss report names a crate name a player may not display, a beatgrid marker that had to move, and a cue kept once or left out. What that file keeps is in [docs/coming-from-rekordbox.md](docs/coming-from-rekordbox.md).

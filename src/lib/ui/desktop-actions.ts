@@ -52,6 +52,7 @@ const VIEWS: Record<string, string> = {
   "view-reanalyze": "reanalyze",
   "view-audio": "audio",
   "view-gain": "gain",
+  "view-streams": "streams",
   "view-snapshots": "snapshots",
   "view-gig": "gig",
   "view-portable": "portable",

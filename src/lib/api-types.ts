@@ -1714,6 +1714,45 @@ export interface CrateComparePlan extends CrateCompareReport {
   warning?: string;
 }
 
+export interface StreamingCandidate {
+  path: string;
+  confidence: string;
+  reason: string;
+  usable: boolean;
+}
+
+export interface StreamingCratePlace {
+  id: number;
+  name: string;
+  list_order: number | null;
+}
+
+export interface StreamingTrack {
+  asset_id: number;
+  service: string;
+  title: string;
+  artist: string;
+  color: number | null;
+  stored: string;
+  cues: string;
+  crates: StreamingCratePlace[];
+  match: StreamingCandidate | null;
+  candidates: StreamingCandidate[];
+}
+
+export interface StreamingSwapPlan {
+  tracks: StreamingTrack[];
+  truncated: boolean;
+  cues: string;
+  note: string;
+  roots: string[];
+  preview: boolean;
+  written: boolean;
+  swaps?: Array<{ asset_id: number; path: string }>;
+  error?: string;
+  code?: string;
+}
+
 export interface ErrorBody {
   error?: string;
   /** Stable code for a known error sentence. The page translates it. */

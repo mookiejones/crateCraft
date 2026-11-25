@@ -43,6 +43,7 @@ import { loadEnergy, showEnergyFailure } from "../health/energy";
 import { loadReanalyze, showReanalyzeFailure } from "../health/reanalyze";
 import { loadAudioChanged, showAudioChangedFailure } from "../health/audio-changed";
 import { loadGainChanged, showGainChangedFailure } from "../health/gain-changed";
+import { loadStreamingSwap, showStreamingSwapFailure } from "../health/streaming-swap";
 import { loadCrateCompare, showCrateCompareFailure } from "../crates/crate-compare";
 import { loadPortableView, showPortableFailure } from "../gig/portable";
 import { mountFilesIslands } from "../files/files-mount";
@@ -537,6 +538,7 @@ export function renderShell() {
   const reanalyzeMode = state.mode === "reanalyze";
   const audioMode = state.mode === "audio";
   const gainMode = state.mode === "gain";
+  const streamsMode = state.mode === "streams";
   const historyMode = state.mode === "history";
   const showCrates = cratesMode || gigMode || cloudMode || driftMode || octaveMode || playersMode || healthMode || scanMode || bitrateMode || energyMode || reanalyzeMode;
   el("crate-tools").hidden = !showCrates;
@@ -558,7 +560,7 @@ export function renderShell() {
   }
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || cloudMode || portableMode || driftMode || octaveMode || playersMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || reanalyzeMode || audioMode || gainMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || cloudMode || portableMode || driftMode || octaveMode || playersMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || reanalyzeMode || audioMode || gainMode || streamsMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
@@ -581,6 +583,7 @@ export function renderShell() {
   el("reanalyze-panel").hidden = !reanalyzeMode;
   el("audio-panel").hidden = !audioMode;
   el("gain-panel").hidden = !gainMode;
+  el("streams-panel").hidden = !streamsMode;
   const listNote = healthListNote();
   if (listNote) el("mode-note").textContent = listNote;
   if (filesMode) el("mode-note").textContent = t("mode.files");
@@ -652,6 +655,10 @@ export function renderShell() {
     el("mode-note").textContent = t("mode.gain");
     document.querySelector(".rules")?.remove();
   }
+  if (streamsMode) {
+    el("mode-note").textContent = t("mode.streams");
+    document.querySelector(".rules")?.remove();
+  }
   if (snapshotsMode) {
     el("mode-note").textContent = t("mode.snapshots");
   }
@@ -695,7 +702,7 @@ export function renderShell() {
     el("crate-foot").textContent = state.activeCrate === "all" ? t("crates.allTracks") : (crate?.name ?? t("crates.selectedCrate"));
     return;
   }
-  if (tagsMode || lostMode || audioMode || gainMode || statsMode || compareMode) {
+  if (tagsMode || lostMode || audioMode || gainMode || streamsMode || statsMode || compareMode) {
     el("crate-foot").textContent = t("gig.wholeSpace");
     return;
   }
@@ -2700,6 +2707,7 @@ export function setMode(mode: string) {
   if (mode === "reanalyze") loadReanalyze().catch(showReanalyzeFailure);
   if (mode === "audio") loadAudioChanged().catch(showAudioChangedFailure);
   if (mode === "gain") loadGainChanged().catch(showGainChangedFailure);
+  if (mode === "streams") loadStreamingSwap().catch(showStreamingSwapFailure);
   if (mode === "compare") loadCrateCompare().catch(showCrateCompareFailure);
   renderList();
   syncHash();
@@ -2904,6 +2912,7 @@ export function wireLibrary(): void {
     if (state.mode === "reanalyze") jobs.push(loadReanalyze().catch(showReanalyzeFailure));
     if (state.mode === "audio") jobs.push(loadAudioChanged().catch(showAudioChangedFailure));
     if (state.mode === "gain") jobs.push(loadGainChanged().catch(showGainChangedFailure));
+    if (state.mode === "streams") jobs.push(loadStreamingSwap().catch(showStreamingSwapFailure));
     if (state.mode === "compare") jobs.push(loadCrateCompare().catch(showCrateCompareFailure));
     Promise.all(jobs).catch(showFailure);
   });
@@ -2949,6 +2958,7 @@ export function wireLibrary(): void {
       if (state.mode === "reanalyze") return loadReanalyze().catch(showReanalyzeFailure);
       if (state.mode === "audio") return loadAudioChanged().catch(showAudioChangedFailure);
       if (state.mode === "gain") return loadGainChanged().catch(showGainChangedFailure);
+      if (state.mode === "streams") return loadStreamingSwap().catch(showStreamingSwapFailure);
       if (state.mode === "compare") return loadCrateCompare().catch(showCrateCompareFailure);
       return null;
     }).catch(showFailure);
