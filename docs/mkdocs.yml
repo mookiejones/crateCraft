@@ -62,6 +62,7 @@ nav:
       - First install: first-install.md
       - Install: guide/install.md
       - Safety and backups: guide/safety.md
+      - Backup Mac: guide/backup-mac.md
       - Is my library safe?: is-my-library-safe.md
       - Panic: panic.md
   - Your library:

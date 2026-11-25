@@ -28,6 +28,7 @@ import crate_trees
 import folder_sync
 import version_family
 import legacy_library
+import lan_stage
 import music_mirror
 import other_dj
 import smart_presets
@@ -190,6 +191,22 @@ ERROR_CODES: dict[str, str] = {
     "No tracks fit tonight crates.": "tonight_empty",
     folder_sync.SMART: "smart_crate_tracks",
     folder_sync.ROOT_CRATE: "crate_not_root",
+    lan_stage.CHOOSE_CRATES: "stage_choose_crates",
+    lan_stage.TOO_MANY: "stage_too_many",
+    lan_stage.FINGERPRINT: "stage_fingerprint",
+    lan_stage.BAD_CODE: "stage_bad_code",
+    lan_stage.BAD_HOST: "stage_bad_host",
+    lan_stage.BAD_PORT: "stage_bad_port",
+    lan_stage.NOT_LISTENING: "stage_not_listening",
+    lan_stage.NOT_STAGED: "stage_not_found",
+    lan_stage.ALREADY: "stage_already",
+    lan_stage.IN_PROGRESS: "stage_in_progress",
+    lan_stage.STAGE_SNAPSHOT: "stage_snapshot",
+    lan_stage.STAGE_LIBRARY: "stage_dest_library",
+    lan_stage.STAGE_SERATO: "stage_dest_serato",
+    lan_stage.LISTEN_FAILED: "stage_listen_failed",
+    lan_stage.NO_SPACE: "stage_no_space",
+    lan_stage.STAGE_NAME: "stage_name",
     music_mirror.DEST_SERATO: "mirror_dest_serato",
     music_mirror.DEST_LIBRARY: "mirror_dest_library",
     music_mirror.DEST_MUSIC: "mirror_dest_music",

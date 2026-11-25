@@ -14,6 +14,7 @@
 [Playback](Playback)
 [Hot loops and Cue points](Hot-Loops-and-Cue-Points)
 [Backups and restore](Backups-and-Restore)
+[Backup Mac](Backup-Mac)
 [Export to Rekordbox](Export-to-Rekordbox)
 [Organizing files](Organizing-Files)
 [Related tracks](Related-Tracks)

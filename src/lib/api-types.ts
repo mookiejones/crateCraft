@@ -964,6 +964,76 @@ export interface BitrateCratePlan extends BitrateCheckReport {
   warning?: string | null;
 }
 
+export interface LanStageFile {
+  file?: string;
+  name?: string;
+  artist?: string;
+  rel?: string;
+  size?: number;
+  reason_code?: string;
+  reason?: string;
+}
+
+export interface LanStageCrate {
+  id?: number;
+  name?: string;
+  color?: number | null;
+  smart?: boolean;
+  ancestry?: string[];
+  tracks?: number;
+  matched?: number;
+}
+
+export interface LanStageInbox {
+  id?: string;
+  label?: string;
+  status?: string;
+  file_count?: number;
+  byte_count?: number;
+  skipped_count?: number;
+  failed_count?: number;
+  crates?: number;
+  snapshot_id?: string | null;
+  auto_mirror?: boolean;
+}
+
+export interface LanStageReport {
+  ok?: boolean;
+  preview?: boolean;
+  written?: boolean;
+  library_written?: boolean;
+  staged?: boolean;
+  removed?: boolean;
+  undone?: boolean;
+  auto_mirror?: boolean;
+  listening?: boolean;
+  code?: string;
+  port?: number | null;
+  host?: string;
+  addresses?: string[];
+  inbox?: LanStageInbox[];
+  id?: string;
+  label?: string;
+  status?: string;
+  space?: string;
+  crates?: LanStageCrate[];
+  files?: LanStageFile[];
+  skipped?: LanStageFile[];
+  failed?: LanStageFile[];
+  file_count?: number;
+  byte_count?: number;
+  skipped_count?: number;
+  failed_count?: number;
+  fingerprint?: string;
+  sent?: number;
+  matched?: number;
+  unmatched?: LanStageFile[];
+  unmatched_count?: number;
+  snapshot_id?: string | null;
+  queued?: boolean;
+  error?: string;
+}
+
 export interface MusicMirrorRow {
   id?: number;
   source?: string;
