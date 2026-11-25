@@ -85,6 +85,8 @@ ERROR_CODES: dict[str, str] = {
     stick_cues.NEEDS_DRIVE: "stick_needs_drive",
     "Choose a crate for a tempo check.": "tempo_needs_crate",
     "Choose a crate for a BPM check.": "bpm_needs_crate",
+    "Choose a crate, or scan the whole library.": "player_needs_crate",
+    "That player is not in the list.": "player_unknown",
     "That track is not half or double the crate.": "bpm_not_flagged",
     "That fix does not match this track.": "bpm_fix_mismatch",
     "Confirm the BPM change before it is saved.": "bpm_needs_confirm",

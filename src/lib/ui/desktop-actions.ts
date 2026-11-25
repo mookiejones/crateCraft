@@ -58,6 +58,7 @@ const VIEWS: Record<string, string> = {
   "view-drift": "drift",
   "view-octave": "octave",
   "view-cloud": "cloud",
+  "view-players": "players",
 };
 
 /**

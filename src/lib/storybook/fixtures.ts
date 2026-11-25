@@ -17,6 +17,7 @@ import type {
   TagClusters,
   BpmSanityReport,
   CloudFilesReport,
+  PlayerCompatReport,
   TempoDriftReport,
   Track,
 } from "../api-types";
@@ -430,6 +431,35 @@ export const octaveReport: BpmSanityReport = {
   ],
 };
 
+export const playersReport: PlayerCompatReport = {
+  player: "club",
+  documents: [{ code: "DRI1052", url: "https://example.test/dri1052" }],
+  filesystems: ["FAT16", "FAT32", "HFS+"],
+  filesystems_not_supported: ["NTFS", "exFAT"],
+  notes: ["club_flac"],
+  limits: [{ kind: "wav", rates: [44100, 48000], depths: [16, 24], versions: [], min_kbps: null, max_kbps: null }],
+  read_only: true,
+  scope: "crate",
+  crate: 5,
+  checked: 1,
+  counts: { will_play: 0, check_first: 0, wont_play: 1, unknown: 0 },
+  tracks: [{
+    id: 9,
+    name: "Wide",
+    artist: "A",
+    file: "wide.wav",
+    extension: ".wav",
+    codec: "wav-extensible",
+    rate_hz: 44100,
+    depth: 16,
+    bitrate_kbps: null,
+    version: "",
+    verdict: "wont_play",
+    reasons: ["wav_extensible"],
+    fix: "export_pcm",
+  }],
+};
+
 export const cloudReport: CloudFilesReport = {
   counts: { local: 8, cloud: 1, missing: 1, unknown: 1, offline: 0 },
   cloud_files: [
@@ -466,6 +496,7 @@ export function gigValue(partial: Partial<GigContextValue> = {}): GigContextValu
     cloud: { report: cloudReport, scope: "Friday" },
     drift: { report: driftReport, scope: "Friday" },
     octave: { report: octaveReport, scope: "Friday", busy: false },
+    players: { report: playersReport, scope: "Friday", show: "problems" },
     portable: {
       report: driveReport,
       status: driveReport.summary,

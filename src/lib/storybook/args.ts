@@ -29,6 +29,7 @@ import {
   driveReport,
   driftReport,
   octaveReport,
+  playersReport,
   filesValue,
   gigReport,
   gigValue,
@@ -418,6 +419,7 @@ export type GigStoryArgs = {
   emptyDrift: boolean;
   emptyOctave: boolean;
   emptyCloud: boolean;
+  emptyPlayers: boolean;
 };
 
 export const gigStoryArgs: GigStoryArgs = {
@@ -427,6 +429,7 @@ export const gigStoryArgs: GigStoryArgs = {
   emptyDrift: false,
   emptyOctave: false,
   emptyCloud: false,
+  emptyPlayers: false,
 };
 
 export const gigArgTypes = {
@@ -436,6 +439,7 @@ export const gigArgTypes = {
   emptyDrift: { control: "boolean" as const, description: "No tempo-drift flags." },
   emptyOctave: { control: "boolean" as const, description: "No BPM-check flags." },
   emptyCloud: { control: "boolean" as const, description: "No cloud-only report." },
+  emptyPlayers: { control: "boolean" as const, description: "Won't play has not been checked." },
 };
 
 /**
@@ -470,6 +474,9 @@ export function gigValueFromArgs(args: GigStoryArgs): GigContextValue {
     octave: args.emptyOctave
       ? { report: null, scope: "", busy: false }
       : { report: octaveReport, scope: "Friday", busy: false },
+    players: args.emptyPlayers
+      ? { report: null, scope: "", show: "problems" }
+      : { report: playersReport, scope: "Friday", show: "problems" },
   });
 }
 

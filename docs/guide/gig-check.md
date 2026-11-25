@@ -51,4 +51,6 @@ A missing drive, or a missing file in the crate you selected, is **Not ready** e
 
 **BPM check** sits beside this check in the same rail group. It flags a stored BPM that is about half or double the rest of the crate, then **×2** or **÷2** writes only that BPM after you confirm. The beatgrid is left alone. It needs a crate. See [BPM check](bpm-check.md).
 
+**Won't play** sits beside this check in the same rail group. Pick a CDJ or XDJ, or Common club players. The list names tracks that player will refuse, with a reason and what to do. A file that could not be read stays unknown. The check only reads headers. See [Won't play](wont-play.md).
+
 When a snapshot exists, **Since last gig** lists crates, cues, beatgrids, and tags that differ from the latest one. Title, artist, BPM, and key show the old value and the new value. The snapshots are the ones in **Backups**. The check compares the library copy and the cues and beatgrids saved in that snapshot with the library now. **Revert** opens the restore plan for that snapshot. Confirm stays off while Serato is running. The plan is a dry run; nothing is written until you confirm. With no snapshot, that section says **No snapshots yet**.

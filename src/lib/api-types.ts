@@ -970,6 +970,60 @@ export interface BpmSanityWrite {
   beatgrid: string;
 }
 
+export interface PlayerCompatDocument {
+  code: string;
+  url: string;
+}
+
+export interface PlayerCompatLimit {
+  kind: string;
+  rates: number[];
+  depths: number[];
+  versions: string[];
+  min_kbps: number | null;
+  max_kbps: number | null;
+}
+
+export interface PlayerCompatCounts {
+  will_play: number;
+  check_first: number;
+  wont_play: number;
+  unknown: number;
+}
+
+export interface PlayerCompatTrack {
+  id: number;
+  name: string;
+  artist: string;
+  file: string;
+  extension: string;
+  codec: string;
+  rate_hz: number | null;
+  depth: number | null;
+  bitrate_kbps: number | null;
+  version: string;
+  verdict: "will_play" | "check_first" | "wont_play" | "unknown";
+  reasons: string[];
+  fix: string;
+}
+
+export interface PlayerCompatReport {
+  player: string;
+  documents: PlayerCompatDocument[];
+  filesystems: string[];
+  filesystems_not_supported: string[];
+  notes: string[];
+  limits: PlayerCompatLimit[];
+  read_only: boolean;
+  scope: string;
+  crate: number | null;
+  checked: number;
+  counts: PlayerCompatCounts;
+  tracks: PlayerCompatTrack[];
+  error?: string;
+  code?: string;
+}
+
 export interface BitrateSuspect {
   id: number;
   name: string;

@@ -633,6 +633,8 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".brand .generation-note", ("--color-bg",), 13, 400),
     (".app-bar-generation .generation-note", ("--color-card",), 13, 400),
     (".app-bar-lock", ("--color-warn-bg",), 15, 400),
+    (".verdict", ("--color-card",), 13, 400),
+    ('.verdict[data-verdict="wont_play"]', ("--color-card",), 13, 400),
     (".rail select", ("--color-bg",), 15, 400),
     (".rail-field input", ("--color-bg",), 15, 400),
     (".view-group-label", ("--color-bg",), 13, 600),

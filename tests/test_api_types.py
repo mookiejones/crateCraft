@@ -508,6 +508,7 @@ class LiveApiShapeTests(unittest.TestCase):
         self.assert_shape("/api/crate-compare?space=Serato%20Library&a=10&b=11", "CrateCompareReport")
         self.assert_shape("/api/energy?space=Serato%20Library&crate=10", "EnergyPlan")
         self.assert_shape("/api/bpm-sanity?space=Serato%20Library&crate=10", "BpmSanityReport")
+        self.assert_shape("/api/player-compat?space=Serato%20Library&scope=library", "PlayerCompatReport")
         self.assert_shape("/api/write-queue", "WriteQueueListing")
         self.assert_shape("/api/batch", "BatchListing")
         self.assert_shape("/api/jobs", "JobList")
