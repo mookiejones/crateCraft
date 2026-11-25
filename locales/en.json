@@ -2375,5 +2375,111 @@
   "error.cue_edit_missing": "The file is not on disk, so cues cannot be edited.",
   "error.cue_edit_corrupt": "That cue list cannot be updated.",
   "error.cue_edit_outside_change": "The audio file changed since you started editing.",
-  "error.cue_edit_bad_pads": "That cue list is not valid."
+  "error.cue_edit_bad_pads": "That cue list is not valid.",
+  "error.gain_cannot_rewrite": "Stored gain could not be rewritten, so nothing was kept.",
+  "error.gain_did_not_stick": "The gain did not read back as 0 dB, so the files were put back.",
+  "error.gain_frames_moved": "Other Serato tags would have changed, so the files were put back.",
+  "error.gain_needs_confirm": "Confirm before stored gain is reset to 0 dB.",
+  "gain.checking": "Checking…",
+  "gain.column.gain": "Stored gain",
+  "gain.confirmCrate": "Confirm crate",
+  "gain.confirmReset": "Confirm reset",
+  "gain.empty": "No track has a stored gain other than 0 dB.",
+  "gain.heading": "Gain changed",
+  "gain.intro": "Lists tracks whose stored gain is not 0 dB. Saving a crate writes the library. Reset to 0 dB writes that gain in the audio file and leaves cues, the beatgrid, overview, and analysis alone. Quit Serato first.",
+  "gain.loadFailed": "The gain report could not be read.",
+  "gain.note": "Only the stored gain changes. Auto gain, cues, the beatgrid, overview, and analysis stay.",
+  "gain.offline": {
+    "one": "An unplugged drive is not a gain change. {count} file is on an unplugged drive.",
+    "other": "An unplugged drive is not a gain change. {count} files are on unplugged drives."
+  },
+  "gain.previewCrate": {
+    "one": "Save {count} track in {name}, inside {folder}. Nothing is written until you confirm.",
+    "other": "Save {count} tracks in {name}, inside {folder}. Nothing is written until you confirm."
+  },
+  "gain.previewEmpty": "Nothing to change. No crate is written and no gain is reset.",
+  "gain.previewReset": {
+    "one": "Reset stored gain to 0 dB on {count} track. Quit Serato first. Nothing is written until you confirm.",
+    "other": "Reset stored gain to 0 dB on {count} tracks. Quit Serato first. Nothing is written until you confirm."
+  },
+  "gain.reset": "Reset to 0 dB",
+  "gain.resetDone": {
+    "one": "Reset stored gain to 0 dB on {count} track. Undo puts that file back.",
+    "other": "Reset stored gain to 0 dB on {count} tracks. Undo puts those files back."
+  },
+  "gain.resetting": "Resetting stored gain…",
+  "gain.saveCrate": "Save crate",
+  "gain.saving": "Saving the crate…",
+  "gain.summary": {
+    "one": "{checked} files checked. {count} track has a stored gain other than 0 dB.",
+    "other": "{checked} files checked. {count} tracks have a stored gain other than 0 dB."
+  },
+  "gain.summaryClear": "{checked} files checked. None have a stored gain other than 0 dB.",
+  "gain.undo": "Undo reset",
+  "gain.undone": "The reset was undone. Stored gain is back.",
+  "gain.undoing": "Putting the files back…",
+  "gain.unreadable": {
+    "one": "{count} file has stored gain this app cannot read, so it was left as it was.",
+    "other": "{count} files have stored gain this app cannot read, so they were left as they were."
+  },
+  "gain.writtenCrate": {
+    "one": "Saved {count} track in {name}, inside {folder}.",
+    "other": "Saved {count} tracks in {name}, inside {folder}."
+  },
+  "mode.gain": "Lists tracks whose stored gain is not 0 dB. Reset writes that gain only. Cues, the beatgrid, overview, and analysis stay. Quit Serato first.",
+  "tooltip.gainConfirmCrate": "Save the Gain changed crate inside the crateCraft folder. Quit Serato first. The audio file stays.",
+  "tooltip.gainConfirmReset": "Set stored gain to 0 dB. Quit Serato first. Cues, the beatgrid, overview, and analysis stay. Undo puts the files back.",
+  "tooltip.gainRefresh": "Check again for tracks whose stored gain is not 0 dB. Nothing is written.",
+  "tooltip.gainReset": "Show the reset plan. Nothing is written until you confirm.",
+  "tooltip.gainSave": "Show the crate plan. Nothing is written until you confirm.",
+  "tooltip.gainUndo": "Put the last gain reset back from its snapshot. Quit Serato first.",
+  "tooltip.viewGain": "List tracks whose stored gain is not 0 dB. Reset writes that gain only, after you confirm. Quit Serato first.",
+  "view.gain": "Gain changed",
+  "view.reanalyze": "Re-analyze",
+  "mode.reanalyze": "Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids. Cues stay. Quit Serato first.",
+  "reanalyze.heading": "Re-analyze",
+  "reanalyze.intro": "Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids and overviews. Cues stay. Quit Serato first.",
+  "reanalyze.preview": "Preview",
+  "reanalyze.confirm": "Confirm re-analyze",
+  "reanalyze.confirmHint": "Quit Serato first. Then open the tracks in Serato to rebuild.",
+  "reanalyze.clearFrames": "Also clear BeatGrid and Autotags",
+  "reanalyze.includeLocked": "Include locked beatgrids (unlocks them)",
+  "reanalyze.checking": "Checking…",
+  "reanalyze.previewing": "Preparing preview…",
+  "reanalyze.applying": "Marking tracks…",
+  "reanalyze.loadFailed": "The re-analyze plan could not be read.",
+  "reanalyze.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+  "reanalyze.summary": {
+    "one": "1 track ready for Serato to re-analyze.",
+    "other": "{count} tracks ready for Serato to re-analyze."
+  },
+  "reanalyze.summaryClear": "No tracks need a re-analyze mark.",
+  "reanalyze.empty": "Nothing to mark. Pick a crate that still has analysis.",
+  "reanalyze.markersNote": "Markers2 cues stay. BeatGrid and Autotags clear when that option is on. Open the tracks in Serato to rebuild.",
+  "reanalyze.lockedNote": {
+    "one": "1 track has a locked beatgrid and was skipped.",
+    "other": "{count} tracks have locked beatgrids and were skipped."
+  },
+  "reanalyze.column.cleared": "Will clear",
+  "reanalyze.previewReady": {
+    "one": "Preview ready: 1 track. Confirm to mark it.",
+    "other": "Preview ready: {count} tracks. Confirm to mark them."
+  },
+  "reanalyze.previewEmpty": "Nothing to mark. No write will run.",
+  "reanalyze.optionsChanged": "Preview again before Confirm. The options changed.",
+  "reanalyze.driveAbsent": "A track's drive is not connected. Serato may put the analyzed mark back when that drive returns.",
+  "reanalyze.written": {
+    "one": "Marked 1 track. Open it in Serato to rebuild.",
+    "other": "Marked {count} tracks. Open them in Serato to rebuild."
+  },
+  "tooltip.viewReanalyze": "Mark tracks unanalyzed so Serato rebuilds grids and overviews. Needs a crate. Cues stay. Quit Serato first.",
+  "tooltip.reanalyzeRefresh": "Check again which tracks still need a re-analyze mark.",
+  "tooltip.reanalyzePreview": "Preview the mark without writing. Quit Serato before Confirm.",
+  "tooltip.reanalyzeConfirm": "Mark the listed tracks unanalyzed. Takes a snapshot first. Quit Serato first.",
+  "tooltip.reanalyzeClearFrames": "Remove BeatGrid and Autotags from the files. Markers2 cues stay. Off marks the database only.",
+  "tooltip.reanalyzeIncludeLocked": "Also unlock locked beatgrids so Serato can rebuild them.",
+  "error.reanalyze_needs_confirm": "Confirm before tracks are marked for re-analyze.",
+  "error.reanalyze_needs_crate": "Choose a crate for re-analyze.",
+  "error.reanalyze_did_not_stick": "The unanalyzed mark did not stick. The library was put back.",
+  "error.reanalyze_locked": "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them."
 }

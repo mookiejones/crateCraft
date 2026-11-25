@@ -828,14 +828,20 @@ def _parse_db_path(value: str | None) -> Path | None:
         value: A file URI, a plain path, or None.
 
     Returns:
-        The path, or None when value is empty.
+        The path, or None when value is empty. A Windows
+        ``file:///C:/...`` URI keeps the drive letter; the leading slash
+        ``urlparse`` leaves in front of ``C:`` is removed (same rule as
+        ``volumes.location_path``).
     """
     if not value:
         return None
     # connection.database_uri is a file URI. Percent-decoding recovers spaces.
     # urlparse leaves the leading slash that file URIs put before the path.
     if value.startswith("file:"):
-        return Path(unquote(urlparse(value).path))
+        parsed = unquote(urlparse(value).path)
+        if len(parsed) >= 3 and parsed[0] == "/" and parsed[2] == ":":
+            parsed = parsed[1:]
+        return Path(parsed)
     return Path(value)
 
 

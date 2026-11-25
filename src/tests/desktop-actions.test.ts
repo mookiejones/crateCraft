@@ -79,8 +79,12 @@ describe("desktop menu actions", () => {
     expect(state.mode).toBe("lost");
     runDesktopAction("view-energy");
     expect(state.mode).toBe("energy");
+    runDesktopAction("view-reanalyze");
+    expect(state.mode).toBe("reanalyze");
     runDesktopAction("view-audio");
     expect(state.mode).toBe("audio");
+    runDesktopAction("view-gain");
+    expect(state.mode).toBe("gain");
     runDesktopAction("view-compare");
     expect(state.mode).toBe("compare");
     runDesktopAction("view-all");

@@ -22,6 +22,12 @@ import tags
 
 FRAME_KINDS = ("Markers2", "BeatGrid", "Autotags")
 
+# BeatGrid and Autotags are what Serato rebuilds for grids and BPM/gain.
+# Markers2 (cues) is never in this set. Overview is not a FRAME_KINDS
+# snapshot kind — adding it would change restore for older snapshots —
+# so clear_analysis_frames leaves Overview for Serato to overwrite.
+ANALYSIS_CLEAR_KINDS = ("BeatGrid", "Autotags")
+
 _KIND_BY_DESCRIPTION = {
     "Serato Markers2": "Markers2",
     "Serato BeatGrid": "BeatGrid",
@@ -32,6 +38,14 @@ _FLAC_KEYS = {
     "SERATO_MARKERS2": "Markers2",
     "SERATO_BEATGRID": "BeatGrid",
     "SERATO_AUTOTAGS": "Autotags",
+    # Serato's own FLAC comment. SERATO_AUTOTAGS is the name this app's
+    # older snapshots wrote. When both exist, SERATO_AUTOGAIN is the one
+    # Serato reads.
+    "SERATO_AUTOGAIN": "Autotags",
+}
+_FLAC_AUTOTAGS_RANK = {
+    "SERATO_AUTOGAIN": 0,
+    "SERATO_AUTOTAGS": 1,
 }
 _FLAC_KEY_FOR_KIND = {
     "Markers2": b"SERATO_MARKERS_V2",
@@ -42,7 +56,14 @@ _MP4_NAMES = {
     "markersv2": "Markers2",
     "markers2": "Markers2",
     "beatgrid": "BeatGrid",
+    # Serato's freeform name. ``autotags`` is the name this app's older
+    # snapshots wrote. When both exist, ``autgain`` is the one Serato reads.
+    "autgain": "Autotags",
     "autotags": "Autotags",
+}
+_MP4_AUTOTAGS_RANK = {
+    "autgain": 0,
+    "autotags": 1,
 }
 _B64_ALPHABET = set(b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=")
 _MP4_CONTAINERS = {b"moov", b"trak", b"mdia", b"minf", b"stbl", b"udta", b"ilst"}
@@ -129,7 +150,9 @@ def read_stored_frames(path: str | Path | None) -> dict[str, bytes]:
         A map of Markers2, BeatGrid, and Autotags to the bytes stored in
         that container. Missing frames are omitted. A shortcut, a missing
         file, or an unreadable file returns an empty map. The file is not
-        modified.
+        modified. FLAC Autotags prefer the ``SERATO_AUTOGAIN`` comment
+        Serato reads, then ``SERATO_AUTOTAGS``. MP4 Autotags prefer the
+        ``autgain`` atom, then ``autotags``.
     """
     if not path:
         return {}
@@ -247,6 +270,47 @@ def restore_stored_frames(path: str | Path, frames: Mapping[str, bytes]) -> None
         if temp is not None:
             temp.unlink(missing_ok=True)
         backup.unlink(missing_ok=True)
+
+
+def clear_analysis_frames(path: str | Path) -> dict[str, bytes]:
+    """Remove BeatGrid and Autotags; keep Markers2 and every other tag.
+
+    Overview stays in the file. Serato overwrites it when Analyze Files
+    runs. Markers2 cues are never deleted. The whole-file preimage from
+    ``safe_write`` is what puts Overview bytes back on undo.
+
+    Args:
+        path: Audio file to update. Shortcuts are refused.
+
+    Returns:
+        The FRAME_KINDS map from before the write, for verify and for a
+        frame-level undo via :func:`restore_stored_frames`.
+
+    Raises:
+        FrameRewriteError: The file cannot be rewritten safely.
+        OSError: The file cannot be read or replaced.
+    """
+    file = Path(path)
+    before = read_stored_frames(file)
+    keep: dict[str, bytes] = {}
+    markers = before.get("Markers2")
+    if isinstance(markers, bytes):
+        keep["Markers2"] = markers
+    restore_stored_frames(file, keep)
+    return before
+
+
+def analysis_frames_cleared(path: str | Path) -> bool:
+    """Return whether BeatGrid and Autotags are absent after a clear.
+
+    Args:
+        path: Audio file just rewritten.
+
+    Returns:
+        True when neither analysis kind is stored. Markers2 may remain.
+    """
+    found = read_stored_frames(path)
+    return all(kind not in found for kind in ANALYSIS_CLEAR_KINDS)
 
 
 def _frames_landed(path: Path, wanted: Mapping[str, bytes]) -> bool:
@@ -557,13 +621,24 @@ def _read_flac_frames(path: Path) -> dict[str, bytes]:
     except FrameRewriteError:
         return {}
     found: dict[str, bytes] = {}
+    autotags_rank: int | None = None
     for _last, block_type, data in blocks:
         if block_type != 4:
             continue
         _vendor, comments = _parse_vorbis_comments(data)
         for key, value in comments:
-            kind = _FLAC_KEYS.get(key.decode("ascii", "replace").upper())
-            if kind and kind not in found:
+            label = key.decode("ascii", "replace").upper()
+            kind = _FLAC_KEYS.get(label)
+            if not kind:
+                continue
+            if kind == "Autotags":
+                rank = _FLAC_AUTOTAGS_RANK.get(label, 9)
+                if autotags_rank is not None and rank >= autotags_rank:
+                    continue
+                found["Autotags"] = value
+                autotags_rank = rank
+                continue
+            if kind not in found:
                 found[kind] = value
     return found
 
@@ -616,13 +691,35 @@ def _rewrite_vorbis(data: bytes, wanted: Mapping[str, bytes]) -> bytes:
         wanted: Stored values keyed by kind.
 
     Returns:
-        A new Vorbis comment payload.
+        A new Vorbis comment payload. When both Autotags comments are
+        present, only ``SERATO_AUTOGAIN`` is replaced. ``SERATO_AUTOTAGS``
+        stays byte for byte. A file with only ``SERATO_AUTOTAGS`` is
+        updated on that key.
     """
     vendor, comments = _parse_vorbis_comments(data)
     kept: list[tuple[bytes, bytes]] = []
     replaced: set[str] = set()
+    autotags_key: bytes | None = None
+    autotags_rank: int | None = None
+    if "Autotags" in wanted:
+        for key, _value in comments:
+            label = key.decode("ascii", "replace").upper()
+            rank = _FLAC_AUTOTAGS_RANK.get(label)
+            if rank is None:
+                continue
+            if autotags_rank is None or rank < autotags_rank:
+                autotags_key = key
+                autotags_rank = rank
     for key, value in comments:
-        kind = _FLAC_KEYS.get(key.decode("ascii", "replace").upper())
+        label = key.decode("ascii", "replace").upper()
+        if label in _FLAC_AUTOTAGS_RANK:
+            if "Autotags" in wanted and key == autotags_key:
+                kept.append((key, wanted["Autotags"]))
+                replaced.add("Autotags")
+            else:
+                kept.append((key, value))
+            continue
+        kind = _FLAC_KEYS.get(label)
         if kind is None:
             kept.append((key, value))
             continue
@@ -866,16 +963,25 @@ def _mp4_text(body: bytes) -> bytes:
     return body[4:].split(b"\x00", 1)[0] if len(body) >= 4 else b""
 
 
-def _edit_freeform(body: bytes, wanted: Mapping[str, bytes]) -> bytes | None:
+def _edit_freeform(
+    body: bytes,
+    wanted: Mapping[str, bytes],
+    autotags_name: str | None = None,
+) -> bytes | None:
     """Replace the ``data`` body of one Serato freeform atom.
 
     Args:
         body: Body of a ``----`` atom.
         wanted: Stored data-atom bodies keyed by kind.
+        autotags_name: Freeform name to rewrite when the file has more
+            than one Autotags atom. ``autgain`` wins over ``autotags``.
+            None rewrites whichever Autotags atom this is. A file with
+            only ``autotags`` still updates that atom.
 
     Returns:
         A new body when this atom is a Serato frame we restore or remove.
-        None when the atom should be copied unchanged.
+        None when the atom should be copied unchanged, including an
+        ``autotags`` atom left beside ``autgain``.
     """
     children = _parse_atom_list(body)
     mean = b""
@@ -887,6 +993,8 @@ def _edit_freeform(body: bytes, wanted: Mapping[str, bytes]) -> bytes | None:
             name = _mp4_text(child.body).decode("latin-1", "replace").lower()
     kind = _MP4_NAMES.get(name)
     if mean != b"com.serato.dj" or kind is None:
+        return None
+    if kind == "Autotags" and autotags_name is not None and name != autotags_name:
         return None
     if kind not in wanted:
         return b""
@@ -903,12 +1011,18 @@ def _edit_freeform(body: bytes, wanted: Mapping[str, bytes]) -> bytes | None:
     return b"".join(rebuilt)
 
 
-def _rewrite_atom_sequence(blob: bytes, wanted: Mapping[str, bytes]) -> bytes:
+def _rewrite_atom_sequence(
+    blob: bytes,
+    wanted: Mapping[str, bytes],
+    autotags_name: str | None = None,
+) -> bytes:
     """Copy an atom sequence, replacing Serato freeform atoms.
 
     Args:
         blob: Bytes that begin on an atom boundary.
         wanted: Stored ``data`` atom bodies keyed by kind.
+        autotags_name: Autotags freeform name to rewrite. Other Autotags
+            names are copied unchanged.
 
     Returns:
         The sequence to write. Unchanged atoms are copied as raw slices.
@@ -918,26 +1032,32 @@ def _rewrite_atom_sequence(blob: bytes, wanted: Mapping[str, bytes]) -> bytes:
     for atom in _parse_atom_list(blob):
         if atom.start > cursor:
             pieces.append(blob[cursor:atom.start])
-        pieces.append(_rewrite_one_atom(blob[atom.start:atom.end], atom, wanted))
+        pieces.append(_rewrite_one_atom(blob[atom.start:atom.end], atom, wanted, autotags_name))
         cursor = atom.end
     if cursor < len(blob):
         pieces.append(blob[cursor:])
     return b"".join(pieces)
 
 
-def _rewrite_one_atom(raw: bytes, atom: _Atom, wanted: Mapping[str, bytes]) -> bytes:
+def _rewrite_one_atom(
+    raw: bytes,
+    atom: _Atom,
+    wanted: Mapping[str, bytes],
+    autotags_name: str | None = None,
+) -> bytes:
     """Return one atom, edited when it contains Serato frames.
 
     Args:
         raw: Original atom bytes, header included.
         atom: Parsed atom.
         wanted: Stored ``data`` atom bodies keyed by kind.
+        autotags_name: Autotags freeform name to rewrite.
 
     Returns:
         Replacement bytes. An empty result drops the atom.
     """
     if atom.typ == b"----":
-        edited = _edit_freeform(atom.body, wanted)
+        edited = _edit_freeform(atom.body, wanted, autotags_name)
         if edited is None:
             return raw
         if not edited:
@@ -945,9 +1065,12 @@ def _rewrite_one_atom(raw: bytes, atom: _Atom, wanted: Mapping[str, bytes]) -> b
         return _pack_atom(b"----", edited)
     if atom.typ == b"meta":
         prefix = atom.body[:4]
-        return _pack_atom(b"meta", prefix + _rewrite_atom_sequence(atom.body[4:], wanted))
+        return _pack_atom(
+            b"meta",
+            prefix + _rewrite_atom_sequence(atom.body[4:], wanted, autotags_name),
+        )
     if atom.typ in _MP4_CONTAINERS:
-        return _pack_atom(atom.typ, _rewrite_atom_sequence(atom.body, wanted))
+        return _pack_atom(atom.typ, _rewrite_atom_sequence(atom.body, wanted, autotags_name))
     return raw
 
 
@@ -961,8 +1084,10 @@ def _read_mp4_frames(path: Path) -> dict[str, bytes]:
         Kind to the exact ``data`` atom body.
     """
     found: dict[str, bytes] = {}
+    autotags_rank: int | None = None
 
     def visit(blob: bytes) -> None:
+        nonlocal autotags_rank
         for atom in _parse_atom_list(blob):
             if atom.typ == b"mdat":
                 continue
@@ -979,7 +1104,16 @@ def _read_mp4_frames(path: Path) -> dict[str, bytes]:
                     elif child.typ == b"data":
                         data = child.body
                 kind = _MP4_NAMES.get(name)
-                if mean == b"com.serato.dj" and kind and kind not in found:
+                if mean != b"com.serato.dj" or not kind:
+                    continue
+                if kind == "Autotags":
+                    rank = _MP4_AUTOTAGS_RANK.get(name, 9)
+                    if autotags_rank is not None and rank >= autotags_rank:
+                        continue
+                    found["Autotags"] = data
+                    autotags_rank = rank
+                    continue
+                if kind not in found:
                     found[kind] = data
             elif atom.typ == b"meta" and len(atom.body) >= 4:
                 visit(atom.body[4:])
@@ -1054,8 +1188,86 @@ def _mp4_mdat(path: Path) -> bytes:
     return b"".join(pieces)
 
 
+def _preferred_mp4_autotags(path: Path) -> str | None:
+    """Return the Autotags freeform name a rewrite should edit.
+
+    Args:
+        path: MP4 file.
+
+    Returns:
+        ``autgain`` when that atom is present, otherwise ``autotags``
+        when only that name is present. None when the file has neither.
+        The file is not modified.
+    """
+    chosen: str | None = None
+    rank: int | None = None
+
+    def visit(blob: bytes) -> None:
+        nonlocal chosen, rank
+        for atom in _parse_atom_list(blob):
+            if atom.typ == b"mdat":
+                continue
+            if atom.typ == b"----":
+                mean = b""
+                name = ""
+                for child in _parse_atom_list(atom.body):
+                    if child.typ == b"mean":
+                        mean = _mp4_text(child.body)
+                    elif child.typ == b"name":
+                        name = _mp4_text(child.body).decode("latin-1", "replace").lower()
+                if mean != b"com.serato.dj" or name not in _MP4_AUTOTAGS_RANK:
+                    continue
+                this = _MP4_AUTOTAGS_RANK[name]
+                if rank is None or this < rank:
+                    chosen = name
+                    rank = this
+            elif atom.typ == b"meta" and len(atom.body) >= 4:
+                visit(atom.body[4:])
+            elif atom.typ in _MP4_CONTAINERS:
+                visit(atom.body)
+
+    try:
+        with path.open("rb") as handle:
+            end = path.stat().st_size
+            while handle.tell() + 8 <= end:
+                pos = handle.tell()
+                head = handle.read(8)
+                if len(head) < 8:
+                    break
+                size = int.from_bytes(head[:4], "big")
+                typ = head[4:8]
+                header = 8
+                if size == 1:
+                    large = handle.read(8)
+                    if len(large) < 8:
+                        break
+                    size = int.from_bytes(large, "big")
+                    header = 16
+                elif size == 0:
+                    size = end - pos
+                if size < header or pos + size > end:
+                    break
+                if typ == b"mdat":
+                    handle.seek(pos + size)
+                    continue
+                body = handle.read(size - header)
+                if typ == b"meta" and len(body) >= 4:
+                    visit(body[4:])
+                elif typ in _MP4_CONTAINERS or typ == b"moov":
+                    visit(body)
+                elif typ == b"----":
+                    visit(_pack_atom(typ, body))
+    except OSError:
+        return None
+    return chosen
+
+
 def _write_mp4(source: Path, dest: Path, wanted: Mapping[str, bytes]) -> None:
     """Write an MP4 file with restored Serato atoms and the original ``mdat``.
+
+    When both ``autgain`` and ``autotags`` are present, only ``autgain``
+    is replaced. ``autotags`` stays byte for byte. A file with only
+    ``autotags`` updates that atom.
 
     Args:
         source: MP4 file to read.
@@ -1065,6 +1277,7 @@ def _write_mp4(source: Path, dest: Path, wanted: Mapping[str, bytes]) -> None:
     Raises:
         FrameRewriteError: If an atom size is not usable.
     """
+    autotags_name = _preferred_mp4_autotags(source)
     with dest.open("wb") as out, source.open("rb") as src:
         end = source.stat().st_size
         while src.tell() + 8 <= end:
@@ -1098,10 +1311,10 @@ def _write_mp4(source: Path, dest: Path, wanted: Mapping[str, bytes]) -> None:
             body = src.read(size - header)
             if typ == b"meta":
                 prefix = body[:4]
-                edited = prefix + _rewrite_atom_sequence(body[4:], wanted)
+                edited = prefix + _rewrite_atom_sequence(body[4:], wanted, autotags_name)
                 out.write(_pack_atom(typ, edited))
             elif typ in _MP4_CONTAINERS:
-                out.write(_pack_atom(typ, _rewrite_atom_sequence(body, wanted)))
+                out.write(_pack_atom(typ, _rewrite_atom_sequence(body, wanted, autotags_name)))
             else:
                 out.write(header_bytes)
                 out.write(body)
