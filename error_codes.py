@@ -195,6 +195,8 @@ ERROR_CODES: dict[str, str] = {
     lan_stage.TOO_MANY: "stage_too_many",
     lan_stage.FINGERPRINT: "stage_fingerprint",
     lan_stage.BAD_CODE: "stage_bad_code",
+    lan_stage.LOCKED: "stage_locked",
+    lan_stage.EXPIRED: "stage_expired",
     lan_stage.BAD_HOST: "stage_bad_host",
     lan_stage.BAD_PORT: "stage_bad_port",
     lan_stage.NOT_LISTENING: "stage_not_listening",

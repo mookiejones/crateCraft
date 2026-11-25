@@ -110,11 +110,28 @@ class AddressTests(unittest.TestCase):
         self.assertEqual(lan_stage.file_name_of(r"C:\Music\Night.mp3"), "Night.mp3")
         self.assertEqual(lan_stage.file_name_of("/Volumes/Stick/Night.mp3"), "Night.mp3")
         self.assertEqual(lan_stage.safe_file_name("Night.mp3"), "Night.mp3")
+        self.assertEqual(lan_stage.safe_file_name("contest.mp3"), "contest.mp3")
+        self.assertEqual(lan_stage.safe_file_name("COM10.mp3"), "COM10.mp3")
         self.assertIsNone(lan_stage.safe_file_name(r"..\master.sqlite"))
         self.assertIsNone(lan_stage.safe_file_name("../master.sqlite"))
         self.assertIsNone(lan_stage.safe_file_name("_Serato_"))
         self.assertIsNone(lan_stage.safe_file_name("a/b.mp3"))
         self.assertIsNone(lan_stage.safe_file_name(""))
+        self.assertIsNone(lan_stage.safe_file_name("song.mp3."))
+        self.assertIsNone(lan_stage.safe_file_name("song.mp3 "))
+        for reserved in (
+            "CON",
+            "con.txt",
+            "PRN",
+            "AUX.mp3",
+            "Nul",
+            "COM1",
+            "com9.tar.gz",
+            "LPT1.mp3",
+            "lpt9",
+        ):
+            with self.subTest(reserved=reserved):
+                self.assertIsNone(lan_stage.safe_file_name(reserved))
 
     def test_hello_rejects_a_mirror_flag(self) -> None:
         """A listener that claims it will mirror is not a staged copy.
@@ -666,6 +683,103 @@ class TransferTests(unittest.TestCase):
         self.assertTrue(outside.is_file())
         self.assertTrue(link.is_symlink())
 
+    def test_five_wrong_codes_lock_that_address_until_the_code_rotates(self) -> None:
+        """Five bad tries lock one address. Another address is not locked.
+
+        The right code does not unlock that address. Rotating the code does.
+        The HTTP listener uses the same check.
+
+        Returns:
+            None.
+        """
+        listener = lan_stage._Listener(None, None, "abcd1234", "127.0.0.1")
+        for _ in range(4):
+            self.assertEqual(listener.check_code("192.168.1.9", "nope"), lan_stage.BAD_CODE)
+        self.assertEqual(listener.check_code("192.168.1.9", "nope"), lan_stage.LOCKED)
+        self.assertEqual(listener.check_code("192.168.1.9", "abcd1234"), lan_stage.LOCKED)
+        self.assertIsNone(listener.check_code("192.168.1.10", "abcd1234"))
+        fresh = listener.rotate()
+        self.assertNotEqual(fresh, "abcd1234")
+        self.assertIsNone(listener.check_code("192.168.1.9", fresh))
+        listening = lan_stage.listen(host="127.0.0.1", port=0)
+        port = int(listening["port"])
+        right = str(listening["code"])
+        import http.client
+
+        for _ in range(4):
+            conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+            conn.request("GET", "/v1/hello", headers={lan_stage.CODE_HEADER: "00000000"})
+            response = conn.getresponse()
+            body = response.read()
+            conn.close()
+            self.assertEqual(response.status, 403)
+            self.assertIn(lan_stage.BAD_CODE.encode(), body)
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+        conn.request("GET", "/v1/hello", headers={lan_stage.CODE_HEADER: "11111111"})
+        response = conn.getresponse()
+        body = response.read()
+        conn.close()
+        self.assertEqual(response.status, 403)
+        self.assertIn(lan_stage.LOCKED.encode(), body)
+        conn = http.client.HTTPConnection("127.0.0.1", port, timeout=5)
+        conn.request("GET", "/v1/hello", headers={lan_stage.CODE_HEADER: right})
+        response = conn.getresponse()
+        body = response.read()
+        conn.close()
+        self.assertEqual(response.status, 403)
+        self.assertIn(lan_stage.LOCKED.encode(), body)
+
+    def test_pairing_code_expires_and_a_staged_copy_rotates_it(self) -> None:
+        """An old code stops working after the timeout and after a copy arrives.
+
+        Returns:
+            None.
+        """
+        clock = {"now": 1_000.0}
+
+        def now() -> float:
+            return clock["now"]
+
+        with mock.patch("lan_stage.time.monotonic", now):
+            listener = lan_stage._Listener(None, None, "abcd1234", "127.0.0.1")
+            self.assertIsNone(listener.check_code("10.1.1.1", "abcd1234"))
+            clock["now"] = 1_000.0 + lan_stage.CODE_TTL_SECONDS + 1
+            self.assertEqual(listener.check_code("10.1.1.1", "abcd1234"), lan_stage.EXPIRED)
+            fresh = listener.fresh_code()
+            self.assertNotEqual(fresh, "abcd1234")
+            self.assertIsNone(listener.check_code("10.1.1.1", fresh))
+        with TempLibrary() as temp:
+            crate_id = self._crate(temp, "Peak time", b"rotate-me")
+            report = lan_stage.preview(library.LIBRARY_SPACE, [crate_id])
+            listening = lan_stage.listen(host="127.0.0.1", port=0)
+            old = str(listening["code"])
+            lan_stage.send_copy(
+                "127.0.0.1",
+                listening["port"],
+                old,
+                library.LIBRARY_SPACE,
+                [crate_id],
+                report["fingerprint"],
+                True,
+            )
+            current = str(lan_stage.status()["code"])
+            self.assertNotEqual(current, old)
+            import http.client
+
+            conn = http.client.HTTPConnection("127.0.0.1", int(listening["port"]), timeout=5)
+            conn.request("GET", "/v1/hello", headers={lan_stage.CODE_HEADER: old})
+            response = conn.getresponse()
+            body = response.read()
+            conn.close()
+            self.assertEqual(response.status, 403)
+            self.assertIn(lan_stage.BAD_CODE.encode(), body)
+            conn = http.client.HTTPConnection("127.0.0.1", int(listening["port"]), timeout=5)
+            conn.request("GET", "/v1/hello", headers={lan_stage.CODE_HEADER: current})
+            response = conn.getresponse()
+            response.read()
+            conn.close()
+            self.assertEqual(response.status, 200)
+
     def test_listen_action_binds_and_stop_clears_it(self) -> None:
         """The page's listen action opens a port and stop closes it.
 
@@ -772,6 +886,8 @@ class TransferTests(unittest.TestCase):
         spanish = __import__("json").loads((root / "locales" / "es.json").read_text(encoding="utf-8"))
         for sentence, code in (
             (lan_stage.BAD_HOST, "stage_bad_host"),
+            (lan_stage.LOCKED, "stage_locked"),
+            (lan_stage.EXPIRED, "stage_expired"),
             (lan_stage.NOT_LISTENING, "stage_not_listening"),
             (lan_stage.STAGE_LIBRARY, "stage_dest_library"),
             (lan_stage.FINGERPRINT, "stage_fingerprint"),

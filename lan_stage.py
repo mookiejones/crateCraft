@@ -23,6 +23,7 @@ import socket
 import sqlite3
 import sys
 import threading
+import time
 import urllib.parse
 from collections.abc import Mapping
 from contextlib import closing
@@ -42,7 +43,10 @@ MAX_FILES = 10000
 MAX_FILE_BYTES = 2_000_000_000
 MAX_JSON = 2_000_000
 CODE_BYTES = 4
+CODE_TRIES = 5
+CODE_TTL_SECONDS = 15 * 60
 ID_RE = re.compile(r"^[0-9a-f]{16}$")
+_RESERVED_DEVICE = re.compile(r"^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)", re.IGNORECASE)
 SHA_RE = re.compile(r"^[0-9a-f]{64}$")
 GENERATED_FOLDER = "_crateCraft generated"
 FOLDER_NAME = "From backup Mac"
@@ -50,13 +54,14 @@ STAGE_DIR_NAME = "lan-stage"
 CODE_HEADER = "X-CrateCraft-Code"
 HASH_HEADER = "X-Content-SHA256"
 PROTOCOL = 1
-LISTEN_HOST = "0.0.0.0"
 LISTEN_PORTS = range(8766, 8776)
 
 CHOOSE_CRATES = "Choose at least one crate."
 TOO_MANY = "Choose fewer crates."
 FINGERPRINT = "The library changed since the preview. Preview again."
 BAD_CODE = "That pairing code is not valid."
+LOCKED = "Too many pairing attempts. Listen again for a new code."
+EXPIRED = "That pairing code has expired. Listen again for a new code."
 BAD_HOST = "That address is not on this local network."
 BAD_PORT = "That port is not valid."
 NOT_LISTENING = "The other Mac is not listening for a staged copy."
@@ -118,8 +123,10 @@ def safe_file_name(name: object) -> str | None:
     """Return a single path segment, or None when the name can escape.
 
     Args:
-        name: Candidate file name. Separators, ``..``, and ``_Serato_``
-            are refused on every platform.
+        name: Candidate file name. Separators, ``..``, ``_Serato_``,
+            a trailing dot or space, and Windows device names (``CON``,
+            ``PRN``, ``AUX``, ``NUL``, ``COM1``–``COM9``, ``LPT1``–``LPT9``,
+            with any extension) are refused on every platform.
 
     Returns:
         The name when it is one safe segment, otherwise None.
@@ -128,7 +135,11 @@ def safe_file_name(name: object) -> str | None:
         return None
     if name in {".", ".."} or "/" in name or "\\" in name or "\x00" in name:
         return None
+    if name.endswith(".") or name.endswith(" "):
+        return None
     if name.casefold() == "_serato_":
+        return None
+    if _RESERVED_DEVICE.match(name):
         return None
     return name
 
@@ -303,6 +314,22 @@ def _codes_match(offered: str, expected: str) -> bool:
         hmac.compare_digest(right, right)
         return False
     return hmac.compare_digest(left, right)
+
+
+def _pairing_error(payload: Mapping[str, object]) -> None:
+    """Raise the listener's pairing refusal.
+
+    Args:
+        payload: JSON body from a 403 response.
+
+    Raises:
+        LibraryError: ``BAD_CODE``, ``LOCKED``, or ``EXPIRED`` when the
+            listener sent one of those sentences. Anything else is a bad code.
+    """
+    message = payload.get("error")
+    if message in {BAD_CODE, LOCKED, EXPIRED}:
+        raise LibraryError(str(message))
+    raise LibraryError(BAD_CODE)
 
 
 def _crate_ids(value: object) -> list[int]:
@@ -887,7 +914,7 @@ def send_copy(
     number = _normalize_port(port)
     hello = _http_json("GET", peer, number, "/v1/hello", pairing, None)
     if hello.get("_status") == 403:
-        raise LibraryError(BAD_CODE)
+        _pairing_error(hello)
     if not hello_acceptable(hello):
         raise LibraryError(NOT_LISTENING)
     pending: list[dict[str, object]] = []
@@ -945,7 +972,7 @@ def send_copy(
     }
     started = _http_json("POST", peer, number, "/v1/begin", pairing, begin_body)
     if started.get("_status") == 403:
-        raise LibraryError(BAD_CODE)
+        _pairing_error(started)
     if started.get("_status") != 200 or not isinstance(started.get("id"), str):
         message = started.get("error")
         if message in {NO_SPACE, STAGE_LIBRARY, STAGE_SERATO, BAD_CODE}:
@@ -998,10 +1025,10 @@ def _lan_addresses(bind_host: str) -> list[str]:
         bind_host: Address the listener socket is bound to.
 
     Returns:
-        That host when it is loopback. Otherwise private IPv4 addresses,
-        or loopback when none are found.
+        That host when the socket is bound to one address. Otherwise
+        private IPv4 addresses, or loopback when none are found.
     """
-    if bind_host in {"127.0.0.1", "::1"}:
+    if bind_host not in {"0.0.0.0", "::", ""}:
         return [bind_host]
     found: list[str] = []
     try:
@@ -1025,26 +1052,122 @@ def _lan_addresses(bind_host: str) -> list[str]:
     return found or ["127.0.0.1"]
 
 
+def _bind_host() -> str:
+    """Return one private address to listen on.
+
+    Returns:
+        The first non-loopback local address, or ``127.0.0.1`` when this
+        computer has none. The listener does not bind every interface.
+    """
+    for ip in _lan_addresses("0.0.0.0"):
+        try:
+            addr = ipaddress.ip_address(ip.split("%", 1)[0])
+        except ValueError:
+            continue
+        if peer_allowed(ip) and not addr.is_loopback:
+            return ip
+    return "127.0.0.1"
+
+
 class _Listener:
     """One staged-copy listener. It does not serve the library API."""
 
-    def __init__(self, httpd: ThreadingHTTPServer, thread: threading.Thread, code: str, host: str) -> None:
+    def __init__(
+        self,
+        httpd: ThreadingHTTPServer | None,
+        thread: threading.Thread | None,
+        code: str,
+        host: str,
+    ) -> None:
         self.httpd = httpd
         self.thread = thread
         self.code = code
         self.host = host
-        self.port = int(httpd.server_address[1])
+        self.port = 0 if httpd is None else int(httpd.server_address[1])
+        self.started = time.monotonic()
+        self.failures: dict[str, int] = {}
+        self.locked: set[str] = set()
+        self._gate = threading.Lock()
 
     def alive(self) -> bool:
         """Return whether the accept loop is still running."""
-        return self.thread.is_alive()
+        return self.thread is not None and self.thread.is_alive()
+
+    def _rotate(self) -> str:
+        """Replace the code. The caller holds ``_gate``."""
+        self.code = os.urandom(CODE_BYTES).hex()
+        self.started = time.monotonic()
+        self.failures.clear()
+        self.locked.clear()
+        return self.code
+
+    def rotate(self) -> str:
+        """Issue a new pairing code and clear lockouts.
+
+        Returns:
+            The new code.
+        """
+        with self._gate:
+            return self._rotate()
+
+    def fresh_code(self) -> str:
+        """Return the code, rotating it when the timeout has passed.
+
+        Returns:
+            The code a sender must present now.
+        """
+        with self._gate:
+            if time.monotonic() - self.started >= CODE_TTL_SECONDS:
+                return self._rotate()
+            return self.code
+
+    def check_code(self, peer: str, offered: str) -> str | None:
+        """Accept a pairing code or return the refusal sentence.
+
+        Five wrong tries from one address lock that address out until the
+        code rotates. An expired code is rotated and refused. A locked
+        address is refused even when it later sends the right code.
+
+        Args:
+            peer: Client address.
+            offered: Header value.
+
+        Returns:
+            None when the code is current. Otherwise ``LOCKED``,
+            ``EXPIRED``, or ``BAD_CODE``.
+        """
+        key = peer.split("%", 1)[0]
+        try:
+            addr = ipaddress.ip_address(key)
+        except ValueError:
+            addr = None
+        if isinstance(addr, ipaddress.IPv6Address) and addr.ipv4_mapped is not None:
+            key = str(addr.ipv4_mapped)
+        elif addr is not None:
+            key = str(addr)
+        with self._gate:
+            if key in self.locked:
+                _codes_match(offered, self.code)
+                return LOCKED
+            if time.monotonic() - self.started >= CODE_TTL_SECONDS:
+                self._rotate()
+                return EXPIRED
+            if _codes_match(offered, self.code):
+                self.failures.pop(key, None)
+                return None
+            count = self.failures.get(key, 0) + 1
+            self.failures[key] = count
+            if count >= CODE_TRIES:
+                self.locked.add(key)
+                return LOCKED
+            return BAD_CODE
 
 
-def _handler_type(code: str) -> type[BaseHTTPRequestHandler]:
-    """Build a handler bound to one pairing code.
+def _handler_type(listener: _Listener) -> type[BaseHTTPRequestHandler]:
+    """Build a handler bound to one listener.
 
     Args:
-        code: Code this listener shows.
+        listener: Listener that checks and rotates the pairing code.
 
     Returns:
         A request-handler class.
@@ -1053,7 +1176,7 @@ def _handler_type(code: str) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
         """Staged-copy protocol only. Paths outside it are 404."""
 
-        listener_code = code
+        stage = listener
         protocol_version = "HTTP/1.1"
 
         def log_message(self, fmt: str, *args: object) -> None:
@@ -1080,9 +1203,10 @@ def _handler_type(code: str) -> type[BaseHTTPRequestHandler]:
 
         def _code_ok(self) -> bool:
             offered = self.headers.get(CODE_HEADER) or ""
-            if _codes_match(offered, self.listener_code):
+            reason = self.stage.check_code(self.client_address[0], offered)
+            if reason is None:
                 return True
-            self._send(403, {"error": BAD_CODE})
+            self._send(403, {"error": reason})
             return False
 
         def _length(self, limit: int) -> int | None:
@@ -1199,15 +1323,16 @@ def _handler_type(code: str) -> type[BaseHTTPRequestHandler]:
     return Handler
 
 
-def listen(host: str = LISTEN_HOST, port: int | None = None) -> dict[str, object]:
+def listen(host: str | None = None, port: int | None = None) -> dict[str, object]:
     """Listen for one staged copy. Does not read or write the library.
 
-    A second call while the listener is up returns the same code. It
-    does not rotate the code and it does not start a mirror.
+    A second call while the listener is up returns the current code. It
+    does not start a mirror. The code expires, and a finished copy
+    rotates it. The socket binds one local address, not every interface.
 
     Args:
-        host: Bind address. The page uses all interfaces. Tests use
-            loopback.
+        host: Bind address. None uses one private address, or loopback
+            when this computer has none. Tests pass loopback.
         port: Port, 0 for an ephemeral port, or None to try 8766–8775.
 
     Returns:
@@ -1220,21 +1345,25 @@ def listen(host: str = LISTEN_HOST, port: int | None = None) -> dict[str, object
     with _lock:
         if _listener is not None and _listener.alive():
             return _status_locked()
-        code = os.urandom(CODE_BYTES).hex()
-        handler = _handler_type(code)
+        chosen = _bind_host() if host is None else host
+        stage = _Listener(None, None, os.urandom(CODE_BYTES).hex(), chosen)
+        handler = _handler_type(stage)
         try:
             if port == 0:
-                httpd = ThreadingHTTPServer((host, 0), handler)
+                httpd = ThreadingHTTPServer((chosen, 0), handler)
             elif port is None:
-                httpd = _bind_range(host, handler)
+                httpd = _bind_range(chosen, handler)
             else:
-                httpd = ThreadingHTTPServer((host, port), handler)
+                httpd = ThreadingHTTPServer((chosen, port), handler)
         except OSError as exc:
             raise LibraryError(LISTEN_FAILED) from exc
         httpd.daemon_threads = True
         thread = threading.Thread(target=httpd.serve_forever, name="crateCraft-lan-stage", daemon=True)
         thread.start()
-        _listener = _Listener(httpd, thread, code, host)
+        stage.httpd = httpd
+        stage.thread = thread
+        stage.port = int(httpd.server_address[1])
+        _listener = stage
         return _status_locked()
 
 
@@ -1259,6 +1388,13 @@ def _bind_range(host: str, handler: type[BaseHTTPRequestHandler]) -> ThreadingHT
             last = exc
     assert last is not None
     raise last
+
+
+def _rotate_pairing() -> None:
+    """Rotate the live pairing code after a copy has been staged."""
+    with _lock:
+        if _listener is not None:
+            _listener.rotate()
 
 
 def stop() -> dict[str, object]:
@@ -1287,7 +1423,7 @@ def _status_locked() -> dict[str, object]:
         {
             "ok": True,
             "listening": listening,
-            "code": current.code if listening and current is not None else "",
+            "code": current.fresh_code() if listening and current is not None else "",
             "port": current.port if listening and current is not None else None,
             "host": current.host if listening and current is not None else "",
             "addresses": _lan_addresses(current.host) if listening and current is not None else [],
@@ -1704,6 +1840,7 @@ def commit_transfer(transfer_id: object) -> dict[str, object]:
             )
     manifest["status"] = "staged"
     _save(manifest)
+    _rotate_pairing()
     return _finish(
         {
             "ok": True,

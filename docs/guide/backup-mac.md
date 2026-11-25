@@ -23,7 +23,7 @@ The note under the heading says **Send selected crates and their music to a pair
 
 The other computer stores the audio and the crate names, including crate colors, in a staged folder next to crateCraft's settings. It does not change that computer's Serato library. A file that fails during the copy is listed. The rest still arrive.
 
-An address that is not on the local network is refused. A wrong pairing code is refused.
+An address that is not on the local network is refused. A wrong pairing code is refused. The code expires after 15 minutes, changes after a copy arrives, and five wrong tries lock that computer out until you listen again. crateCraft listens on one local address. The copy is not encrypted, so use a network you trust.
 
 ## Add the copy on the backup Mac
 
