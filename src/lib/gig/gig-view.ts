@@ -8,8 +8,9 @@
 import type { GigChanges, GigReport, GigTagDiff } from "../api-types";
 import { t, type MessageKey } from "../i18n";
 import { fileName } from "../snapshots/restore-view";
+import { cloudLocationText } from "./cloud-files-view";
 
-export const GIG_STEP_COUNT = 5;
+export const GIG_STEP_COUNT = 6;
 
 export interface GigStep {
   title: MessageKey;
@@ -20,6 +21,7 @@ export interface GigStep {
 export const GIG_STEPS: readonly GigStep[] = [
   { title: "gig.drives", action: "gig.drivesAction", empty: "gig.drivesEmpty" },
   { title: "gig.missing", action: "gig.missingAction", empty: "gig.missingEmpty" },
+  { title: "gig.cloud", action: "gig.cloudAction", empty: "gig.cloudEmpty" },
   { title: "gig.streaming", action: "gig.streamingAction", empty: "gig.streamingEmpty" },
   { title: "gig.emptyCrates", action: "gig.emptyCratesAction", empty: "gig.emptyCratesEmpty" },
   { title: "gig.since", action: "gig.sinceAction", empty: "gig.sinceEmpty" },
@@ -84,7 +86,7 @@ export function tagEditLines(changes: GigChanges | null | undefined): string[] {
  * Lines for one numbered gig step, not the since-last-gig screen.
  *
  * @param payload Report from GET /api/gig-check.
- * @param index Step from 0 to 3.
+ * @param index Step from 0 to 4.
  * @returns Display rows for that step.
  */
 export function gigLinesFor(payload: GigReport, index: number): string[] {
@@ -94,8 +96,14 @@ export function gigLinesFor(payload: GigReport, index: number): string[] {
     );
   }
   if (index === 1) return (payload.missing_files || []).map((item) => item.path);
-  if (index === 2) return (payload.streaming_tracks || []).map((item) => `${item.service}: ${item.title}`);
-  if (index === 3) return (payload.empty_crates || []).map((item) => `${item.name} — ${item.warning}`);
+  if (index === 2) {
+    const locations = (payload.cloud_locations || []).map((item) => cloudLocationText(item));
+    const files = (payload.cloud_files || []).map((item) => item.path);
+    const unknown = (payload.unknown_files || []).map((item) => t("gig.cloudUnknown", { path: item.path }));
+    return [...locations, ...files, ...unknown];
+  }
+  if (index === 3) return (payload.streaming_tracks || []).map((item) => `${item.service}: ${item.title}`);
+  if (index === 4) return (payload.empty_crates || []).map((item) => `${item.name} — ${item.warning}`);
   return [];
 }
 

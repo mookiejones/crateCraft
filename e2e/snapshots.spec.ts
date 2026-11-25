@@ -38,6 +38,10 @@ test("the snapshots list renders from context", async ({ page }) => {
   await expect(page.locator('#snapshots-list [data-action="prune"]')).toHaveText("Prune");
   await expect(page.locator("#snapshots-take")).toHaveAttribute("data-tooltip", /.+/);
   await expect(page.locator("#music-mirror-heading")).toHaveText("Music files");
+  await expect(page.locator("#lan-stage-heading")).toHaveText("Backup Mac");
+  await expect(page.locator("#lan-stage-listen")).toHaveAttribute("data-tooltip", /staged copy/);
+  await expect(page.locator("#lan-stage-preview")).toBeDisabled();
+  await expect(page.locator("#lan-stage-send")).toBeDisabled();
   await expect(page.locator("#music-mirror-dest")).toBeVisible();
   await expect(page.locator("#music-mirror-preview")).toBeDisabled();
   await page.locator("#music-mirror-dest").fill("/Volumes/Backup");

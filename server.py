@@ -51,10 +51,12 @@ import lost_tags
 import library
 import library_health
 import history_rescue
+import lan_stage
 import music_mirror
 import quality_line
 import music_roots
 import path_forms
+import player_compat
 import portable_smart
 import rekordbox
 import related
@@ -1883,7 +1885,7 @@ class Handler(BaseHTTPRequestHandler):
         Health, version, and the portable-drive check are answered before the library is opened.
         Settings and logs are answered before the library routes. Library,
         status, track, history, duplicate, file, related-track, gig-check,
-        tempo-drift, bpm-sanity, M3U, and rekordbox XML paths return data. Every other path is a file
+        cloud-files, tempo-drift, bpm-sanity, player-compat, M3U, and rekordbox XML paths return data. Every other path is a file
         under static/. A Host or Origin that is not this computer is refused first.
         """
         try:
@@ -1897,7 +1899,7 @@ class Handler(BaseHTTPRequestHandler):
         """Answer a GET request.
 
         Health, version, and the portable-drive check do not open the library.
-        Library, status, track, history, duplicate, file, related-track, gig-check, tempo-drift, bpm-sanity, M3U, and rekordbox
+        Library, status, track, history, duplicate, file, related-track, gig-check, cloud-files, tempo-drift, bpm-sanity, player-compat, M3U, and rekordbox
         XML paths return data. Every other path is a file under static/.
         """
         parsed = urlparse(self.path)
@@ -2020,6 +2022,9 @@ class Handler(BaseHTTPRequestHandler):
                     raise library.LibraryError(folder_sync.CHOOSE_FOLDER)
                 self.send_json(music_mirror.preview(dest, space))
                 return
+            if parsed.path == "/api/lan-stage":
+                self.send_json(lan_stage.status())
+                return
             if parsed.path == "/api/stick-backup":
                 source = query_text(query, "source", "") or ""
                 dest = query_text(query, "dest", "") or ""
@@ -2120,6 +2125,15 @@ class Handler(BaseHTTPRequestHandler):
                 bpm_sanity.require_crate(crate_id)
                 self.send_json(bpm_sanity.scan(Path(library.MASTER), space, crate_id))
                 return
+            if parsed.path == "/api/player-compat":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "all") or "all")
+                player = query_text(query, "player", "club") or "club"
+                scope = query_text(query, "scope", "") or None
+                self.send_json(player_compat.scan(
+                    Path(library.MASTER), space, crate_id, player, scope,
+                ))
+                return
             if parsed.path == "/api/file-scan":
                 space = require_space(query_text(query, "space"))
                 crate_id = crate_query(query_text(query, "crate", "all") or "all")
@@ -2174,6 +2188,11 @@ class Handler(BaseHTTPRequestHandler):
                 raw_crate = query_text(query, "crate", "all") or "all"
                 report = gig_check.run_gig_check(space=space, crate_id=crate_query(raw_crate))
                 self.send_json(gig_check.report_to_dict(report))
+                return
+            if parsed.path == "/api/cloud-files":
+                space = require_space(query_text(query, "space"))
+                raw_crate = query_text(query, "crate", "all") or "all"
+                self.send_json(gig_check.cloud_report(space=space, crate_id=crate_query(raw_crate)))
                 return
             if parsed.path == "/api/reanalyze":
                 space = require_space(query_text(query, "space"))
@@ -2419,6 +2438,7 @@ class Handler(BaseHTTPRequestHandler):
                     reanalyzing = parsed.path == "/api/reanalyze"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
+                    staging = parsed.path == "/api/lan-stage"
                     sticking_backup = parsed.path == "/api/stick-backup"
                     rescuing = parsed.path == "/api/history-rescue"
                     versioning = parsed.path == "/api/version-family"
@@ -2520,6 +2540,13 @@ class Handler(BaseHTTPRequestHandler):
                             mirroring
                             and (
                                 payload.get("action") in ("preview", "copy")
+                                or payload.get("confirm") is not True
+                            )
+                        )
+                        or (
+                            staging
+                            and (
+                                payload.get("action") not in ("accept", "undo")
                                 or payload.get("confirm") is not True
                             )
                         )
@@ -2701,6 +2728,17 @@ class Handler(BaseHTTPRequestHandler):
                         result = music_mirror.action(request)
                         if (
                             request.get("action") == "crate"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif staging:
+                        request = dict(payload)
+                        if request.get("action") in ("preview", "send", "accept"):
+                            request["space"] = require_space(optional_text(payload.get("space")))
+                        result = lan_stage.action(request)
+                        if (
+                            request.get("action") == "accept"
                             and request.get("confirm") is True
                             and result.get("written")
                         ):

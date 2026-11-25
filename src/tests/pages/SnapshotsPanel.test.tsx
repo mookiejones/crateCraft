@@ -99,6 +99,8 @@ describe("SnapshotsPanel context", () => {
     expect(prune?.getAttribute("data-tooltip")).toBe(t("tooltip.pruneSnapshot"));
     expect(host.querySelector("#snapshots-take")?.getAttribute("data-tooltip")).toBe(t("tooltip.snapshotsTake"));
     expect(host.querySelector("#music-mirror-heading")?.textContent).toBe(t("musicMirror.heading"));
+    expect(host.querySelector("#lan-stage-heading")?.textContent).toBe(t("lanStage.heading"));
+    expect(host.querySelector("#lan-stage-listen")?.getAttribute("data-tooltip")).toBe(t("tooltip.lanStageListen"));
     expect(host.querySelector("#music-mirror-dest")).not.toBeNull();
     expect(host.querySelector("#snapshots-drives")?.getAttribute("data-tooltip")).not.toBe(
       host.querySelector("#snapshots-drives")?.getAttribute("aria-label"),

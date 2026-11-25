@@ -9,8 +9,10 @@
 
 import { repaintDialogs } from "./dialogs";
 import { repaintGig } from "../gig/gig";
+import { repaintCloud } from "../gig/cloud";
 import { repaintDrift } from "../gig/drift";
 import { repaintOctave } from "../gig/octave";
+import { repaintPlayers } from "../gig/players";
 import { repaintHealth } from "../health/health";
 import { repaintHistoryStats } from "../history/history-stats";
 import { repaintScan } from "../health/scan";
@@ -49,8 +51,10 @@ export function repaintAll(): void {
   repaintViews();
   if (state.mode === "snapshots") renderSnapshots();
   if (state.mode === "gig") repaintGig();
+  if (state.mode === "cloud") repaintCloud();
   if (state.mode === "drift") repaintDrift();
   if (state.mode === "octave") repaintOctave();
+  if (state.mode === "players") repaintPlayers();
   if (state.mode === "health") repaintHealth();
   if (state.mode === "stats") repaintHistoryStats();
   if (state.mode === "scan") repaintScan();

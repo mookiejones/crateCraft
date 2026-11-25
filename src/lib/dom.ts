@@ -145,6 +145,11 @@ export interface ElementIds {
   "portable-view-verdict": HTMLParagraphElement;
   "portable-view-summary": HTMLParagraphElement;
   "portable-view-findings": HTMLDivElement;
+  "cloud-panel": HTMLElement;
+  "cloud-scope": HTMLParagraphElement;
+  "cloud-status": HTMLParagraphElement;
+  "cloud-report": HTMLDivElement;
+  "cloud-refresh": HTMLButtonElement;
   "drift-panel": HTMLElement;
   "drift-scope": HTMLParagraphElement;
   "drift-status": HTMLParagraphElement;
@@ -155,6 +160,13 @@ export interface ElementIds {
   "octave-status": HTMLParagraphElement;
   "octave-report": HTMLDivElement;
   "octave-refresh": HTMLButtonElement;
+  "players-panel": HTMLElement;
+  "players-scope": HTMLParagraphElement;
+  "players-target": HTMLSelectElement;
+  "players-show": HTMLSelectElement;
+  "players-status": HTMLParagraphElement;
+  "players-report": HTMLDivElement;
+  "players-refresh": HTMLButtonElement;
   "stats-panel": HTMLElement;
   "stats-scope": HTMLParagraphElement;
   "stats-period": HTMLSelectElement;

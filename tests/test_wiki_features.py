@@ -16,6 +16,7 @@ WIKI = ROOT / "docs" / "wiki"
 FEATURE_PAGES = (
     "Hot-Loops-and-Cue-Points.md",
     "Backups-and-Restore.md",
+    "Backup-Mac.md",
     "Crates.md",
     "Export-to-Rekordbox.md",
     "Organizing-Files.md",
@@ -31,6 +32,7 @@ FEATURE_PAGES = (
 FEATURE_IMAGES = {
     "Hot-Loops-and-Cue-Points.md": "images/features/hot-loops-and-cue-points.png",
     "Backups-and-Restore.md": "images/features/backups-and-restore.png",
+    "Backup-Mac.md": "images/features/backup-mac.png",
     "Crates.md": "images/features/crates.png",
     "Export-to-Rekordbox.md": "images/features/export-to-rekordbox.png",
     "Organizing-Files.md": "images/features/organizing-files.png",

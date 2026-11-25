@@ -22,6 +22,7 @@ import { driveCopyText, operationCardText } from "../lib/snapshots/restore-view"
 import { snapshotColumns } from "../lib/snapshots/snapshot-columns";
 import { ensureGridDom } from "../lib/ui/grid-dom-stubs";
 import { tips } from "../lib/ui/tooltip-strings";
+import { LanStagePanel } from "../components/LanStagePanel";
 import { MusicMirrorPanel } from "../components/MusicMirrorPanel";
 import { TrashHeldList } from "../components/TrashHeldList";
 import { GigLockPanel } from "../components/GigLockPanel";
@@ -211,6 +212,7 @@ export function SnapshotsPanel() {
       </div>
       <TrashHeldList />
       <MusicMirrorPanel />
+      <LanStagePanel />
       <GigLockPanel />
       <BatchPanel />
       <section id="operations" className="operations" aria-labelledby="operations-heading">

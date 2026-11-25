@@ -11,7 +11,7 @@
   and previews a rename, move, replace, or delete before it is saved.
   Backups lists hash-checked library snapshots and previews a
   restore before it is confirmed. Ready is a read-only ready score,
-  Check drive, Tempo drift, and BPM check.
+  Check drive, Tempo drift, BPM check, and Won't play.
   tokens.css, app.css, and app.js are local files. The page talks only to
   the library server on 127.0.0.1. It does not open master.sqlite itself.
 -->
@@ -74,9 +74,11 @@
           <button type="button" id="streams-tab" data-view="streams" role="tab" hidden aria-controls="streams-panel" data-i18n="view.streams">Streaming repair</button>
           <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
           <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
+          <button type="button" id="cloud-tab" data-view="cloud" role="tab" hidden aria-controls="cloud-panel" data-i18n="view.cloud">Cloud-only</button>
           <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
           <button type="button" id="drift-tab" data-view="drift" role="tab" hidden aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
           <button type="button" id="octave-tab" data-view="octave" role="tab" hidden aria-controls="octave-panel" data-i18n="view.octave">BPM check</button>
+          <button type="button" id="players-tab" data-view="players" role="tab" hidden aria-controls="players-panel" data-i18n="view.players">Won't play</button>
         </div>
         <button type="button" data-nav="files" role="tab" data-i18n="view.files">Organize files</button>
         <button type="button" data-nav="health" role="tab" data-i18n="view.group.health">Health</button>
@@ -254,6 +256,17 @@
         <div id="gig-report" class="gig-report"></div>
       </section>
 
+      <section id="cloud-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="cloud-heading" aria-busy="false">
+        <h2 id="cloud-heading" class="visually-hidden" data-i18n="cloud.heading">Cloud-only</h2>
+        <div class="browser-bar">
+          <p id="cloud-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="cloud-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+        </div>
+        <p id="cloud-hint" class="gig-note" data-i18n="cloud.intro">These tracks are in the library, but the audio is not fully on this computer. Download them before the gig. This screen does not download them.</p>
+        <p id="cloud-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="cloud-report" class="gig-report" tabindex="-1"></div>
+      </section>
+
       <section id="portable-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="portable-heading" aria-busy="false">
         <h2 id="portable-heading" class="visually-hidden" data-i18n="portable.title">Portable drive</h2>
         <div class="browser-bar">
@@ -296,6 +309,39 @@
         <p id="octave-hint" class="gig-note" data-i18n="octave.intro">Needs a crate. Flags a stored BPM that is about half or double the rest of the crate. ×2 or ÷2 writes only that BPM after you confirm. The beatgrid is left alone.</p>
         <p id="octave-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="octave-report" class="gig-report" tabindex="-1"></div>
+      </section>
+
+      <section id="players-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="players-heading" aria-busy="false">
+        <h2 id="players-heading" class="visually-hidden" data-i18n="players.heading">Won't play</h2>
+        <div class="browser-bar">
+          <p id="players-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <label class="stats-field">
+            <span data-i18n="players.player">Player</span>
+            <select id="players-target" aria-label="Player to check" data-i18n-attr="aria-label:players.playerLabel">
+              <option value="club" data-i18n="players.player.club">Common club players</option>
+              <option value="cdj-3000" data-i18n="players.player.cdj3000">CDJ-3000</option>
+              <option value="cdj-2000nxs2" data-i18n="players.player.cdj2000nxs2">CDJ-2000NXS2</option>
+              <option value="cdj-2000nxs" data-i18n="players.player.cdj2000nxs">CDJ-2000NXS</option>
+              <option value="xdj-xz" data-i18n="players.player.xdjxz">XDJ-XZ</option>
+              <option value="xdj-1000mk2" data-i18n="players.player.xdj1000mk2">XDJ-1000MK2</option>
+            </select>
+          </label>
+          <label class="stats-field">
+            <span data-i18n="players.show">Show</span>
+            <select id="players-show" aria-label="Which results to list" data-i18n-attr="aria-label:players.showLabel">
+              <option value="problems" data-i18n="players.show.problems">Won't play and check first</option>
+              <option value="wont_play" data-i18n="players.show.wont_play">Won't play</option>
+              <option value="check_first" data-i18n="players.show.check_first">Check first</option>
+              <option value="will_play" data-i18n="players.show.will_play">Will play</option>
+              <option value="unknown" data-i18n="players.show.unknown">Unknown</option>
+              <option value="all" data-i18n="players.show.all">Every result</option>
+            </select>
+          </label>
+          <button id="players-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+        </div>
+        <p id="players-hint" class="gig-note" data-i18n="players.intro">Pick a player. A crate checks that crate and its subcrates. All tracks checks the whole space. This only reads file headers. It does not convert audio, write cues, or change the library.</p>
+        <p id="players-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="players-report" class="gig-report" tabindex="-1"></div>
       </section>
 
       <section id="stats-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="stats-heading" aria-busy="false">
