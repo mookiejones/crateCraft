@@ -28,7 +28,19 @@ TOKEN_DECL = re.compile(r"(--[A-Za-z0-9-]+)\s*:\s*(#[0-9A-Fa-f]{6})\b")
 SRC = ROOT / "src"
 MUI_THEME = SRC / "lib" / "ui" / "mui-theme.ts"
 # Serato cue/loop data on the waveform fixture, not page chrome.
-SERATO_MARKER_HEX = {"#CC0000", "#27AAE1"}
+SERATO_MARKER_HEX = {
+    "#CC0000",
+    "#27AAE1",
+    # Serato DJ Pro GUI pads 1–8 (tokens.css --cue-slot-N).
+    "#C02626",
+    "#F8821A",
+    "#173BA2",
+    "#FAC313",
+    "#1FAD26",
+    "#CE359E",
+    "#1DBEBD",
+    "#6823B6",
+}
 THEME_TO_TOKEN = {
     "bg": "--color-bg",
     "paper": "--color-card",
@@ -825,6 +837,8 @@ _DECORATIVE = {
     ".detail-card",
     ".detail-chip",
     ".detail-swatch-empty",
+    ".cue-edit-row[data-swap=\"true\"]",
+    ".cue-editor-pending",
 }
 
 # The only visible edge of these fields. Card surfaces use the sheet.

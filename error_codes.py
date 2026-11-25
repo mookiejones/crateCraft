@@ -31,6 +31,7 @@ import legacy_library
 import music_mirror
 import other_dj
 import smart_presets
+import cue_edit
 import path_forms
 import stick_cues
 import suspicious_cues
@@ -65,6 +66,15 @@ ERROR_CODES: dict[str, str] = {
     "The unanalyzed mark did not stick. The library was put back.": "reanalyze_did_not_stick",
     "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them.": "reanalyze_locked",
     suspicious_cues.NEEDS_CONFIRM: "cues_needs_confirm",
+    cue_edit.NEEDS_CONFIRM: "cue_edit_needs_confirm",
+    cue_edit.NEEDS_UNDO: "cue_edit_needs_undo",
+    cue_edit.MISSING_UNDO: "cue_edit_missing_undo",
+    cue_edit.PROTECTED: "cue_edit_protected",
+    cue_edit.UNSUPPORTED: "cue_edit_unsupported",
+    cue_edit.MISSING_FILE: "cue_edit_missing",
+    cue_edit.CORRUPT: "cue_edit_corrupt",
+    cue_edit.OUTSIDE_CHANGE: "cue_edit_outside_change",
+    cue_edit.BAD_PADS: "cue_edit_bad_pads",
     "Confirm before stored gain is reset to 0 dB.": "gain_needs_confirm",
     "The gain did not read back as 0 dB, so the files were put back.": "gain_did_not_stick",
     "Other Serato tags would have changed, so the files were put back.": "gain_frames_moved",

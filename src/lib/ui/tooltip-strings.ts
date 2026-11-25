@@ -377,6 +377,8 @@ export const tips = {
   showDismissed: spec("tooltip.showDismissed"),
   healthFindArt: spec("tooltip.healthFindArt"),
   suspiciousCues: spec("tooltip.suspiciousCues"),
+  cueEditUndo: spec("tooltip.cueEditUndo"),
+  cueEditDisabled: spec("tooltip.cueEditDisabled"),
   healthPathForms: spec("tooltip.healthPathForms"),
   healthPathFormsReview: spec("tooltip.healthPathFormsReview"),
   healthPathFormsConfirm: spec("tooltip.healthPathFormsConfirm"),
@@ -785,6 +787,22 @@ export function selectRow(name: string): TipSpec {
 
 export function cueTip(label: string): TipSpec {
   return spec("tooltip.cue", { label });
+}
+
+export const cueEditApplyTip = spec("tooltip.cueEditApply");
+export const cueEditDiscardTip = spec("tooltip.cueEditDiscard");
+export const cueEditTimeTip = spec("tooltip.cueEditTime");
+export const cueEditNameTip = spec("tooltip.cueEditName");
+export const cueEditColorTip = spec("tooltip.cueEditColor");
+export const cueEditDeleteTip = spec("tooltip.cueEditDelete");
+export const cueEditSetTip = spec("tooltip.cueEditSet");
+export const cueEditSwapTip = spec("tooltip.cueEditSwap");
+
+export function cueEditNudgeTip(deltaMs: number, beat = false): TipSpec {
+  if (beat) {
+    return spec(deltaMs < 0 ? "tooltip.cueEditBeatBack" : "tooltip.cueEditBeatForward");
+  }
+  return spec("tooltip.cueEditNudge", { ms: Math.abs(deltaMs), sign: deltaMs < 0 ? "−" : "+" });
 }
 
 export function editField(label: string): TipSpec {
