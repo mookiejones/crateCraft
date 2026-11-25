@@ -1,4 +1,8 @@
-"""History session compare, restore, and crate rebuild (#482)."""
+"""History session compare, restore, and crate rebuild (#482).
+
+Write tests patch ``snapshots.serato_dj_running`` so a running Serato DJ
+does not queue or block the restore.
+"""
 
 from __future__ import annotations
 
@@ -89,9 +93,10 @@ class HistoryRescueTests(unittest.TestCase):
             )
             self.assertTrue(plan["preview"])
             self.assertEqual(plan["session_count"], 1)
-            written = history_rescue.rebuild_crates(
-                "live", [1], library.LIBRARY_SPACE, confirm=True
-            )
+            with mock.patch("snapshots.serato_dj_running", return_value=False):
+                written = history_rescue.rebuild_crates(
+                    "live", [1], library.LIBRARY_SPACE, confirm=True
+                )
             self.assertTrue(written["written"])
             self.assertGreaterEqual(int(written["crate_count"]), 1)
             parent = written["parent"]
@@ -107,9 +112,10 @@ class HistoryRescueTests(unittest.TestCase):
                 before = conn.execute("SELECT COUNT(*) FROM history_session").fetchone()
                 assert before is not None
                 before_count = int(before[0])
-            report = history_rescue.restore_sessions(
-                "backup:serato-web-test", [9], confirm=True
-            )
+            with mock.patch("snapshots.serato_dj_running", return_value=False):
+                report = history_rescue.restore_sessions(
+                    "backup:serato-web-test", [9], confirm=True
+                )
             self.assertTrue(report["written"])
             self.assertEqual(report["restored_count"], 1)
             self.assertIsInstance(report.get("snapshot_id"), str)
@@ -121,9 +127,10 @@ class HistoryRescueTests(unittest.TestCase):
                     "SELECT name FROM history_session WHERE name = 'Rescue me'"
                 ).fetchone()
                 self.assertIsNotNone(row)
-            again = history_rescue.restore_sessions(
-                "backup:serato-web-test", [9], confirm=True
-            )
+            with mock.patch("snapshots.serato_dj_running", return_value=False):
+                again = history_rescue.restore_sessions(
+                    "backup:serato-web-test", [9], confirm=True
+                )
             self.assertFalse(again["written"])
             self.assertEqual(again["restored_count"], 0)
             self.assertEqual(again["skipped_count"], 1)
@@ -190,16 +197,17 @@ class HistoryRescueApiTests(unittest.TestCase):
         self.assertEqual(status, 200)
         assert isinstance(body, dict)
         self.assertIn("sources", body)
-        status, body = self.request(
-            "/api/history-rescue",
-            {
-                "action": "crates",
-                "source": "live",
-                "sessions": [1],
-                "space": library.LIBRARY_SPACE,
-                "confirm": True,
-            },
-        )
+        with mock.patch("snapshots.serato_dj_running", return_value=False):
+            status, body = self.request(
+                "/api/history-rescue",
+                {
+                    "action": "crates",
+                    "source": "live",
+                    "sessions": [1],
+                    "space": library.LIBRARY_SPACE,
+                    "confirm": True,
+                },
+            )
         self.assertEqual(status, 200)
         assert isinstance(body, dict)
         self.assertTrue(body["written"])
