@@ -14,6 +14,7 @@
  * Tag spellings are src/lib/health/tags.ts.
  * Lost tags are src/lib/health/lost-tags.ts.
  * Energy is src/lib/health/energy.ts.
+ * Re-analyze is src/lib/health/reanalyze.ts.
  * Audio changed is src/lib/health/audio-changed.ts.
  * Compare crates is src/lib/crates/crate-compare.ts.
  * Crate presets are src/lib/crates/presets.ts.
@@ -37,7 +38,9 @@ import { wireBitrate } from "./lib/health/bitrate";
 import { wireTags } from "./lib/health/tags";
 import { wireLostTags } from "./lib/health/lost-tags";
 import { wireEnergy } from "./lib/health/energy";
+import { wireReanalyze } from "./lib/health/reanalyze";
 import { wireAudioChanged } from "./lib/health/audio-changed";
+import { wireGainChanged } from "./lib/health/gain-changed";
 import { wireCrateCompare } from "./lib/crates/crate-compare";
 import { wireHelp } from "./lib/ui/help";
 import { wirePortable } from "./lib/gig/portable";
@@ -102,7 +105,9 @@ wireBitrate();
 wireTags();
 wireLostTags();
 wireEnergy();
+wireReanalyze();
 wireAudioChanged();
+wireGainChanged();
 wireCrateCompare();
 wirePortable();
 wireLayout();

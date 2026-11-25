@@ -23374,7 +23374,113 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "wizard.yes": "Yes, share",
     "write.forceConfirm": "The library files changed on disk since they were loaded. Write anyway?",
     "write.forceTitle": "Library changed",
-    "write.forceWrite": "Write anyway"
+    "write.forceWrite": "Write anyway",
+    "error.gain_cannot_rewrite": "Stored gain could not be rewritten, so nothing was kept.",
+    "error.gain_did_not_stick": "The gain did not read back as 0 dB, so the files were put back.",
+    "error.gain_frames_moved": "Other Serato tags would have changed, so the files were put back.",
+    "error.gain_needs_confirm": "Confirm before stored gain is reset to 0 dB.",
+    "gain.checking": "Checking…",
+    "gain.column.gain": "Stored gain",
+    "gain.confirmCrate": "Confirm crate",
+    "gain.confirmReset": "Confirm reset",
+    "gain.empty": "No track has a stored gain other than 0 dB.",
+    "gain.heading": "Gain changed",
+    "gain.intro": "Lists tracks whose stored gain is not 0 dB. Saving a crate writes the library. Reset to 0 dB writes that gain in the audio file and leaves cues, the beatgrid, overview, and analysis alone. Quit Serato first.",
+    "gain.loadFailed": "The gain report could not be read.",
+    "gain.note": "Only the stored gain changes. Auto gain, cues, the beatgrid, overview, and analysis stay.",
+    "gain.offline": {
+      one: "An unplugged drive is not a gain change. {count} file is on an unplugged drive.",
+      other: "An unplugged drive is not a gain change. {count} files are on unplugged drives."
+    },
+    "gain.previewCrate": {
+      one: "Save {count} track in {name}, inside {folder}. Nothing is written until you confirm.",
+      other: "Save {count} tracks in {name}, inside {folder}. Nothing is written until you confirm."
+    },
+    "gain.previewEmpty": "Nothing to change. No crate is written and no gain is reset.",
+    "gain.previewReset": {
+      one: "Reset stored gain to 0 dB on {count} track. Quit Serato first. Nothing is written until you confirm.",
+      other: "Reset stored gain to 0 dB on {count} tracks. Quit Serato first. Nothing is written until you confirm."
+    },
+    "gain.reset": "Reset to 0 dB",
+    "gain.resetDone": {
+      one: "Reset stored gain to 0 dB on {count} track. Undo puts that file back.",
+      other: "Reset stored gain to 0 dB on {count} tracks. Undo puts those files back."
+    },
+    "gain.resetting": "Resetting stored gain…",
+    "gain.saveCrate": "Save crate",
+    "gain.saving": "Saving the crate…",
+    "gain.summary": {
+      one: "{checked} files checked. {count} track has a stored gain other than 0 dB.",
+      other: "{checked} files checked. {count} tracks have a stored gain other than 0 dB."
+    },
+    "gain.summaryClear": "{checked} files checked. None have a stored gain other than 0 dB.",
+    "gain.undo": "Undo reset",
+    "gain.undone": "The reset was undone. Stored gain is back.",
+    "gain.undoing": "Putting the files back…",
+    "gain.unreadable": {
+      one: "{count} file has stored gain this app cannot read, so it was left as it was.",
+      other: "{count} files have stored gain this app cannot read, so they were left as they were."
+    },
+    "gain.writtenCrate": {
+      one: "Saved {count} track in {name}, inside {folder}.",
+      other: "Saved {count} tracks in {name}, inside {folder}."
+    },
+    "mode.gain": "Lists tracks whose stored gain is not 0 dB. Reset writes that gain only. Cues, the beatgrid, overview, and analysis stay. Quit Serato first.",
+    "tooltip.gainConfirmCrate": "Save the Gain changed crate inside the crateCraft folder. Quit Serato first. The audio file stays.",
+    "tooltip.gainConfirmReset": "Set stored gain to 0 dB. Quit Serato first. Cues, the beatgrid, overview, and analysis stay. Undo puts the files back.",
+    "tooltip.gainRefresh": "Check again for tracks whose stored gain is not 0 dB. Nothing is written.",
+    "tooltip.gainReset": "Show the reset plan. Nothing is written until you confirm.",
+    "tooltip.gainSave": "Show the crate plan. Nothing is written until you confirm.",
+    "tooltip.gainUndo": "Put the last gain reset back from its snapshot. Quit Serato first.",
+    "tooltip.viewGain": "List tracks whose stored gain is not 0 dB. Reset writes that gain only, after you confirm. Quit Serato first.",
+    "view.gain": "Gain changed",
+    "view.reanalyze": "Re-analyze",
+    "mode.reanalyze": "Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids. Cues stay. Quit Serato first.",
+    "reanalyze.heading": "Re-analyze",
+    "reanalyze.intro": "Needs a crate. Marks tracks unanalyzed so Serato rebuilds grids and overviews. Cues stay. Quit Serato first.",
+    "reanalyze.preview": "Preview",
+    "reanalyze.confirm": "Confirm re-analyze",
+    "reanalyze.confirmHint": "Quit Serato first. Then open the tracks in Serato to rebuild.",
+    "reanalyze.clearFrames": "Also clear BeatGrid and Autotags",
+    "reanalyze.includeLocked": "Include locked beatgrids (unlocks them)",
+    "reanalyze.checking": "Checking…",
+    "reanalyze.previewing": "Preparing preview…",
+    "reanalyze.applying": "Marking tracks…",
+    "reanalyze.loadFailed": "The re-analyze plan could not be read.",
+    "reanalyze.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+    "reanalyze.summary": {
+      one: "1 track ready for Serato to re-analyze.",
+      other: "{count} tracks ready for Serato to re-analyze."
+    },
+    "reanalyze.summaryClear": "No tracks need a re-analyze mark.",
+    "reanalyze.empty": "Nothing to mark. Pick a crate that still has analysis.",
+    "reanalyze.markersNote": "Markers2 cues stay. BeatGrid and Autotags clear when that option is on. Open the tracks in Serato to rebuild.",
+    "reanalyze.lockedNote": {
+      one: "1 track has a locked beatgrid and was skipped.",
+      other: "{count} tracks have locked beatgrids and were skipped."
+    },
+    "reanalyze.column.cleared": "Will clear",
+    "reanalyze.previewReady": {
+      one: "Preview ready: 1 track. Confirm to mark it.",
+      other: "Preview ready: {count} tracks. Confirm to mark them."
+    },
+    "reanalyze.previewEmpty": "Nothing to mark. No write will run.",
+    "reanalyze.optionsChanged": "Preview again before Confirm. The options changed.",
+    "reanalyze.driveAbsent": "A track's drive is not connected. Serato may put the analyzed mark back when that drive returns.",
+    "reanalyze.written": {
+      one: "Marked 1 track. Open it in Serato to rebuild.",
+      other: "Marked {count} tracks. Open them in Serato to rebuild."
+    },
+    "tooltip.viewReanalyze": "Mark tracks unanalyzed so Serato rebuilds grids and overviews. Needs a crate. Cues stay. Quit Serato first.",
+    "tooltip.reanalyzeRefresh": "Check again which tracks still need a re-analyze mark.",
+    "tooltip.reanalyzePreview": "Preview the mark without writing. Quit Serato before Confirm.",
+    "tooltip.reanalyzeConfirm": "Mark the listed tracks unanalyzed. Takes a snapshot first. Quit Serato first.",
+    "tooltip.reanalyzeClearFrames": "Remove BeatGrid and Autotags from the files. Markers2 cues stay. Off marks the database only.",
+    "tooltip.reanalyzeIncludeLocked": "Also unlock locked beatgrids so Serato can rebuild them.",
+    "error.reanalyze_needs_confirm": "Confirm before tracks are marked for re-analyze.",
+    "error.reanalyze_needs_crate": "Choose a crate for re-analyze.",
+    "error.reanalyze_did_not_stick": "The unanalyzed mark did not stick. The library was put back.",
+    "error.reanalyze_locked": "Those beatgrids are locked. Turn on Include locked beatgrids to unlock them."
   };
 
   // locales/es.json
@@ -25764,7 +25870,113 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "wizard.yes": "Sí, compartir",
     "write.forceConfirm": "Los archivos de la biblioteca cambiaron en disco desde que se cargaron. ¿Escribir de todos modos?",
     "write.forceTitle": "Biblioteca cambiada",
-    "write.forceWrite": "Escribir de todos modos"
+    "write.forceWrite": "Escribir de todos modos",
+    "error.gain_cannot_rewrite": "No se pudo reescribir la ganancia guardada, así que no se cambió nada.",
+    "error.gain_did_not_stick": "La ganancia no se leyó como 0 dB, así que los archivos volvieron a como estaban.",
+    "error.gain_frames_moved": "Otras etiquetas de Serato habrían cambiado, así que los archivos volvieron a como estaban.",
+    "error.gain_needs_confirm": "Confirma antes de restablecer la ganancia guardada a 0 dB.",
+    "gain.checking": "Comprobando…",
+    "gain.column.gain": "Ganancia guardada",
+    "gain.confirmCrate": "Confirmar caja",
+    "gain.confirmReset": "Confirmar restablecimiento",
+    "gain.empty": "Ninguna pista tiene una ganancia guardada distinta de 0 dB.",
+    "gain.heading": "Ganancia cambiada",
+    "gain.intro": "Lista las pistas cuya ganancia guardada no es 0 dB. Guardar una caja escribe en la biblioteca. Restablecer a 0 dB escribe esa ganancia en el archivo de audio y deja los cues, la rejilla, la vista general y el análisis como estaban. Cierra Serato primero.",
+    "gain.loadFailed": "No se pudo leer el informe de ganancia.",
+    "gain.note": "Solo cambia la ganancia guardada. La ganancia automática, los cues, la rejilla, la vista general y el análisis se quedan.",
+    "gain.offline": {
+      one: "Un disco desconectado no es un cambio de ganancia. {count} archivo está en un disco desconectado.",
+      other: "Un disco desconectado no es un cambio de ganancia. {count} archivos están en discos desconectados."
+    },
+    "gain.previewCrate": {
+      one: "Guardar {count} pista en {name}, dentro de {folder}. No se escribe nada hasta que confirmes.",
+      other: "Guardar {count} pistas en {name}, dentro de {folder}. No se escribe nada hasta que confirmes."
+    },
+    "gain.previewEmpty": "Nada que cambiar. No se escribe una caja y no se restablece la ganancia.",
+    "gain.previewReset": {
+      one: "Restablecer la ganancia guardada a 0 dB en {count} pista. Cierra Serato primero. No se escribe nada hasta que confirmes.",
+      other: "Restablecer la ganancia guardada a 0 dB en {count} pistas. Cierra Serato primero. No se escribe nada hasta que confirmes."
+    },
+    "gain.reset": "Restablecer a 0 dB",
+    "gain.resetDone": {
+      one: "Ganancia guardada restablecida a 0 dB en {count} pista. Deshacer devuelve ese archivo.",
+      other: "Ganancia guardada restablecida a 0 dB en {count} pistas. Deshacer devuelve esos archivos."
+    },
+    "gain.resetting": "Restableciendo la ganancia guardada…",
+    "gain.saveCrate": "Guardar caja",
+    "gain.saving": "Guardando la caja…",
+    "gain.summary": {
+      one: "{checked} archivos comprobados. {count} pista tiene una ganancia guardada distinta de 0 dB.",
+      other: "{checked} archivos comprobados. {count} pistas tienen una ganancia guardada distinta de 0 dB."
+    },
+    "gain.summaryClear": "{checked} archivos comprobados. Ninguno tiene una ganancia guardada distinta de 0 dB.",
+    "gain.undo": "Deshacer restablecimiento",
+    "gain.undone": "El restablecimiento se deshizo. La ganancia guardada volvió.",
+    "gain.undoing": "Devolviendo los archivos…",
+    "gain.unreadable": {
+      one: "{count} archivo tiene una ganancia guardada que esta app no puede leer, así que se dejó como estaba.",
+      other: "{count} archivos tienen una ganancia guardada que esta app no puede leer, así que se dejaron como estaban."
+    },
+    "gain.writtenCrate": {
+      one: "Se guardó {count} pista en {name}, dentro de {folder}.",
+      other: "Se guardaron {count} pistas en {name}, dentro de {folder}."
+    },
+    "mode.gain": "Lista las pistas cuya ganancia guardada no es 0 dB. Restablecer escribe solo esa ganancia. Los cues, la rejilla, la vista general y el análisis se quedan. Cierra Serato primero.",
+    "tooltip.gainConfirmCrate": "Guarda la caja Ganancia cambiada dentro de la carpeta de crateCraft. Cierra Serato primero. El archivo de audio se queda.",
+    "tooltip.gainConfirmReset": "Pon la ganancia guardada en 0 dB. Cierra Serato primero. Los cues, la rejilla, la vista general y el análisis se quedan. Deshacer devuelve los archivos.",
+    "tooltip.gainRefresh": "Vuelve a buscar pistas cuya ganancia guardada no es 0 dB. No se escribe nada.",
+    "tooltip.gainReset": "Muestra el plan de restablecimiento. No se escribe nada hasta que confirmes.",
+    "tooltip.gainSave": "Muestra el plan de la caja. No se escribe nada hasta que confirmes.",
+    "tooltip.gainUndo": "Devuelve el último restablecimiento de ganancia desde su copia. Cierra Serato primero.",
+    "tooltip.viewGain": "Lista las pistas cuya ganancia guardada no es 0 dB. Restablecer escribe solo esa ganancia, después de confirmar. Cierra Serato primero.",
+    "view.gain": "Ganancia cambiada",
+    "view.reanalyze": "Reanalizar",
+    "mode.reanalyze": "Necesita una caja. Marca pistas sin analizar para que Serato reconstruya las rejillas. Las cues se quedan. Cierra Serato primero.",
+    "reanalyze.heading": "Reanalizar",
+    "reanalyze.intro": "Necesita una caja. Marca pistas sin analizar para que Serato reconstruya rejillas y overviews. Las cues se quedan. Cierra Serato primero.",
+    "reanalyze.preview": "Vista previa",
+    "reanalyze.confirm": "Confirmar reanalizar",
+    "reanalyze.confirmHint": "Cierra Serato primero. Luego abre las pistas en Serato para reconstruir.",
+    "reanalyze.clearFrames": "También borrar BeatGrid y Autotags",
+    "reanalyze.includeLocked": "Incluir rejillas bloqueadas (las desbloquea)",
+    "reanalyze.checking": "Comprobando…",
+    "reanalyze.previewing": "Preparando vista previa…",
+    "reanalyze.applying": "Marcando pistas…",
+    "reanalyze.loadFailed": "No se pudo leer el plan de reanalizar.",
+    "reanalyze.unreachable": "No se pudo alcanzar el servidor. Comprueba que esté en marcha y pulsa Comprobar de nuevo",
+    "reanalyze.summary": {
+      one: "1 pista lista para que Serato la reanalice.",
+      other: "{count} pistas listas para que Serato las reanalice."
+    },
+    "reanalyze.summaryClear": "Ninguna pista necesita marca de reanalizar.",
+    "reanalyze.empty": "Nada que marcar. Elige una caja que aún tenga análisis.",
+    "reanalyze.markersNote": "Las cues de Markers2 se quedan. BeatGrid y Autotags se borran si esa opción está activa. Abre las pistas en Serato para reconstruir.",
+    "reanalyze.lockedNote": {
+      one: "1 pista tiene la rejilla bloqueada y se omitió.",
+      other: "{count} pistas tienen la rejilla bloqueada y se omitieron."
+    },
+    "reanalyze.column.cleared": "Se borrará",
+    "reanalyze.previewReady": {
+      one: "Vista previa lista: 1 pista. Confirma para marcarla.",
+      other: "Vista previa lista: {count} pistas. Confirma para marcarlas."
+    },
+    "reanalyze.previewEmpty": "Nada que marcar. No se escribe nada.",
+    "reanalyze.optionsChanged": "Vuelve a la vista previa antes de confirmar. Las opciones cambiaron.",
+    "reanalyze.driveAbsent": "La unidad de una pista no está conectada. Serato puede volver a poner la marca de analizada cuando esa unidad regrese.",
+    "reanalyze.written": {
+      one: "Se marcó 1 pista. Ábrela en Serato para reconstruir.",
+      other: "Se marcaron {count} pistas. Ábrelas en Serato para reconstruir."
+    },
+    "tooltip.viewReanalyze": "Marca pistas sin analizar para que Serato reconstruya rejillas y overviews. Necesita una caja. Las cues se quedan. Cierra Serato primero.",
+    "tooltip.reanalyzeRefresh": "Comprobar de nuevo qué pistas aún necesitan marca de reanalizar.",
+    "tooltip.reanalyzePreview": "Vista previa de la marca sin escribir. Cierra Serato antes de Confirmar.",
+    "tooltip.reanalyzeConfirm": "Marca las pistas listadas como sin analizar. Primero toma una instantánea. Cierra Serato primero.",
+    "tooltip.reanalyzeClearFrames": "Quita BeatGrid y Autotags de los archivos. Las cues de Markers2 se quedan. Si está desactivado, solo marca la base de datos.",
+    "tooltip.reanalyzeIncludeLocked": "También desbloquea rejillas bloqueadas para que Serato pueda reconstruirlas.",
+    "error.reanalyze_needs_confirm": "Confirma antes de marcar pistas para reanalizar.",
+    "error.reanalyze_needs_crate": "Elige una caja para reanalizar.",
+    "error.reanalyze_did_not_stick": "La marca de sin analizar no se guardó. Se restauró la biblioteca.",
+    "error.reanalyze_locked": "Esas rejillas están bloqueadas. Activa Incluir rejillas bloqueadas para desbloquearlas."
   };
 
   // src/lib/i18n.ts
@@ -26425,15 +26637,28 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     viewTags: spec("tooltip.viewTags"),
     viewLost: spec("tooltip.viewLost"),
     viewEnergy: spec("tooltip.viewEnergy"),
+    viewReanalyze: spec("tooltip.viewReanalyze"),
     viewAudio: spec("tooltip.viewAudio"),
+    viewGain: spec("tooltip.viewGain"),
     lostApply: spec("tooltip.lostApply"),
     lostRefresh: spec("tooltip.lostRefresh"),
     energyApply: spec("tooltip.energyApply"),
     energyRefresh: spec("tooltip.energyRefresh"),
+    reanalyzeRefresh: spec("tooltip.reanalyzeRefresh"),
+    reanalyzePreview: spec("tooltip.reanalyzePreview"),
+    reanalyzeConfirm: spec("tooltip.reanalyzeConfirm"),
+    reanalyzeClearFrames: spec("tooltip.reanalyzeClearFrames"),
+    reanalyzeIncludeLocked: spec("tooltip.reanalyzeIncludeLocked"),
     audioRefresh: spec("tooltip.audioRefresh"),
     audioSave: spec("tooltip.audioSave"),
     audioReanalyze: spec("tooltip.audioReanalyze"),
     audioConfirm: spec("tooltip.audioConfirm"),
+    gainRefresh: spec("tooltip.gainRefresh"),
+    gainSave: spec("tooltip.gainSave"),
+    gainReset: spec("tooltip.gainReset"),
+    gainUndo: spec("tooltip.gainUndo"),
+    gainConfirmCrate: spec("tooltip.gainConfirmCrate"),
+    gainConfirmReset: spec("tooltip.gainConfirmReset"),
     healthRefresh: spec("tooltip.healthRefresh"),
     healthSection: spec("tooltip.healthSection"),
     healthOpenMissing: spec("tooltip.healthOpenMissing"),
