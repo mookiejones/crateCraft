@@ -91,6 +91,8 @@ describe("desktop menu actions", () => {
     expect(state.mode).toBe("audio");
     runDesktopAction("view-gain");
     expect(state.mode).toBe("gain");
+    runDesktopAction("view-broken");
+    expect(state.mode).toBe("broken");
     runDesktopAction("view-compare");
     expect(state.mode).toBe("compare");
     runDesktopAction("view-all");

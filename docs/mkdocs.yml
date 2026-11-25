@@ -86,6 +86,7 @@ nav:
       - Re-analyze: guide/reanalyze.md
       - Audio changed: guide/audio-changed.md
       - Gain changed: guide/gain-changed.md
+      - Broken smart crates: guide/broken-smart.md
       - Prepare: guide/prepare.md
       - Playlists: guide/playlists.md
       - From Rekordbox: coming-from-rekordbox.md

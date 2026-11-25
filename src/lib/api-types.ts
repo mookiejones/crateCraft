@@ -1477,6 +1477,29 @@ export interface GainChangedReport {
   code?: string;
 }
 
+/** One smart crate whose rules row is missing (#489). */
+export interface BrokenSmartCrate {
+  id: number;
+  name: string;
+  path: string;
+  reason: "missing_rules" | "missing_table";
+  restorable: boolean;
+  source: "snapshot" | "backup" | "sandbox" | "mirror" | "rules" | null;
+  source_at: string | null;
+}
+
+/** GET/POST /api/broken-smart plan. */
+export interface BrokenSmartPlan {
+  checked: number;
+  crates: BrokenSmartCrate[];
+  preview?: boolean;
+  written?: boolean;
+  snapshot_id?: string | null;
+  queued?: boolean;
+  error?: string;
+  code?: string;
+}
+
 export interface AudioChangedTrack {
   id: number;
   name: string;

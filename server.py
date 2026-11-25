@@ -46,6 +46,7 @@ import jobs
 import legacy_library
 import audio_changed
 import stored_gain
+import broken_smart
 import lost_tags
 import library
 import library_health
@@ -2149,6 +2150,10 @@ class Handler(BaseHTTPRequestHandler):
                 space = require_space(query_text(query, "space"))
                 self.send_json(lost_tags.plan(Path(library.MASTER), space))
                 return
+            if parsed.path == "/api/broken-smart":
+                space = require_space(query_text(query, "space"))
+                self.send_json(broken_smart.scan(Path(library.MASTER), space))
+                return
             if parsed.path == "/api/energy":
                 space = require_space(query_text(query, "space"))
                 crate_id = crate_query(query_text(query, "crate", "all") or "all")
@@ -2396,6 +2401,7 @@ class Handler(BaseHTTPRequestHandler):
                     clustering = parsed.path == "/api/tag-clusters"
                     families = parsed.path == "/api/genre-families"
                     losting = parsed.path == "/api/lost-tags"
+                    breaking = parsed.path == "/api/broken-smart"
                     energizing = parsed.path == "/api/energy"
                     swapping = parsed.path == "/api/audio-changed"
                     gaining = parsed.path == "/api/gain-changed"
@@ -2457,6 +2463,13 @@ class Handler(BaseHTTPRequestHandler):
                             and payload.get("confirm") is not True
                         )
                         or (losting and payload.get("action") == "preview")
+                        or (
+                            breaking
+                            and (
+                                payload.get("action") == "preview"
+                                or payload.get("confirm") is not True
+                            )
+                        )
                         or (energizing and payload.get("action") == "preview")
                         or (
                             swapping
@@ -2606,6 +2619,10 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = lost_tags.action(request)
+                    elif breaking:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = broken_smart.action(request)
                     elif energizing:
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))

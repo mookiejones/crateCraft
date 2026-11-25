@@ -27,6 +27,7 @@ export const VIEW_LABEL_KEYS: Record<ViewMode, MessageKey> = {
   reanalyze: "view.reanalyze",
   audio: "view.audio",
   gain: "view.gain",
+  broken: "view.broken",
   snapshots: "view.snapshots",
   gig: "view.gig",
   portable: "view.portable",

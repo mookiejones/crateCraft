@@ -139,6 +139,7 @@ export interface PageState {
   reanalyzeToken: number;
   audioToken: number;
   gainToken: number;
+  brokenToken: number;
   compareToken: number;
   view: Track[];
   viewB: Track[];
@@ -225,6 +226,7 @@ export const state: PageState = {
   reanalyzeToken: 0,
   audioToken: 0,
   gainToken: 0,
+  brokenToken: 0,
   compareToken: 0,
   view: [],
   viewB: [],

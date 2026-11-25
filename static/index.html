@@ -71,6 +71,7 @@
           <button type="button" id="reanalyze-tab" data-view="reanalyze" role="tab" hidden aria-controls="reanalyze-panel" data-i18n="view.reanalyze">Re-analyze</button>
           <button type="button" id="audio-tab" data-view="audio" role="tab" hidden aria-controls="audio-panel" data-i18n="view.audio">Audio changed</button>
           <button type="button" id="gain-tab" data-view="gain" role="tab" hidden aria-controls="gain-panel" data-i18n="view.gain">Gain changed</button>
+          <button type="button" id="broken-tab" data-view="broken" role="tab" hidden aria-controls="broken-panel" data-i18n="view.broken">Broken smart crates</button>
           <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
           <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
           <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
@@ -471,6 +472,19 @@
         <p id="gain-hint" class="gig-note" data-i18n="gain.intro">Lists tracks whose stored gain is not 0 dB. Saving a crate writes the library. Reset to 0 dB writes that gain in the audio file and leaves cues, the beatgrid, overview, and analysis alone. Quit Serato first.</p>
         <p id="gain-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="gain-report" class="gig-report" tabindex="-1"></div>
+      </section>
+
+      <section id="broken-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="broken-heading" aria-busy="false">
+        <h2 id="broken-heading" class="visually-hidden" data-i18n="broken.heading">Broken smart crates</h2>
+        <div class="browser-bar">
+          <p id="broken-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="broken-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+          <button id="broken-repair" type="button" data-i18n="broken.apply">Repair</button>
+          <button id="broken-undo" type="button" data-i18n="broken.undo">Undo repair</button>
+        </div>
+        <p id="broken-hint" class="gig-note" data-i18n="broken.intro">Lists smart crates that lost their rules. Check again writes nothing. Repair puts the saved rules back. Quit Serato first.</p>
+        <p id="broken-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="broken-report" class="gig-report" tabindex="-1"></div>
       </section>
       <div id="player-bar" class="player-bar"></div>
     </main>

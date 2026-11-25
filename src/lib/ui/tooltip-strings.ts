@@ -347,6 +347,7 @@ export const tips = {
   viewReanalyze: spec("tooltip.viewReanalyze"),
   viewAudio: spec("tooltip.viewAudio"),
   viewGain: spec("tooltip.viewGain"),
+  viewBroken: spec("tooltip.viewBroken"),
   lostApply: spec("tooltip.lostApply"),
   lostRefresh: spec("tooltip.lostRefresh"),
   energyApply: spec("tooltip.energyApply"),
@@ -364,6 +365,11 @@ export const tips = {
   gainSave: spec("tooltip.gainSave"),
   gainReset: spec("tooltip.gainReset"),
   gainUndo: spec("tooltip.gainUndo"),
+  brokenRefresh: spec("tooltip.brokenRefresh"),
+  brokenRepair: spec("tooltip.brokenRepair"),
+  brokenUndo: spec("tooltip.brokenUndo"),
+  brokenConfirm: spec("tooltip.brokenConfirm"),
+  brokenPick: spec("tooltip.brokenPick"),
   gainConfirmCrate: spec("tooltip.gainConfirmCrate"),
   gainConfirmReset: spec("tooltip.gainConfirmReset"),
   healthRefresh: spec("tooltip.healthRefresh"),
@@ -510,6 +516,7 @@ export function viewTip(view: string): TipSpec | undefined {
     reanalyze: tips.viewReanalyze,
     audio: tips.viewAudio,
     gain: tips.viewGain,
+    broken: tips.viewBroken,
   };
   return known[view];
 }
@@ -649,6 +656,9 @@ export function staticTip(id: string): TipSpec | undefined {
     "gain-save": tips.gainSave,
     "gain-reset": tips.gainReset,
     "gain-undo": tips.gainUndo,
+    "broken-refresh": tips.brokenRefresh,
+    "broken-repair": tips.brokenRepair,
+    "broken-undo": tips.brokenUndo,
     "snapshots-take": tips.snapshotsTake,
     "music-mirror-dest": tips.musicMirrorDest,
     "music-mirror-preview": tips.musicMirrorPreview,

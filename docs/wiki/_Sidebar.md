@@ -20,6 +20,7 @@
 [Re-analyze](Re-analyze)
 [Audio changed](Audio-Changed)
 [Gain changed](Gain-Changed)
+[Broken smart crates](Broken-Smart-Crates)
 [BPM check](BPM-Check)
 
 **The app**

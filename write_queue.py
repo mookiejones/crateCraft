@@ -80,6 +80,7 @@ QUEUEABLE = frozenset(
         "/api/tonight",
         "/api/tag-clusters",
         "/api/lost-tags",
+        "/api/broken-smart",
         "/api/energy",
         "/api/reanalyze",
         "/api/audio-changed",
@@ -529,6 +530,10 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return tag_cleanup.action(request)
     if path == "/api/lost-tags":
         return lost_tags.action(request)
+    if path == "/api/broken-smart":
+        import broken_smart
+
+        return broken_smart.action(request)
     if path == "/api/energy":
         return energy_level.action(request)
     if path == "/api/reanalyze":
