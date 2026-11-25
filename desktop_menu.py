@@ -175,6 +175,7 @@ def build_menu(dispatch: Dispatch, language: str | None) -> list[object]:
                     "view.group.gig",
                     [
                         item("view.gig", "view-gig"),
+                        item("view.cloud", "view-cloud"),
                         item("view.portable", "view-portable"),
                         item("view.drift", "view-drift"),
                         item("view.octave", "view-octave"),

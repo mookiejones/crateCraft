@@ -2,7 +2,7 @@
  * Sheet heading and crate-scope chip.
  *
  * The heading repeats the open view and space. Overview, Ready, Tempo
- * drift, BPM check, Won't play, Damaged files, Suspect quality, and Energy also show which crate
+ * drift, BPM check, Cloud-only, Won't play, Damaged files, Suspect quality, and Energy also show which crate
  * the report uses, with a control that selects All tracks.
  */
 
@@ -29,6 +29,7 @@ export const VIEW_LABEL_KEYS: Record<ViewMode, MessageKey> = {
   gain: "view.gain",
   snapshots: "view.snapshots",
   gig: "view.gig",
+  cloud: "view.cloud",
   portable: "view.portable",
   drift: "view.drift",
   octave: "view.octave",
@@ -39,6 +40,7 @@ export const VIEW_LABEL_KEYS: Record<ViewMode, MessageKey> = {
 export const CRATE_SCOPED_MODES: readonly ViewMode[] = [
   "health",
   "gig",
+  "cloud",
   "drift",
   "octave",
   "players",

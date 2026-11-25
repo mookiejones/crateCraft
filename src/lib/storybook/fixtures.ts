@@ -16,6 +16,7 @@ import type {
   TagClusterPlan,
   TagClusters,
   BpmSanityReport,
+  CloudFilesReport,
   PlayerCompatReport,
   TempoDriftReport,
   Track,
@@ -459,9 +460,40 @@ export const playersReport: PlayerCompatReport = {
   }],
 };
 
+export const cloudReport: CloudFilesReport = {
+  counts: { local: 8, cloud: 1, missing: 1, unknown: 1, offline: 0 },
+  cloud_files: [
+    {
+      path: "/Music/cloud.mp3",
+      title: "Clouded",
+      artist: "A",
+      crate: "Friday",
+      provider: "icloud",
+      status: "cloud",
+      reason: "dataless",
+    },
+  ],
+  unknown_files: [
+    {
+      path: "/Music/maybe.mp3",
+      title: "Maybe",
+      artist: "B",
+      crate: "Friday",
+      provider: "other",
+      status: "unknown",
+      reason: "unsupported_provider",
+    },
+  ],
+  cloud_locations: [
+    { role: "music", provider: "icloud", path: "/Users/a/iCloud", optimize_storage: true },
+  ],
+  scope: { space: "Serato Library", crate_id: 5, crate_name: "Friday" },
+};
+
 export function gigValue(partial: Partial<GigContextValue> = {}): GigContextValue {
   return {
     gig: { report: gigReport, stepIndex: 0, checkedAt: new Date("2026-01-01T12:00:00Z") },
+    cloud: { report: cloudReport, scope: "Friday" },
     drift: { report: driftReport, scope: "Friday" },
     octave: { report: octaveReport, scope: "Friday", busy: false },
     players: { report: playersReport, scope: "Friday", show: "problems" },

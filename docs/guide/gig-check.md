@@ -7,7 +7,7 @@
 1. Open crateCraft.
 2. Click **Gig** in the drawer, then **Ready**.
 3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The sheet heading names the view. **Scope** under it shows All tracks or the crate. **All tracks** on that chip checks the whole space.
-4. Walk the five steps: **Drives**, **Missing files**, **Streaming**, **Empty crates**, and **Since last gig**. Each step says **Step N of 5**. One button names the thing to do, such as **Locate missing files**. **Back** returns to the previous step. **Exit gig check** leaves the check. Lists sit in groups you can open and close. Tab to a group heading, then Enter or Space to hide or show it.
+4. Walk the six steps: **Drives**, **Missing files**, **Cloud-only**, **Streaming**, **Empty crates**, and **Since last gig**. Each step says **Step N of 6**. One button names the thing to do, such as **Locate missing files**. **Back** returns to the previous step. **Exit gig check** leaves the check. Lists sit in groups you can open and close. Tab to a group heading, then Enter or Space to hide or show it.
 5. Read the score on each step. It shows the number out of 100, such as **72/100**, and **✓ Ready** or **✕ Not ready**. Color is not the only signal. **Ready** means the score is at least 70 and nothing below is a hard stop. **Not ready** means do not treat the crate as ready to play.
 6. The last screen says whether you are ready for the gig, the score, the crate, and the time of the check. **Check again** after you plug a drive back in or move a file. The report stays up while the new check runs. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
 
@@ -31,6 +31,8 @@ The list under **Holding it back** is each reason the score is not 100.
 | --- | --- |
 | **Not ready**, and a drive name, with the word **absent** | Plug that drive in. Tracks on it are **unavailable**. They are not listed as missing files. The drive is named once. |
 | **Not ready**, and missing files | Each missing path is listed under **Missing files**. [Missing files](missing.md) is where you point a track at a file that moved. |
+| **Not ready**, and cloud-only files | The path is in the library, but the audio is not fully on this computer. Download it in Finder or File Explorer before the gig. This check does not download it. A cloud placeholder is not a missing file. [Cloud-only](cloud-only.md) lists every one. |
+| A file that could not be checked | The check cannot tell whether the audio is on this computer, so it is not counted as local. An unsupported cloud folder is never treated as local. |
 | A streaming track | Apple Music tracks play only while you are logged in to Apple Music. They are counted on their own, not as missing files. |
 | An empty crate | The line is **Serato may delete this crate when it closes.** Put a track in the crate if you want to keep it. Serato's own clean-up note describes empty crates disappearing after quit, and that note does not name a version. The Serato DJ 4.0 crate page does not say they are deleted. |
 | **No snapshot in the last 7 days** | The score drops. A snapshot from the last 7 days does not drop it. |
@@ -42,6 +44,8 @@ A missing drive, or a missing file in the crate you selected, is **Not ready** e
 ## What changed
 
 **Check drive** sits beside this check in the same rail group. Pick a connected drive that has a `_Serato_` folder. The report is read-only. An unplugged drive is named and is not treated as a missing file. **Back up this stick** copies the stick's music and `_Serato_` to another drive or disk image without writing the stick. **Review stick cues** and **Import empty pads** sit under the report. Review writes nothing. Import copies cues into empty pads and does not replace a cue you already have. See [Check a portable drive](files.md#check-a-portable-drive) and [Back up this stick](files.md#back-up-this-stick).
+
+**Cloud-only** sits beside this check in the same rail group. It lists tracks whose audio is still in the cloud, and files the check could not prove are on this computer. It does not download them. See [Cloud-only](cloud-only.md).
 
 **Tempo drift** sits beside this check in the same rail group. It lists tracks whose tempo wanders or that look live, so you can give them a flexible beatgrid. It needs a crate. See [Tempo drift](tempo-drift.md).
 

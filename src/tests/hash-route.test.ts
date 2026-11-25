@@ -92,6 +92,7 @@ describe("parseHash", () => {
       "gain",
       "snapshots",
       "gig",
+      "cloud",
       "portable",
       "drift",
       "octave",

@@ -145,6 +145,11 @@ export interface ElementIds {
   "portable-view-verdict": HTMLParagraphElement;
   "portable-view-summary": HTMLParagraphElement;
   "portable-view-findings": HTMLDivElement;
+  "cloud-panel": HTMLElement;
+  "cloud-scope": HTMLParagraphElement;
+  "cloud-status": HTMLParagraphElement;
+  "cloud-report": HTMLDivElement;
+  "cloud-refresh": HTMLButtonElement;
   "drift-panel": HTMLElement;
   "drift-scope": HTMLParagraphElement;
   "drift-status": HTMLParagraphElement;

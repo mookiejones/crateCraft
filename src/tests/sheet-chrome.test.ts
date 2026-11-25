@@ -36,6 +36,7 @@ describe("sheet chrome", () => {
   it("scopes Overview, Ready, Tempo drift, Damaged files, Suspect quality, and Energy", () => {
     expect(isCrateScopedMode("health")).toBe(true);
     expect(isCrateScopedMode("gig")).toBe(true);
+    expect(isCrateScopedMode("cloud")).toBe(true);
     expect(isCrateScopedMode("drift")).toBe(true);
     expect(isCrateScopedMode("octave")).toBe(true);
     expect(isCrateScopedMode("players")).toBe(true);

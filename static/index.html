@@ -73,6 +73,7 @@
           <button type="button" id="gain-tab" data-view="gain" role="tab" hidden aria-controls="gain-panel" data-i18n="view.gain">Gain changed</button>
           <button type="button" data-view="snapshots" role="tab" hidden data-i18n="view.snapshots">Backups</button>
           <button type="button" id="gig-tab" data-view="gig" role="tab" hidden aria-controls="gig-panel" data-i18n="view.gig">Ready</button>
+          <button type="button" id="cloud-tab" data-view="cloud" role="tab" hidden aria-controls="cloud-panel" data-i18n="view.cloud">Cloud-only</button>
           <button type="button" id="portable-tab" data-view="portable" role="tab" hidden aria-controls="portable-panel" data-i18n="view.portable">Check drive</button>
           <button type="button" id="drift-tab" data-view="drift" role="tab" hidden aria-controls="drift-panel" data-i18n="view.drift">Tempo drift</button>
           <button type="button" id="octave-tab" data-view="octave" role="tab" hidden aria-controls="octave-panel" data-i18n="view.octave">BPM check</button>
@@ -252,6 +253,17 @@
         </div>
         <p id="gig-status" class="gig-status" role="status" aria-live="polite"></p>
         <div id="gig-report" class="gig-report"></div>
+      </section>
+
+      <section id="cloud-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="cloud-heading" aria-busy="false">
+        <h2 id="cloud-heading" class="visually-hidden" data-i18n="cloud.heading">Cloud-only</h2>
+        <div class="browser-bar">
+          <p id="cloud-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <button id="cloud-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
+        </div>
+        <p id="cloud-hint" class="gig-note" data-i18n="cloud.intro">These tracks are in the library, but the audio is not fully on this computer. Download them before the gig. This screen does not download them.</p>
+        <p id="cloud-status" class="gig-status" role="status" aria-live="polite"></p>
+        <div id="cloud-report" class="gig-report" tabindex="-1"></div>
       </section>
 
       <section id="portable-panel" class="scan-panel" role="tabpanel" hidden aria-labelledby="portable-heading" aria-busy="false">

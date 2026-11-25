@@ -833,6 +833,40 @@ export interface GigChanges {
   tag_diffs?: GigTagDiff[];
 }
 
+export interface CloudTrack {
+  path: string;
+  title: string;
+  artist: string;
+  crate: string;
+  provider: string;
+  status: string;
+  reason: string;
+}
+
+export interface CloudLocation {
+  role: string;
+  provider: string;
+  path: string;
+  optimize_storage: boolean | null;
+}
+
+export interface CloudCounts {
+  local: number;
+  cloud: number;
+  missing: number;
+  unknown: number;
+  offline: number;
+}
+
+export interface CloudFilesReport {
+  counts?: CloudCounts;
+  cloud_files?: CloudTrack[];
+  unknown_files?: CloudTrack[];
+  cloud_locations?: CloudLocation[];
+  scope?: { space: string; crate_id: number | null; crate_name: string | null };
+  error?: string;
+}
+
 export interface GigReport {
   ready: boolean;
   score: number;
@@ -842,6 +876,10 @@ export interface GigReport {
   unavailable_drives?: Array<{ name: string; track_count: number; crates: string[] }>;
   streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string }>;
   empty_crates?: Array<{ name: string; warning: string }>;
+  cloud_files?: CloudTrack[];
+  unknown_files?: CloudTrack[];
+  cloud_locations?: CloudLocation[];
+  counts?: CloudCounts;
   snapshot_note?: string;
   snapshot_id?: string;
   changes?: GigChanges | null;
