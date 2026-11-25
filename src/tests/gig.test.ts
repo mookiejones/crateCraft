@@ -99,16 +99,17 @@ describe("gig", () => {
     expect(score.getAttribute("aria-label")).toBe("Ready score 72 out of 100, not ready");
     expect(score.textContent).toContain("72/100");
     expect(score.textContent).toContain("✕ Not ready");
-    expect(reportText()).toContain("Step 1 of 5");
+    expect(reportText()).toContain("Step 1 of 6");
     expect(reportText()).toContain("GIGDRIVE");
     clickAction("next");
-    expect(reportText()).toContain("Step 2 of 5");
+    expect(reportText()).toContain("Step 2 of 6");
     expect(reportText()).toContain("/Music/gone.mp3");
     expect(reportText()).toContain("Locate missing files");
     clickAction("next");
     clickAction("next");
     clickAction("next");
-    expect(reportText()).toContain("Step 5 of 5");
+    clickAction("next");
+    expect(reportText()).toContain("Step 6 of 6");
     expect(reportText()).toContain("Crates added");
     expect(reportText()).toContain("Saturday");
     expect(reportText()).toContain("Cues edited");
@@ -202,13 +203,14 @@ describe("gig", () => {
     clickAction("next");
     clickAction("next");
     clickAction("next");
+    clickAction("next");
     expect(reportText()).toContain("Nothing changed since the last snapshot.");
     expect(reportText()).not.toContain("Latest snapshot");
     const notes = [...document.querySelectorAll(".gig-note")].map((node) => node.textContent);
     expect(notes.every((text) => text && text.trim().length > 0)).toBe(true);
   });
 
-  it("walks the five steps, focuses each heading, and ends on the done screen", async () => {
+  it("walks the six steps, focuses each heading, and ends on the done screen", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => reply(clear)));
     let left = false;
     wireGigCheck(() => {
@@ -221,21 +223,21 @@ describe("gig", () => {
     expect(document.getElementById("gig-report")!.getAttribute("aria-live")).toBeNull();
     expect(document.getElementById("gig-status")!.getAttribute("aria-live")).toBe("polite");
     expect(document.activeElement?.id).toBe("gig-step-heading");
-    const titles = ["Drives", "Missing files", "Streaming", "Empty crates", "Since last gig"];
+    const titles = ["Drives", "Missing files", "Cloud-only", "Streaming", "Empty crates", "Since last gig"];
     for (let index = 0; index < titles.length; index += 1) {
-      expect(reportText()).toContain(`Step ${index + 1} of 5`);
+      expect(reportText()).toContain(`Step ${index + 1} of 6`);
       expect(document.getElementById("gig-step-heading")!.textContent).toBe(titles[index]);
       expect(document.activeElement?.id).toBe("gig-step-heading");
       clickAction("next");
     }
-    expect(reportText()).not.toContain("Step 6 of 5");
+    expect(reportText()).not.toContain("Step 7 of 6");
     expect(document.getElementById("gig-step-heading")!.textContent).toBe("Done");
     expect(reportText()).toMatch(/Ready for the gig: 100\/100, checked the whole space at \d{1,2}:\d{2} [AP]M/);
     const art = document.getElementById("gig-ready-art")!;
     expect(art.dataset.slot).toBe("gig-ready");
     expect(art.childElementCount).toBe(0);
     clickAction("back");
-    expect(reportText()).toContain("Step 5 of 5");
+    expect(reportText()).toContain("Step 6 of 6");
     clickAction("exit");
     expect(left).toBe(true);
   });
@@ -267,7 +269,7 @@ describe("gig in the active language", () => {
     const text = reportText();
     expect(text).toContain("72/100");
     expect(text).toContain("✕ No listo");
-    expect(text).toContain("Paso 1 de 5");
+    expect(text).toContain("Paso 1 de 6");
     expect(text).toContain("Unidades");
     expect(text).toContain("GIGDRIVE: 2 pistas no disponibles");
     expect(text).not.toContain("Not ready");
@@ -286,7 +288,7 @@ describe("gig in the active language", () => {
     setLocale("es");
     repaintGig();
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(reportText()).toContain("Paso 2 de 5");
+    expect(reportText()).toContain("Paso 2 de 6");
     expect(reportText()).toContain("Archivos que faltan");
     expect(reportText()).toContain("/Music/gone.mp3");
   });
@@ -302,6 +304,7 @@ describe("gig in the active language", () => {
     expect(keys("back")).toBe("tooltip.gigBack");
     expect(keys("next")).toBe("tooltip.gigNext");
     expect(keys("exit")).toBe("tooltip.gigExit");
+    clickAction("next");
     clickAction("next");
     clickAction("next");
     clickAction("next");
@@ -356,6 +359,7 @@ describe("gig in the active language", () => {
     clickAction("next");
     clickAction("next");
     clickAction("next");
+    clickAction("next");
     clickAction("revert");
     expect(openPlan).toHaveBeenCalledWith("snap-9");
   });
@@ -367,11 +371,13 @@ describe("gig in the active language", () => {
     clickAction("next");
     clickAction("next");
     clickAction("next");
+    clickAction("next");
     expect(document.querySelector('[data-gig-action="revert"]')).toBeNull();
 
     vi.stubGlobal("fetch", vi.fn(async () => reply(report)));
     state.seratoRunning = true;
     await loadGigCheck();
+    clickAction("next");
     clickAction("next");
     clickAction("next");
     clickAction("next");

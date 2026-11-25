@@ -28,6 +28,7 @@ import { isQueuedWrite } from "../crates/queue-notice";
 import { clickPane, paintDualChrome } from "../crates/dual-crate-view";
 import { colorHex, compare, durationLabel, isNumericSort, sizeLabel } from "../format";
 import { loadGigCheck, showGigFailure } from "../gig/gig";
+import { loadCloud, showCloudFailure } from "../gig/cloud";
 import { loadDrift, showDriftFailure } from "../gig/drift";
 import { loadOctave, showOctaveFailure } from "../gig/octave";
 import { loadHealth, mountHealthListChrome, showHealthFailure } from "../health/health";
@@ -519,6 +520,7 @@ export function renderShell() {
   markHistoryColumns();
   const cratesMode = state.mode === "crates";
   const gigMode = state.mode === "gig";
+  const cloudMode = state.mode === "cloud";
   const portableMode = state.mode === "portable";
   const driftMode = state.mode === "drift";
   const octaveMode = state.mode === "octave";
@@ -534,7 +536,7 @@ export function renderShell() {
   const audioMode = state.mode === "audio";
   const gainMode = state.mode === "gain";
   const historyMode = state.mode === "history";
-  const showCrates = cratesMode || gigMode || driftMode || octaveMode || healthMode || scanMode || bitrateMode || energyMode || reanalyzeMode;
+  const showCrates = cratesMode || gigMode || cloudMode || driftMode || octaveMode || healthMode || scanMode || bitrateMode || energyMode || reanalyzeMode;
   el("crate-tools").hidden = !showCrates;
   el("crate-actions").hidden = !cratesMode;
   el("crate-list").hidden = !showCrates;
@@ -554,13 +556,14 @@ export function renderShell() {
   }
   const filesMode = state.mode === "files";
   const snapshotsMode = state.mode === "snapshots";
-  const panelMode = filesMode || snapshotsMode || gigMode || portableMode || driftMode || octaveMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || reanalyzeMode || audioMode || gainMode;
+  const panelMode = filesMode || snapshotsMode || gigMode || cloudMode || portableMode || driftMode || octaveMode || healthMode || statsMode || compareMode || scanMode || bitrateMode || tagsMode || lostMode || energyMode || reanalyzeMode || audioMode || gainMode;
   el("browser").hidden = panelMode;
   el("track-splitter").hidden = panelMode;
   el("detail").hidden = panelMode;
   el("files-panel").hidden = !filesMode;
   el("snapshots-panel").hidden = !snapshotsMode;
   el("gig-panel").hidden = !gigMode;
+  el("cloud-panel").hidden = !cloudMode;
   el("portable-panel").hidden = !portableMode;
   el("drift-panel").hidden = !driftMode;
   el("octave-panel").hidden = !octaveMode;
@@ -580,6 +583,10 @@ export function renderShell() {
   if (filesMode) el("mode-note").textContent = t("mode.files");
   if (gigMode) {
     el("mode-note").textContent = t("mode.gig");
+    document.querySelector(".rules")?.remove();
+  }
+  if (cloudMode) {
+    el("mode-note").textContent = t("mode.cloud");
     document.querySelector(".rules")?.remove();
   }
   if (portableMode) {
@@ -865,6 +872,7 @@ export function selectCrate(id: number | "all", event?: MouseEvent) {
   list.scrollTop = 0;
   renderList();
   if (state.mode === "gig") loadGigCheck().catch(showGigFailure);
+  if (state.mode === "cloud") loadCloud().catch(showCloudFailure);
   if (state.mode === "drift") loadDrift().catch(showDriftFailure);
   if (state.mode === "octave") loadOctave().catch(showOctaveFailure);
   if (state.mode === "health") loadHealth().catch(showHealthFailure);
@@ -2669,6 +2677,7 @@ export function setMode(mode: string) {
     loadSnapshots().catch((error) => failSnapshots(error));
   }
   if (mode === "gig") loadGigCheck().catch(showGigFailure);
+  if (mode === "cloud") loadCloud().catch(showCloudFailure);
   if (mode === "portable") loadPortableView().catch(showPortableFailure);
   if (mode === "drift") loadDrift().catch(showDriftFailure);
   if (mode === "octave") loadOctave().catch(showOctaveFailure);
@@ -2871,6 +2880,7 @@ export function wireLibrary(): void {
     if (state.mode === "history") jobs.push(loadHistory());
     if (state.mode === "duplicates") jobs.push(loadDuplicates());
     if (state.mode === "gig") jobs.push(loadGigCheck().catch(showGigFailure));
+    if (state.mode === "cloud") jobs.push(loadCloud().catch(showCloudFailure));
     if (state.mode === "portable") jobs.push(loadPortableView().catch(showPortableFailure));
     if (state.mode === "drift") jobs.push(loadDrift().catch(showDriftFailure));
     if (state.mode === "octave") jobs.push(loadOctave().catch(showOctaveFailure));
@@ -2914,6 +2924,7 @@ export function wireLibrary(): void {
     loadLibrary().then(() => {
       if (state.mode === "duplicates") return loadDuplicates();
       if (state.mode === "gig") return loadGigCheck().catch(showGigFailure);
+      if (state.mode === "cloud") return loadCloud().catch(showCloudFailure);
       if (state.mode === "portable") return loadPortableView().catch(showPortableFailure);
       if (state.mode === "drift") return loadDrift().catch(showDriftFailure);
       if (state.mode === "octave") return loadOctave().catch(showOctaveFailure);

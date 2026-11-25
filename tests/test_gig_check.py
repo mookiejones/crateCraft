@@ -1306,6 +1306,8 @@ class GigCheckTests(unittest.TestCase):
         self.assertIn('data-view="gig"', page)
         self.assertIn('id="gig-report"', page)
         self.assertIn("/api/gig-check", script)
+        self.assertIn("/api/cloud-files", script)
+        self.assertIn('data-view="cloud"', page)
         for field in (
             "score",
             "ready",
@@ -1314,6 +1316,9 @@ class GigCheckTests(unittest.TestCase):
             "unavailable_drives",
             "streaming_tracks",
             "empty_crates",
+            "cloud_files",
+            "unknown_files",
+            "cloud_locations",
             "snapshot_note",
             "snapshot_id",
             "changes",

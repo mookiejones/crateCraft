@@ -1,7 +1,7 @@
 /**
  * Gig check report painted by React.
  *
- * Five steps lead to a done screen. Back, the step verb, and Exit read
+ * Six steps lead to a done screen. Back, the step verb, and Exit read
  * `useGig`. Color is not the only signal: the verdict is ✓ Ready or
  * ✕ Not ready.
  */
@@ -156,6 +156,9 @@ export function GigReport() {
           <>
             <p className="gig-kicker">{t("gig.stepOf", { index: gig.stepIndex + 1, total: GIG_STEP_COUNT })}</p>
             <h3 id="gig-step-heading" tabIndex={-1}>{t(step!.title)}</h3>
+            {step?.title === "gig.cloud"
+              ? <p className="gig-note">{t("gig.cloudGuidance")}</p>
+              : null}
             {gig.stepIndex === GIG_STEP_COUNT - 1
               ? <GigSince payload={payload} />
               : lines.length
