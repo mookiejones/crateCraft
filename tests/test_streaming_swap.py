@@ -276,8 +276,9 @@ class PlanTests(unittest.TestCase):
             report = streaming_swap.plan(temp.db, library.LIBRARY_SPACE, [music])
             track = cast(list[dict[str, object]], report["tracks"])[0]
             self.assertIsNone(track["match"])
-            self.assertEqual(len(cast(list[object], track["candidates"])), 2)
-            self.assertTrue(all(item["confidence"] == "low" for item in cast(list[dict[str, object]], track["candidates"])))
+            candidates = cast(list[dict[str, object]], track["candidates"])
+            self.assertEqual(len(candidates), 2)
+            self.assertTrue(all(item["confidence"] == "low" for item in candidates))
 
     def test_one_file_cannot_repair_two_rows(self) -> None:
         """Refuse to point two streaming rows at the same local file.
@@ -339,6 +340,8 @@ class ApplyTests(unittest.TestCase):
             )
             self.assertTrue(result["written"])
             self.assertEqual(result["cues"], "kept-on-row")
+            returned = [item["asset_id"] for item in cast(list[dict[str, object]], result["tracks"])]
+            self.assertNotIn(10, returned)
             saved = _row(temp.db, 10)
             self.assertEqual(saved["color"], 255)
             self.assertEqual(saved["name"], "Night Drive")
@@ -388,6 +391,29 @@ class ApplyTests(unittest.TestCase):
             self.assertEqual(saved["portable_id"], "beatport:10")
             self.assertEqual(saved["revision"], 1)
             self.assertEqual(local.read_bytes(), b"stay")
+
+    def test_a_low_confidence_file_writes_nothing(self) -> None:
+        """Refuse one of several same-name files.
+
+        The plan lists both and does not choose. Apply of either path
+        writes nothing.
+
+        Returns:
+            None. The test fails when a low-confidence candidate is stored.
+        """
+        with TempLibrary() as temp:
+            music = Path(tempfile.mkdtemp())
+            self.addCleanup(lambda: __import__("shutil").rmtree(music, ignore_errors=True))
+            first = music / "a" / "Ada - Night Drive.mp3"
+            _audio(first, b"a")
+            _audio(music / "b" / "Ada - Night Drive.mp3", b"b")
+            _track(temp.db, 10, "beatport:10", color=255)
+            with self.assertRaises(library.LibraryError) as caught:
+                streaming_swap.apply(library.LIBRARY_SPACE, [(10, str(first))], [music])
+            self.assertEqual(str(caught.exception), streaming_swap.MISMATCH)
+            self.assertEqual(_row(temp.db, 10)["portable_id"], "beatport:10")
+            self.assertEqual(_row(temp.db, 10)["color"], 255)
+            self.assertEqual(first.read_bytes(), b"a")
 
     def test_a_path_that_is_not_a_match_writes_nothing(self) -> None:
         """Refuse a file that is not one of this track's candidates.

@@ -692,13 +692,16 @@ def _accept(tracks: Sequence[Mapping[str, object]], swaps: Sequence[tuple[int, s
         if track is None or resolved is None or _blocked(resolved, library_dir) is not None:
             raise library.LibraryError(MISMATCH, 400)
         key = _key(resolved)
-        candidates = track.get("candidates")
-        paths = {
-            _key(Path(str(item["path"])))
-            for item in candidates
-            if isinstance(candidates, list) and isinstance(item, dict) and isinstance(item.get("path"), str)
-        }
-        if key not in paths or key in seen_paths or _blocked(resolved, library_dir) is not None:
+        match = track.get("match")
+        match_path = match.get("path") if isinstance(match, dict) else None
+        listed = (
+            isinstance(match, dict)
+            and match.get("usable") is True
+            and match.get("confidence") in {"high", "medium"}
+            and isinstance(match_path, str)
+            and _key(Path(match_path)) == key
+        )
+        if not listed or key in seen_paths:
             raise library.LibraryError(MISMATCH, 400)
         seen_paths.add(key)
         accepted.append((asset_id, resolved, files.to_portable(resolved)))
@@ -739,7 +742,9 @@ def apply(
             the Files roots.
 
     Returns:
-        The plan. ``written`` is false when there is nothing to change.
+        The plan after the write when ``written`` is true, so a repaired
+        row is no longer listed. ``written`` is false when there is nothing
+        to change.
 
     Raises:
         library.LibraryError: The space is unknown, or a pair does not
@@ -894,6 +899,12 @@ def apply(
                                 "third_party_type": 0,
                             },
                         )
+        fresh = plan(database, space, roots)
+        result["tracks"] = fresh["tracks"]
+        result["truncated"] = fresh["truncated"]
+        result["roots"] = fresh["roots"]
+        result["preview"] = False
+        result["written"] = True
     return result
 
 

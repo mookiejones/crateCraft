@@ -23454,7 +23454,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     },
     "streams.none": "Nothing changed.",
     "streams.loadFailed": "The streaming repair list could not be read.",
-    "streams.unreachable": "Couldn't reach the library server. Check it's running, then press Check again",
+    "streams.unreachable": "Couldn't reach the library server. Check it's running, then press Check again.",
     "streams.column.track": "Track",
     "streams.column.service": "Service",
     "streams.column.crates": "Crates",

@@ -124,6 +124,7 @@ describe("streaming repair", () => {
     expect(document.getElementById("streams-report")!.textContent).toContain("Nothing is written until you confirm");
     postJSON.mockResolvedValueOnce({
       ...report,
+      tracks: report.tracks.filter((item) => item.asset_id !== 10),
       written: true,
       preview: false,
       swaps: [{ asset_id: 10, path: "/music/Ada - Night Drive.mp3" }],
@@ -138,6 +139,8 @@ describe("streaming repair", () => {
       swaps: [{ asset_id: 10, path: "/music/Ada - Night Drive.mp3" }],
     });
     expect(bridge.reloadLibrary).toHaveBeenCalled();
+    expect((document.getElementById("streams-repair") as HTMLButtonElement).disabled).toBe(true);
+    expect(document.getElementById("streams-report")!.textContent).not.toContain("Night Drive");
   });
 
   it("gives the new controls tooltips that are not their names", async () => {
