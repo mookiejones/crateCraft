@@ -217,7 +217,11 @@ class LocateTests(unittest.TestCase):
                 self.assertEqual(opened, [])
 
     def test_absent_posix_volume_is_unknown(self) -> None:
-        """``/Volumes/cratecraft-absent-372`` is unknown and is not opened.
+        """``/Volumes/cratecraft-absent-372`` is not opened.
+
+        On macOS and Linux an unplugged ``/Volumes`` drive is unknown.
+        Windows does not treat that path as a volume, so the file is a
+        known miss instead. Either result stays unprepped.
 
         Returns:
             None.
@@ -225,8 +229,6 @@ class LocateTests(unittest.TestCase):
         stored = "/Volumes/cratecraft-absent-372/song.mp3"
         mounts = volumes.Mounts()
         volume = volumes.volume_of(stored)
-        self.assertIsNotNone(volume)
-        assert volume is not None
         opened: list[Path] = []
 
         def open_check(path: Path) -> bool:
@@ -234,6 +236,11 @@ class LocateTests(unittest.TestCase):
             return True
 
         present, found = prepped.locate(stored, "", mounts, (), open_check)
+        if volume is None:
+            self.assertIs(present, False)
+            self.assertIsNone(found)
+            self.assertEqual(opened, [])
+            return
         if mounts.mounted(volume):
             self.assertIn(present, (True, False))
         else:
