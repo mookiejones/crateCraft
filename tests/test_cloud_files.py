@@ -21,6 +21,7 @@ from unittest import mock
 import cloud_files
 import gig_check
 import server
+import unplayable
 from tests.fixture import TempLibrary, open_database
 from tests.test_gig_check import NOW, _add_crate, _add_track, _digest, _names, _write_db
 
@@ -376,9 +377,9 @@ class GigCloudTests(unittest.TestCase):
                 return cloud_files.probe_path(path)
 
             opened: list[str] = []
-            real_open = gig_check._opens_for_read
+            real_open = unplayable.open_state
 
-            def wrapped(path: Path) -> bool:
+            def wrapped(path: Path) -> str:
                 opened.append(Path(path).name)
                 return real_open(path)
 
@@ -397,7 +398,7 @@ class GigCloudTests(unittest.TestCase):
                 mock.patch.object(cloud_files, "probe_path", fake_probe),
                 mock.patch.object(cloud_files, "discover_roots", lambda *args, **kwargs: (cloud_files.CloudRoot("dropbox", str(drop)),)),
                 mock.patch.object(cloud_files, "optimize_mac_storage_enabled", lambda *args, **kwargs: None),
-                mock.patch.object(gig_check, "_opens_for_read", wrapped),
+                mock.patch.object(unplayable, "open_state", wrapped),
             ):
                 report = gig_check.run_gig_check(database, now=NOW)
             self.assertEqual(_digest(database), before)

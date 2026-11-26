@@ -217,7 +217,7 @@ describe("library views", () => {
     expect(titles()).toEqual(["Gone"]);
     expect(document.querySelector("#list .offline-word")).toBeNull();
     expect(document.querySelector("#mode-note")?.textContent).toBe(
-      "Tracks whose files are missing on a connected drive. 1 track on an unplugged drive is marked offline in crates.",
+      "Tracks whose files are missing on a connected drive. 1 track on an unplugged drive is marked drive offline in crates.",
     );
     state.mode = "crates";
     renderList();

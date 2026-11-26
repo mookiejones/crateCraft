@@ -1315,6 +1315,8 @@ class GigCheckTests(unittest.TestCase):
             "missing_files",
             "unavailable_drives",
             "streaming_tracks",
+            "no_path_tracks",
+            "unchecked_tracks",
             "empty_crates",
             "cloud_files",
             "unknown_files",
@@ -1323,9 +1325,11 @@ class GigCheckTests(unittest.TestCase):
             "snapshot_id",
             "changes",
             "tag_diffs",
+            "update_safety",
             "deck_freeze",
         ):
             self.assertIn(field, script)
+        self.assertIn("Safe to update?", script)
         self.assertNotIn("innerHTML", src_page_text())
         guide = (ROOT / "docs" / "guide" / "gig-check.md").read_text(encoding="utf-8")
         self.assertIn(gig_check.EMPTY_CRATE_WARNING, guide)

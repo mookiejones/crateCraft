@@ -113,6 +113,8 @@ export interface Track {
   offline?: boolean;
   /** Drive name when `offline` is set. */
   offline_drive?: string;
+  /** Live reason: streaming, drive offline, file missing, no path, or unknown. */
+  unplayable_reason?: string | null;
   stems?: boolean;
   entry?: boolean;
   deck?: string;
@@ -884,6 +886,40 @@ export interface CloudFilesReport {
   error?: string;
 }
 
+export interface GigPathRow {
+  path: string;
+  title: string;
+  artist: string;
+  crate: string;
+  reason?: string;
+}
+
+export interface GigUpdateReason {
+  code: string;
+  summary: string;
+  params?: Record<string, string>;
+}
+
+export interface GigUpdateRelease {
+  product: string;
+  label: string;
+  version: string;
+  published: string;
+}
+
+/** Safe-to-update verdict. Unknown does not hard-red the ready score. */
+export interface GigUpdateSafety {
+  verdict: string;
+  reasons?: GigUpdateReason[];
+  new_release_within_7_days: boolean;
+  releases?: GigUpdateRelease[];
+  serato_version?: string;
+  os_name?: string;
+  os_version?: string;
+  os_label?: string;
+  hardware?: string[];
+}
+
 /** Read-only XDJ-1000MK2 warning. Null when the check did not warn. */
 export interface DeckFreezeWarning {
   player: string;
@@ -898,9 +934,11 @@ export interface GigReport {
   hard_red: boolean;
   holding_it_back?: GigDeduction[];
   deck_freeze?: DeckFreezeWarning | null;
-  missing_files?: Array<{ path: string; title: string; artist: string; crate: string }>;
-  unavailable_drives?: Array<{ name: string; track_count: number; crates: string[] }>;
-  streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string }>;
+  missing_files?: GigPathRow[];
+  unavailable_drives?: Array<{ name: string; track_count: number; crates: string[]; reason?: string }>;
+  streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string; reason?: string }>;
+  no_path_tracks?: GigPathRow[];
+  unchecked_tracks?: GigPathRow[];
   empty_crates?: Array<{ name: string; warning: string }>;
   cloud_files?: CloudTrack[];
   unknown_files?: CloudTrack[];
@@ -911,6 +949,7 @@ export interface GigReport {
   changes?: GigChanges | null;
   scope?: { space: string; crate_id: number | null; crate_name: string | null };
   checked_at?: string;
+  update_safety?: GigUpdateSafety | null;
   error?: string;
 }
 

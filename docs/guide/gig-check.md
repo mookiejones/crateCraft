@@ -9,7 +9,21 @@
 3. Click **All tracks** to check the space, or click one crate to check that crate and the crates inside it. The sheet heading names the view. **Scope** under it shows All tracks or the crate. **All tracks** on that chip checks the whole space.
 4. Walk the six steps: **Drives**, **Missing files**, **Cloud-only**, **Streaming**, **Empty crates**, and **Since last gig**. Each step says **Step N of 6**. One button names the thing to do, such as **Locate missing files**. **Back** returns to the previous step. **Exit gig check** leaves the check. Lists sit in groups you can open and close. Tab to a group heading, then Enter or Space to hide or show it.
 5. Read the score on each step. It shows the number out of 100, such as **72/100**, and **✓ Ready** or **✕ Not ready**. Color is not the only signal. **Ready** means the score is at least 70 and nothing below is a hard stop. **Not ready** means do not treat the crate as ready to play.
-6. The last screen says whether you are ready for the gig, the score, the crate, and the time of the check. **Check again** after you plug a drive back in or move a file. The report stays up while the new check runs. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
+6. The last screen says whether you are ready for the gig, the score, the crate, and the time of the check. **Check again** after you plug a drive back in or move a file. The new check reads the drives again. A drive that is plugged in is not still called **drive offline**. The report stays up while the new check runs. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
+
+## Safe to update?
+
+**Safe to update?** sits under the score on every step. It does not change the score. It does not update Serato, macOS, Windows, or firmware.
+
+**Yes** means this Serato version, this system, and the connected hardware are on the cleared list.
+
+**Not cleared** means do not update before the gig. macOS 27 needs Serato DJ Pro or Lite 5.1.0 or newer. Hardware Serato still marks as in testing is not cleared.
+
+**Unknown** means this check cannot say the combo is safe. Unknown does not turn **✕ Not ready** on by itself. When no connected hardware is listed, the answer stays Unknown.
+
+A line can also say a Serato or system release came out in the last 7 days. That warning can show even when the answer is Yes. Wait until after the gig.
+
+**Serato downloads**, **macOS 27 hardware note**, and **Lexicon DJ software updates** open those pages in the browser. crateCraft does not download Serato and does not read the Lexicon page.
 
 ## Older deck
 
@@ -39,11 +53,12 @@ The list under **Holding it back** is each reason the score is not 100.
 
 | What you see | What to do |
 | --- | --- |
-| **Not ready**, and a drive name, with the word **absent** | Plug that drive in. Tracks on it are **unavailable**. They are not listed as missing files. The drive is named once. |
-| **Not ready**, and missing files | Each missing path is listed under **Missing files**. [Missing files](missing.md) is where you point a track at a file that moved. |
+| **Not ready**, and a drive name, with the words **drive offline** | Plug that drive in, then **Check again**. Tracks on it are not listed as missing files. The drive is named once. |
+| **Not ready**, and missing files, with the words **file missing** | Each missing path is listed under **Missing files**. The drive is connected and the file does not open. [Missing files](missing.md) is where you point a track at a file that moved. |
+| **Not ready**, and tracks with **no path** | The track has no file path and no drive location. Those lines stay on the missing step and are not mixed into the missing-file list. |
 | **Not ready**, and cloud-only files | The path is in the library, but the audio is not fully on this computer. Download it in Finder or File Explorer before the gig. This check does not download it. A cloud placeholder is not a missing file. [Cloud-only](cloud-only.md) lists every one. |
-| A file that could not be checked | The check cannot tell whether the audio is on this computer, so it is not counted as local. An unsupported cloud folder is never treated as local. |
-| A streaming track | Apple Music tracks play only while you are logged in to Apple Music. They are counted on their own, not as missing files. |
+| A file that could not be checked, with the word **unknown** | The check cannot tell whether the audio is on this computer, so it is not counted as local and it is not a missing file. An unsupported cloud folder is never treated as local. Nothing was changed. |
+| A streaming track, with the word **streaming** | Apple Music tracks play only while you are logged in to Apple Music. They are counted on their own, not as missing files. |
 | An empty crate | The line is **Serato may delete this crate when it closes.** Put a track in the crate if you want to keep it. Serato's own clean-up note describes empty crates disappearing after quit, and that note does not name a version. The Serato DJ 4.0 crate page does not say they are deleted. |
 | **No snapshot in the last 7 days** | The score drops. A snapshot from the last 7 days does not drop it. |
 | **No snapshots yet** | Nothing has been saved to compare with this library, so there is no list of what changed. The score still drops, because there is no snapshot from the last 7 days. Open **Backups** and click **Take a backup**. |

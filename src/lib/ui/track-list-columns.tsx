@@ -2,7 +2,7 @@
  * MUI X Data Grid column defs for crate and history lists.
  *
  * Play is its own first column. Title is the name plus swatch, emoji,
- * missing/offline/stems badges, and a prepped mark. Cells are read-only.
+ * a prepped mark, a named unplayable reason, and missing or offline badges.
  * Sort keys match the keys `buildView` already uses.
  */
 
@@ -13,6 +13,7 @@ import { clockLabel, colorHex, dateLabel, lengthLabel, trackEnergy } from "../fo
 import { formatNumber, t, type MessageKey } from "../i18n";
 import { playerStrings } from "../player/player-strings";
 import { PlayButton } from "../../components/PlayButton";
+import { isUnplayableReason, unplayableLabel, unplayableTip } from "../tracks/unplayable-reason";
 import { preppedView } from "./prepped-mark";
 import { tooltipRef } from "./tooltip";
 import { sortTip, tips, type TipSpec } from "./tooltip-strings";
@@ -95,10 +96,11 @@ function Cell({ text, numeric = false }: { text: string; numeric?: boolean }) {
 }
 
 /**
- * Title cell: name, color swatch, emoji, status badges, and prepped mark.
+ * Title cell: name, color swatch, emoji, prepped mark, and unplayable word.
  *
  * Play lives in its own column. The mark is omitted when the row has no
- * `prepped` field, which is how history rows stay unmarked.
+ * `prepped` field, which is how history rows stay unmarked. A live
+ * unplayable reason replaces the older missing and offline badges.
  *
  * @param track Row.
  * @returns Title contents.
@@ -106,6 +108,7 @@ function Cell({ text, numeric = false }: { text: string; numeric?: boolean }) {
 export function TrackTitleCell({ track }: { track: Track }) {
   const hex = colorHex(track.color);
   const mark = preppedView(track);
+  const reason = isUnplayableReason(track.unplayable_reason) ? track.unplayable_reason : null;
   return (
     <span className="cell">
       <span className="title-line">
@@ -122,7 +125,11 @@ export function TrackTitleCell({ track }: { track: Track }) {
             <span className="prepped-word" aria-hidden="true">{mark.visible}</span>
           </span>
         ) : null}
-        {track.offline ? (
+        {reason ? (
+          <span className="unplayable-word" tabIndex={0} ref={tooltipRef(unplayableTip(reason))}>
+            {unplayableLabel(reason)}
+          </span>
+        ) : track.offline ? (
           <span className="offline-word">{t("track.offlineBadge")}</span>
         ) : track.missing ? (
           <span className="missing-word">{t("track.missingBadge")}</span>

@@ -103,9 +103,11 @@ describe("gig", () => {
     expect(score.textContent).toContain("✕ Not ready");
     expect(reportText()).toContain("Step 1 of 6");
     expect(reportText()).toContain("GIGDRIVE");
+    expect(reportText()).toContain("drive offline");
     clickAction("next");
     expect(reportText()).toContain("Step 2 of 6");
     expect(reportText()).toContain("/Music/gone.mp3");
+    expect(reportText()).toContain("file missing");
     expect(reportText()).toContain("Locate missing files");
     clickAction("next");
     clickAction("next");
