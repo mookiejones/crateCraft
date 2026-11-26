@@ -182,6 +182,13 @@ export function GigReport() {
   const lines = step && gig.stepIndex < GIG_STEP_COUNT - 1
     ? gigLinesFor(payload, gig.stepIndex)
     : [];
+  const freeze = payload.deck_freeze;
+  const freezeText = freeze
+    ? t("gig.deckFreeze", {
+      count: freeze.track_count,
+      categories: freeze.categories.join(", "),
+    })
+    : "";
   return (
     <>
       <p
@@ -194,6 +201,9 @@ export function GigReport() {
         </span>
       </p>
       <GigUpdate payload={payload} />
+      {freezeText
+        ? <p id="gig-deck-freeze" className="gig-note" role="status">{freezeText}</p>
+        : null}
       {done
         ? (
           <>

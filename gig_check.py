@@ -93,6 +93,14 @@ CLOUD_MUSIC_CAP = 20
 CLOUD_GUIDANCE = "Download them before the gig. This check does not download them."
 READ_MODE = "rb"
 
+# One documented case: an XDJ-1000MK2 froze around 14,100 tracks because
+# TIME, HOT CUE BANK, FILE NAME, and BITRATE have no precomputed list.
+# CDJ-2000NXS2 and CDJ-900 are not included. This check does not say they freeze.
+DECK_FREEZE_MIN_TRACKS = 10_000
+DECK_FREEZE_PLAYER = "xdj-1000mk2"
+UNKNOWN_TARGET = "unknown"
+DECK_FREEZE_CATEGORIES = ("TIME", "HOT CUE BANK", "FILE NAME", "BITRATE")
+
 
 @dataclass(frozen=True, slots=True)
 class MissingFile:
@@ -205,6 +213,8 @@ class GigReport:
         local_count: Tracks whose audio is on this computer.
         update_safety: Read-only Serato, OS, and hardware verdict. ``unknown``
             does not set ``hard_red``.
+        deck_freeze: Warning for a large library on an XDJ-1000MK2, or None.
+            It does not change the score. Other models are not named.
     """
 
     ready: bool
@@ -227,6 +237,24 @@ class GigReport:
     cloud_locations: tuple[cloud_files.CloudLocation, ...] = ()
     local_count: int = 0
     update_safety: update_safety.UpdateSafety | None = None
+    deck_freeze: DeckFreezeWarning | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckFreezeWarning:
+    """A read-only note that one documented deck may freeze on a large library.
+
+    Attributes:
+        player: Target id. Only ``xdj-1000mk2``.
+        track_count: Tracks in the space that was checked.
+        categories: Root categories with no precomputed list.
+        summary: Sentence the DJ reads. It names only this player.
+    """
+
+    player: str
+    track_count: int
+    categories: tuple[str, ...]
+    summary: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -1489,6 +1517,60 @@ def _change_summary(changes: ChangeReport) -> str:
     return "Changes since the last snapshot: " + ", ".join(parts) + "."
 
 
+def normalize_deck_target(target: str | None) -> str:
+    """Return a player id, or ``unknown`` when none was chosen.
+
+    Args:
+        target: Query value, command flag, or None. Leading and trailing
+            spaces are ignored. Case is ignored.
+
+    Returns:
+        ``unknown`` when the value is missing or blank. Any other text is
+        the lowered id. An id this app does not list is still returned.
+        It does not warn, and it is not an error.
+    """
+    if not isinstance(target, str):
+        return UNKNOWN_TARGET
+    text = target.strip().lower()
+    if text in {"", UNKNOWN_TARGET}:
+        return UNKNOWN_TARGET
+    return text
+
+
+def deck_freeze_warning(track_count: int, target: str | None) -> DeckFreezeWarning | None:
+    """Warn only for a large library on the one documented deck.
+
+    The check is pure. It does not open a file, change rekordbox, or
+    write a USB stick. A count below 10000, an empty library, ``unknown``,
+    ``club``, and every other player return None. CDJ-2000NXS2 and CDJ-900
+    are not a documented freeze, so they do not warn.
+
+    Args:
+        track_count: Tracks in the space. A bool or any other type does
+            not warn. Negative counts do not warn.
+        target: Player id. ``XDJ-1000MK2`` matches ``xdj-1000mk2``.
+
+    Returns:
+        A warning when the count is at least 10000 and the target is
+        ``xdj-1000mk2``. None otherwise. The sentence names only that deck.
+    """
+    if isinstance(track_count, bool) or not isinstance(track_count, int):
+        return None
+    if track_count < DECK_FREEZE_MIN_TRACKS:
+        return None
+    player = normalize_deck_target(target)
+    if player != DECK_FREEZE_PLAYER:
+        return None
+    categories = ", ".join(DECK_FREEZE_CATEGORIES)
+    summary = (
+        f"This library has {track_count:,} tracks. An XDJ-1000MK2 may freeze when it opens "
+        f"{categories}, because those categories have no precomputed list. "
+        "In rekordbox, open Preferences › Category and set those four to Inactive. "
+        "This check does not change rekordbox or a USB stick."
+    )
+    return DeckFreezeWarning(DECK_FREEZE_PLAYER, track_count, DECK_FREEZE_CATEGORIES, summary)
+
+
 def run_gig_check(
     database: Path | None = None,
     space: str = library.LIBRARY_SPACE,
@@ -1502,6 +1584,7 @@ def run_gig_check(
     safety_hardware: Sequence[str] | None = None,
     safety_facts: update_safety.VendorFacts | None = None,
     safety_fetch: Callable[[], update_safety.VendorFacts] | None = None,
+    target: str = UNKNOWN_TARGET,
 ) -> GigReport:
     """Check one space, or one crate, without writing.
 
@@ -1520,11 +1603,15 @@ def run_gig_check(
         safety_facts: Vendor table. None uses the baked table.
         safety_fetch: Optional version-list loader. A failure is unknown.
             The default does not use the network.
+        target: Player id from the Won't play list, or ``unknown``. The
+            default does not warn. Only ``xdj-1000mk2`` can warn, and only
+            when the space has at least 10000 tracks.
 
     Returns:
         A frozen report. Missing files in the selected scope, any absent
         drive in that scope, a cloud-only file, and a Serato folder inside
         a cloud folder set ``ready`` false. ``update_safety`` does not.
+        ``deck_freeze`` does not change the score or ``ready``.
 
     Raises:
         library.LibraryError: If the space name is not one this app reads,
@@ -1575,6 +1662,7 @@ def run_gig_check(
         classified.locations,
         classified.local_count,
         safety,
+        deck_freeze_warning(len(loaded.assets), target),
     )
 
 
@@ -1660,6 +1748,27 @@ def report_to_dict(report: GigReport) -> dict[str, object]:
         "update_safety": update_safety.to_dict(report.update_safety)
         if report.update_safety is not None
         else None,
+        "deck_freeze": _deck_freeze_dict(report.deck_freeze),
+    }
+
+
+def _deck_freeze_dict(warning: DeckFreezeWarning | None) -> dict[str, object] | None:
+    """Serialize the older-deck warning.
+
+    Args:
+        warning: Warning from :func:`deck_freeze_warning`, or None.
+
+    Returns:
+        JSON fields, or None when the check did not warn. The sentence
+        names only the XDJ-1000MK2.
+    """
+    if warning is None:
+        return None
+    return {
+        "player": warning.player,
+        "track_count": warning.track_count,
+        "categories": list(warning.categories),
+        "summary": warning.summary,
     }
 
 
@@ -1863,6 +1972,8 @@ def format_report(report: GigReport) -> str:
         "",
     ]
     blocks.extend(update_safety.format_lines(report.update_safety))
+    if report.deck_freeze is not None:
+        blocks.extend(["", "XDJ-1000MK2", report.deck_freeze.summary])
     blocks.extend(["", "Holding it back"])
     if report.holding_it_back:
         blocks.extend(f"- {line.summary}" for line in report.holding_it_back)
@@ -1961,6 +2072,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         default="all",
         help="Crate id to check, including its subcrates, or all (default: all).",
     )
+    parser.add_argument(
+        "--target",
+        default=UNKNOWN_TARGET,
+        help=(
+            "Player id. xdj-1000mk2 warns when the space has at least 10000 tracks. "
+            "The default is unknown, which does not warn. Nothing is written."
+        ),
+    )
     args = parser.parse_args(list(argv) if argv is not None else None)
     crate_text = str(args.crate)
     if crate_text in {"", "all"}:
@@ -1976,7 +2095,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 2
     database = None if args.database is None else Path(str(args.database))
     try:
-        report = run_gig_check(database, str(args.space), crate_id)
+        report = run_gig_check(database, str(args.space), crate_id, target=str(args.target))
     except library.LibraryError as exc:
         print(exc.message, file=sys.stderr)
         return 1
