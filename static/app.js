@@ -12609,15 +12609,15 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState85 = React321.useState, useEffect97 = React321.useEffect, useLayoutEffect22 = React321.useLayoutEffect, useDebugValue3 = React321.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useState86 = React321.useState, useEffect96 = React321.useEffect, useLayoutEffect22 = React321.useLayoutEffect, useDebugValue3 = React321.useDebugValue;
       function useSyncExternalStore$2(subscribe3, getSnapshot) {
-        var value = getSnapshot(), _useState = useState85({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
+        var value = getSnapshot(), _useState = useState86({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
         return useLayoutEffect22(
           function() {
             inst.value = value, inst.getSnapshot = getSnapshot, checkIfSnapshotChanged(inst) && forceUpdate({ inst });
           },
           [subscribe3, value, getSnapshot]
-        ), useEffect97(
+        ), useEffect96(
           function() {
             return checkIfSnapshotChanged(inst) && forceUpdate({ inst }), subscribe3(function() {
               checkIfSnapshotChanged(inst) && forceUpdate({ inst });
@@ -12660,7 +12660,7 @@ Error generating stack: ` + x.message + `
       function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore6 = shim.useSyncExternalStore, useRef126 = React321.useRef, useEffect97 = React321.useEffect, useMemo75 = React321.useMemo, useDebugValue3 = React321.useDebugValue;
+      var objectIs = typeof Object.is == "function" ? Object.is : is3, useSyncExternalStore6 = shim.useSyncExternalStore, useRef126 = React321.useRef, useEffect96 = React321.useEffect, useMemo75 = React321.useMemo, useDebugValue3 = React321.useDebugValue;
       exports.useSyncExternalStoreWithSelector = function(subscribe3, getSnapshot, getServerSnapshot, selector, isEqual) {
         var instRef = useRef126(null);
         if (instRef.current === null) {
@@ -12695,7 +12695,7 @@ Error generating stack: ` + x.message + `
           [getSnapshot, getServerSnapshot, selector, isEqual]
         );
         var value = useSyncExternalStore6(subscribe3, instRef[0], instRef[1]);
-        return useEffect97(
+        return useEffect96(
           function() {
             inst.hasValue = !0, inst.value = value;
           },
@@ -45360,7 +45360,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       "withBorderColor",
       "row--beingDragged"
     ]
-  }, gridClasses = generateUtilityClasses("MuiDataGrid", [...gridClassesOverrides.root, ...gridClassesOverrides.children, "aiAssistantPanel", "aiAssistantPanelHeader", "aiAssistantPanelTitleContainer", "aiAssistantPanelTitle", "aiAssistantPanelBody", "aiAssistantPanelEmptyText", "aiAssistantPanelFooter", "aiAssistantPanelConversation", "aiAssistantPanelConversationList", "aiAssistantPanelConversationTitle", "aiAssistantPanelSuggestions", "aiAssistantPanelSuggestionsList", "aiAssistantPanelSuggestionsItem", "aiAssistantPanelSuggestionsLabel", "aggregationColumnHeader", "aggregationColumnHeader--alignLeft", "aggregationColumnHeader--alignCenter", "aggregationColumnHeader--alignRight", "aggregationColumnHeaderLabel", "aggregationRowOverlayWrapper", "formulaColumnHeaderLetter", "computedColumnHeaderBadge", "formulaRowNumberCell", "formulaBar", "mainContent", "withSidePanel", "collapsible", "collapsibleTrigger", "collapsibleIcon", "collapsiblePanel", "columnHeader--filter", "columnHeaderFilterInput", "columnHeaderFilterOperatorLabel", "columnHeaderTitle", "columnHeaders", "columnsManagement", "columnsManagementRow", "columnsManagementHeader", "columnsManagementSearchInput", "columnsManagementFooter", "columnsManagementScrollArea", "columnsManagementEmptyText", "contentFiller", "detailPanel", "footerCell", "panel", "panelHeader", "panelWrapper", "panelContent", "panelFooter", "paper", "editInputCell", "longTextCell", "longTextCellContent", "longTextCellExpandButton", "longTextCellCollapseButton", "longTextCellPopup", "longTextCellPopperContent", "editLongTextCell", "editLongTextCellValue", "editLongTextCellPopup", "editLongTextCellPopperContent", "editLongTextCellTextarea", "multiSelectCell", "multiSelectCellChip", "multiSelectCellChip--hidden", "multiSelectCellOverflow", "multiSelectCellPopup", "multiSelectCellPopperContent", "editMultiSelectCell", "editMultiSelectCellChip", "editMultiSelectCellChip--hidden", "editMultiSelectCellOverflow", "editMultiSelectCellPopup", "editMultiSelectCellPopperContent", "filler", "filterForm", "filterFormDeleteIcon", "filterFormLogicOperatorInput", "filterFormColumnInput", "filterFormOperatorInput", "filterFormValueInput", "filler--horizontal", "footerContainer", "iconButtonContainer", "main", "main--hasPinnedRight", "main--hiddenContent", "menu", "overlay", "overlayWrapper", "root", "virtualizer--layoutControlled", "rowCount", "rowReorderIcon", "scrollArea--left", "scrollArea--right", "scrollArea--up", "scrollArea--down", "scrollArea", "scrollShadow", "scrollShadow--vertical", "scrollShadow--horizontal", "selectedRowCount", "sortButton", "shadowScrollArea", "sidebar", "sidebarHeader", "toolbarContainer", "toolbar", "toolbarLabel", "toolbarDivider", "toolbarFilterList", "toolbarQuickFilter", "toolbarQuickFilterTrigger", "toolbarQuickFilterControl", "virtualScroller", "virtualScroller--hasScrollX", "virtualScrollerContent", "virtualScrollerContent--overflowed", "virtualScrollerRenderZone", "pivotPanelAvailableFields", "pivotPanelField", "pivotPanelField--sorted", "pivotPanelFieldActionContainer", "pivotPanelFieldCheckbox", "pivotPanelFieldDragIcon", "pivotPanelFieldList", "pivotPanelFieldName", "pivotPanelHeader", "pivotPanelPlaceholder", "pivotPanelScrollArea", "pivotPanelSearchContainer", "pivotPanelSection", "pivotPanelSectionTitle", "pivotPanelSections", "pivotPanelSwitch", "pivotPanelSwitchLabel", "computedColumnsPanel", "computedColumnsPanelHeader", "computedColumnsPanelList", "computedColumnsPanelListItem", "computedColumnsPanelEmpty", "computedColumnsPanelEditor", "computedColumnsPanelField", "computedColumnsPanelFormula", "computedColumnsPanelPreview", "computedColumnsPanelReference", "computedColumnsPanelValidation", "computedColumnsPanelFooter", "prompt", "promptContent", "promptText", "promptFeedback", "promptChangeList", "promptChangesToggle", "promptChangesToggleIcon", "promptIcon", "promptIconContainer", "promptError", "promptAction", "resizablePanelHandle", "resizablePanelHandle--horizontal", "resizablePanelHandle--vertical"]);
+  }, gridClasses = generateUtilityClasses("MuiDataGrid", [...gridClassesOverrides.root, ...gridClassesOverrides.children, "aiAssistantPanel", "aiAssistantPanelHeader", "aiAssistantPanelTitleContainer", "aiAssistantPanelTitle", "aiAssistantPanelBody", "aiAssistantPanelEmptyText", "aiAssistantPanelFooter", "aiAssistantPanelConversation", "aiAssistantPanelConversationList", "aiAssistantPanelConversationTitle", "aiAssistantPanelSuggestions", "aiAssistantPanelSuggestionsList", "aiAssistantPanelSuggestionsItem", "aiAssistantPanelSuggestionsLabel", "aggregationColumnHeader", "aggregationColumnHeader--alignLeft", "aggregationColumnHeader--alignCenter", "aggregationColumnHeader--alignRight", "aggregationColumnHeaderLabel", "aggregationRowOverlayWrapper", "formulaColumnHeaderLetter", "computedColumnHeaderBadge", "formulaRowNumberCell", "formulaBar", "mainContent", "withSidePanel", "collapsible", "collapsibleTrigger", "collapsibleIcon", "collapsiblePanel", "columnHeader--filter", "columnHeaderFilterInput", "columnHeaderFilterOperatorLabel", "columnHeaderTitle", "columnHeaders", "columnsManagement", "columnsManagementRow", "columnsManagementHeader", "columnsManagementSearchInput", "columnsManagementFooter", "columnsManagementScrollArea", "columnsManagementEmptyText", "contentFiller", "detailPanel", "footerCell", "panel", "panelHeader", "panelWrapper", "panelContent", "panelFooter", "paper", "editInputCell", "longTextCell", "longTextCellContent", "longTextCellExpandButton", "longTextCellCollapseButton", "longTextCellPopup", "longTextCellPopperContent", "editLongTextCell", "editLongTextCellValue", "editLongTextCellPopup", "editLongTextCellPopperContent", "editLongTextCellTextarea", "multiSelectCell", "multiSelectCellChip", "multiSelectCellChip--hidden", "multiSelectCellOverflow", "multiSelectCellPopup", "multiSelectCellPopperContent", "editMultiSelectCell", "editMultiSelectCellChip", "editMultiSelectCellChip--hidden", "editMultiSelectCellOverflow", "editMultiSelectCellPopup", "editMultiSelectCellPopperContent", "filler", "filterForm", "filterFormDeleteIcon", "filterFormLogicOperatorInput", "filterFormColumnInput", "filterFormOperatorInput", "filterFormValueInput", "filler--horizontal", "footerContainer", "iconButtonContainer", "main", "main--hasPinnedRight", "main--hiddenContent", "menu", "overlay", "overlayWrapper", "root", "virtualizer--layoutControlled", "rowCount", "rowReorderIcon", "scrollArea--left", "scrollArea--right", "scrollArea--up", "scrollArea--down", "scrollArea", "scrollShadow", "scrollShadow--vertical", "scrollShadow--horizontal", "selectedRowCount", "sortButton", "shadowScrollArea", "sidebar", "sidebarHeader", "toolbarContainer", "toolbar", "toolbarLabel", "toolbarDivider", "toolbarFilterList", "toolbarQuickFilter", "toolbarQuickFilterTrigger", "toolbarQuickFilterControl", "virtualScroller", "virtualScroller--hasScrollX", "virtualScrollerContent", "virtualScrollerContent--overflowed", "virtualScrollerRenderZone", "pivotPanelBody", "pivotPanelAvailableFields", "pivotPanelField", "pivotPanelField--sorted", "pivotPanelField--dragging", "pivotPanelFieldActionContainer", "pivotPanelFieldCheckbox", "pivotPanelFieldDragIcon", "pivotPanelFieldList", "pivotPanelFieldName", "pivotPanelHeader", "pivotPanelPlaceholder", "pivotPanelScrollArea", "pivotPanelSearchContainer", "pivotPanelSection", "pivotPanelSectionTitle", "pivotPanelSections", "pivotPanelSwitch", "pivotPanelSwitchLabel", "computedColumnsPanel", "computedColumnsPanelHeader", "computedColumnsPanelList", "computedColumnsPanelListItem", "computedColumnsPanelEmpty", "computedColumnsPanelEditor", "computedColumnsPanelField", "computedColumnsPanelFormula", "computedColumnsPanelPreview", "computedColumnsPanelReference", "computedColumnsPanelValidation", "computedColumnsPanelFooter", "prompt", "promptContent", "promptText", "promptFeedback", "promptChangeList", "promptChangesToggle", "promptChangesToggleIcon", "promptIcon", "promptIconContainer", "promptError", "promptAction", "resizablePanelHandle", "resizablePanelHandle--horizontal", "resizablePanelHandle--vertical"]);
 
   // node_modules/@mui/x-data-grid/hooks/utils/useGridSelector.mjs
   var React134 = __toESM(require_react(), 1);
@@ -45458,7 +45458,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   })(({
     ownerState
   }) => {
-    let apiRef = useGridPrivateApiContext(), shouldShowBorderTopRightRadius = useGridSelector(apiRef, shouldShowBorderTopRightRadiusSelector), baseBackground = vars.colors.background.base, headerBackground = vars.header.background.base, pinnedBackground = vars.cell.background.pinned, hoverColor = removeOpacity(vars.colors.interactive.hover), hoverOpacity = vars.colors.interactive.hoverOpacity, selectedColor = vars.colors.interactive.selected, selectedOpacity = vars.colors.interactive.selectedOpacity, selectedHoverColor = selectedColor, selectedHoverOpacity = `calc(${selectedOpacity} + ${hoverOpacity})`, fallbackColors = {
+    let apiRef = useGridPrivateApiContext(), shouldShowBorderTopRightRadius = useGridSelector(apiRef, shouldShowBorderTopRightRadiusSelector), fillPreviewTint = `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`, baseBackground = vars.colors.background.base, headerBackground = vars.header.background.base, pinnedBackground = vars.cell.background.pinned, hoverColor = removeOpacity(vars.colors.interactive.hover), hoverOpacity = vars.colors.interactive.hoverOpacity, selectedColor = vars.colors.interactive.selected, selectedOpacity = vars.colors.interactive.selectedOpacity, selectedHoverColor = selectedColor, selectedHoverOpacity = `calc(${selectedOpacity} + ${hoverOpacity})`, fallbackColors = {
       hover: vars.colors.interactive.hover,
       selected: selectedColor,
       selectedHover: selectedColor,
@@ -45606,6 +45606,25 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.cell}:focus`]: {
         outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
         outlineOffset: focusOutlineWidth * -1
+      },
+      // Separate rule, because a browser without `:has()` support drops the whole rule.
+      // `:where()` keeps the specificity of `.cell:focus-within`, so overrides of it still apply.
+      [`& .${gridClasses.cell}:has(> :where([data-cell-editor="preMounted"]):focus-within)`]: {
+        outline: `solid ${vars.colors.interactive.focus} ${focusOutlineWidth}px`,
+        outlineOffset: focusOutlineWidth * -1
+      },
+      // Pre-mounted editor (`imeFastEdit`). It must stay focusable, so do not use `display: none`
+      // or `visibility: hidden`. Without offsets, it needs no positioned ancestor.
+      [`& .${gridClasses.cell} > [data-cell-editor="preMounted"]`]: {
+        position: "absolute",
+        width: 0,
+        height: 0,
+        overflow: "hidden",
+        opacity: 0,
+        pointerEvents: "none"
+      },
+      [`& .${gridClasses.cell} > [data-cell-editor="editing"]`]: {
+        display: "contents"
       },
       // Hide the column separator when:
       // - the column is focused and has an outline
@@ -46192,6 +46211,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       /* Fill handle styles */
       [`& .${gridClasses["cell--withFillHandle"]}`]: {
         position: "relative",
+        // Pinned cells must stay sticky, otherwise their `left`/`right` offset displaces them
+        [`&.${gridClasses["cell--pinnedLeft"]}, &.${gridClasses["cell--pinnedRight"]}`]: {
+          position: "sticky"
+        },
         "&::after": {
           content: '""',
           position: "absolute",
@@ -46205,7 +46228,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         }
       },
       [`& .${gridClasses["cell--fillPreview"]}`]: {
-        backgroundColor: `color-mix(in srgb, ${vars.colors.interactive.focus} 8%, transparent)`
+        // Paint the tint as an image layer on top of the cell's own background color,
+        // so opaque backgrounds (pinned cells) stay opaque.
+        backgroundImage: `linear-gradient(${fillPreviewTint}, ${fillPreviewTint})`
       },
       [`& .${gridClasses["cell--fillPreviewTop"]}`]: {
         borderTop: `1px dashed ${vars.colors.interactive.focus}`
@@ -48263,26 +48288,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/@mui/x-virtualizer/features/virtualization/virtualization.mjs
-  var clamp2 = (value, min2, max2) => Math.max(min2, Math.min(max2, value)), MINIMUM_COLUMN_WIDTH = 50, MAX_VELOCITY_SAMPLE_GAP_MS = 100, SCROLL_DELAY_LEVELS = [{
-    minVelocityPxPerMs: 28,
-    frames: 6
-  }, {
-    minVelocityPxPerMs: 20,
-    frames: 4
-  }, {
-    minVelocityPxPerMs: 16,
-    frames: 2
-  }, {
-    minVelocityPxPerMs: 8,
-    frames: 1
-  }];
-  function scrollDelayFrames(velocityPxPerMs) {
-    for (let level of SCROLL_DELAY_LEVELS)
-      if (velocityPxPerMs >= level.minVelocityPxPerMs)
-        return level.frames;
-    return 0;
-  }
-  var EMPTY_SCROLL_POSITION = {
+  var clamp2 = (value, min2, max2) => Math.max(min2, Math.min(max2, value)), MINIMUM_COLUMN_WIDTH = 50, EMPTY_SCROLL_POSITION = {
     top: 0,
     left: 0
   }, EMPTY_DETAIL_PANELS = Object.freeze(/* @__PURE__ */ new Map()), EMPTY_RENDER_CONTEXT = {
@@ -48364,11 +48370,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onScrollChange,
       scrollReset,
       renderRow
-    } = params, hasBottomPinnedRows = pinnedRows.bottom.length > 0, [panels, setPanels] = React145.useState(EMPTY_DETAIL_PANELS), isUpdateScheduled = React145.useRef(!1), isRenderContextReady = React145.useRef(!1), renderContext = useStore(store, selectors3.renderContext), enabledForRows = useStore(store, selectors3.enabledForRows), enabledForColumns = useStore(store, selectors3.enabledForColumns), layoutMode = useStore(store, selectors3.layoutMode), contentHeight = useStore(store, Dimensions.selectors.contentHeight), scrollPosition = React145.useRef(initialState?.scroll ?? EMPTY_SCROLL_POSITION), ignoreNextScrollEvent = React145.useRef(!1), previousContextScrollPosition = React145.useRef(EMPTY_SCROLL_POSITION), previousRowContext = React145.useRef(EMPTY_RENDER_CONTEXT), scrollTimeout = useTimeout(), frozenContext = React145.useRef(void 0), deferredStickyFrame = React145.useRef(0), deferredFramesRemaining = React145.useRef(0), forceStickyCommit = React145.useRef(!1), lastScrollTimestamp = React145.useRef(0);
-    React145.useEffect(() => () => {
-      deferredStickyFrame.current !== 0 && cancelAnimationFrame(deferredStickyFrame.current);
-    }, []);
-    let scrollCache = useLazyRef(() => createScrollCache(isRtl, rowBufferPx, columnBufferPx, averageRowHeight(store, rowHeight) * 15, MINIMUM_COLUMN_WIDTH * 6, layoutMode)).current, updateScrollCacheBuffer = (direction) => {
+    } = params, hasBottomPinnedRows = pinnedRows.bottom.length > 0, [panels, setPanels] = React145.useState(EMPTY_DETAIL_PANELS), isUpdateScheduled = React145.useRef(!1), isRenderContextReady = React145.useRef(!1), renderContext = useStore(store, selectors3.renderContext), enabledForRows = useStore(store, selectors3.enabledForRows), enabledForColumns = useStore(store, selectors3.enabledForColumns), layoutMode = useStore(store, selectors3.layoutMode), contentHeight = useStore(store, Dimensions.selectors.contentHeight), scrollPosition = React145.useRef(initialState?.scroll ?? EMPTY_SCROLL_POSITION), ignoreNextScrollEvent = React145.useRef(!1), previousContextScrollPosition = React145.useRef(EMPTY_SCROLL_POSITION), previousRowContext = React145.useRef(EMPTY_RENDER_CONTEXT), scrollTimeout = useTimeout(), frozenContext = React145.useRef(void 0), scrollCache = useLazyRef(() => createScrollCache(isRtl, rowBufferPx, columnBufferPx, averageRowHeight(store, rowHeight) * 15, MINIMUM_COLUMN_WIDTH * 6, layoutMode)).current, updateScrollCacheBuffer = (direction) => {
       scrollCache.direction = direction, scrollCache.buffer = bufferForDirection(isRtl, direction, rowBufferPx, columnBufferPx, averageRowHeight(store, rowHeight) * 15, MINIMUM_COLUMN_WIDTH * 6, layoutMode);
     }, updateRenderContext = React145.useCallback((nextRenderContext, nextAnchor) => {
       let state2 = store.state.virtualization, anchorTop = nextAnchor ?? anchorTopFor(store, state2.layoutMode, nextRenderContext, !1);
@@ -48388,9 +48390,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       let dimensions = Dimensions.selectors.dimensions(store.state), maxScrollTop = Math.ceil(dimensions.contentSize.height - dimensions.viewportInnerSize.height), maxScrollLeft = Math.ceil(dimensions.contentSize.width - dimensions.viewportInnerSize.width), newScroll = {
         top: clamp2(scroller.scrollTop, 0, maxScrollTop),
         left: isRtl ? clamp2(scroller.scrollLeft, -Math.abs(maxScrollLeft), 0) : clamp2(scroller.scrollLeft, 0, maxScrollLeft)
-      }, dx = newScroll.left - scrollPosition.current.left, dy = newScroll.top - scrollPosition.current.top, now = performance.now(), dtSinceLastScroll = now - lastScrollTimestamp.current;
-      lastScrollTimestamp.current = now;
-      let rowVelocity = dtSinceLastScroll > 0 && dtSinceLastScroll < MAX_VELOCITY_SAMPLE_GAP_MS ? Math.abs(dy) / dtSinceLastScroll : 0, isScrolling = dx !== 0 || dy !== 0;
+      }, dx = newScroll.left - scrollPosition.current.left, dy = newScroll.top - scrollPosition.current.top, isScrolling = dx !== 0 || dy !== 0;
       scrollPosition.current = newScroll;
       let direction = isScrolling ? ScrollDirection.forDelta(dx, dy) : ScrollDirection.NONE, didChangeDirection = scrollCache.direction !== direction, isSettled = isSettlePass && direction === ScrollDirection.NONE, shouldUpdate;
       if (layoutMode === "sticky")
@@ -48408,32 +48408,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
             current: _extends({}, scrollPosition.current)
           }
         })), renderContext;
-      let isDeferralPending = deferredStickyFrame.current !== 0;
-      if (layoutMode === "sticky" && !forceStickyCommit.current && !didChangeDirection && !isSettlePass && (isDeferralPending || scrollDelayFrames(rowVelocity) > 0)) {
-        if (!isDeferralPending) {
-          deferredFramesRemaining.current = scrollDelayFrames(rowVelocity);
-          let advanceOneFrame = () => {
-            if (deferredFramesRemaining.current -= 1, deferredFramesRemaining.current > 0) {
-              deferredStickyFrame.current = requestAnimationFrame(advanceOneFrame);
-              return;
-            }
-            deferredStickyFrame.current = 0, forceStickyCommit.current = !0;
-            try {
-              triggerUpdateRenderContext(!1);
-            } finally {
-              forceStickyCommit.current = !1;
-            }
-          };
-          deferredStickyFrame.current = requestAnimationFrame(advanceOneFrame);
-        }
-        return store.set("virtualization", _extends({}, store.state.virtualization, {
-          anchorTop: anchorTopFor(store, layoutMode, renderContext, isSettled),
-          scrollPosition: {
-            current: _extends({}, scrollPosition.current)
-          }
-        })), renderContext;
-      }
-      if (deferredStickyFrame.current !== 0 && (cancelAnimationFrame(deferredStickyFrame.current), deferredStickyFrame.current = 0), didChangeDirection)
+      if (didChangeDirection)
         switch (direction) {
           case ScrollDirection.NONE:
           case ScrollDirection.LEFT:
@@ -49075,7 +49050,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     };
   };
   function padTopFor(offsetTop, anchorTop) {
-    return Math.max(0, offsetTop - anchorTop);
+    return Math.max(1, offsetTop - anchorTop);
   }
   var LayoutListSticky = class extends Layout {
     static elements = ["scroller", "container", "content", "positioner", "window", "windowContent"];
@@ -49666,7 +49641,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     previousCache,
     getRowId,
     updates,
-    groupKeys
+    groupKeys,
+    replaceChildrenOf
   }) => {
     if (previousCache.updates.type === "full")
       throw new Error(formatErrorMessage_default2(86));
@@ -49681,6 +49657,16 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       } else
         uniqueUpdates.set(id, update);
     });
+    let childrenOrder = previousCache.updates.childrenOrder;
+    if (replaceChildrenOf !== void 0) {
+      let ids = [];
+      uniqueUpdates.forEach((row, id) => {
+        row._action !== "delete" && ids.push(id);
+      }), childrenOrder = {
+        parentId: replaceChildrenOf,
+        ids
+      };
+    }
     let partialUpdates = {
       type: "partial",
       actions: {
@@ -49689,7 +49675,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         remove: [...previousCache.updates.actions.remove ?? []]
       },
       idToActionLookup: _extends({}, previousCache.updates.idToActionLookup),
-      groupKeys
+      groupKeys,
+      childrenOrder
     }, dataRowIdToModelLookup = _extends({}, previousCache.dataRowIdToModelLookup), alreadyAppliedActionsToRemove = {
       insert: {},
       modify: {},
@@ -50114,6 +50101,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     // Boolean cell text
     booleanCellTrueLabel: "yes",
     booleanCellFalseLabel: "no",
+    // Cell editor text
+    emptyCellLabel: "Empty",
     // Long text cell
     longTextCellExpandLabel: "Expand",
     longTextCellCollapseLabel: "Collapse",
@@ -50358,6 +50347,21 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     throw new Error(formatErrorMessage_default2(57));
   }
 
+  // node_modules/@mui/x-data-grid/models/gridEditRowModel.mjs
+  var GridEditModes = /* @__PURE__ */ (function(GridEditModes2) {
+    return GridEditModes2.Cell = "cell", GridEditModes2.Row = "row", GridEditModes2;
+  })(GridEditModes || {}), GridCellModes = /* @__PURE__ */ (function(GridCellModes2) {
+    return GridCellModes2.Edit = "edit", GridCellModes2.View = "view", GridCellModes2;
+  })(GridCellModes || {}), GridRowModes = /* @__PURE__ */ (function(GridRowModes2) {
+    return GridRowModes2.Edit = "edit", GridRowModes2.View = "view", GridRowModes2;
+  })(GridRowModes || {});
+
+  // node_modules/@mui/x-data-grid/utils/cellEditor.mjs
+  var PRE_MOUNTED_EDITOR_SELECTOR = '[data-cell-editor="preMounted"]';
+  function isEventFromPreMountedEditor(event) {
+    return !!event.target?.closest?.(PRE_MOUNTED_EDITOR_SELECTOR);
+  }
+
   // node_modules/@mui/x-data-grid/components/cell/GridEditInputCell.mjs
   var import_jsx_runtime120 = __toESM(require_jsx_runtime(), 1), _excluded28 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "hasFocus", "isValidating", "debounceMs", "isProcessingProps", "onValueChange", "slotProps"], useUtilityClasses58 = (ownerState) => {
     let {
@@ -50388,6 +50392,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onValueChange,
       slotProps
     } = props, other = _objectWithoutPropertiesLoose(props, _excluded28), apiRef = useGridApiContext(), inputRef = React149.useRef(null), [valueState, setValueState] = React149.useState(value), classes2 = useUtilityClasses58(rootProps), handleChange = React149.useCallback(async (event) => {
+      if (isEventFromPreMountedEditor(event) && apiRef.current.getCellMode(id, field2) === GridCellModes.View)
+        return;
       let newValue = event.target.value, column2 = apiRef.current.getColumn(field2), parsedValue = newValue;
       column2?.valueParser && (parsedValue = column2.valueParser(newValue, apiRef.current.getRow(id), column2, apiRef)), setValueState(parsedValue), apiRef.current.setEditCellValue({
         id,
@@ -50454,15 +50460,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }, getNextGridSortDirection = (sortingOrder, current4) => {
     let currentIdx = sortingOrder.indexOf(current4);
     return !current4 || currentIdx === -1 || currentIdx + 1 === sortingOrder.length ? sortingOrder[0] : sortingOrder[currentIdx + 1];
-  }, gridNillComparator = (v1, v2) => v1 == null && v2 != null ? -1 : v2 == null && v1 != null ? 1 : v1 == null && v2 == null ? 0 : null, collator = new Intl.Collator(), gridStringOrNumberComparator = (value1, value2) => {
-    let nillResult = gridNillComparator(value1, value2);
-    return nillResult !== null ? nillResult : typeof value1 == "string" ? collator.compare(value1.toString(), value2.toString()) : value1 - value2;
+  }, gridNilComparator = (v1, v2) => v1 == null && v2 != null ? -1 : v2 == null && v1 != null ? 1 : v1 == null && v2 == null ? 0 : null, collator = new Intl.Collator(), gridStringOrNumberComparator = (value1, value2) => {
+    let nilResult = gridNilComparator(value1, value2);
+    return nilResult !== null ? nilResult : typeof value1 == "string" ? collator.compare(value1.toString(), value2.toString()) : value1 - value2;
   }, gridNumberComparator = (value1, value2) => {
-    let nillResult = gridNillComparator(value1, value2);
-    return nillResult !== null ? nillResult : Number(value1) - Number(value2);
+    let nilResult = gridNilComparator(value1, value2);
+    return nilResult !== null ? nilResult : Number(value1) - Number(value2);
   }, gridDateComparator = (value1, value2) => {
-    let nillResult = gridNillComparator(value1, value2);
-    return nillResult !== null ? nillResult : value1 > value2 ? 1 : value1 < value2 ? -1 : 0;
+    let nilResult = gridNilComparator(value1, value2);
+    return nilResult !== null ? nilResult : value1 > value2 ? 1 : value1 < value2 ? -1 : 0;
   };
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputValue.mjs
@@ -50565,6 +50571,12 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   var runIf = (condition, fn2) => (...params) => {
     condition && fn2(...params);
   };
+  function pickDataAttributes(props) {
+    let dataAttributes = {};
+    for (let key of Object.keys(props))
+      key.startsWith("data-") && (dataAttributes[key] = props[key]);
+    return dataAttributes;
+  }
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputMultipleValue.mjs
   var React151 = __toESM(require_react(), 1);
@@ -50608,15 +50620,6 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     }, other, slotProps?.root));
   }
 
-  // node_modules/@mui/x-data-grid/models/gridEditRowModel.mjs
-  var GridEditModes = /* @__PURE__ */ (function(GridEditModes2) {
-    return GridEditModes2.Cell = "cell", GridEditModes2.Row = "row", GridEditModes2;
-  })(GridEditModes || {}), GridCellModes = /* @__PURE__ */ (function(GridCellModes2) {
-    return GridCellModes2.Edit = "edit", GridCellModes2.View = "view", GridCellModes2;
-  })(GridCellModes || {}), GridRowModes = /* @__PURE__ */ (function(GridRowModes2) {
-    return GridRowModes2.Edit = "edit", GridRowModes2.View = "view", GridRowModes2;
-  })(GridRowModes || {});
-
   // node_modules/@mui/x-data-grid/models/gridFilterItem.mjs
   var GridLogicOperator = /* @__PURE__ */ (function(GridLogicOperator2) {
     return GridLogicOperator2.And = "and", GridLogicOperator2.Or = "or", GridLogicOperator2;
@@ -50653,14 +50656,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
 
   // node_modules/@mui/x-data-grid/models/params/gridEditCellParams.mjs
   var GridCellEditStartReasons = /* @__PURE__ */ (function(GridCellEditStartReasons2) {
-    return GridCellEditStartReasons2.enterKeyDown = "enterKeyDown", GridCellEditStartReasons2.cellDoubleClick = "cellDoubleClick", GridCellEditStartReasons2.printableKeyDown = "printableKeyDown", GridCellEditStartReasons2.deleteKeyDown = "deleteKeyDown", GridCellEditStartReasons2.pasteKeyDown = "pasteKeyDown", GridCellEditStartReasons2;
+    return GridCellEditStartReasons2.enterKeyDown = "enterKeyDown", GridCellEditStartReasons2.cellDoubleClick = "cellDoubleClick", GridCellEditStartReasons2.printableKeyDown = "printableKeyDown", GridCellEditStartReasons2.deleteKeyDown = "deleteKeyDown", GridCellEditStartReasons2.pasteKeyDown = "pasteKeyDown", GridCellEditStartReasons2.compositionStart = "compositionStart", GridCellEditStartReasons2;
   })(GridCellEditStartReasons || {}), GridCellEditStopReasons = /* @__PURE__ */ (function(GridCellEditStopReasons2) {
     return GridCellEditStopReasons2.cellFocusOut = "cellFocusOut", GridCellEditStopReasons2.escapeKeyDown = "escapeKeyDown", GridCellEditStopReasons2.enterKeyDown = "enterKeyDown", GridCellEditStopReasons2.tabKeyDown = "tabKeyDown", GridCellEditStopReasons2.shiftTabKeyDown = "shiftTabKeyDown", GridCellEditStopReasons2;
   })(GridCellEditStopReasons || {});
 
   // node_modules/@mui/x-data-grid/models/params/gridRowParams.mjs
   var GridRowEditStartReasons = /* @__PURE__ */ (function(GridRowEditStartReasons2) {
-    return GridRowEditStartReasons2.enterKeyDown = "enterKeyDown", GridRowEditStartReasons2.cellDoubleClick = "cellDoubleClick", GridRowEditStartReasons2.printableKeyDown = "printableKeyDown", GridRowEditStartReasons2.deleteKeyDown = "deleteKeyDown", GridRowEditStartReasons2;
+    return GridRowEditStartReasons2.enterKeyDown = "enterKeyDown", GridRowEditStartReasons2.cellDoubleClick = "cellDoubleClick", GridRowEditStartReasons2.printableKeyDown = "printableKeyDown", GridRowEditStartReasons2.deleteKeyDown = "deleteKeyDown", GridRowEditStartReasons2.compositionStart = "compositionStart", GridRowEditStartReasons2;
   })(GridRowEditStartReasons || {}), GridRowEditStopReasons = /* @__PURE__ */ (function(GridRowEditStopReasons2) {
     return GridRowEditStopReasons2.rowFocusOut = "rowFocusOut", GridRowEditStopReasons2.escapeKeyDown = "escapeKeyDown", GridRowEditStopReasons2.enterKeyDown = "enterKeyDown", GridRowEditStopReasons2.tabKeyDown = "tabKeyDown", GridRowEditStopReasons2.shiftTabKeyDown = "shiftTabKeyDown", GridRowEditStopReasons2;
   })(GridRowEditStopReasons || {});
@@ -50933,7 +50936,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     getApplyFilterFn: (filterItem) => {
       if (!filterItem.value)
         return null;
-      let filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim(), filterRegex = new RegExp(`^${escapeRegExp(filterItemValue)}.*$`, "i");
+      let filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim(), filterRegex = new RegExp(`^${escapeRegExp(filterItemValue)}`, "i");
       return (value) => value != null ? filterRegex.test(value.toString()) : !1;
     },
     InputComponent: GridFilterInputValue
@@ -50942,7 +50945,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     getApplyFilterFn: (filterItem) => {
       if (!filterItem.value)
         return null;
-      let filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim(), filterRegex = new RegExp(`.*${escapeRegExp(filterItemValue)}$`, "i");
+      let filterItemValue = disableTrim ? filterItem.value : filterItem.value.trim(), filterRegex = new RegExp(`${escapeRegExp(filterItemValue)}$`, "i");
       return (value) => value != null ? filterRegex.test(value.toString()) : !1;
     },
     InputComponent: GridFilterInputValue
@@ -51016,6 +51019,9 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
   function isSelectAllShortcut(event) {
     return (event.ctrlKey || event.metaKey) && String.fromCharCode(event.keyCode) === "A" && !event.shiftKey && !event.altKey;
+  }
+  function isImeKeyDown(event) {
+    return event.nativeEvent?.isComposing || event.key === "Process" || event.keyCode === 229;
   }
 
   // node_modules/@mui/x-data-grid/utils/css/context.mjs
@@ -54011,7 +54017,13 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var React189 = __toESM(require_react(), 1);
 
   // node_modules/@mui/x-data-grid/hooks/utils/useGridVisibleRows.mjs
-  var getVisibleRows = (apiRef, props) => gridVisibleRowsSelector(apiRef), useGridVisibleRows = (apiRef, props) => useGridSelector(apiRef, gridVisibleRowsSelector);
+  var getVisibleRows = (apiRef, props) => gridVisibleRowsSelector(apiRef), useGridVisibleRows = (apiRef, props) => useGridSelector(apiRef, gridVisibleRowsSelector), getRowIndexRelativeToAllRows = (apiRef, id) => {
+    let rowIndex = gridExpandedSortedRowIndexLookupSelector(apiRef)[id];
+    if (rowIndex === void 0)
+      return;
+    let pagination = gridPaginationSelector(apiRef);
+    return !pagination.enabled || pagination.paginationMode === "client" ? rowIndex : pagination.paginationModel.page * pagination.paginationModel.pageSize + rowIndex;
+  };
 
   // node_modules/@mui/x-data-grid/hooks/features/virtualization/gridFocusedVirtualCellSelector.mjs
   var gridIsFocusedCellOutOfContext = createSelector2(gridFocusCellSelector, gridRenderContextSelector, gridVisibleRowsSelector, gridVisibleColumnDefinitionsSelector, (focusedCell, renderContext, currentPage, visibleColumns) => {
@@ -54129,9 +54141,16 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   var React185 = __toESM(require_react(), 1);
   var useGridPipeProcessing = (apiRef) => {
     let cache = React185.useRef({}), isRunning = React185.useRef(!1), runAppliers = React185.useCallback((groupCache) => {
-      isRunning.current || !groupCache || (isRunning.current = !0, Object.values(groupCache.appliers).forEach((callback) => {
-        callback();
-      }), isRunning.current = !1);
+      if (!(isRunning.current || !groupCache)) {
+        isRunning.current = !0;
+        try {
+          Object.values(groupCache.appliers).forEach((callback) => {
+            callback();
+          });
+        } finally {
+          isRunning.current = !1;
+        }
+      }
     }, []), registerPipeProcessor = React185.useCallback((group, id, processor) => {
       cache.current[group] || (cache.current[group] = {
         processors: /* @__PURE__ */ new Map(),
@@ -54660,6 +54679,22 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     return !side || pinnedOffset === void 0 || (style4[side] = pinnedOffset), style4;
   }
 
+  // node_modules/@mui/x-data-grid/hooks/features/editing/utils.mjs
+  var getDefaultCellValue = (colDef) => {
+    switch (colDef.type) {
+      case "boolean":
+        return !1;
+      case "date":
+      case "dateTime":
+      case "number":
+        return;
+      case "singleSelect":
+        return "";
+      default:
+        return "";
+    }
+  };
+
   // node_modules/@mui/x-data-grid/components/cell/GridCell.mjs
   var import_jsx_runtime154 = __toESM(require_jsx_runtime(), 1), _excluded45 = ["column", "row", "rowId", "rowNode", "align", "children", "colIndex", "width", "className", "style", "colSpan", "disableDragEvents", "isNotVisible", "pinnedOffset", "pinnedPosition", "showRightBorder", "showLeftBorder", "onClick", "onDoubleClick", "onMouseDown", "onMouseUp", "onMouseOver", "onKeyDown", "onKeyUp", "onDragEnter", "onDragOver"], _excluded211 = ["changeReason", "unstable_updateValueOnRender"], useUtilityClasses76 = (ownerState) => {
     let {
@@ -54676,6 +54711,30 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     };
     return composeClasses(slots, getDataGridUtilityClass, classes2);
   };
+  function canPreMountEditor(column2) {
+    return column2.type === "string" && column2.renderEditCell === renderEditInputCell;
+  }
+  var PRE_MOUNTED_EDITOR_INPUT_PROPS = {
+    autoComplete: "off",
+    spellCheck: !1,
+    "data-lpignore": "true",
+    "data-1p-ignore": "",
+    "data-bwignore": "",
+    "data-form-type": "other"
+  };
+  function handlePreMountedEditorKeyDown(event) {
+    event.key === "Enter" && !isImeKeyDown(event) && event.preventDefault();
+  }
+  function getContentTabStop(cell) {
+    return Array.from(cell.querySelectorAll('[tabindex="0"]')).find((element) => !element.closest(PRE_MOUNTED_EDITOR_SELECTOR));
+  }
+  function isCoarsePointer(element) {
+    return typeof window > "u" ? !1 : !!ownerWindow(element ?? void 0).matchMedia?.("(pointer: coarse)").matches;
+  }
+  function hasTextSelection(cell) {
+    let selection = ownerDocument(cell).getSelection();
+    return !!selection && !selection.isCollapsed && cell.contains(selection.anchorNode);
+  }
   var GridCell = forwardRef72(function(props, ref) {
     let {
       column: column2,
@@ -54734,7 +54793,9 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       hasFocus,
       isEditable = !1,
       value
-    } = cellParams, tabIndex = (cellMode === "view" || !isEditable) && column2.type !== "actions" ? cellParams.tabIndex : -1, {
+    } = cellParams, tabIndex = (cellMode === "view" || !isEditable) && column2.type !== "actions" ? cellParams.tabIndex : -1, imeFastEdit = !!rootProps.experimentalFeatures?.imeFastEdit, [editorHasDomFocus, setEditorHasDomFocus] = React191.useState(!1), [contentHasTabStop, setContentHasTabStop] = React191.useState(!1), [editorHadFocus, setEditorHadFocus] = React191.useState(!1), cellId = useId(), canCellPreMountEditor = imeFastEdit && cellMode === GridCellModes.View && !contentHasTabStop && canPreMountEditor(column2) && !isCoarsePointer(apiRef.current.rootElementRef?.current ?? null), isEditorPreMounted = canCellPreMountEditor && (hasFocus && isEditable || editorHasDomFocus || editorHadFocus && isEditable && cellParams.tabIndex === 0);
+    editorHasDomFocus && !isEditorPreMounted && cellMode === GridCellModes.View && setEditorHasDomFocus(!1), editorHadFocus && !isEditorPreMounted && cellMode === GridCellModes.View && setEditorHadFocus(!1);
+    let {
       classes: rootClasses,
       getCellClassName
     } = rootProps, classNames = [useGridSelector(apiRef, () => apiRef.current.unstable_applyPipeProcessors("cellClassName", [], {
@@ -54751,17 +54812,28 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       pinnedPosition,
       isSelected,
       isSelectionMode
-    }, classes2 = useUtilityClasses76(ownerState), publishMouseUp = React191.useCallback((eventName) => (event) => {
-      if (!apiRef.current.getRow(rowId))
+    }, classes2 = useUtilityClasses76(ownerState), focusPreMountedEditor = React191.useCallback(() => {
+      let doc = ownerDocument(apiRef.current.rootElementRef.current);
+      if (!cellRef.current || doc.activeElement !== cellRef.current || getContentTabStop(cellRef.current) !== void 0 || hasTextSelection(cellRef.current))
+        return;
+      let input = cellRef.current.querySelector(`${PRE_MOUNTED_EDITOR_SELECTOR} input`);
+      input && focusElement(input, apiRef);
+    }, [apiRef]), isMouseDownRef = React191.useRef(!1), publishMouseUp = React191.useCallback((eventName) => (event) => {
+      if (isMouseDownRef.current = !1, !apiRef.current.getRow(rowId))
         return;
       let params = apiRef.current.getCellParams(rowId, field2 || "");
-      apiRef.current.publishEvent(eventName, params, event), onMouseUp && onMouseUp(event);
-    }, [apiRef, field2, onMouseUp, rowId]), publishMouseDown = React191.useCallback((eventName) => (event) => {
-      if (!apiRef.current.getRow(rowId))
+      apiRef.current.publishEvent(eventName, params, event), onMouseUp && onMouseUp(event), imeFastEdit && focusPreMountedEditor();
+    }, [apiRef, field2, focusPreMountedEditor, imeFastEdit, onMouseUp, rowId]), publishMouseDown = React191.useCallback((eventName) => (event) => {
+      if (isMouseDownRef.current = !0, imeFastEdit && ownerDocument(event.currentTarget).addEventListener("mouseup", () => {
+        isMouseDownRef.current = !1;
+      }, {
+        once: !0,
+        capture: !0
+      }), !apiRef.current.getRow(rowId))
         return;
       let params = apiRef.current.getCellParams(rowId, field2 || "");
       apiRef.current.publishEvent(eventName, params, event), onMouseDown && onMouseDown(event);
-    }, [apiRef, field2, onMouseDown, rowId]), publish = React191.useCallback((eventName, propHandler) => (event) => {
+    }, [apiRef, field2, imeFastEdit, onMouseDown, rowId]), publish = React191.useCallback((eventName, propHandler) => (event) => {
       if (!apiRef.current.getRow(rowId))
         return;
       let params = apiRef.current.getCellParams(rowId, field2 || "");
@@ -54781,6 +54853,8 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       return rowSpan > 1 && (cellStyle.height = `calc(var(--height) * ${rowSpan})`, cellStyle.zIndex = 10, (isLeftPinned || isRightPinned) && (cellStyle.zIndex = 40)), cellStyle;
     }, [width2, isNotVisible, styleProp, pinnedOffset, pinnedPosition, pinnedScrollOffset, isRtl, rowSpan]);
     if (useEnhancedEffect_default(() => {
+      !imeFastEdit || !hasFocus || cellMode !== GridCellModes.View || !cellRef.current || setContentHasTabStop(getContentTabStop(cellRef.current) !== void 0);
+    }, [imeFastEdit, hasFocus, cellMode, row, column2]), useEnhancedEffect_default(() => {
       if (!hasFocus || cellMode === GridCellModes.Edit)
         return;
       let doc = ownerDocument(apiRef.current.rootElementRef.current);
@@ -54792,10 +54866,17 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           cell: null
         }))
           return;
-        let elementToFocus = cellRef.current.querySelector('[tabindex="0"]') || cellRef.current;
+        let elementToFocus = (getContentTabStop(cellRef.current) ?? cellRef.current.querySelector('[tabindex="0"]')) || cellRef.current;
         focusElement(elementToFocus, apiRef);
       }
-    }, [hasFocus, cellMode, apiRef]), isCellRowSpanned)
+    }, [hasFocus, cellMode, apiRef]), useEnhancedEffect_default(() => {
+      isEditorPreMounted && focusPreMountedEditor();
+    }, [isEditorPreMounted, focusPreMountedEditor]), useEnhancedEffect_default(() => {
+      if (!imeFastEdit || isEditorPreMounted || !hasFocus || cellMode !== GridCellModes.View)
+        return;
+      let doc = ownerDocument(apiRef.current.rootElementRef.current);
+      cellRef.current && doc.activeElement === doc.body && focusElement(cellRef.current, apiRef);
+    }, [imeFastEdit, isEditorPreMounted, hasFocus, cellMode, apiRef]), isCellRowSpanned)
       return /* @__PURE__ */ (0, import_jsx_runtime154.jsx)("div", {
         "data-colindex": colIndex,
         role: "none",
@@ -54803,7 +54884,26 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           width: "var(--width)"
         }, style4)
       });
-    let handleFocus = other.onFocus, children, title2;
+    let handleFocus = other.onFocus;
+    if (imeFastEdit) {
+      let handleFocusWithoutEditor = handleFocus;
+      handleFocus = (event) => {
+        handleFocusWithoutEditor?.(event);
+        let isFromMouseDown = isMouseDownRef.current;
+        isMouseDownRef.current = !1, event.target === event.currentTarget && (isEditorPreMounted ? isFromMouseDown || focusPreMountedEditor() : !isFromMouseDown && !hasFocus && isEditable && canCellPreMountEditor && apiRef.current.unstable_applyPipeProcessors("canUpdateFocus", !0, {
+          event: event.nativeEvent,
+          cell: cellParams
+        }) && apiRef.current.setCellFocus(rowId, field2));
+      };
+    }
+    let handleEditorFocus = (event) => {
+      if (setEditorHasDomFocus(!0), setEditorHadFocus(!0), hasFocus || !isEditorPreMounted)
+        return;
+      apiRef.current.unstable_applyPipeProcessors("canUpdateFocus", !0, {
+        event: event.nativeEvent,
+        cell: cellParams
+      }) && apiRef.current.setCellFocus(rowId, field2);
+    }, children, title2;
     if (editCellState === null && column2.renderCell && (children = column2.renderCell(cellParams)), editCellState !== null && column2.renderEditCell) {
       let updatedRow = apiRef.current.getRowWithUpdatedValues(rowId, column2.field), editCellStateRest = _objectWithoutPropertiesLoose(editCellState, _excluded211), formattedValue = column2.valueFormatter ? column2.valueFormatter(editCellState.value, updatedRow, column2, apiRef) : cellParams.formattedValue, params = _extends({}, cellParams, {
         row: updatedRow,
@@ -54815,6 +54915,39 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       let valueString = valueToRender?.toString();
       children = valueString, title2 = valueString;
     }
+    if (imeFastEdit) {
+      let editor = null, editorState = null;
+      editCellState !== null ? (editor = children, children = null, editorState = "editing") : isEditorPreMounted && (editor = column2.renderEditCell(_extends({}, cellParams, {
+        value: getDefaultCellValue(column2),
+        isValidating: !1,
+        isProcessingProps: !1,
+        // The cell gives the focus to the editor, see `focusPreMountedEditor`.
+        hasFocus: !1,
+        slotProps: {
+          root: {
+            slotProps: {
+              htmlInput: _extends({}, PRE_MOUNTED_EDITOR_INPUT_PROPS, {
+                // The editor replaces the cell as the tab stop.
+                tabIndex: cellParams.tabIndex
+              }, children == null || children === "" ? {
+                "aria-label": apiRef.current.getLocaleText("emptyCellLabel")
+              } : {
+                "aria-labelledby": cellId
+              })
+            }
+          }
+        }
+      })), editorState = "preMounted"), children = [editorState === null ? null : /* @__PURE__ */ (0, import_jsx_runtime154.jsx)("div", {
+        "data-cell-editor": editorState,
+        onCompositionStart: editorState === "preMounted" ? publish("cellCompositionStart", void 0) : void 0,
+        onKeyDown: editorState === "preMounted" ? handlePreMountedEditorKeyDown : void 0,
+        onFocus: handleEditorFocus,
+        onBlur: () => setEditorHasDomFocus(!1),
+        children: editor
+      }, "editor"), /* @__PURE__ */ (0, import_jsx_runtime154.jsx)(React191.Fragment, {
+        children
+      }, "view")];
+    }
     let draggableEventHandlers = disableDragEvents ? null : {
       onDragEnter: publish("cellDragEnter", onDragEnter),
       onDragOver: publish("cellDragOver", onDragOver)
@@ -54822,6 +54955,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     return /* @__PURE__ */ (0, import_jsx_runtime154.jsx)("div", _extends({
       className: clsx_default(classes2.root, classNames, className),
       role: column2.rowHeader ? "rowheader" : "gridcell",
+      id: isEditorPreMounted ? cellId : void 0,
       "data-field": field2,
       "data-colindex": colIndex,
       "aria-colindex": colIndex + 1,
@@ -54829,7 +54963,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       "aria-rowspan": rowSpan,
       style: style4,
       title: title2,
-      tabIndex,
+      tabIndex: isEditorPreMounted ? -1 : tabIndex,
       onClick: publish("cellClick", onClick),
       onDoubleClick: publish("cellDoubleClick", onDoubleClick),
       onMouseOver: publish("cellMouseOver", onMouseOver),
@@ -56334,6 +56468,12 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterFormBase.mjs
   var React226 = __toESM(require_react(), 1);
 
+  // node_modules/@mui/x-internals/domUtils/interactiveElements.mjs
+  var TABBABLE_ELEMENT_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [contenteditable]:not([contenteditable="false"]), [tabindex]:not([tabindex="-1"])';
+  function getTabbableDescendants(container2) {
+    return Array.from(container2.querySelectorAll(TABBABLE_ELEMENT_SELECTOR));
+  }
+
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterFormColumnInput.mjs
   var React225 = __toESM(require_react(), 1);
   var import_react28 = __toESM(require_react(), 1), import_jsx_runtime188 = __toESM(require_jsx_runtime(), 1), _excluded66 = ["item", "columns", "value", "onChange", "disabled", "className"], FilterFormColumnInput = styled_default2("div", {
@@ -56448,7 +56588,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       disableDebounce = !1,
       readOnly,
       filterModel
-    } = props, other = _objectWithoutPropertiesLoose(props, _excluded67), apiRef = useGridApiContext(), columnLookup = useGridSelector(apiRef, gridColumnLookupSelector), filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector), operatorSelectId = useId(), operatorSelectLabelId = useId(), rootProps = useGridRootProps(), classes2 = useUtilityClasses92(rootProps), valueRef = React226.useRef(null), filterSelectorRef = React226.useRef(null), multiFilterOperator = filterModel.logicOperator ?? GridLogicOperator.And, hasLogicOperatorColumn = hasMultipleFilters && logicOperators.length > 0, isBaseSelectNative = (rootProps.slotProps?.baseSelect || {}).native ?? !1, baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {}, {
+    } = props, other = _objectWithoutPropertiesLoose(props, _excluded67), apiRef = useGridApiContext(), columnLookup = useGridSelector(apiRef, gridColumnLookupSelector), filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector), operatorSelectId = useId(), operatorSelectLabelId = useId(), rootProps = useGridRootProps(), classes2 = useUtilityClasses92(rootProps), rootRef = React226.useRef(null), handleRootRef = useForkRef(ref, rootRef), multiFilterOperator = filterModel.logicOperator ?? GridLogicOperator.And, hasLogicOperatorColumn = hasMultipleFilters && logicOperators.length > 0, isLogicOperatorDisabled = !!disableMultiFilterOperator || logicOperators.length === 1, isLogicOperatorFocusable = hasLogicOperatorColumn && !!showMultiFilterOperators && !isLogicOperatorDisabled, isBaseSelectNative = (rootProps.slotProps?.baseSelect || {}).native ?? !1, baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {}, {
       InputComponentProps
     } = valueInputProps, valueInputPropsOther = _objectWithoutPropertiesLoose(valueInputProps, _excluded213), columnInputSlotProps = rootProps.slotProps?.filterFormColumnInput, pivotActive = useGridSelector(apiRef, gridPivotActiveSelector), initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector), {
       filteredColumns,
@@ -56522,14 +56662,22 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     };
     return React226.useImperativeHandle(focusElementRef, () => ({
       focus: () => {
-        currentOperator?.InputComponent ? valueRef?.current?.focus() : filterSelectorRef.current.focus();
+        let fieldClasses = [...isLogicOperatorFocusable ? [gridClasses.filterFormLogicOperatorInput] : [], gridClasses.filterFormColumnInput, gridClasses.filterFormOperatorInput, gridClasses.filterFormValueInput];
+        for (let fieldClass of fieldClasses) {
+          let field2 = rootRef.current?.querySelector(`.${fieldClass}`);
+          if (!field2)
+            continue;
+          let target = field2.tabIndex >= 0 ? field2 : getTabbableDescendants(field2)[0];
+          if (target?.focus(), target && target === ownerDocument(target).activeElement)
+            return;
+        }
       }
-    }), [currentOperator]), /* @__PURE__ */ (0, import_jsx_runtime189.jsxs)(GridFilterFormRoot, _extends({
+    }), [isLogicOperatorFocusable]), /* @__PURE__ */ (0, import_jsx_runtime189.jsxs)(GridFilterFormRoot, _extends({
       className: classes2.root,
       "data-id": item.id,
       ownerState: rootProps
     }, other, {
-      ref,
+      ref: handleRootRef,
       children: [/* @__PURE__ */ (0, import_jsx_runtime189.jsx)(FilterFormDeleteIcon, _extends({}, deleteIconProps, {
         className: clsx_default(classes2.deleteIcon, deleteIconProps.className),
         ownerState: rootProps,
@@ -56566,7 +56714,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         },
         value: multiFilterOperator ?? "",
         onChange: changeLogicOperator,
-        disabled: !!disableMultiFilterOperator || logicOperators.length === 1,
+        disabled: isLogicOperatorDisabled,
         native: isBaseSelectNative
       }, rootProps.slotProps?.baseSelect, {
         children: logicOperators.map((logicOperator) => /* @__PURE__ */ (0, import_react29.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
@@ -56593,7 +56741,6 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         value: item.operator,
         onChange: changeOperator,
         native: isBaseSelectNative,
-        inputRef: filterSelectorRef,
         disabled: readOnly
       }, rootProps.slotProps?.baseSelect, {
         children: currentColumn?.filterOperators?.map((operator) => /* @__PURE__ */ (0, import_react29.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
@@ -56608,7 +56755,6 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
           apiRef,
           item,
           applyValue: applyFilterChanges,
-          focusElementRef: valueRef,
           disabled: readOnly,
           disableDebounce,
           slotProps: {
@@ -57377,9 +57523,8 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
             render: (triggerProps) => /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(rootProps.slots.baseTooltip, {
               title: apiRef.current.getLocaleText("toolbarQuickFilterLabel"),
               enterDelay: 0,
-              children: /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(GridQuickFilterTrigger, _extends({
-                className: classes2.trigger
-              }, triggerProps, {
+              children: /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(GridQuickFilterTrigger, _extends({}, triggerProps, {
+                className: classes2.trigger,
                 ownerState: currentOwnerState,
                 color: "default",
                 "aria-disabled": state2.expanded,
@@ -57396,7 +57541,6 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
               } = _ref, controlProps = _objectWithoutPropertiesLoose(_ref, _excluded215);
               return /* @__PURE__ */ (0, import_jsx_runtime200.jsx)(GridQuickFilterTextField, _extends({
                 as: rootProps.slots.baseTextField,
-                className: classes2.control,
                 ownerState: currentOwnerState,
                 inputRef: ref,
                 "aria-label": apiRef.current.getLocaleText("toolbarQuickFilterLabel"),
@@ -57419,7 +57563,9 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
                     }) : null
                   }, controlSlotProps?.input)
                 }, controlSlotProps)
-              }, rootProps.slotProps?.baseTextField, controlProps, slotProps?.root, other));
+              }, rootProps.slotProps?.baseTextField, controlProps, slotProps?.root, other, {
+                className: clsx_default(classes2.control, slotProps?.root?.className)
+              }));
             }
           })]
         }));
@@ -58707,7 +58853,7 @@ ${CSVBody}` : CSVHead;
         });
       else {
         let focusedCell = gridFocusCellSelector(apiRef);
-        if (focusedCell) {
+        if (focusedCell && apiRef.current.getRow(focusedCell.id)) {
           let cellParams = apiRef.current.getCellParams(focusedCell.id, focusedCell.field);
           textToCopy = serializeCellValue(cellParams, {
             csvOptions: {
@@ -58845,25 +58991,31 @@ ${CSVBody}` : CSVHead;
         });
         apiRef.current.setColumnVisibilityModel(newModel);
       }
-    }, [apiRef]), getColumnIndexRelativeToVisibleColumns = React266.useCallback((field2) => gridColumnFieldsSelector(apiRef).findIndex((col) => col === field2), [apiRef]), setColumnIndex = React266.useCallback((field2, targetIndexPosition) => {
+    }, [apiRef]), getColumnIndexRelativeToVisibleColumns = React266.useCallback((field2) => getColumnIndex(field2, !1), [getColumnIndex]), setColumnIndex = React266.useCallback((field2, targetIndexPosition, useVisibleColumns) => {
       let column2 = apiRef.current.getColumn(field2);
       if (!column2)
         return;
-      let allColumns = gridColumnFieldsSelector(apiRef), oldIndexPosition = getColumnIndexRelativeToVisibleColumns(field2);
-      if (oldIndexPosition === targetIndexPosition)
+      let allColumns = gridColumnFieldsSelector(apiRef), visibilityModel = gridColumnVisibilityModelSelector(apiRef), isVisible = (columnField) => visibilityModel[columnField] !== !1;
+      if (useVisibleColumns === void 0 && !allColumns.every(isVisible) && warnOnce(["MUI X: The default value of `useVisibleColumns` in `setColumnIndex()` will change from `false` to `true` in v10.", "With hidden columns, the target index then counts only the visible columns.", "Pass `useVisibleColumns` explicitly to silence this warning: `false` keeps the current behavior."].join(`
+`)), useVisibleColumns && getColumnIndex(field2) === targetIndexPosition)
         return;
-      logger.debug(`Moving column ${field2} to index ${targetIndexPosition}`);
-      let updatedColumns = [...allColumns], fieldRemoved = updatedColumns.splice(oldIndexPosition, 1)[0];
-      updatedColumns.splice(targetIndexPosition, 0, fieldRemoved), setGridColumnsState(_extends({}, gridColumnsStateSelector(apiRef), {
+      let oldIndexPosition = getColumnIndex(field2, !1), updatedColumns = allColumns.filter((columnField) => columnField !== field2), targetIndex = targetIndexPosition;
+      if (useVisibleColumns) {
+        let otherVisibleColumns = updatedColumns.filter(isVisible), anchor = otherVisibleColumns[targetIndexPosition], lastVisibleColumn = otherVisibleColumns[otherVisibleColumns.length - 1];
+        anchor !== void 0 ? targetIndex = updatedColumns.indexOf(anchor) : targetIndex = lastVisibleColumn === void 0 ? updatedColumns.length : updatedColumns.indexOf(lastVisibleColumn) + 1;
+      }
+      if (oldIndexPosition === targetIndex)
+        return;
+      logger.debug(`Moving column ${field2} to index ${targetIndex}`), updatedColumns.splice(targetIndex, 0, field2), setGridColumnsState(_extends({}, gridColumnsStateSelector(apiRef), {
         orderedFields: updatedColumns
       }));
       let params = {
         column: column2,
-        targetIndex: apiRef.current.getColumnIndexRelativeToVisibleColumns(field2),
+        targetIndex: apiRef.current.getColumnIndex(field2, !1),
         oldIndex: oldIndexPosition
       };
       apiRef.current.publishEvent("columnIndexChange", params);
-    }, [apiRef, logger, setGridColumnsState, getColumnIndexRelativeToVisibleColumns]), setColumnWidth = React266.useCallback((field2, width2) => {
+    }, [apiRef, logger, setGridColumnsState, getColumnIndex]), setColumnWidth = React266.useCallback((field2, width2) => {
       logger.debug(`Updating column ${field2} width to ${width2}`);
       let columnsState = gridColumnsStateSelector(apiRef), column2 = columnsState.lookup[field2], newColumn = _extends({}, column2, {
         width: width2,
@@ -59228,10 +59380,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }, [apiRef, props.autoPageSize, props.signature]);
     useGridRegisterPipeProcessor(apiRef, "exportState", stateExportPreProcessing), useGridRegisterPipeProcessor(apiRef, "restoreState", stateRestorePreProcessing);
     let handlePaginationModelChange = () => {
+      if (!props.pagination)
+        return;
       let paginationModel = gridPaginationModelSelector(apiRef);
-      apiRef.current.virtualScrollerRef?.current && apiRef.current.scrollToIndexes({
-        rowIndex: paginationModel.page * paginationModel.pageSize
-      });
+      if (apiRef.current.virtualScrollerRef?.current) {
+        let paginationRange = gridPaginationRowRangeSelector(apiRef);
+        apiRef.current.scrollToIndexes({
+          rowIndex: paginationRange?.firstRowIndex ?? paginationModel.page * paginationModel.pageSize
+        });
+      }
     }, handleUpdateAutoPageSize = React269.useCallback(() => {
       if (!props.autoPageSize)
         return;
@@ -59589,7 +59746,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       columnGroupHeader: null
     }
   }), useGridFocus = (apiRef, props) => {
-    let logger = useGridLogger(apiRef, "useGridFocus"), lastClickedCell = React272.useRef(null), hasRootReference = apiRef.current.rootElementRef.current !== null, publishCellFocusOut = React272.useCallback((cell, event) => {
+    let logger = useGridLogger(apiRef, "useGridFocus"), lastClickedCell = React272.useRef(null), lastFocusedRowIndexRef = React272.useRef(null), hasRootReference = apiRef.current.rootElementRef.current !== null, publishCellFocusOut = React272.useCallback((cell, event) => {
       cell && apiRef.current.getRow(cell.id) && apiRef.current.publishEvent("cellFocusOut", apiRef.current.getCellParams(cell.id, cell.field), event);
     }, [apiRef]), setCellFocus = React272.useCallback((id, field2) => {
       let focusedCell = gridFocusCellSelector(apiRef);
@@ -59605,7 +59762,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         focusElement(cellElement, apiRef);
         return;
       }
-      apiRef.current.setState((state2) => (logger.debug(`Focusing on cell with id=${id} and field=${field2}`), _extends({}, state2, {
+      lastFocusedRowIndexRef.current = apiRef.current.getRowIndexRelativeToVisibleRows(id) ?? null, apiRef.current.setState((state2) => (logger.debug(`Focusing on cell with id=${id} and field=${field2}`), _extends({}, state2, {
         tabIndex: {
           cell: {
             id,
@@ -59733,7 +59890,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let focusedColumnGroup = gridFocusColumnGroupHeaderSelector(apiRef);
       focusedColumnGroup !== null && focusedColumnGroup.depth === depth && fields.includes(focusedColumnGroup.field) || apiRef.current.setColumnGroupHeaderFocus(fields[0], depth, event);
     }, [apiRef]), handleBlur = React272.useCallback((_, event) => {
-      event.relatedTarget?.getAttribute("class")?.includes(gridClasses.columnHeader) || event.relatedTarget?.getAttribute("class")?.includes(gridClasses.cell) || (logger.debug("Clearing focus"), apiRef.current.setState((state2) => _extends({}, state2, {
+      if (event.relatedTarget?.getAttribute("class")?.includes(gridClasses.columnHeader) || event.relatedTarget?.getAttribute("class")?.includes(gridClasses.cell))
+        return;
+      let focusedCell = gridFocusCellSelector(apiRef);
+      focusedCell && event.relatedTarget && apiRef.current.getCellElement(focusedCell.id, focusedCell.field)?.contains(event.relatedTarget) || (logger.debug("Clearing focus"), apiRef.current.setState((state2) => _extends({}, state2, {
         focus: {
           cell: null,
           columnHeader: null,
@@ -59772,12 +59932,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }, [apiRef]), handleRowsSet = React272.useCallback(() => {
       let cell = gridFocusCellSelector(apiRef);
       if (cell && !apiRef.current.getRow(cell.id)) {
+        let currentPage = getVisibleRows(apiRef, {
+          pagination: props.pagination,
+          paginationMode: props.paginationMode
+        });
+        if (currentPage.rows.length === 0 && gridRowsLoadingSelector(apiRef)) {
+          let doc = ownerDocument(apiRef.current.rootElementRef.current), cellElement = apiRef.current.getCellElement(cell.id, cell.field);
+          if (!doc.activeElement || doc.activeElement === doc.body || cellElement?.contains(doc.activeElement))
+            return;
+        }
         let lastFocusedRowId = cell.id, nextRowId = null;
         if (typeof lastFocusedRowId < "u") {
-          let rowEl = apiRef.current.getRowElement(lastFocusedRowId), lastFocusedRowIndex = rowEl?.dataset.rowindex ? Number(rowEl?.dataset.rowindex) : 0, currentPage = getVisibleRows(apiRef, {
-            pagination: props.pagination,
-            paginationMode: props.paginationMode
-          });
+          let rowEl = apiRef.current.getRowElement(lastFocusedRowId), lastFocusedRowIndex = rowEl?.dataset.rowindex ? Number(rowEl?.dataset.rowindex) : lastFocusedRowIndexRef.current ?? 0;
           nextRowId = currentPage.rows[clamp3(lastFocusedRowIndex, 0, currentPage.rows.length - 1)]?.id ?? null;
         }
         apiRef.current.setState((state2) => _extends({}, state2, {
@@ -59877,9 +60043,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // node_modules/@mui/x-data-grid/hooks/features/keyboardNavigation/useGridKeyboardNavigation.mjs
   var gridVisibleRowsWithPinnedRowsSelector = createSelectorMemoized2(gridVisibleRowsSelector, gridPinnedRowsSelector, (visibleRows, pinnedRows) => (pinnedRows.top || []).concat(visibleRows.rows, pinnedRows.bottom || [])), useGridKeyboardNavigation = (apiRef, props) => {
     let logger = useGridLogger(apiRef, "useGridKeyboardNavigation"), isRtl = useRtl(), getCurrentPageRows = React273.useCallback(() => gridVisibleRowsWithPinnedRowsSelector(apiRef), [apiRef]), headerFilteringEnabled = props.signature !== "DataGrid" && props.headerFilters, goToCell = React273.useCallback((colIndex, rowId, closestColumnToUse = "left", rowSpanScanDirection = "up") => {
-      let visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef), nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
+      let nextCellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, colIndex);
       nextCellColSpanInfo && nextCellColSpanInfo.spannedByColSpan && (closestColumnToUse === "left" ? colIndex = nextCellColSpanInfo.leftVisibleCellIndex : closestColumnToUse === "right" && (colIndex = nextCellColSpanInfo.rightVisibleCellIndex));
-      let field2 = gridVisibleColumnFieldsSelector(apiRef)[colIndex], nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, colIndex, rowSpanScanDirection), rowIndexRelativeToAllRows = visibleSortedRows.findIndex((row) => row.id === nonRowSpannedRowId);
+      let field2 = gridVisibleColumnFieldsSelector(apiRef)[colIndex], nonRowSpannedRowId = findNonRowSpannedCell(apiRef, rowId, colIndex, rowSpanScanDirection), rowIndexRelativeToAllRows = getRowIndexRelativeToAllRows(apiRef, nonRowSpannedRowId);
       logger.debug(`Navigating to cell row ${rowIndexRelativeToAllRows}, col ${colIndex}`), apiRef.current.scrollToIndexes({
         colIndex,
         rowIndex: rowIndexRelativeToAllRows
@@ -60385,24 +60551,6 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/x-data-grid/hooks/features/editing/useGridCellEditing.mjs
   var React277 = __toESM(require_react(), 1);
-
-  // node_modules/@mui/x-data-grid/hooks/features/editing/utils.mjs
-  var getDefaultCellValue = (colDef) => {
-    switch (colDef.type) {
-      case "boolean":
-        return !1;
-      case "date":
-      case "dateTime":
-      case "number":
-        return;
-      case "singleSelect":
-        return "";
-      default:
-        return "";
-    }
-  };
-
-  // node_modules/@mui/x-data-grid/hooks/features/editing/useGridCellEditing.mjs
   var _excluded86 = ["id", "field"], _excluded217 = ["id", "field"], useGridCellEditing = (apiRef, props) => {
     let [cellModesModel, setCellModesModel] = React277.useState({}), cellModesModelRef = React277.useRef(cellModesModel), prevCellModesModel = React277.useRef({}), {
       processRowUpdate,
@@ -60434,7 +60582,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       apiRef.current.publishEvent("cellEditStop", newParams, event);
     }, [apiRef]), handleCellKeyDown = React277.useCallback((params, event) => {
       if (params.cellMode === GridCellModes.Edit) {
-        if (event.which === 229)
+        if (isImeKeyDown(event))
           return;
         let reason;
         if (event.key === "Escape" ? reason = GridCellEditStopReasons.escapeKeyDown : event.key === "Enter" ? reason = GridCellEditStopReasons.enterKeyDown : event.key === "Tab" && (reason = event.shiftKey ? GridCellEditStopReasons.shiftTabKeyDown : GridCellEditStopReasons.tabKeyDown, event.preventDefault()), reason) {
@@ -60444,6 +60592,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           apiRef.current.publishEvent("cellEditStop", newParams, event);
         }
       } else if (params.isEditable) {
+        if (isEventFromPreMountedEditor(event) && isImeKeyDown(event))
+          return;
         let reason;
         if (!apiRef.current.unstable_applyPipeProcessors("canStartEditing", !0, {
           event,
@@ -60459,6 +60609,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           apiRef.current.publishEvent("cellEditStart", newParams, event);
         }
       }
+    }, [apiRef]), handleCellCompositionStart = React277.useCallback((params, event) => {
+      if (params.cellMode !== GridCellModes.View || !params.isEditable || apiRef.current.getCellMode(params.id, params.field) !== GridCellModes.View)
+        return;
+      let newParams = _extends({}, params, {
+        reason: GridCellEditStartReasons.compositionStart
+      });
+      apiRef.current.publishEvent("cellEditStart", newParams, event);
     }, [apiRef]), handleCellEditStart = React277.useCallback((params) => {
       let {
         id,
@@ -60468,7 +60625,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         id,
         field: field2
       };
-      (reason === GridCellEditStartReasons.printableKeyDown || reason === GridCellEditStartReasons.deleteKeyDown || reason === GridCellEditStartReasons.pasteKeyDown) && (startCellEditModeParams.deleteValue = !0), apiRef.current.startCellEditMode(startCellEditModeParams);
+      (reason === GridCellEditStartReasons.printableKeyDown || reason === GridCellEditStartReasons.deleteKeyDown || reason === GridCellEditStartReasons.pasteKeyDown || reason === GridCellEditStartReasons.compositionStart) && (startCellEditModeParams.deleteValue = !0), apiRef.current.startCellEditMode(startCellEditModeParams);
     }, [apiRef]), handleCellEditStop = React277.useCallback((params) => {
       let {
         id,
@@ -60494,7 +60651,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         apiRef.current.state.editRows[id][field2]?.error || callback(...args);
       }
     };
-    useGridEvent(apiRef, "cellDoubleClick", runIfEditModeIsCell(handleCellDoubleClick)), useGridEvent(apiRef, "cellFocusOut", runIfEditModeIsCell(handleCellFocusOut)), useGridEvent(apiRef, "cellKeyDown", runIfEditModeIsCell(handleCellKeyDown)), useGridEvent(apiRef, "cellEditStart", runIfEditModeIsCell(handleCellEditStart)), useGridEvent(apiRef, "cellEditStop", runIfEditModeIsCell(handleCellEditStop)), useGridEventPriority(apiRef, "cellEditStart", props.onCellEditStart), useGridEventPriority(apiRef, "cellEditStop", runIfNoFieldErrors(props.onCellEditStop));
+    useGridEvent(apiRef, "cellDoubleClick", runIfEditModeIsCell(handleCellDoubleClick)), useGridEvent(apiRef, "cellFocusOut", runIfEditModeIsCell(handleCellFocusOut)), useGridEvent(apiRef, "cellKeyDown", runIfEditModeIsCell(handleCellKeyDown)), useGridEvent(apiRef, "cellCompositionStart", runIfEditModeIsCell(handleCellCompositionStart)), useGridEvent(apiRef, "cellEditStart", runIfEditModeIsCell(handleCellEditStart)), useGridEvent(apiRef, "cellEditStop", runIfEditModeIsCell(handleCellEditStop)), useGridEventPriority(apiRef, "cellEditStart", props.onCellEditStart), useGridEventPriority(apiRef, "cellEditStop", runIfNoFieldErrors(props.onCellEditStop));
     let getCellMode = React277.useCallback((id, field2) => {
       let editingState = gridEditRowsStateSelector(apiRef);
       return editingState[id] && editingState[id][field2] ? GridCellModes.Edit : GridCellModes.View;
@@ -60747,7 +60904,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }, []);
     let handleCellKeyDown = React278.useCallback((params, event) => {
       if (params.cellMode === GridRowModes.Edit) {
-        if (event.which === 229)
+        if (isImeKeyDown(event))
           return;
         let reason;
         if (event.key === "Escape")
@@ -60771,6 +60928,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           apiRef.current.publishEvent("rowEditStop", newParams, event);
         }
       } else if (params.isEditable) {
+        if (isEventFromPreMountedEditor(event) && isImeKeyDown(event))
+          return;
         let reason;
         if (!apiRef.current.unstable_applyPipeProcessors("canStartEditing", !0, {
           event,
@@ -60786,7 +60945,15 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           apiRef.current.publishEvent("rowEditStart", newParams, event);
         }
       }
-    }, [apiRef, hasFieldsWithErrors]), handleRowEditStart = React278.useCallback((params) => {
+    }, [apiRef, hasFieldsWithErrors]), handleCellCompositionStart = React278.useCallback((params, event) => {
+      if (params.cellMode !== GridCellModes.View || !params.isEditable || apiRef.current.getRowMode(params.id) !== GridRowModes.View)
+        return;
+      let rowParams = apiRef.current.getRowParams(params.id), newParams = _extends({}, rowParams, {
+        field: params.field,
+        reason: GridRowEditStartReasons.compositionStart
+      });
+      apiRef.current.publishEvent("rowEditStart", newParams, event);
+    }, [apiRef]), handleRowEditStart = React278.useCallback((params) => {
       let {
         id,
         field: field2,
@@ -60795,7 +60962,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         id,
         fieldToFocus: field2
       };
-      (reason === GridRowEditStartReasons.printableKeyDown || reason === GridRowEditStartReasons.deleteKeyDown) && (startRowEditModeParams.deleteValue = !!field2), apiRef.current.startRowEditMode(startRowEditModeParams);
+      (reason === GridRowEditStartReasons.printableKeyDown || reason === GridRowEditStartReasons.deleteKeyDown || reason === GridRowEditStartReasons.compositionStart) && (startRowEditModeParams.deleteValue = !!field2), apiRef.current.startRowEditMode(startRowEditModeParams);
     }, [apiRef]), handleRowEditStop = React278.useCallback((params) => {
       let {
         id,
@@ -60813,7 +60980,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         cellToFocusAfter
       });
     }, [apiRef]);
-    useGridEvent(apiRef, "cellDoubleClick", runIfEditModeIsRow(handleCellDoubleClick)), useGridEvent(apiRef, "cellFocusIn", runIfEditModeIsRow(handleCellFocusIn)), useGridEvent(apiRef, "cellFocusOut", runIfEditModeIsRow(handleCellFocusOut)), useGridEvent(apiRef, "cellKeyDown", runIfEditModeIsRow(handleCellKeyDown)), useGridEvent(apiRef, "rowEditStart", runIfEditModeIsRow(handleRowEditStart)), useGridEvent(apiRef, "rowEditStop", runIfEditModeIsRow(handleRowEditStop)), useGridEventPriority(apiRef, "rowEditStart", props.onRowEditStart), useGridEventPriority(apiRef, "rowEditStop", props.onRowEditStop);
+    useGridEvent(apiRef, "cellDoubleClick", runIfEditModeIsRow(handleCellDoubleClick)), useGridEvent(apiRef, "cellFocusIn", runIfEditModeIsRow(handleCellFocusIn)), useGridEvent(apiRef, "cellFocusOut", runIfEditModeIsRow(handleCellFocusOut)), useGridEvent(apiRef, "cellKeyDown", runIfEditModeIsRow(handleCellKeyDown)), useGridEvent(apiRef, "cellCompositionStart", runIfEditModeIsRow(handleCellCompositionStart)), useGridEvent(apiRef, "rowEditStart", runIfEditModeIsRow(handleRowEditStart)), useGridEvent(apiRef, "rowEditStop", runIfEditModeIsRow(handleRowEditStop)), useGridEventPriority(apiRef, "rowEditStart", props.onRowEditStart), useGridEventPriority(apiRef, "rowEditStop", props.onRowEditStop);
     let getRowMode = React278.useCallback((id) => gridRowIsEditingSelector(apiRef, {
       rowId: id,
       editMode: props.editMode
@@ -61225,16 +61392,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         cache,
         throttle: !0
       });
-    }, [props.signature, props.dataSource, props.getRowId, throttledRowsChange, apiRef]), updateNestedRows = React280.useCallback((updates, groupKeys) => {
+    }, [props.signature, props.dataSource, props.getRowId, throttledRowsChange, apiRef]), updateNestedRows = React280.useCallback((updates, groupKeys, options) => {
       let nonPinnedRowsUpdates = computeRowsUpdates(apiRef, updates, props.getRowId), cache = updateCacheWithNewRows({
         updates: nonPinnedRowsUpdates,
         getRowId: props.getRowId,
         previousCache: apiRef.current.caches.rows,
-        groupKeys: groupKeys ?? []
+        groupKeys,
+        replaceChildrenOf: options?.replaceChildrenOf
       });
       throttledRowsChange({
         cache,
-        throttle: !1
+        throttle: options?.throttle ?? !1
       });
     }, [props.getRowId, throttledRowsChange, apiRef]), setLoading = React280.useCallback((loading) => {
       logger.debug(`Setting loading to ${loading}`), apiRef.current.setState((state2) => _extends({}, state2, {
@@ -61743,7 +61911,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }, selectionManager = createRowSelectionManager(newSelectionModel), isOrHasSelectableDescendant = (nodeId) => {
         let node2 = rowTree[nodeId];
         return !node2 || props.filterMode !== "server" && filteredRowsLookup[nodeId] === !1 ? !1 : node2.type !== "group" ? !!rowsLookup[nodeId] && apiRef.current.isRowSelectable(nodeId) : node2.children.some((childId) => isOrHasSelectableDescendant(childId));
-      }, hasChanged = !1;
+      }, hasAllRows = props.dataSource === void 0 && props.filterMode !== "server" && props.paginationMode !== "server", hasChanged = !1;
       if (isNested && props.rowSelectionPropagation?.descendants && currentSelection.type === "include" && currentSelection.ids.size > 0 && previousRowsLookup !== null && previousRowsLookup !== rowsLookup) {
         let isNewRow = (id) => rowsLookup[id] !== void 0 && previousRowsLookup[id] === void 0, inheritsSelection = (id) => {
           let parentId = rowTree[id]?.parent;
@@ -61753,6 +61921,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           isNewRow(id) && filteredRowsLookup[id] !== !1 && inheritsSelection(id) && apiRef.current.isRowSelectable(id) && (selectionManager.select(id), hasChanged = !0);
       }
       for (let id of currentSelection.ids) {
+        if (!selectionManager.has(id)) {
+          hasAllRows && !rowTree[id] && !props.keepNonExistentRowsSelected && (newSelectionModel.ids.delete(id), hasChanged = !0);
+          continue;
+        }
         if (isNonExistent(id)) {
           if (props.keepNonExistentRowsSelected)
             continue;
@@ -61786,7 +61958,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           }
         else
           apiRef.current.setRowSelectionModel(newSelectionModel, "multipleRowsSelection");
-    }, [apiRef, props.rowSelectionPropagation?.parents, props.rowSelectionPropagation?.descendants, props.keepNonExistentRowsSelected, props.filterMode, props.dataSource, canHaveMultipleSelection, getRowsToBeSelected]), handleSingleRowSelection = React282.useCallback((id, event) => {
+    }, [apiRef, props.rowSelectionPropagation?.parents, props.rowSelectionPropagation?.descendants, props.keepNonExistentRowsSelected, props.filterMode, props.paginationMode, props.dataSource, canHaveMultipleSelection, getRowsToBeSelected]), handleSingleRowSelection = React282.useCallback((id, event) => {
       let hasCtrlKey = event.metaKey || event.ctrlKey, isMultipleSelectionDisabled = !checkboxSelection && !hasCtrlKey && !isKeyboardEvent(event), resetSelection = !canHaveMultipleSelection || isMultipleSelectionDisabled, isSelected = apiRef.current.isRowSelected(id), newSelectionState = gridRowSelectionCountSelector(apiRef) > 1 && resetSelection || !isSelected;
       apiRef.current.selectRow(id, newSelectionState, resetSelection);
     }, [apiRef, canHaveMultipleSelection, checkboxSelection]), handleRowClick = React282.useCallback((params, event) => {
@@ -62041,28 +62213,66 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     if (elementOffset < scrollPosition)
       return elementOffset;
   }
-  var useGridScroll = (apiRef, props) => {
+  function isIndexInvalid(indexName, index, min2, max2, isPaginated = !1) {
+    return index === void 0 || Number.isInteger(index) && index >= min2 && index <= max2 ? !1 : (warnOnce([`MUI X: The \`${indexName}\` value passed to \`scrollToIndexes\` is invalid.`, `Use an integer between ${min2} and ${max2}${isPaginated ? " for the current page" : ""}.`, indexName === "rowIndex" ? "`rowIndex` is an index in the full filtered and sorted row list, not relative to the current page." : "`colIndex` is an index in the visible columns.", "See https://mui.com/x/react-data-grid/scrolling/#scrolling-to-specific-cells."].join(`
+`)), !0);
+  }
+  function getRowIndexBounds(apiRef, visibleRowCount) {
+    let pagination = gridPaginationSelector(apiRef);
+    if (pagination.enabled && pagination.paginationMode === "server") {
+      let rowIndexOffset = pagination.paginationModel.page * pagination.paginationModel.pageSize;
+      return {
+        firstRowIndex: rowIndexOffset,
+        lastRowIndex: rowIndexOffset + visibleRowCount - 1,
+        rowIndexOffset,
+        rowIndexLookupOffset: rowIndexOffset,
+        isPaginated: !0
+      };
+    }
+    let paginationRange = pagination.enabled ? gridPaginationRowRangeSelector(apiRef) : null;
+    return paginationRange ? {
+      firstRowIndex: paginationRange.firstRowIndex,
+      lastRowIndex: paginationRange.lastRowIndex,
+      rowIndexOffset: paginationRange.firstRowIndex,
+      rowIndexLookupOffset: 0,
+      isPaginated: !0
+    } : {
+      firstRowIndex: 0,
+      lastRowIndex: visibleRowCount - 1,
+      rowIndexOffset: 0,
+      rowIndexLookupOffset: 0,
+      isPaginated: pagination.enabled
+    };
+  }
+  var useGridScroll = (apiRef) => {
     let isRtl = useRtl(), logger = useGridLogger(apiRef, "useGridScroll"), colRef = apiRef.current.columnHeadersContainerRef, virtualScrollerRef = apiRef.current.virtualScrollerRef, scrollToIndexes = React285.useCallback((params) => {
-      let dimensions = gridDimensionsSelector(apiRef), totalRowCount = gridRowCountSelector(apiRef), visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
-      if (!(params.rowIndex == null) && totalRowCount === 0 || visibleColumns.length === 0)
+      let dimensions = gridDimensionsSelector(apiRef), visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef), visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef), rowIndex = params.rowIndex ?? void 0, colIndex = params.colIndex ?? void 0;
+      if (!(rowIndex === void 0) && visibleSortedRows.length === 0 || visibleColumns.length === 0)
         return !1;
-      logger.debug(`Scrolling to cell at row ${params.rowIndex}, col: ${params.colIndex} `);
+      let {
+        firstRowIndex,
+        lastRowIndex,
+        rowIndexOffset,
+        rowIndexLookupOffset,
+        isPaginated
+      } = getRowIndexBounds(apiRef, visibleSortedRows.length), hasInvalidRowIndex = isIndexInvalid("rowIndex", rowIndex, firstRowIndex, lastRowIndex, isPaginated), hasInvalidColIndex = isIndexInvalid("colIndex", colIndex, 0, visibleColumns.length - 1), targetRowIndex = hasInvalidRowIndex ? void 0 : rowIndex, targetColIndex = hasInvalidColIndex ? void 0 : colIndex, rowIndexInVisibleSortedRows = targetRowIndex === void 0 ? void 0 : targetRowIndex - rowIndexLookupOffset;
+      logger.debug(`Scrolling to cell at row ${targetRowIndex}, col: ${targetColIndex} `);
       let scrollCoordinates = {};
-      if (params.colIndex !== void 0 && visibleColumns[params.colIndex]) {
+      if (targetColIndex !== void 0) {
         let columnPositions = gridColumnPositionsSelector(apiRef), cellWidth;
-        if (typeof params.rowIndex < "u") {
-          let rowId = gridExpandedSortedRowEntriesSelector(apiRef)[params.rowIndex]?.id, cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, params.colIndex);
+        if (rowIndexInVisibleSortedRows !== void 0) {
+          let rowId = visibleSortedRows[rowIndexInVisibleSortedRows]?.id, cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(rowId, targetColIndex);
           cellColSpanInfo && !cellColSpanInfo.spannedByColSpan && (cellWidth = cellColSpanInfo.cellProps.width);
         }
-        typeof cellWidth > "u" && (cellWidth = visibleColumns[params.colIndex].computedWidth), scrollCoordinates.left = scrollIntoView({
+        cellWidth === void 0 && (cellWidth = visibleColumns[targetColIndex].computedWidth), scrollCoordinates.left = scrollIntoView({
           containerSize: dimensions.viewportOuterSize.width,
           scrollPosition: Math.abs(virtualScrollerRef.current?.scrollLeft ?? 0),
           elementSize: cellWidth,
-          elementOffset: columnPositions[params.colIndex]
+          elementOffset: columnPositions[targetColIndex]
         });
       }
-      if (params.rowIndex !== void 0) {
-        let rowsMeta = gridRowsMetaSelector(apiRef), page = gridPageSelector(apiRef), pageSize2 = gridPageSizeSelector(apiRef), elementIndex = props.pagination ? params.rowIndex - page * pageSize2 : params.rowIndex, targetOffsetHeight = rowsMeta.positions[elementIndex + 1] ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex] : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
+      if (targetRowIndex !== void 0) {
+        let rowsMeta = gridRowsMetaSelector(apiRef), elementIndex = targetRowIndex - rowIndexOffset, targetOffsetHeight = rowsMeta.positions[elementIndex + 1] ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex] : rowsMeta.currentPageTotalHeight - rowsMeta.positions[elementIndex];
         scrollCoordinates.top = scrollIntoView({
           containerSize: dimensions.viewportInnerSize.height,
           scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
@@ -62070,8 +62280,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           elementOffset: rowsMeta.positions[elementIndex]
         });
       }
-      return scrollCoordinates = apiRef.current.unstable_applyPipeProcessors("scrollToIndexes", scrollCoordinates, params), typeof scrollCoordinates.left < "u" || typeof scrollCoordinates.top < "u" ? (apiRef.current.scroll(scrollCoordinates), !0) : !1;
-    }, [logger, apiRef, virtualScrollerRef, props.pagination]), scroll = React285.useCallback((params) => {
+      return scrollCoordinates = apiRef.current.unstable_applyPipeProcessors("scrollToIndexes", scrollCoordinates, {
+        rowIndex: targetRowIndex,
+        colIndex: targetColIndex
+      }), typeof scrollCoordinates.left < "u" || typeof scrollCoordinates.top < "u" ? (apiRef.current.scroll(scrollCoordinates), !0) : !1;
+    }, [logger, apiRef, virtualScrollerRef]), scroll = React285.useCallback((params) => {
       if (virtualScrollerRef.current && params.left !== void 0 && colRef.current) {
         let direction = isRtl ? -1 : 1;
         colRef.current.scrollLeft = params.left, virtualScrollerRef.current.scrollLeft = direction * params.left, logger.debug(`Scrolling left: ${params.left}`);
@@ -63163,7 +63376,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
 
   // node_modules/@mui/x-data-grid/DataGrid/useDataGridComponent.mjs
   var useDataGridComponent = (apiRef, props, configuration2) => {
-    useGridInitialization(apiRef, props), useGridRowSelectionPreProcessors(apiRef, props), useGridRowsPreProcessors(apiRef), useGridInitializeState(propsStateInitializer, apiRef, props), useGridInitializeState(rowSelectionStateInitializer, apiRef, props), useGridInitializeState(columnsStateInitializer, apiRef, props), useGridInitializeState(rowsStateInitializer, apiRef, props), useGridInitializeState(paginationStateInitializer, apiRef, props), useGridInitializeState(editingStateInitializer, apiRef, props), useGridInitializeState(focusStateInitializer, apiRef, props), useGridInitializeState(sortingStateInitializer, apiRef, props), useGridInitializeState(preferencePanelStateInitializer, apiRef, props), useGridInitializeState(filterStateInitializer, apiRef, props), useGridInitializeState(rowSpanningStateInitializer, apiRef, props), useGridInitializeState(densityStateInitializer, apiRef, props), useGridInitializeState(columnResizeStateInitializer, apiRef, props), useGridInitializeState(columnMenuStateInitializer, apiRef, props), useGridInitializeState(columnGroupsStateInitializer, apiRef, props), useGridInitializeState(virtualizationStateInitializer, apiRef, props), useGridInitializeState(dimensionsStateInitializer, apiRef, props), useGridInitializeState(rowsMetaStateInitializer, apiRef, props), useGridInitializeState(listViewStateInitializer, apiRef, props), useGridKeyboardNavigation(apiRef, props), useGridRowSelection(apiRef, props), useGridColumns(apiRef, props), useGridRows(apiRef, props, configuration2), useGridRowSpanning(apiRef, props), useGridParamsApi(apiRef, props, configuration2), useGridColumnSpanning(apiRef), useGridColumnGrouping(apiRef, props), useGridEditing(apiRef, props, configuration2), useGridFocus(apiRef, props), useGridPreferencesPanel(apiRef, props), useGridFilter(apiRef, props, configuration2), useGridSorting(apiRef, props), useGridDensity(apiRef, props), useGridColumnResize(apiRef, props), useGridPagination(apiRef, props), useGridScroll(apiRef, props), useGridColumnMenu(apiRef), useGridCsvExport(apiRef, props), useGridPrintExport(apiRef, props), useGridClipboard(apiRef, props), useGridDimensions(apiRef, props), useGridEvents(apiRef, props), useGridStatePersistence(apiRef), useGridVirtualization(apiRef, props), useGridListView(apiRef, props), useGridDataSource(apiRef, props), useOnFirstRender(() => {
+    useGridInitialization(apiRef, props), useGridRowSelectionPreProcessors(apiRef, props), useGridRowsPreProcessors(apiRef), useGridInitializeState(propsStateInitializer, apiRef, props), useGridInitializeState(rowSelectionStateInitializer, apiRef, props), useGridInitializeState(columnsStateInitializer, apiRef, props), useGridInitializeState(rowsStateInitializer, apiRef, props), useGridInitializeState(paginationStateInitializer, apiRef, props), useGridInitializeState(editingStateInitializer, apiRef, props), useGridInitializeState(focusStateInitializer, apiRef, props), useGridInitializeState(sortingStateInitializer, apiRef, props), useGridInitializeState(preferencePanelStateInitializer, apiRef, props), useGridInitializeState(filterStateInitializer, apiRef, props), useGridInitializeState(rowSpanningStateInitializer, apiRef, props), useGridInitializeState(densityStateInitializer, apiRef, props), useGridInitializeState(columnResizeStateInitializer, apiRef, props), useGridInitializeState(columnMenuStateInitializer, apiRef, props), useGridInitializeState(columnGroupsStateInitializer, apiRef, props), useGridInitializeState(virtualizationStateInitializer, apiRef, props), useGridInitializeState(dimensionsStateInitializer, apiRef, props), useGridInitializeState(rowsMetaStateInitializer, apiRef, props), useGridInitializeState(listViewStateInitializer, apiRef, props), useGridKeyboardNavigation(apiRef, props), useGridRowSelection(apiRef, props), useGridColumns(apiRef, props), useGridRows(apiRef, props, configuration2), useGridRowSpanning(apiRef, props), useGridParamsApi(apiRef, props, configuration2), useGridColumnSpanning(apiRef), useGridColumnGrouping(apiRef, props), useGridEditing(apiRef, props, configuration2), useGridFocus(apiRef, props), useGridPreferencesPanel(apiRef, props), useGridFilter(apiRef, props, configuration2), useGridSorting(apiRef, props), useGridDensity(apiRef, props), useGridColumnResize(apiRef, props), useGridPagination(apiRef, props), useGridScroll(apiRef), useGridColumnMenu(apiRef), useGridCsvExport(apiRef, props), useGridPrintExport(apiRef, props), useGridClipboard(apiRef, props), useGridDimensions(apiRef, props), useGridEvents(apiRef, props), useGridStatePersistence(apiRef), useGridVirtualization(apiRef, props), useGridListView(apiRef, props), useGridDataSource(apiRef, props), useOnFirstRender(() => {
       apiRef.current.runAppliersForPendingProcessors();
     }), React296.useEffect(() => {
       apiRef.current.runAppliersForPendingProcessors();
@@ -63816,7 +64029,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         className: props.className,
         style: props.style,
         sx: props.sx
-      }, props.slotProps?.root, {
+      }, pickDataAttributes(props), props.slotProps?.root, {
         ref
       }))
     });
@@ -64035,6 +64248,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     // Boolean cell text
     booleanCellTrueLabel: "si",
     booleanCellFalseLabel: "no",
+    // Cell editor text
+    // emptyCellLabel: 'Empty',
     // Long text cell
     longTextCellExpandLabel: "Expandir",
     longTextCellCollapseLabel: "Contraer",
