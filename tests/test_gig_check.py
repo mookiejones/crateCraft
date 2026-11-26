@@ -1323,8 +1323,10 @@ class GigCheckTests(unittest.TestCase):
             "snapshot_id",
             "changes",
             "tag_diffs",
+            "update_safety",
         ):
             self.assertIn(field, script)
+        self.assertIn("Safe to update?", script)
         self.assertNotIn("innerHTML", src_page_text())
         guide = (ROOT / "docs" / "guide" / "gig-check.md").read_text(encoding="utf-8")
         self.assertIn(gig_check.EMPTY_CRATE_WARNING, guide)

@@ -34,6 +34,8 @@ test("gig check and Tempo drift render from context", async ({ page }) => {
   await expect(page.locator(".gig-score")).toContainText("72/100");
   await expect(page.locator(".gig-score")).toContainText("Not ready");
   await expect(page.locator("#gig-report")).toContainText("GIGDRIVE");
+  await expect(page.locator(".gig-update")).toContainText("Not cleared");
+  await expect(page.locator(".gig-update-fresh")).toContainText("5.1.0");
   await expect(page.locator("#drift-report")).toContainText("Tempo wanders");
   await expect(page.locator("#drift-report")).toContainText("Old Tape");
   await saveShot(page, "gig_drift_react");

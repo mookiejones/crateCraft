@@ -61,6 +61,26 @@ window.fetch = (input: RequestInfo | URL) => {
         }],
       },
       scope: { space: "Serato Library", crate_id: 5, crate_name: "Friday" },
+      update_safety: {
+        verdict: "not_cleared",
+        reasons: [{
+          code: "serato_below_os",
+          summary: "macOS 27 needs Serato 5.1.0.",
+          params: { os: "27", need: "5.1.0", installed: "5.0.0" },
+        }],
+        new_release_within_7_days: true,
+        releases: [{
+          product: "serato",
+          label: "Serato DJ Pro",
+          version: "5.1.0",
+          published: "2026-11-26",
+        }],
+        serato_version: "5.0.0",
+        os_name: "macos",
+        os_version: "27.0",
+        os_label: "macOS 27",
+        hardware: ["Rane ONE"],
+      },
     };
   return Promise.resolve(new Response(JSON.stringify(body), {
     status: 200,
