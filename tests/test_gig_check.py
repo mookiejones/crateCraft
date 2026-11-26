@@ -1315,6 +1315,8 @@ class GigCheckTests(unittest.TestCase):
             "missing_files",
             "unavailable_drives",
             "streaming_tracks",
+            "no_path_tracks",
+            "unchecked_tracks",
             "empty_crates",
             "cloud_files",
             "unknown_files",

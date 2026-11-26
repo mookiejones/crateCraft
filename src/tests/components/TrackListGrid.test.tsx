@@ -44,6 +44,18 @@ describe("Track list Data Grid", () => {
     await drainReactScheduler();
   });
 
+  it("shows a named unplayable reason with a tooltip, not only a color", () => {
+    state.tracks = [track(1, "Gone", { missing: true, unplayable_reason: "file missing" })];
+    state.view = [...state.tracks];
+    renderList();
+    const badge = document.querySelector<HTMLElement>("#list .unplayable-word");
+    expect(badge?.textContent).toBe("file missing");
+    expect(badge?.getAttribute("tabindex")).toBe("0");
+    expect(badge?.getAttribute("data-tooltip")).toContain("does not open");
+    expect(badge?.closest(".title-line")?.querySelector(".missing-word")).toBeNull();
+    expect(badge?.closest(".title-line")?.querySelector(".offline-word")).toBeNull();
+  });
+
   it("puts a checkbox column first on Crates, then Play, and Title holds only the name", () => {
     renderList();
     expect(headerFields()[0]).toBe("__check__");

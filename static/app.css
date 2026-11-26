@@ -65,6 +65,7 @@ a:focus-visible,
 .twist:focus-visible,
 .splitter:focus-visible,
 .waveform-overview:focus-visible,
+.unplayable-word:focus-visible,
 #portable-view-verdict:focus-visible {
   outline: 2px solid var(--cadmium);
   outline-offset: 2px;
@@ -1145,6 +1146,12 @@ button:disabled { cursor: default; }
 
 .offline-word {
   color: var(--quiet);
+  font-style: italic;
+  flex: none;
+}
+
+.unplayable-word {
+  color: var(--ink);
   font-style: italic;
   flex: none;
 }

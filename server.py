@@ -24,6 +24,8 @@ from urllib.parse import parse_qs, urlparse
 
 import album_art
 import app_config
+import cloud_files
+import unplayable
 import app_log
 import audio_stream
 import batch_run
@@ -1294,6 +1296,61 @@ def require_space(space: str | None) -> str:
     return chosen
 
 
+def _party_type(value: object) -> int | None:
+    """Return a third_party_type integer, or None.
+
+    Args:
+        value: Column value. A bool is not a marker.
+
+    Returns:
+        The integer, or None when the column is empty or not an integer.
+    """
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None
+    return value
+
+
+def _live_unplayable(tracks: list[object]) -> list[object]:
+    """Copy track rows and name the live unplayable reason on the copies.
+
+    The cached rows keep the stored path, location URI, and streaming
+    marker. They do not keep the reason. A later load computes it again.
+
+    Args:
+        tracks: Cached track dicts for one space.
+
+    Returns:
+        New dicts. ``unplayable_reason`` is set only when the check names
+        one of the five reasons. Private input keys are omitted.
+    """
+    roots = cloud_files.discover_roots()
+    mounts = volumes.Mounts()
+    copied: list[object] = []
+    for item in tracks:
+        if not isinstance(item, dict):
+            copied.append(item)
+            continue
+        row = dict(item)
+        portable = row.pop("_portable_id", "")
+        uri = row.pop("_location_uri", "")
+        party = row.pop("_third_party_type", None)
+        if not isinstance(portable, str):
+            portable = ""
+        if not isinstance(uri, str):
+            uri = ""
+        outcome = unplayable.unplayable_reason(
+            portable,
+            uri,
+            _party_type(party),
+            mounts=mounts,
+            roots=roots,
+        )
+        if outcome.reason in unplayable.REASONS:
+            row["unplayable_reason"] = outcome.reason
+        copied.append(row)
+    return copied
+
+
 def load_library(space: str | None = None) -> dict[str, object]:
     """Load the track list and crate tree for one space.
 
@@ -1309,6 +1366,8 @@ def load_library(space: str | None = None) -> dict[str, object]:
     chosen = require_space(space)
     with _lock:
         payload = dict(_load_library(chosen))
+    tracks = payload.get("tracks")
+    payload["tracks"] = _live_unplayable(tracks if isinstance(tracks, list) else [])
     info = as_dict(_library_call("status"))
     payload["serato"] = info
     payload["writable"] = info["writable"]
@@ -1354,7 +1413,7 @@ def _load_library(space: str) -> dict[str, object]:
                    a.file_size, a.time_added, a.rating, a.emoji,
                    a.comments, a.grouping, a.composer,
                    a.is_beatgrid_locked, a.dj_play_count, a.stems_analyze_state,
-                   a.file_bit_rate, a.portable_id, a.location_id,
+                   a.file_bit_rate, a.portable_id, a.location_id, a.third_party_type,
                    (SELECT MAX(e.start_time) FROM history_entry e
                     WHERE e.asset_id = a.id AND e.played) AS last_played
             FROM asset a
@@ -1395,6 +1454,9 @@ def _load_library(space: str) -> dict[str, object]:
                 "play_count": cell(row, "dj_play_count"),
                 "stems": int_flag(cell(row, "stems_analyze_state")),
                 "bitrate": cell(row, "file_bit_rate"),
+                "_portable_id": portable,
+                "_location_uri": uri,
+                "_third_party_type": _party_type(cell(row, "third_party_type")),
             }
             if drive is not None:
                 track["offline"] = 1
@@ -1765,6 +1827,10 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
     if drive is not None:
         payload["offline"] = True
         payload["offline_drive"] = drive
+    party = data.get("third_party_type")
+    outcome = unplayable.unplayable_reason(portable or "", location_uri, _party_type(party))
+    if outcome.reason in unplayable.REASONS:
+        payload["unplayable_reason"] = outcome.reason
     return payload
 
 

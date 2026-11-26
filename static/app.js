@@ -13885,8 +13885,8 @@ Error generating stack: ` + x.message + `
     "mode.energy": "Needs a crate. Writes the library, not the audio files. Quit Serato first.",
     "mode.missing": "Tracks whose files are missing on a connected drive.",
     "mode.missingOffline": {
-      one: "Tracks whose files are missing on a connected drive. {count} track on an unplugged drive is marked offline in crates.",
-      other: "Tracks whose files are missing on a connected drive. {count} tracks on unplugged drives are marked offline in crates."
+      one: "Tracks whose files are missing on a connected drive. {count} track on an unplugged drive is marked drive offline in crates.",
+      other: "Tracks whose files are missing on a connected drive. {count} tracks on unplugged drives are marked drive offline in crates."
     },
     "mode.portable": "Read-only. This check does not change the library.",
     "mode.scan": "Read-only. This check does not change the library.",
@@ -15014,7 +15014,7 @@ Error generating stack: ` + x.message + `
     "tooltip.viewAudio": "Notice a file replaced under the same name. Cues and the beatgrid may not fit. Saving a crate writes the library.",
     "tooltip.viewLost": "Fill a blank title or artist from the file. Writes the library, not the audio.",
     "tooltip.viewEnergy": "Write Energy 1–10 into a blank Grouping field. Needs a crate. Writes the library, not the audio.",
-    "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as offline.",
+    "tooltip.viewMissing": "Show tracks whose files are missing on a connected drive. Tracks on an unplugged drive stay in crates as drive offline.",
     "tooltip.viewPortable": "Check a portable Serato drive before a gig. Pick a connected drive. Read-only.",
     "tooltip.viewScan": "Find audio files that are empty, the wrong format, or will not decode. Read-only.",
     "tooltip.viewSnapshots": "Open backups. Hash-checked copies of the library, crates, and cue frames. Ctrl/Cmd+5.",
@@ -15045,8 +15045,18 @@ Error generating stack: ` + x.message + `
     "tooltip.wizardYes": "Share anonymous stats and crash reports.",
     "tooltip.zoomIn": "Show a shorter stretch of the waveform around the playhead.",
     "tooltip.zoomOut": "Show a longer stretch of the waveform around the playhead.",
+    "tooltip.trackReason.driveOffline": "The drive this track is on is unplugged. It is not a missing file.",
+    "tooltip.trackReason.fileMissing": "The drive is connected and the file does not open.",
+    "tooltip.trackReason.noPath": "This track has no file path and no drive location.",
+    "tooltip.trackReason.streaming": "This track is streaming. It is not a file on this computer.",
+    "tooltip.trackReason.unknown": "This track could not be checked. Nothing was changed.",
     "track.missingBadge": "missing",
     "track.offlineBadge": "offline",
+    "track.reason.driveOffline": "drive offline",
+    "track.reason.fileMissing": "file missing",
+    "track.reason.noPath": "no path",
+    "track.reason.streaming": "streaming",
+    "track.reason.unknown": "unknown",
     "track.numbered": "Track {id}",
     "track.stemsBadge": "stems",
     "track.untitled": "Untitled",
@@ -16715,8 +16725,8 @@ Error generating stack: ` + x.message + `
     "mode.energy": "Necesita una caja. Escribe en la biblioteca, no en los archivos de audio. Cierra Serato primero.",
     "mode.missing": "Pistas cuyo archivo falta en una unidad conectada.",
     "mode.missingOffline": {
-      one: "Pistas cuyo archivo falta en una unidad conectada. {count} pista en una unidad desconectada se marca como desconectada en las cajas.",
-      other: "Pistas cuyo archivo falta en una unidad conectada. {count} pistas en unidades desconectadas se marcan como desconectadas en las cajas."
+      one: "Pistas cuyo archivo falta en una unidad conectada. {count} pista en una unidad desconectada se marca como unidad desconectada en las cajas.",
+      other: "Pistas cuyo archivo falta en una unidad conectada. {count} pistas en unidades desconectadas se marcan como unidad desconectada en las cajas."
     },
     "mode.portable": "Solo lectura. Esta comprobación no cambia la biblioteca.",
     "mode.scan": "Solo lectura. Esta comprobación no cambia la biblioteca.",
@@ -17844,7 +17854,7 @@ Error generating stack: ` + x.message + `
     "tooltip.viewAudio": "Avisa de un archivo reemplazado con el mismo nombre. Los cues y la rejilla pueden no encajar. Guardar una caja escribe en la biblioteca.",
     "tooltip.viewLost": "Rellena título o artista en blanco desde el archivo. Escribe en la biblioteca, no en el audio.",
     "tooltip.viewEnergy": "Escribe Energía 1–10 en una Agrupación en blanco. Necesita una caja. Escribe en la biblioteca, no en el audio.",
-    "tooltip.viewMissing": "Muestra las pistas cuyo archivo falta en una unidad conectada. Las pistas en una unidad desconectada se quedan en las cajas como desconectadas.",
+    "tooltip.viewMissing": "Muestra las pistas cuyo archivo falta en una unidad conectada. Las pistas en una unidad desconectada se quedan en las cajas como unidad desconectada.",
     "tooltip.viewPortable": "Comprueba una unidad Serato portátil antes del bolo. Elige una unidad conectada. Solo lectura.",
     "tooltip.viewScan": "Busca archivos de audio vacíos, con el formato incorrecto o que no se pueden decodificar. Solo lectura.",
     "tooltip.viewSnapshots": "Abre las copias de seguridad. Copias comprobadas de la biblioteca, las cajas y los cues. Ctrl/Cmd+5.",
@@ -17875,8 +17885,18 @@ Error generating stack: ` + x.message + `
     "tooltip.wizardYes": "Comparte estadísticas anónimas e informes de fallos.",
     "tooltip.zoomIn": "Muestra un tramo más corto de la forma de onda alrededor del cursor.",
     "tooltip.zoomOut": "Muestra un tramo más largo de la forma de onda alrededor del cursor.",
+    "tooltip.trackReason.driveOffline": "La unidad de esta pista está desconectada. No es un archivo que falta.",
+    "tooltip.trackReason.fileMissing": "La unidad está conectada y el archivo no se abre.",
+    "tooltip.trackReason.noPath": "Esta pista no tiene ruta de archivo ni ubicación de unidad.",
+    "tooltip.trackReason.streaming": "Esta pista es streaming. No es un archivo en este ordenador.",
+    "tooltip.trackReason.unknown": "No se pudo comprobar esta pista. No se cambió nada.",
     "track.missingBadge": "no encontrada",
     "track.offlineBadge": "desconectada",
+    "track.reason.driveOffline": "unidad desconectada",
+    "track.reason.fileMissing": "archivo ausente",
+    "track.reason.noPath": "sin ruta",
+    "track.reason.streaming": "en streaming",
+    "track.reason.unknown": "desconocido",
     "track.numbered": "Pista {id}",
     "track.stemsBadge": "stems",
     "track.untitled": "Sin título",
@@ -19291,6 +19311,11 @@ Error generating stack: ` + x.message + `
     volume: spec("tooltip.volume"),
     zoomIn: spec("tooltip.zoomIn"),
     zoomOut: spec("tooltip.zoomOut"),
+    trackReasonDriveOffline: spec("tooltip.trackReason.driveOffline"),
+    trackReasonFileMissing: spec("tooltip.trackReason.fileMissing"),
+    trackReasonNoPath: spec("tooltip.trackReason.noPath"),
+    trackReasonStreaming: spec("tooltip.trackReason.streaming"),
+    trackReasonUnknown: spec("tooltip.trackReason.unknown"),
     overview: spec("tooltip.overview"),
     smartRules: spec("tooltip.smartRules"),
     saveRules: spec("tooltip.saveRules"),
@@ -64571,6 +64596,36 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     );
   }
 
+  // src/lib/tracks/unplayable-reason.ts
+  var UNPLAYABLE_REASONS = [
+    "streaming",
+    "drive offline",
+    "file missing",
+    "no path",
+    "unknown"
+  ], LABEL = {
+    streaming: "track.reason.streaming",
+    "drive offline": "track.reason.driveOffline",
+    "file missing": "track.reason.fileMissing",
+    "no path": "track.reason.noPath",
+    unknown: "track.reason.unknown"
+  }, TIP = {
+    streaming: tips.trackReasonStreaming,
+    "drive offline": tips.trackReasonDriveOffline,
+    "file missing": tips.trackReasonFileMissing,
+    "no path": tips.trackReasonNoPath,
+    unknown: tips.trackReasonUnknown
+  };
+  function isUnplayableReason(value) {
+    return typeof value == "string" && UNPLAYABLE_REASONS.includes(value);
+  }
+  function unplayableLabel(reason) {
+    return t(LABEL[reason]);
+  }
+  function unplayableTip(reason) {
+    return TIP[reason];
+  }
+
   // src/lib/ui/track-list-columns.tsx
   var import_jsx_runtime232 = __toESM(require_jsx_runtime(), 1), HISTORY_PLAYED_WIDTH = 136, TRACK_COLUMN_FIELDS = [
     "name",
@@ -64616,12 +64671,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
   }
   function TrackTitleCell({ track }) {
-    let hex = colorHex(track.color);
+    let hex = colorHex(track.color), reason = isUnplayableReason(track.unplayable_reason) ? track.unplayable_reason : null;
     return /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime232.jsxs)("span", { className: "title-line", children: [
       hex ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
       track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { children: track.emoji }) : null,
       /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
-      track.offline ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
+      reason ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "unplayable-word", tabIndex: 0, ref: tooltipRef(unplayableTip(reason)), children: unplayableLabel(reason) }) : track.offline ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
       track.stems ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
     ] }) });
   }
@@ -73049,17 +73104,36 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       return diff ? tagDiffText(diff) : path;
     }) : (changes.tag_diffs || []).map(tagDiffText);
   }
+  function withReason(text2, reason, fallback) {
+    let code = isUnplayableReason(reason) ? reason : fallback;
+    return `${text2} — ${unplayableLabel(code)}`;
+  }
   function gigLinesFor(payload, index) {
     if (index === 0)
       return (payload.unavailable_drives || []).map(
-        (drive) => t("gig.driveUnavailable", { name: drive.name, count: drive.track_count })
+        (drive) => withReason(
+          t("gig.driveUnavailable", { name: drive.name, count: drive.track_count }),
+          drive.reason,
+          "drive offline"
+        )
       );
-    if (index === 1) return (payload.missing_files || []).map((item) => item.path);
-    if (index === 2) {
-      let locations = (payload.cloud_locations || []).map((item) => cloudLocationText(item)), files = (payload.cloud_files || []).map((item) => item.path), unknown = (payload.unknown_files || []).map((item) => t("gig.cloudUnknown", { path: item.path }));
-      return [...locations, ...files, ...unknown];
+    if (index === 1) {
+      let missing = (payload.missing_files || []).map(
+        (item) => withReason(item.path, item.reason, "file missing")
+      ), noPath = (payload.no_path_tracks || []).map(
+        (item) => withReason(item.path || item.title, item.reason, "no path")
+      );
+      return [...missing, ...noPath];
     }
-    return index === 3 ? (payload.streaming_tracks || []).map((item) => `${item.service}: ${item.title}`) : index === 4 ? (payload.empty_crates || []).map((item) => `${item.name} — ${item.warning}`) : [];
+    if (index === 2) {
+      let locations = (payload.cloud_locations || []).map((item) => cloudLocationText(item)), files = (payload.cloud_files || []).map((item) => item.path), unknown = (payload.unknown_files || []).map((item) => t("gig.cloudUnknown", { path: item.path })), unchecked = (payload.unchecked_tracks || []).map(
+        (item) => withReason(item.path || item.title, item.reason, "unknown")
+      );
+      return [...locations, ...files, ...unknown, ...unchecked];
+    }
+    return index === 3 ? (payload.streaming_tracks || []).map(
+      (item) => withReason(`${item.service}: ${item.title}`, item.reason, "streaming")
+    ) : index === 4 ? (payload.empty_crates || []).map((item) => `${item.name} — ${item.warning}`) : [];
   }
   function gigScopeLabel(payload) {
     return payload.scope?.crate_name || t("gig.wholeSpace");

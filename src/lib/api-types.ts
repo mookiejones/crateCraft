@@ -113,6 +113,8 @@ export interface Track {
   offline?: boolean;
   /** Drive name when `offline` is set. */
   offline_drive?: string;
+  /** Live reason: streaming, drive offline, file missing, no path, or unknown. */
+  unplayable_reason?: string | null;
   stems?: boolean;
   entry?: boolean;
   deck?: string;
@@ -867,14 +869,24 @@ export interface CloudFilesReport {
   error?: string;
 }
 
+export interface GigPathRow {
+  path: string;
+  title: string;
+  artist: string;
+  crate: string;
+  reason?: string;
+}
+
 export interface GigReport {
   ready: boolean;
   score: number;
   hard_red: boolean;
   holding_it_back?: GigDeduction[];
-  missing_files?: Array<{ path: string; title: string; artist: string; crate: string }>;
-  unavailable_drives?: Array<{ name: string; track_count: number; crates: string[] }>;
-  streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string }>;
+  missing_files?: GigPathRow[];
+  unavailable_drives?: Array<{ name: string; track_count: number; crates: string[]; reason?: string }>;
+  streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string; reason?: string }>;
+  no_path_tracks?: GigPathRow[];
+  unchecked_tracks?: GigPathRow[];
   empty_crates?: Array<{ name: string; warning: string }>;
   cloud_files?: CloudTrack[];
   unknown_files?: CloudTrack[];

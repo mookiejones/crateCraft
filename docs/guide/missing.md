@@ -1,8 +1,10 @@
 # Missing files
 
-**Missing files** lists tracks whose files are missing on a connected drive. The note under the view buttons says **Tracks whose files are missing on a connected drive.** When tracks sit on an unplugged drive, the note says how many, and those rows stay in crates with the word **offline**. They are not listed here, so Relink does not point them at another file.
+**Missing files** lists tracks whose files are missing on a connected drive. The note under the view buttons says **Tracks whose files are missing on a connected drive.** When tracks sit on an unplugged drive, the note says how many, and those rows stay in crates with the words **drive offline**. They are not listed here, so Relink does not point them at another file.
 
-A missing row shows the word **missing**. An offline row uses a quieter **offline** label, not the missing color.
+A crate row names why a track will not play: **streaming**, **drive offline**, **file missing**, or **no path**. **unknown** means the check could not run. The words are checked again each time the list loads. They are not saved. Plug the drive back in and load the list again. The old **drive offline** word does not stay. A file that opens has no reason word. A streaming track is not a missing file. Hover the word, or tab to it, for the explanation. The word is not color alone.
+
+A row that still uses the older labels shows **missing** or **offline** when the live check has no named reason.
 
 ## Relink missing files
 
