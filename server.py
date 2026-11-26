@@ -2247,15 +2247,29 @@ class Handler(BaseHTTPRequestHandler):
                     query_text(query, "hot_loops", "0") or "0", default=False, name="hot_loops"
                 )
                 key_notation = query_text(query, "key", "asis") or "asis"
+                # Default parse_qs drops frozen=. Keep the blank so an empty value is 400.
+                frozen = rekordbox.parse_frozen(
+                    query_text(parse_qs(parsed.query, keep_blank_values=True), "frozen")
+                )
+                smart_crates: list[dict[str, object]] = []
                 xml_text, report = rekordbox.export_rekordbox(
                     space,
                     crate_id,
                     memory_cues=memory,
                     hot_loops=hot_loops,
                     key_notation=key_notation,
+                    frozen=frozen,
+                    summary=smart_crates,
                 )
                 if (query_text(query, "report", "") or "") == "1":
-                    self.send_json({"report": report, "xml": xml_text, "filename": "rekordbox.xml"})
+                    self.send_json(
+                        {
+                            "report": report,
+                            "xml": xml_text,
+                            "filename": "rekordbox.xml",
+                            "smart_crates": smart_crates,
+                        }
+                    )
                     return
                 body = xml_text.encode("utf-8")
                 self.send_response(200)

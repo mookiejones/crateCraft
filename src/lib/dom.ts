@@ -281,6 +281,7 @@ export interface ElementIds {
   "rekordbox-hot-loops": HTMLInputElement;
   "rekordbox-key": HTMLSelectElement;
   "rekordbox-report": HTMLUListElement;
+  "rekordbox-smart": HTMLDivElement;
   "export-rekordbox": HTMLButtonElement;
   "rekordbox-status": HTMLParagraphElement;
   "rekordbox-dialog": HTMLDialogElement;

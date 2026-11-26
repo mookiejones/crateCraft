@@ -936,6 +936,10 @@ export function keepCopy(name: string): TipSpec {
   return spec("tooltip.keepCopy", { name });
 }
 
+export function rekordboxSmartFreeze(name: string): TipSpec {
+  return spec("tooltip.rekordboxSmartFreeze", { name });
+}
+
 export function quickOpenHit(kind: string, title: string, detail: string): TipSpec {
   if (detail) return spec("tooltip.quickOpenHitDetail", { kind, title, detail });
   return spec("tooltip.quickOpenHit", { kind, title });

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { loadPrivacy, rankReplaceCandidates, rekordboxExportUrl, renderCratesReplacePreview, renderMergePreview, saveRekordboxExport, wireDialogs } from "../lib/ui/dialogs";
+import { loadPrivacy, rankReplaceCandidates, rekordboxExportUrl, renderCratesReplacePreview, renderMergePreview, saveRekordboxExport, unmountRekordboxSmart, wireDialogs } from "../lib/ui/dialogs";
 import { el } from "../lib/dom";
 import { setLocale } from "../lib/i18n";
 import { state } from "../lib/state";
@@ -52,6 +52,7 @@ describe("playlist export chrome", () => {
   });
 
   afterEach(async () => {
+    unmountRekordboxSmart();
     unmountSharedDialogs();
     await drainReactScheduler();
     vi.unstubAllGlobals();
@@ -190,6 +191,7 @@ describe("Rekordbox export settings", () => {
   });
 
   afterEach(async () => {
+    unmountRekordboxSmart();
     unmountSharedDialogs();
     await drainReactScheduler();
     vi.unstubAllGlobals();
@@ -292,6 +294,54 @@ describe("Rekordbox export settings", () => {
     await saveRekordboxExport();
     expect(memoryCues().checked).toBe(false);
     expect(rekordboxExportUrl(false)).toContain("memory=0");
+  });
+
+  it("names each rule class and refetches with frozen=none when the box is cleared", async () => {
+    const fetchMock = vi.mocked(fetch);
+    fetchMock.mockResolvedValue(settingsResponse({
+      telemetry_consent: null,
+      needs_consent_prompt: false,
+    }));
+    wireDialogs();
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    fetchMock.mockClear();
+    fetchMock.mockResolvedValue(settingsResponse({
+      xml: "<?xml version=\"1.0\"?><DJ_PLAYLISTS/>",
+      report: ["Smart crate 'Chinese Pop': rule 'location contains' has no rekordbox equivalent."],
+      smart_crates: [{
+        id: 7,
+        name: "Chinese Pop",
+        frozen: true,
+        stored_count: 2,
+        written_count: 1,
+        mismatch: true,
+        status: "rules",
+        rules: [
+          { label: "genre is", classification: "exact" },
+          { label: "genre contains", classification: "approximate" },
+          { label: "location contains", classification: "impossible" },
+        ],
+      }],
+    }));
+    el("export-rekordbox").click();
+    await vi.waitFor(() => expect(document.getElementById("rekordbox-freeze-7")).toBeTruthy());
+    const box = document.getElementById("rekordbox-freeze-7") as HTMLInputElement;
+    expect(box.checked).toBe(true);
+    expect(box.dataset.tooltipKey).toBe("tooltip.rekordboxSmartFreeze");
+    const text = el("rekordbox-smart").textContent ?? "";
+    expect(text).toContain("Freeze today's tracks for Chinese Pop");
+    expect(text).toContain("genre is: Exact");
+    expect(text).toContain("genre contains: Approximate");
+    expect(text).toContain("location contains: Impossible");
+    expect(text).toContain("This comparison did not run Rekordbox.");
+    const opened = String(fetchMock.mock.calls.at(-1)?.[0]);
+    expect(opened).toContain("report=1");
+    expect(opened).not.toContain("frozen=");
+    fetchMock.mockClear();
+    box.click();
+    await vi.waitFor(() => {
+      expect(String(fetchMock.mock.calls.at(-1)?.[0])).toContain("frozen=none");
+    });
   });
 });
 

@@ -9,6 +9,7 @@ from __future__ import annotations
 import base64
 import contextlib
 import io
+import json
 import struct
 import unicodedata
 import unittest
@@ -1974,3 +1975,223 @@ class ParseTests(unittest.TestCase):
             rekordbox.parse_rekordbox("<playlist></playlist>")
         with self.assertRaises(ValueError):
             rekordbox.parse_rekordbox("not xml")
+
+
+def _playlist_named(xml_text: str, name: str) -> ElementTree.Element:
+    """Return the playlist node with this visible name.
+
+    Args:
+        xml_text: Export XML.
+        name: Playlist name.
+
+    Returns:
+        The Type 1 NODE.
+
+    Raises:
+        AssertionError: If that playlist is missing.
+    """
+    root = ElementTree.fromstring(xml_text)
+    for node in root.iter("NODE"):
+        if node.get("Type") == "1" and node.get("Name") == name:
+            return node
+    raise AssertionError(name)
+
+
+def _plant_smart(
+    temp: TempLibrary,
+    crate_id: int,
+    name: str,
+    rules: dict[str, object],
+    members: list[int],
+) -> None:
+    """Insert one smart crate, its rules JSON, and stored members.
+
+    The rows go straight into the temporary database. That skips the
+    Serato-open write gate. Export still only reads.
+
+    Args:
+        temp: Temporary library.
+        crate_id: Container id. Must be unused in this database.
+        name: Display name stored in container.name.
+        rules: Rules object with a rules list.
+        members: Asset ids in playlist order. An id that is not an asset
+            stays stored and is omitted from the collection.
+
+    Returns:
+        None.
+    """
+    blob = json.dumps(rules, ensure_ascii=False, separators=(",", ":"))
+    with open_database(temp.db) as conn:
+        conn.execute(
+            """
+            INSERT INTO container
+                (id, parent_id, name, type, list_order, space_id, time_added, expanded, portable_id)
+            VALUES (?, 1, ?, 2, ?, 1, 1, 0, '')
+            """,
+            (crate_id, name, crate_id),
+        )
+        conn.execute(
+            "INSERT INTO smart_crate_rules (container_id, version, rules) VALUES (?, 1, ?)",
+            (crate_id, blob),
+        )
+        link = crate_id + 100
+        conn.execute(
+            "INSERT INTO location_container (id, container_id, location_id) VALUES (?, ?, 1)",
+            (link, crate_id),
+        )
+        for order, asset_id in enumerate(members):
+            conn.execute(
+                """
+                INSERT INTO container_asset (id, asset_id, location_container_id, list_order)
+                VALUES (?, ?, ?, ?)
+                """,
+                (link * 10 + order, asset_id, link, order),
+            )
+
+
+class SmartCrateExportTests(unittest.TestCase):
+    """Classify stored rules and compare stored members with the playlist."""
+
+    def test_frozen_playlist_names_each_class_and_a_count_mismatch(self) -> None:
+        """Freeze stored tracks and name exact, approximate, and impossible rules.
+
+        A member that is not in the collection is stored but not written.
+        The comparison says Rekordbox did not run. Location contains is not
+        rewritten as filename contains. The library file is not written.
+
+        Returns:
+            None. The test fails if a class, the playlist, or the count is wrong.
+        """
+        rules = {
+            "conjunction": "AND",
+            "live_updates": True,
+            "spaces": ["Serato Library"],
+            "rules": [
+                {"type": "STRING", "attribute": "genre", "operation": "IS", "version": 1, "value": "House"},
+                {"type": "STRING", "attribute": "genre", "operation": "CONTAINS", "version": 1, "value": "pop"},
+                {"type": "STRING", "attribute": "key", "operation": "IS", "version": 1, "value": "8A"},
+                {
+                    "type": "STRING",
+                    "attribute": "location",
+                    "operation": "CONTAINS",
+                    "version": 1,
+                    "value": "ONLYLOCATION",
+                },
+                {
+                    "type": "UINT32",
+                    "attribute": "bpm",
+                    "operation": "GREATER_THAN_OR_EQUAL_TO",
+                    "version": 1,
+                    "value": "120",
+                },
+            ],
+        }
+        with TempLibrary() as temp:
+            _plant_smart(temp, 40, "Chinese Pop", rules, [1, 99])
+            before = temp.db.stat().st_mtime_ns
+            xml_text, report = rekordbox.export_rekordbox("Serato Library", None)
+            self.assertEqual(temp.db.stat().st_mtime_ns, before)
+            text = "\n".join(report)
+            self.assertIn(
+                "Smart crates are ordinary playlists in this file. Their rules are not copied.",
+                text,
+            )
+            self.assertIn(
+                "Smart crate 'Chinese Pop': rule 'genre is' is exact. "
+                "The same field is already written on each track. It is not a rekordbox smart-list rule.",
+                text,
+            )
+            self.assertIn("rule 'genre contains' is approximate, not fully compatible", text)
+            self.assertIn("rule 'key is' is approximate, not fully compatible", text)
+            self.assertIn("rule 'bpm is at least' is exact", text)
+            self.assertIn(
+                "Smart crate 'Chinese Pop': rule 'location contains' has no rekordbox equivalent.",
+                text,
+            )
+            self.assertNotIn("filename contains", text)
+            self.assertNotIn("ONLYLOCATION", xml_text)
+            self.assertIn(
+                "Smart crate 'Chinese Pop': Serato had stored 2 tracks. This playlist lists 1. "
+                "This comparison did not run Rekordbox.",
+                text,
+            )
+            playlist = _playlist_named(xml_text, "Chinese Pop")
+            self.assertEqual(playlist.get("Entries"), "1")
+            self.assertEqual([track.get("Key") for track in playlist.findall("TRACK")], ["1"])
+
+    def test_leaving_freeze_off_does_not_rewrite_the_rule(self) -> None:
+        """Leave a non-frozen smart crate empty instead of mapping the rule.
+
+        Returns:
+            None. The test fails if the playlist keeps the stored track or the
+            location value is written.
+        """
+        rules = {
+            "rules": [
+                {
+                    "type": "STRING",
+                    "attribute": "location",
+                    "operation": "CONTAINS",
+                    "version": 1,
+                    "value": "ONLYLOCATION",
+                }
+            ]
+        }
+        with TempLibrary() as temp:
+            _plant_smart(temp, 40, "Chinese Pop", rules, [1])
+            summary: list[dict[str, object]] = []
+            xml_text, report = rekordbox.export_rekordbox(
+                "Serato Library",
+                None,
+                frozen=frozenset(),
+                summary=summary,
+            )
+            playlist = _playlist_named(xml_text, "Chinese Pop")
+            self.assertEqual(playlist.get("Entries"), "0")
+            self.assertEqual(playlist.findall("TRACK"), [])
+            self.assertNotIn("ONLYLOCATION", xml_text)
+            text = "\n".join(report)
+            self.assertIn("Smart crate 'Chinese Pop' was not frozen.", text)
+            self.assertIn("was not rewritten as a different field", text)
+            self.assertIn("has no rekordbox equivalent", text)
+            self.assertNotIn("filename contains", text)
+            self.assertIn(
+                "Serato had stored 1 tracks. This playlist lists 0. This comparison did not run Rekordbox.",
+                text,
+            )
+            self.assertEqual(summary[0]["mismatch"], True)
+            self.assertEqual(summary[0]["written_count"], 0)
+            self.assertEqual(summary[0]["rules"], [{"label": "location contains", "classification": "impossible"}])
+
+    def test_matching_stored_count_is_not_flagged(self) -> None:
+        """Skip the mismatch line when the playlist lists every stored track.
+
+        Returns:
+            None. The test fails if a matching count is called a mismatch.
+        """
+        rules = {"rules": [{"attribute": "genre", "operation": "IS", "value": "House"}]}
+        with TempLibrary() as temp:
+            crate_id = 41
+            _plant_smart(temp, crate_id, "Exact House", rules, [1])
+            _xml_text, report = rekordbox.export_rekordbox(
+                "Serato Library", None, frozen=frozenset({crate_id})
+            )
+            text = "\n".join(report)
+            self.assertIn("was exported as a frozen playlist", text)
+            self.assertNotIn("did not run Rekordbox", text)
+            self.assertIn("rule 'genre is' is exact", text)
+
+    def test_parse_frozen_accepts_none_and_ids(self) -> None:
+        """Read omitted, none, and ids, and reject a bad token.
+
+        Returns:
+            None. The test fails if a bad token is treated as freeze-all.
+        """
+        self.assertIsNone(rekordbox.parse_frozen(None))
+        self.assertEqual(rekordbox.parse_frozen("none"), frozenset())
+        self.assertEqual(rekordbox.parse_frozen(" NONE "), frozenset())
+        self.assertEqual(rekordbox.parse_frozen(" 4, 2 "), frozenset({4, 2}))
+        for raw in ("", "1,", "nope", str(2**63)):
+            with self.subTest(raw=raw):
+                with self.assertRaises(library.LibraryError):
+                    rekordbox.parse_frozen(raw)

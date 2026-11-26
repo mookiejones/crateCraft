@@ -29,7 +29,7 @@ The dialog names a crate that uses an emoji or a non-Latin script, a beatgrid ma
 6. Read the dialog **Download rekordbox.xml?**
 7. Click **Download**. **Cancel** writes nothing.
 
-Subcrates become nested playlist folders. A crate that has tracks and subcrates becomes a folder, and its own tracks are a playlist of the same name inside that folder. Smart crates become ordinary playlists. Their rules are not copied.
+Subcrates become nested playlist folders. A crate that has tracks and subcrates becomes a folder, and its own tracks are a playlist of the same name inside that folder. Smart crates become ordinary playlists. Their rules are not copied. The dialog names each rule **Exact**, **Approximate**, or **Impossible**. **Location contains** is **Impossible** and is not rewritten as filename contains. **Freeze today's tracks** writes the tracks Serato had stored. Clear that box and the playlist is empty. A difference between the stored count and the tracks in that playlist is named. That count is not from Rekordbox.
 
 In Rekordbox 6 and 7 the import is **Preferences**, **Advanced**, **Database**, **rekordbox xml**. A track already in the collection stays as it is until you select the tracks in that list, choose **Import to Collection**, and answer **Yes** to **load information from imported library**. That replaces cues, the beatgrid, and tags in Rekordbox.
 

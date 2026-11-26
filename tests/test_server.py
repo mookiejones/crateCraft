@@ -500,6 +500,7 @@ class ApiTests(unittest.TestCase):
         self.assertTrue(summary["xml"].startswith("<?xml"))
         self.assertIn("Colour", " ".join(summary["report"]))
         self.assertIn("smart crate", " ".join(summary["report"]).lower())
+        self.assertEqual(summary["smart_crates"], [])
         status, bad_crate = self.request("/api/export.rekordbox.xml?crate=nope")
         self.assertEqual(status, 400)
         self.assertIn("not valid", bad_crate)
@@ -561,6 +562,34 @@ class ApiTests(unittest.TestCase):
                     self.assertTrue(str(body).startswith('{"'))
                     self.assertIs(export.call_args.kwargs["hot_loops"], expected)
                     self.assertIs(export.call_args.kwargs["memory_cues"], True)
+
+    def test_frozen_reaches_the_export(self) -> None:
+        """Pass the freeze query through, and reject a token that is not an id.
+
+        Omitted ``frozen`` freezes every smart crate. ``none`` freezes none.
+        A comma-separated list freezes those ids. ``nope`` and an empty
+        value are 400. The export function is replaced.
+
+        Returns:
+            None. The test fails if the set passed to the export differs.
+        """
+        sentinel = ('<?xml version="1.0" encoding="UTF-8"?>\n<DJ_PLAYLISTS/>', [])
+        with unittest.mock.patch.object(server.rekordbox, "export_rekordbox", return_value=sentinel) as export:
+            status, _body = self.request("/api/export.rekordbox.xml?crate=all&report=1")
+            self.assertEqual(status, 200)
+            self.assertIsNone(export.call_args.kwargs["frozen"])
+            status, _body = self.request("/api/export.rekordbox.xml?crate=all&report=1&frozen=none")
+            self.assertEqual(status, 200)
+            self.assertEqual(export.call_args.kwargs["frozen"], frozenset())
+            status, _body = self.request("/api/export.rekordbox.xml?crate=all&report=1&frozen=4,2")
+            self.assertEqual(status, 200)
+            self.assertEqual(export.call_args.kwargs["frozen"], frozenset({4, 2}))
+            status, bad = self.request("/api/export.rekordbox.xml?crate=all&report=1&frozen=nope")
+            self.assertEqual(status, 400)
+            self.assertIn("not valid", bad)
+            status, empty = self.request("/api/export.rekordbox.xml?crate=all&report=1&frozen=")
+            self.assertEqual(status, 400)
+            self.assertIn("not valid", empty)
 
     def test_served_page_renders_hot_loops(self) -> None:
         """Serve the Hot loops control with its label and help line.
