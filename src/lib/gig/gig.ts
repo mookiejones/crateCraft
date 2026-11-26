@@ -10,6 +10,8 @@
  * Page text is in the locale catalogs under gig.*. The report sentences
  * the server writes (holding_it_back, snapshot_note, empty-crate
  * warnings) stay in English, as the Rekordbox loss report does.
+ * The older-deck warning is the exception: the page shows `gig.deckFreeze`
+ * so Spanish can name the same four categories. The check does not write.
  */
 
 import { createElement } from "react";
@@ -140,6 +142,9 @@ export function wireGigCheck(exit: () => void): void {
   el("gig-refresh").addEventListener("click", () => {
     void loadGigCheck(true);
   });
+  el("gig-target").addEventListener("change", () => {
+    void loadGigCheck(true);
+  });
   el("tonight-build").addEventListener("click", () => {
     void buildTonightCrates();
   });
@@ -161,9 +166,10 @@ export async function loadGigCheck(keepStep = false): Promise<void> {
   beginBusy();
   let settle: "heading" | "retry" | "none" = "none";
   const crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+  const target = el("gig-target").value || "unknown";
   try {
     const response = await fetch(
-      `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`,
+      `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&target=${encodeURIComponent(target)}`,
     );
     if (token !== state.gigToken) return;
     const payload = await readJSON<GigReport>(response).catch((): null => null);

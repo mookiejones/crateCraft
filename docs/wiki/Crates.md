@@ -47,6 +47,8 @@ A smart crate shows **smart**. You cannot tick it in the track's crate list. Put
 
 **Tonight crates** on **Ready** (under Gig) builds **Newest adds**, **Most played**, and by-decade crates under `_crateCraft generated` / `Tonight`. Quit Serato first. A re-run replaces only that Tonight folder. Crates you made yourself stay put.
 
+**Ready** can warn when this space has 10,000 tracks or more and **Player** is **XDJ-1000MK2**. TIME, HOT CUE BANK, FILE NAME, and BITRATE have no precomputed list, so that deck may freeze. In rekordbox, set those four to Inactive under Preferences › Category. The check does not change rekordbox or a USB stick. It names only that deck.
+
 **Copy smart crates** on **Check drive** writes the rules and the current tracks into that drive's `_Serato_` folder. On another computer, click **Restore smart crates**, then **Restore**. A rule that cannot be rebuilt becomes a normal crate named in the preview. Quit Serato first.
 
 To put a song in a crate, open the track, find **Crates**, and tick a normal crate. The audio file stays where it is. Moving, renaming, or trashing the file is [Organizing files](Organizing-Files).
