@@ -65,6 +65,7 @@ a:focus-visible,
 .twist:focus-visible,
 .splitter:focus-visible,
 .waveform-overview:focus-visible,
+.prepped-mark:focus-visible,
 #portable-view-verdict:focus-visible {
   outline: 2px solid var(--cadmium);
   outline-offset: 2px;
@@ -1147,6 +1148,27 @@ button:disabled { cursor: default; }
   color: var(--quiet);
   font-style: italic;
   flex: none;
+}
+
+.prepped-mark {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  max-width: 16rem;
+  min-height: 24px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-control-edge);
+  border-radius: var(--radius-card);
+  color: var(--color-text);
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.2;
+}
+
+.prepped-word {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .empty-list {

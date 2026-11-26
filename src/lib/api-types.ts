@@ -128,8 +128,25 @@ export interface Track {
   time_added?: number | string | null;
   /** Latest played history_entry.start_time, or null. */
   last_played?: number | string | null;
-  /** Cue presence when the list already knows it. Omitted on GET /api/library. */
-  has_cues?: boolean;
+  /**
+   * Cue points in the file. True when a cue was read, false when the file
+   * was read and the cue list was empty, null when the file was not read.
+   * Loops do not count. Omitted on history rows.
+   */
+  has_cues?: boolean | null;
+  /**
+   * True only when cues, analysis, and the file are all present. Null when
+   * any check is unknown. Omitted on history rows.
+   */
+  prepped?: boolean | null;
+  /** Known-false piece names: cues, analysed, file. */
+  prepped_missing?: string[];
+  /** Unknown piece names, in that same order. */
+  prepped_unknown?: string[];
+  /** Analysis bit or beatgrid. Null when neither was read. */
+  analysed?: boolean | null;
+  /** File opened for reading. Null when the check was skipped. */
+  file_present?: boolean | null;
   comments?: string;
   grouping?: string;
   composer?: string;

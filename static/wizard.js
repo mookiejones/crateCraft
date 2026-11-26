@@ -12433,10 +12433,10 @@ Error generating stack: ` + x.message + `
     UPDATE_CHOICE_EVENT: () => UPDATE_CHOICE_EVENT,
     open: () => open
   });
-  var import_react9 = __toESM(require_react(), 1), import_react_dom = __toESM(require_react_dom(), 1), import_client = __toESM(require_client(), 1);
+  var import_react10 = __toESM(require_react(), 1), import_react_dom = __toESM(require_react_dom(), 1), import_client = __toESM(require_client(), 1);
 
   // src/pages/WizardScreen.tsx
-  var import_react8 = __toESM(require_react(), 1);
+  var import_react9 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Button/Button.mjs
   var React34 = __toESM(require_react(), 1);
@@ -12660,13 +12660,16 @@ Error generating stack: ` + x.message + `
   }
   function cssContainerQueries(themeInput) {
     let toContainerQuery = (mediaQuery, name) => mediaQuery.replace("@media", name ? `@container ${name}` : "@container");
-    function attachCq(node3, name) {
-      node3.up = (...args) => toContainerQuery(themeInput.breakpoints.up(...args), name), node3.down = (...args) => toContainerQuery(themeInput.breakpoints.down(...args), name), node3.between = (...args) => toContainerQuery(themeInput.breakpoints.between(...args), name), node3.only = (...args) => toContainerQuery(themeInput.breakpoints.only(...args), name), node3.not = (...args) => {
+    function attachCq(node2, name) {
+      node2.up = (...args) => toContainerQuery(themeInput.breakpoints.up(...args), name), node2.down = (...args) => toContainerQuery(themeInput.breakpoints.down(...args), name), node2.between = (...args) => toContainerQuery(themeInput.breakpoints.between(...args), name), node2.only = (...args) => toContainerQuery(themeInput.breakpoints.only(...args), name), node2.not = (...args) => {
         let result = toContainerQuery(themeInput.breakpoints.not(...args), name);
-        return result.includes("not all and") ? result.replace("not all and ", "").replace("min-width:", "width<").replace("max-width:", "width>").replace("and", "or") : result;
+        return result.includes("not all and") ? result.replace("not all and ", "").replace("min-width:", "width<").replace("max-width:", "width>").replace(") and (", ") or (") : result;
       };
     }
-    let node2 = {}, containerQueries = (name) => (attachCq(node2, name), node2);
+    let containerQueries = (name) => {
+      let node2 = {};
+      return attachCq(node2, name), node2;
+    };
     return attachCq(containerQueries), {
       ...themeInput,
       containerQueries
@@ -12698,7 +12701,8 @@ Error generating stack: ` + x.message + `
       ...other
     } = breakpoints, sortedValues = sortBreakpointsValues(values2), keys = Object.keys(sortedValues);
     function up(key) {
-      return `@media (min-width:${typeof values2[key] == "number" ? values2[key] : key}${unit})`;
+      let value = typeof values2[key] == "number" ? values2[key] : key;
+      return typeof value == "string" && Number.isNaN(Number(value)) ? `@media (min-width:${value})` : `@media (min-width:${value}${unit})`;
     }
     function down(key) {
       return `@media (max-width:${(typeof values2[key] == "number" ? values2[key] : key) - step / 100}${unit})`;
@@ -12896,7 +12900,7 @@ Error generating stack: ` + x.message + `
   for (let key in aliases)
     CSS_PROPERTIES[key] = CSS_PROPERTIES[aliases[key]];
   var marginKeys = /* @__PURE__ */ new Set(["m", "mt", "mr", "mb", "ml", "mx", "my", "margin", "marginTop", "marginRight", "marginBottom", "marginLeft", "marginX", "marginY", "marginInline", "marginInlineStart", "marginInlineEnd", "marginBlock", "marginBlockStart", "marginBlockEnd"]), paddingKeys = /* @__PURE__ */ new Set(["p", "pt", "pr", "pb", "pl", "px", "py", "padding", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "paddingX", "paddingY", "paddingInline", "paddingInlineStart", "paddingInlineEnd", "paddingBlock", "paddingBlockStart", "paddingBlockEnd"]), spacingKeys = /* @__PURE__ */ new Set([...marginKeys, ...paddingKeys]);
-  function createUnaryUnit(theme, themeKey, defaultValue, propName) {
+  function createBaseUnit(theme, themeKey, defaultValue, propName) {
     let themeSpacing = getPath(theme, themeKey, !0) ?? defaultValue;
     return typeof themeSpacing == "number" || typeof themeSpacing == "string" ? (val) => typeof val == "string" ? val : typeof themeSpacing == "string" ? themeSpacing.startsWith("var(") && val === 0 ? 0 : themeSpacing.startsWith("var(") && val === 1 ? themeSpacing : `calc(${val} * ${themeSpacing})` : themeSpacing * val : Array.isArray(themeSpacing) ? (val) => {
       if (typeof val == "string")
@@ -12906,11 +12910,30 @@ Error generating stack: ` + x.message + `
     } : typeof themeSpacing == "function" ? themeSpacing : () => {
     };
   }
+  var transformersByTheme = /* @__PURE__ */ new WeakMap();
+  function isSeparateKeyedScale(scale, base) {
+    return typeof scale == "function" && !!scale.keys && base !== scale;
+  }
+  function createUnaryUnit(theme, themeKey, defaultValue, propName) {
+    let base = createBaseUnit(theme, themeKey, defaultValue, propName), scale = theme?.[themeKey];
+    if (isSeparateKeyedScale(scale, base)) {
+      let cache = transformersByTheme.get(theme);
+      if ((!cache || cache.scale !== scale) && (cache = {
+        scale,
+        byProp: {}
+      }, transformersByTheme.set(theme, cache)), !cache.byProp[propName]) {
+        let keyed = (value) => typeof value == "string" && scale.keys.has(value) ? scale(value) : base(value);
+        keyed.keys = scale.keys, cache.byProp[propName] = keyed;
+      }
+      return cache.byProp[propName];
+    }
+    return base;
+  }
   function createUnarySpacing(theme) {
     return createUnaryUnit(theme, "spacing", 8, "spacing");
   }
   function getValue(transformer, propValue) {
-    return typeof propValue == "string" || propValue == null ? propValue : transformer(propValue);
+    return propValue == null ? propValue : typeof propValue == "string" ? transformer.keys?.has(propValue) ? transformer(propValue) : propValue : transformer(propValue);
   }
   var container = [""];
   function style2(props, keys) {
@@ -14392,8 +14415,9 @@ Error generating stack: ` + x.message + `
     typeof HTMLElement < "u" ? /* @__PURE__ */ createCache({
       key: "css"
     }) : null
-  ), CacheProvider = EmotionCacheContext.Provider;
-  var withEmotionCache = function(func) {
+  ), CacheProvider = EmotionCacheContext.Provider, __unsafe_useEmotionCache = function() {
+    return (0, import_react.useContext)(EmotionCacheContext);
+  }, withEmotionCache = function(func) {
     return /* @__PURE__ */ (0, import_react.forwardRef)(function(props, ref) {
       var cache = (0, import_react.useContext)(EmotionCacheContext);
       return func(props, cache, ref);
@@ -14734,6 +14758,9 @@ Error generating stack: ` + x.message + `
   function internal_serializeStyles(styles2) {
     return wrapper[0] = styles2, serializeStyles(wrapper);
   }
+  function internal_useNonce() {
+    return __unsafe_useEmotionCache()?.nonce;
+  }
 
   // node_modules/@mui/system/createTheme/shape.mjs
   var shape = {
@@ -14937,6 +14964,7 @@ Error generating stack: ` + x.message + `
     }
     return results;
   }
+  var sxStyleFunctions = /* @__PURE__ */ new WeakSet();
   function createStyled3(input = {}) {
     let {
       themeId,
@@ -14948,7 +14976,7 @@ Error generating stack: ` + x.message + `
       attachTheme(props, themeId, defaultTheme2);
     }
     return (tag, inputOptions = {}) => {
-      internal_mutateStyles(tag, (styles2) => styles2.filter((style3) => style3 !== styleFunctionSx_default));
+      internal_mutateStyles(tag, (styles2) => styles2.filter((style3) => !sxStyleFunctions.has(style3)));
       let {
         name: componentName,
         slot: componentSlot,
@@ -14964,11 +14992,12 @@ Error generating stack: ` + x.message + `
         componentSlot && componentSlot !== "Root" && componentSlot !== "root" || !1
       ), skipSx = inputSkipSx || !1, shouldForwardPropOption = shouldForwardProp;
       componentSlot === "Root" || componentSlot === "root" ? shouldForwardPropOption = rootShouldForwardProp2 : componentSlot ? shouldForwardPropOption = slotShouldForwardProp2 : isStringTag(tag) && (shouldForwardPropOption = void 0);
-      let defaultStyledResolver = styled_engine_default(tag, {
+      let sxOwner = {}, engineOptions = {
         shouldForwardProp: shouldForwardPropOption,
         label: generateStyledLabel(componentName, componentSlot),
-        ...options2
-      }), transformStyle = (style3) => {
+        ...options2,
+        sxOwner
+      }, defaultStyledResolver = styled_engine_default(tag, engineOptions), transformStyle = (style3) => {
         if (style3.__emotion_real === style3)
           return style3;
         if (typeof style3 == "function")
@@ -14995,7 +15024,11 @@ Error generating stack: ` + x.message + `
         }), componentName && !skipVariantsResolver && expressionsTail.push(function(props) {
           let themeVariants = props.theme?.components?.[componentName]?.variants;
           return themeVariants ? processStyleVariants(props, themeVariants, [], props.theme.modularCssLayers ? "theme" : void 0) : null;
-        }), skipSx || expressionsTail.push(styleFunctionSx_default), Array.isArray(expressionsBody[0])) {
+        }), !skipSx) {
+          let styleSx = (props) => props.$muiSxOwner && props.$muiSxOwner !== sxOwner ? null : styleFunctionSx_default(props);
+          sxStyleFunctions.add(styleSx), expressionsTail.push(styleSx);
+        }
+        if (Array.isArray(expressionsBody[0])) {
           let inputStrings = expressionsBody.shift(), placeholdersHead = new Array(expressionsHead.length).fill(""), placeholdersTail = new Array(expressionsTail.length).fill(""), outputStrings;
           outputStrings = [...placeholdersHead, ...inputStrings, ...placeholdersTail], outputStrings.raw = [...placeholdersHead, ...inputStrings.raw, ...placeholdersTail], expressionsHead.unshift(outputStrings);
         }
@@ -15046,7 +15079,7 @@ Error generating stack: ` + x.message + `
       throw new Error(formatMuiErrorMessage(9, color2));
     let values2 = color2.substring(marker + 1, color2.length - 1), colorSpace;
     if (type === "color") {
-      if (values2 = values2.split(" "), colorSpace = values2.shift(), values2.length === 4 && values2[3].charAt(0) === "/" && (values2[3] = values2[3].slice(1)), !["srgb", "display-p3", "a98-rgb", "prophoto-rgb", "rec-2020"].includes(colorSpace))
+      if (values2 = values2.split(/\s*\/\s*|\s+/), colorSpace = values2.shift(), !["srgb", "display-p3", "a98-rgb", "prophoto-rgb", "rec-2020"].includes(colorSpace))
         throw new Error(formatMuiErrorMessage(10, colorSpace));
     } else
       values2 = values2.split(",");
@@ -15073,7 +15106,7 @@ Error generating stack: ` + x.message + `
     } = color2, {
       values: values2
     } = color2;
-    return type.includes("rgb") ? values2 = values2.map((n, i) => i < 3 ? parseInt(n, 10) : n) : type.includes("hsl") && (values2[1] = `${values2[1]}%`, values2[2] = `${values2[2]}%`), type.includes("color") ? values2 = `${colorSpace} ${values2.join(" ")}` : values2 = `${values2.join(", ")}`, `${type}(${values2})`;
+    return type.includes("rgb") ? values2 = values2.map((n, i) => i < 3 ? parseInt(n, 10) : n) : type.includes("hsl") && (values2[1] = `${values2[1]}%`, values2[2] = `${values2[2]}%`), type.includes("color") ? (values2.length === 4 && (values2 = [...values2.slice(0, 3), `/${values2[3]}`]), values2 = `${colorSpace} ${values2.join(" ")}`) : values2 = `${values2.join(", ")}`, `${type}(${values2})`;
   }
   function hslToRgb(color2) {
     color2 = decomposeColor(color2);
@@ -15095,7 +15128,7 @@ Error generating stack: ` + x.message + `
     return (Math.max(lumA, lumB) + 0.05) / (Math.min(lumA, lumB) + 0.05);
   }
   function alpha(color2, value) {
-    return color2 = decomposeColor(color2), value = clampWrapper(value), (color2.type === "rgb" || color2.type === "hsl") && (color2.type += "a"), color2.type === "color" ? color2.values[3] = `/${value}` : color2.values[3] = value, recomposeColor(color2);
+    return color2 = decomposeColor(color2), value = clampWrapper(value), (color2.type === "rgb" || color2.type === "hsl") && (color2.type += "a"), color2.values[3] = value, recomposeColor(color2);
   }
   function private_safeAlpha(color2, value, warning) {
     try {
@@ -15163,9 +15196,6 @@ Error generating stack: ` + x.message + `
     return React9.useContext(ThemeContext_default);
   }
 
-  // node_modules/@mui/private-theming/ThemeProvider/nested.mjs
-  var hasSymbol = typeof Symbol == "function" && Symbol.for, nested_default = hasSymbol ? /* @__PURE__ */ Symbol.for("mui.nested") : "__THEME_NESTED__";
-
   // node_modules/@mui/private-theming/ThemeProvider/ThemeProvider.mjs
   var import_jsx_runtime3 = __toESM(require_jsx_runtime(), 1);
   function mergeOuterLocalTheme(outerTheme, localTheme) {
@@ -15178,12 +15208,9 @@ Error generating stack: ` + x.message + `
     let {
       children,
       theme: localTheme
-    } = props, outerTheme = useTheme3(), theme = React10.useMemo(() => {
-      let output = outerTheme === null ? {
-        ...localTheme
-      } : mergeOuterLocalTheme(outerTheme, localTheme);
-      return output != null && (output[nested_default] = outerTheme !== null), output;
-    }, [localTheme, outerTheme]);
+    } = props, outerTheme = useTheme3(), theme = React10.useMemo(() => outerTheme === null ? {
+      ...localTheme
+    } : mergeOuterLocalTheme(outerTheme, localTheme), [localTheme, outerTheme]);
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ThemeContext_default.Provider, {
       value: theme,
       children
@@ -15265,7 +15292,7 @@ Error generating stack: ` + x.message + `
   // node_modules/@mui/system/ThemeProvider/useLayerOrder.mjs
   var import_jsx_runtime6 = __toESM(require_jsx_runtime(), 1);
   function useLayerOrder(theme) {
-    let upperTheme = useThemeWithoutDefault_default(), id = useId() || "", {
+    let upperTheme = useThemeWithoutDefault_default(), id = useId() || "", nonce = internal_useNonce(), {
       modularCssLayers
     } = theme, layerOrder = "mui.global, mui.components, mui.theme, mui.custom, mui.sx";
     return !modularCssLayers || upperTheme !== null ? layerOrder = "" : typeof modularCssLayers == "string" ? layerOrder = modularCssLayers.replace(/mui(?!\.)/g, layerOrder) : layerOrder = `@layer ${layerOrder};`, useEnhancedEffect_default(() => {
@@ -15277,10 +15304,10 @@ Error generating stack: ` + x.message + `
         if (firstChild && firstChild.hasAttribute?.("data-mui-layer-order") && firstChild.getAttribute("data-mui-layer-order") === id)
           return;
         let styleElement = document.createElement("style");
-        styleElement.setAttribute("data-mui-layer-order", id), styleElement.textContent = layerOrder, head.prepend(styleElement);
+        styleElement.setAttribute("data-mui-layer-order", id), nonce && styleElement.setAttribute("nonce", nonce), styleElement.textContent = layerOrder, head.prepend(styleElement);
       } else
         head.querySelector(`style[data-mui-layer-order="${id}"]`)?.remove();
-    }, [layerOrder, id]), layerOrder ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(GlobalStyles_default, {
+    }, [layerOrder, id, nonce]), layerOrder ? /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(GlobalStyles_default, {
       styles: layerOrder
     }) : null;
   }
@@ -15626,7 +15653,7 @@ try {
         defaultMode: initialMode = "system",
         forceThemeRerender = !1,
         noSsr
-      } = props, hasMounted = React17.useRef(!1), upperTheme = useTheme3(), ctx = React17.useContext(ColorSchemeContext), nested = !!ctx && !disableNestedContext, initialTheme = React17.useMemo(() => themeProp || (typeof defaultTheme2 == "function" ? defaultTheme2() : defaultTheme2), [themeProp]), scopedTheme = initialTheme[themeId], restThemeProp = scopedTheme || initialTheme, {
+      } = props, hasMounted = React17.useRef(!1), nonce = internal_useNonce(), upperTheme = useTheme3(), ctx = React17.useContext(ColorSchemeContext), nested = !!ctx && !disableNestedContext, initialTheme = React17.useMemo(() => themeProp || (typeof defaultTheme2 == "function" ? defaultTheme2() : defaultTheme2), [themeProp]), scopedTheme = initialTheme[themeId], restThemeProp = scopedTheme || initialTheme, {
         colorSchemes = defaultColorSchemes,
         components = defaultComponents,
         cssVarPrefix
@@ -15691,14 +15718,14 @@ try {
         let timer;
         if (disableTransitionOnChange && hasMounted.current && documentNode) {
           let css2 = documentNode.createElement("style");
-          css2.appendChild(documentNode.createTextNode(DISABLE_CSS_TRANSITION)), documentNode.head.appendChild(css2), window.getComputedStyle(documentNode.body), timer = setTimeout(() => {
+          nonce && css2.setAttribute("nonce", nonce), css2.appendChild(documentNode.createTextNode(DISABLE_CSS_TRANSITION)), documentNode.head.appendChild(css2), window.getComputedStyle(documentNode.body), timer = setTimeout(() => {
             documentNode.head.removeChild(css2);
           }, 1);
         }
         return () => {
           clearTimeout(timer);
         };
-      }, [colorScheme, disableTransitionOnChange, documentNode]), React17.useEffect(() => (hasMounted.current = !0, () => {
+      }, [colorScheme, disableTransitionOnChange, documentNode, nonce]), React17.useEffect(() => (hasMounted.current = !0, () => {
         hasMounted.current = !1;
       }), []);
       let contextValue = React17.useMemo(() => ({
@@ -19225,7 +19252,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (parent.contains(child))
       return !0;
     let rootNode = child.getRootNode?.();
-    if (rootNode && rootNode instanceof ShadowRoot) {
+    if (rootNode && rootNode instanceof (child.ownerDocument?.defaultView?.ShadowRoot ?? ShadowRoot)) {
       let next2 = child;
       for (; next2; ) {
         if (parent === next2)
@@ -19574,7 +19601,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/react-transition-group/esm/TransitionGroupContext.js
-  var import_react6 = __toESM(require_react()), TransitionGroupContext_default = import_react6.default.createContext(null);
+  var import_react7 = __toESM(require_react()), TransitionGroupContext_default = import_react7.default.createContext(null);
 
   // node_modules/@mui/material/internal/Transition.mjs
   var import_jsx_runtime18 = __toESM(require_jsx_runtime(), 1);
@@ -20985,7 +21012,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/WizardContext.tsx
-  var import_react7 = __toESM(require_react(), 1);
+  var import_react8 = __toESM(require_react(), 1);
 
   // locales/en.json
   var en_default = {
@@ -23145,6 +23172,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.portableSmartRestore": "Preview how these smart crates would land in this library. Nothing is written yet.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
     "tooltip.prepareRemove": "Take this track out of Prepare.",
+    "tooltip.prepped": "Prepped. This track has cues, is analysed, and the file is here. Nothing is written.",
+    "tooltip.preppedMissing": "Not prepped. Missing: {pieces}. Nothing is written.",
+    "tooltip.preppedMixed": "Missing: {missing}. Not checked: {unknown}. Nothing is written.",
+    "tooltip.preppedUnknown": "Not checked. Could not check: {pieces}. Nothing is written.",
     "tooltip.presetBpm": "The tempo in the middle of the range.",
     "tooltip.presetCancel": "Close without making a crate.",
     "tooltip.presetCreate": "Save the matching tracks as a new crate.",
@@ -23319,6 +23350,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.wizardYes": "Share anonymous stats and crash reports.",
     "tooltip.zoomIn": "Show a shorter stretch of the waveform around the playhead.",
     "tooltip.zoomOut": "Show a longer stretch of the waveform around the playhead.",
+    "track.notPrepped": "Not prepped",
+    "track.notPreppedDetail": "Not prepped: {pieces}",
+    "track.prepped": "Prepped",
+    "track.preppedMixedDetail": "Not prepped: {missing}. Not checked: {unknown}",
+    "track.preppedPiece.analysed": "analysed",
+    "track.preppedPiece.cues": "cues",
+    "track.preppedPiece.file": "file",
+    "track.preppedUnchecked": "Not checked",
+    "track.preppedUncheckedDetail": "Not checked: {pieces}",
     "track.missingBadge": "missing",
     "track.offlineBadge": "offline",
     "track.numbered": "Track {id}",
@@ -25975,6 +26015,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.portableSmartRestore": "Muestra cómo quedarían estas cajas inteligentes en esta biblioteca. Todavía no se escribe nada.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
     "tooltip.prepareRemove": "Quita esta pista de Preparar.",
+    "tooltip.prepped": "Preparada. Esta pista tiene cues, está analizada y el archivo está aquí. No se escribe nada.",
+    "tooltip.preppedMissing": "No preparada. Falta: {pieces}. No se escribe nada.",
+    "tooltip.preppedMixed": "Falta: {missing}. Sin comprobar: {unknown}. No se escribe nada.",
+    "tooltip.preppedUnknown": "Sin comprobar. No se pudo comprobar: {pieces}. No se escribe nada.",
     "tooltip.presetBpm": "El tempo en el centro del rango.",
     "tooltip.presetCancel": "Cierra sin crear una caja.",
     "tooltip.presetCreate": "Guarda las pistas que coinciden como una caja nueva.",
@@ -26149,6 +26193,15 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     "tooltip.wizardYes": "Comparte estadísticas anónimas e informes de fallos.",
     "tooltip.zoomIn": "Muestra un tramo más corto de la forma de onda alrededor del cursor.",
     "tooltip.zoomOut": "Muestra un tramo más largo de la forma de onda alrededor del cursor.",
+    "track.notPrepped": "No preparada",
+    "track.notPreppedDetail": "No preparada: {pieces}",
+    "track.prepped": "Preparada",
+    "track.preppedMixedDetail": "No preparada: {missing}. Sin comprobar: {unknown}",
+    "track.preppedPiece.analysed": "análisis",
+    "track.preppedPiece.cues": "cues",
+    "track.preppedPiece.file": "archivo",
+    "track.preppedUnchecked": "Sin comprobar",
+    "track.preppedUncheckedDetail": "Sin comprobar: {pieces}",
     "track.missingBadge": "no encontrada",
     "track.offlineBadge": "desconectada",
     "track.numbered": "Pista {id}",
@@ -26880,7 +26933,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       onBrowse: noopPath
     };
   }
-  var WizardContext = (0, import_react7.createContext)(null);
+  var WizardContext = (0, import_react8.createContext)(null);
   function WizardProvider({
     value,
     children
@@ -26888,7 +26941,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(WizardContext, { value, children });
   }
   function useWizard() {
-    let value = (0, import_react7.useContext)(WizardContext);
+    let value = (0, import_react8.useContext)(WizardContext);
     if (value === null)
       throw new Error("useWizard must be used within WizardProvider");
     return value;
@@ -27501,8 +27554,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     };
   }
   function useLocaleTick() {
-    let [, setLocale] = (0, import_react8.useState)(getLocale);
-    (0, import_react8.useEffect)(() => onLocaleChange(setLocale), []);
+    let [, setLocale] = (0, import_react9.useState)(getLocale);
+    (0, import_react9.useEffect)(() => onLocaleChange(setLocale), []);
   }
   function bodyText(model2, summary2) {
     switch (model2.step) {
@@ -27527,7 +27580,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function WizardScreen() {
     useLocaleTick();
-    let colorway = document.documentElement.dataset.colorway || "serato-like", theme = (0, import_react8.useMemo)(() => createAppTheme(colorway), [colorway]), wizard = useWizard(), {
+    let colorway = document.documentElement.dataset.colorway || "serato-like", theme = (0, import_react9.useMemo)(() => createAppTheme(colorway), [colorway]), wizard = useWizard(), {
       model: model2,
       busy: busy2,
       folderOpen: folderOpen2,
@@ -27538,8 +27591,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       nextHint,
       statusNote: statusNote2,
       focusToken: focusToken2
-    } = wizard, titleRef = (0, import_react8.useRef)(null), [announcement, setAnnouncement] = (0, import_react8.useState)("");
-    (0, import_react8.useEffect)(() => {
+    } = wizard, titleRef = (0, import_react9.useRef)(null), [announcement, setAnnouncement] = (0, import_react9.useState)("");
+    (0, import_react9.useEffect)(() => {
       focusToken2 !== 0 && (setAnnouncement(stepAnnouncement(model2)), titleRef.current?.focus());
     }, [focusToken2]);
     let position2 = stepPosition(model2), body = bodyText(model2, summary2), hintText = nextHint, showHint = model2.step === "library" && model2.context.library !== "found" && hintText.length > 0, status = statusFor(model2, statusNote2), action = primaryAction(model2), saving = model2.step === "snapshot" && model2.context.snapshot === "saving", saved = model2.step === "snapshot" && model2.context.snapshot === "saved", primaryLabel = saving ? t("wizard.savingCopy") : action === "none" ? "" : t(LABELS[action]), segments = Array.from({ length: position2.count }, (_, offset) => {
@@ -28009,9 +28062,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function paint(moveFocus) {
     moveFocus && (focusToken += 1), (0, import_react_dom.flushSync)(() => {
       wizardRoot().render(
-        (0, import_react9.createElement)(WizardProvider, {
+        (0, import_react10.createElement)(WizardProvider, {
           value: readValue(),
-          children: (0, import_react9.createElement)(WizardScreen)
+          children: (0, import_react10.createElement)(WizardScreen)
         })
       );
     });

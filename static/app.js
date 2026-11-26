@@ -14871,6 +14871,10 @@ Error generating stack: ` + x.message + `
     "tooltip.portableSmartRestore": "Preview how these smart crates would land in this library. Nothing is written yet.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
     "tooltip.prepareRemove": "Take this track out of Prepare.",
+    "tooltip.prepped": "Prepped. This track has cues, is analysed, and the file is here. Nothing is written.",
+    "tooltip.preppedMissing": "Not prepped. Missing: {pieces}. Nothing is written.",
+    "tooltip.preppedMixed": "Missing: {missing}. Not checked: {unknown}. Nothing is written.",
+    "tooltip.preppedUnknown": "Not checked. Could not check: {pieces}. Nothing is written.",
     "tooltip.presetBpm": "The tempo in the middle of the range.",
     "tooltip.presetCancel": "Close without making a crate.",
     "tooltip.presetCreate": "Save the matching tracks as a new crate.",
@@ -15045,6 +15049,15 @@ Error generating stack: ` + x.message + `
     "tooltip.wizardYes": "Share anonymous stats and crash reports.",
     "tooltip.zoomIn": "Show a shorter stretch of the waveform around the playhead.",
     "tooltip.zoomOut": "Show a longer stretch of the waveform around the playhead.",
+    "track.notPrepped": "Not prepped",
+    "track.notPreppedDetail": "Not prepped: {pieces}",
+    "track.prepped": "Prepped",
+    "track.preppedMixedDetail": "Not prepped: {missing}. Not checked: {unknown}",
+    "track.preppedPiece.analysed": "analysed",
+    "track.preppedPiece.cues": "cues",
+    "track.preppedPiece.file": "file",
+    "track.preppedUnchecked": "Not checked",
+    "track.preppedUncheckedDetail": "Not checked: {pieces}",
     "track.missingBadge": "missing",
     "track.offlineBadge": "offline",
     "track.numbered": "Track {id}",
@@ -17701,6 +17714,10 @@ Error generating stack: ` + x.message + `
     "tooltip.portableSmartRestore": "Muestra cómo quedarían estas cajas inteligentes en esta biblioteca. Todavía no se escribe nada.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
     "tooltip.prepareRemove": "Quita esta pista de Preparar.",
+    "tooltip.prepped": "Preparada. Esta pista tiene cues, está analizada y el archivo está aquí. No se escribe nada.",
+    "tooltip.preppedMissing": "No preparada. Falta: {pieces}. No se escribe nada.",
+    "tooltip.preppedMixed": "Falta: {missing}. Sin comprobar: {unknown}. No se escribe nada.",
+    "tooltip.preppedUnknown": "Sin comprobar. No se pudo comprobar: {pieces}. No se escribe nada.",
     "tooltip.presetBpm": "El tempo en el centro del rango.",
     "tooltip.presetCancel": "Cierra sin crear una caja.",
     "tooltip.presetCreate": "Guarda las pistas que coinciden como una caja nueva.",
@@ -17875,6 +17892,15 @@ Error generating stack: ` + x.message + `
     "tooltip.wizardYes": "Comparte estadísticas anónimas e informes de fallos.",
     "tooltip.zoomIn": "Muestra un tramo más corto de la forma de onda alrededor del cursor.",
     "tooltip.zoomOut": "Muestra un tramo más largo de la forma de onda alrededor del cursor.",
+    "track.notPrepped": "No preparada",
+    "track.notPreppedDetail": "No preparada: {pieces}",
+    "track.prepped": "Preparada",
+    "track.preppedMixedDetail": "No preparada: {missing}. Sin comprobar: {unknown}",
+    "track.preppedPiece.analysed": "análisis",
+    "track.preppedPiece.cues": "cues",
+    "track.preppedPiece.file": "archivo",
+    "track.preppedUnchecked": "Sin comprobar",
+    "track.preppedUncheckedDetail": "Sin comprobar: {pieces}",
     "track.missingBadge": "no encontrada",
     "track.offlineBadge": "desconectada",
     "track.numbered": "Pista {id}",
@@ -18751,9 +18777,9 @@ Error generating stack: ` + x.message + `
     let inA = id === a, inB = b != null && id === b;
     return inA && inB ? "both" : inA ? "a" : inB ? "b" : null;
   }
-  function saveViewIds(view) {
+  function saveViewIds(view2) {
     let seen = /* @__PURE__ */ new Set(), ids = [];
-    for (let track of view)
+    for (let track of view2)
       track.entry || !Number.isInteger(track.id) || track.id < 0 || seen.has(track.id) || (seen.add(track.id), ids.push(track.id));
     return ids;
   }
@@ -19511,7 +19537,7 @@ Error generating stack: ` + x.message + `
       gig: tips.navGig
     }[id];
   }
-  function viewTip(view) {
+  function viewTip(view2) {
     return {
       crates: tips.viewCrates,
       history: tips.viewHistory,
@@ -19539,7 +19565,7 @@ Error generating stack: ` + x.message + `
       gain: tips.viewGain,
       broken: tips.viewBroken,
       streams: tips.viewStreams
-    }[view];
+    }[view2];
   }
   function crateSortTip(key) {
     if (key === "order") return tips.sortOrder;
@@ -20628,16 +20654,16 @@ Error generating stack: ` + x.message + `
   }
 
   // src/lib/gig/gig.ts
-  var import_react67 = __toESM(require_react(), 1);
+  var import_react68 = __toESM(require_react(), 1);
 
   // src/app/mount.tsx
   var import_react_dom6 = __toESM(require_react_dom(), 1), import_client = __toESM(require_client(), 1);
 
   // src/app/providers.tsx
-  var import_react66 = __toESM(require_react(), 1), import_react_dom5 = __toESM(require_react_dom(), 1);
+  var import_react67 = __toESM(require_react(), 1), import_react_dom5 = __toESM(require_react_dom(), 1);
 
   // src/app/mui-theme-root.tsx
-  var import_react11 = __toESM(require_react(), 1), import_react_dom = __toESM(require_react_dom(), 1);
+  var import_react12 = __toESM(require_react(), 1), import_react_dom = __toESM(require_react_dom(), 1);
 
   // node_modules/@mui/utils/formatMuiErrorMessage/formatMuiErrorMessage.mjs
   function formatMuiErrorMessage(code, ...args) {
@@ -21555,8 +21581,9 @@ Error generating stack: ` + x.message + `
     typeof HTMLElement < "u" ? /* @__PURE__ */ createCache({
       key: "css"
     }) : null
-  ), CacheProvider = EmotionCacheContext.Provider;
-  var withEmotionCache = function(func) {
+  ), CacheProvider = EmotionCacheContext.Provider, __unsafe_useEmotionCache = function() {
+    return (0, import_react2.useContext)(EmotionCacheContext);
+  }, withEmotionCache = function(func) {
     return /* @__PURE__ */ (0, import_react2.forwardRef)(function(props, ref) {
       var cache = (0, import_react2.useContext)(EmotionCacheContext);
       return func(props, cache, ref);
@@ -21897,6 +21924,9 @@ Error generating stack: ` + x.message + `
   function internal_serializeStyles(styles5) {
     return wrapper[0] = styles5, serializeStyles(wrapper);
   }
+  function internal_useNonce() {
+    return __unsafe_useEmotionCache()?.nonce;
+  }
 
   // node_modules/@mui/utils/deepmerge/deepmerge.mjs
   var React5 = __toESM(require_react(), 1), import_react_is = __toESM(require_react_is2(), 1);
@@ -21951,7 +21981,8 @@ Error generating stack: ` + x.message + `
       ...other
     } = breakpoints2, sortedValues = sortBreakpointsValues(values3), keys2 = Object.keys(sortedValues);
     function up(key) {
-      return `@media (min-width:${typeof values3[key] == "number" ? values3[key] : key}${unit})`;
+      let value = typeof values3[key] == "number" ? values3[key] : key;
+      return typeof value == "string" && Number.isNaN(Number(value)) ? `@media (min-width:${value})` : `@media (min-width:${value}${unit})`;
     }
     function down(key) {
       return `@media (max-width:${(typeof values3[key] == "number" ? values3[key] : key) - step / 100}${unit})`;
@@ -22018,13 +22049,16 @@ Error generating stack: ` + x.message + `
   }
   function cssContainerQueries(themeInput) {
     let toContainerQuery = (mediaQuery, name) => mediaQuery.replace("@media", name ? `@container ${name}` : "@container");
-    function attachCq(node3, name) {
-      node3.up = (...args) => toContainerQuery(themeInput.breakpoints.up(...args), name), node3.down = (...args) => toContainerQuery(themeInput.breakpoints.down(...args), name), node3.between = (...args) => toContainerQuery(themeInput.breakpoints.between(...args), name), node3.only = (...args) => toContainerQuery(themeInput.breakpoints.only(...args), name), node3.not = (...args) => {
+    function attachCq(node2, name) {
+      node2.up = (...args) => toContainerQuery(themeInput.breakpoints.up(...args), name), node2.down = (...args) => toContainerQuery(themeInput.breakpoints.down(...args), name), node2.between = (...args) => toContainerQuery(themeInput.breakpoints.between(...args), name), node2.only = (...args) => toContainerQuery(themeInput.breakpoints.only(...args), name), node2.not = (...args) => {
         let result = toContainerQuery(themeInput.breakpoints.not(...args), name);
-        return result.includes("not all and") ? result.replace("not all and ", "").replace("min-width:", "width<").replace("max-width:", "width>").replace("and", "or") : result;
+        return result.includes("not all and") ? result.replace("not all and ", "").replace("min-width:", "width<").replace("max-width:", "width>").replace(") and (", ") or (") : result;
       };
     }
-    let node2 = {}, containerQueries = (name) => (attachCq(node2, name), node2);
+    let containerQueries = (name) => {
+      let node2 = {};
+      return attachCq(node2, name), node2;
+    };
     return attachCq(containerQueries), {
       ...themeInput,
       containerQueries
@@ -22292,7 +22326,7 @@ Error generating stack: ` + x.message + `
   for (let key in aliases)
     CSS_PROPERTIES[key] = CSS_PROPERTIES[aliases[key]];
   var marginKeys = /* @__PURE__ */ new Set(["m", "mt", "mr", "mb", "ml", "mx", "my", "margin", "marginTop", "marginRight", "marginBottom", "marginLeft", "marginX", "marginY", "marginInline", "marginInlineStart", "marginInlineEnd", "marginBlock", "marginBlockStart", "marginBlockEnd"]), paddingKeys = /* @__PURE__ */ new Set(["p", "pt", "pr", "pb", "pl", "px", "py", "padding", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "paddingX", "paddingY", "paddingInline", "paddingInlineStart", "paddingInlineEnd", "paddingBlock", "paddingBlockStart", "paddingBlockEnd"]), spacingKeys = /* @__PURE__ */ new Set([...marginKeys, ...paddingKeys]);
-  function createUnaryUnit(theme, themeKey, defaultValue, propName) {
+  function createBaseUnit(theme, themeKey, defaultValue, propName) {
     let themeSpacing = getPath(theme, themeKey, !0) ?? defaultValue;
     return typeof themeSpacing == "number" || typeof themeSpacing == "string" ? (val) => typeof val == "string" ? val : typeof themeSpacing == "string" ? themeSpacing.startsWith("var(") && val === 0 ? 0 : themeSpacing.startsWith("var(") && val === 1 ? themeSpacing : `calc(${val} * ${themeSpacing})` : themeSpacing * val : Array.isArray(themeSpacing) ? (val) => {
       if (typeof val == "string")
@@ -22302,11 +22336,30 @@ Error generating stack: ` + x.message + `
     } : typeof themeSpacing == "function" ? themeSpacing : () => {
     };
   }
+  var transformersByTheme = /* @__PURE__ */ new WeakMap();
+  function isSeparateKeyedScale(scale, base) {
+    return typeof scale == "function" && !!scale.keys && base !== scale;
+  }
+  function createUnaryUnit(theme, themeKey, defaultValue, propName) {
+    let base = createBaseUnit(theme, themeKey, defaultValue, propName), scale = theme?.[themeKey];
+    if (isSeparateKeyedScale(scale, base)) {
+      let cache = transformersByTheme.get(theme);
+      if ((!cache || cache.scale !== scale) && (cache = {
+        scale,
+        byProp: {}
+      }, transformersByTheme.set(theme, cache)), !cache.byProp[propName]) {
+        let keyed = (value) => typeof value == "string" && scale.keys.has(value) ? scale(value) : base(value);
+        keyed.keys = scale.keys, cache.byProp[propName] = keyed;
+      }
+      return cache.byProp[propName];
+    }
+    return base;
+  }
   function createUnarySpacing(theme) {
     return createUnaryUnit(theme, "spacing", 8, "spacing");
   }
   function getValue(transformer, propValue) {
-    return typeof propValue == "string" || propValue == null ? propValue : transformer(propValue);
+    return propValue == null ? propValue : typeof propValue == "string" ? transformer.keys?.has(propValue) ? transformer(propValue) : propValue : transformer(propValue);
   }
   var container = [""];
   function style2(props, keys2) {
@@ -23137,6 +23190,7 @@ Error generating stack: ` + x.message + `
     }
     return results;
   }
+  var sxStyleFunctions = /* @__PURE__ */ new WeakSet();
   function createStyled3(input = {}) {
     let {
       themeId,
@@ -23148,7 +23202,7 @@ Error generating stack: ` + x.message + `
       attachTheme(props, themeId, defaultTheme4);
     }
     return (tag, inputOptions = {}) => {
-      internal_mutateStyles(tag, (styles5) => styles5.filter((style4) => style4 !== styleFunctionSx_default));
+      internal_mutateStyles(tag, (styles5) => styles5.filter((style4) => !sxStyleFunctions.has(style4)));
       let {
         name: componentName,
         slot: componentSlot,
@@ -23164,11 +23218,12 @@ Error generating stack: ` + x.message + `
         componentSlot && componentSlot !== "Root" && componentSlot !== "root" || !1
       ), skipSx = inputSkipSx || !1, shouldForwardPropOption = shouldForwardProp;
       componentSlot === "Root" || componentSlot === "root" ? shouldForwardPropOption = rootShouldForwardProp2 : componentSlot ? shouldForwardPropOption = slotShouldForwardProp2 : isStringTag(tag) && (shouldForwardPropOption = void 0);
-      let defaultStyledResolver = styled_engine_default(tag, {
+      let sxOwner = {}, engineOptions = {
         shouldForwardProp: shouldForwardPropOption,
         label: generateStyledLabel(componentName, componentSlot),
-        ...options
-      }), transformStyle = (style4) => {
+        ...options,
+        sxOwner
+      }, defaultStyledResolver = styled_engine_default(tag, engineOptions), transformStyle = (style4) => {
         if (style4.__emotion_real === style4)
           return style4;
         if (typeof style4 == "function")
@@ -23195,7 +23250,11 @@ Error generating stack: ` + x.message + `
         }), componentName && !skipVariantsResolver && expressionsTail.push(function(props) {
           let themeVariants = props.theme?.components?.[componentName]?.variants;
           return themeVariants ? processStyleVariants(props, themeVariants, [], props.theme.modularCssLayers ? "theme" : void 0) : null;
-        }), skipSx || expressionsTail.push(styleFunctionSx_default), Array.isArray(expressionsBody[0])) {
+        }), !skipSx) {
+          let styleSx = (props) => props.$muiSxOwner && props.$muiSxOwner !== sxOwner ? null : styleFunctionSx_default(props);
+          sxStyleFunctions.add(styleSx), expressionsTail.push(styleSx);
+        }
+        if (Array.isArray(expressionsBody[0])) {
           let inputStrings = expressionsBody.shift(), placeholdersHead = new Array(expressionsHead.length).fill(""), placeholdersTail = new Array(expressionsTail.length).fill(""), outputStrings;
           outputStrings = [...placeholdersHead, ...inputStrings, ...placeholdersTail], outputStrings.raw = [...placeholdersHead, ...inputStrings.raw, ...placeholdersTail], expressionsHead.unshift(outputStrings);
         }
@@ -23311,7 +23370,7 @@ Error generating stack: ` + x.message + `
       throw new Error(formatMuiErrorMessage(9, color2));
     let values3 = color2.substring(marker + 1, color2.length - 1), colorSpace;
     if (type === "color") {
-      if (values3 = values3.split(" "), colorSpace = values3.shift(), values3.length === 4 && values3[3].charAt(0) === "/" && (values3[3] = values3[3].slice(1)), !["srgb", "display-p3", "a98-rgb", "prophoto-rgb", "rec-2020"].includes(colorSpace))
+      if (values3 = values3.split(/\s*\/\s*|\s+/), colorSpace = values3.shift(), !["srgb", "display-p3", "a98-rgb", "prophoto-rgb", "rec-2020"].includes(colorSpace))
         throw new Error(formatMuiErrorMessage(10, colorSpace));
     } else
       values3 = values3.split(",");
@@ -23338,7 +23397,7 @@ Error generating stack: ` + x.message + `
     } = color2, {
       values: values3
     } = color2;
-    return type.includes("rgb") ? values3 = values3.map((n, i) => i < 3 ? parseInt(n, 10) : n) : type.includes("hsl") && (values3[1] = `${values3[1]}%`, values3[2] = `${values3[2]}%`), type.includes("color") ? values3 = `${colorSpace} ${values3.join(" ")}` : values3 = `${values3.join(", ")}`, `${type}(${values3})`;
+    return type.includes("rgb") ? values3 = values3.map((n, i) => i < 3 ? parseInt(n, 10) : n) : type.includes("hsl") && (values3[1] = `${values3[1]}%`, values3[2] = `${values3[2]}%`), type.includes("color") ? (values3.length === 4 && (values3 = [...values3.slice(0, 3), `/${values3[3]}`]), values3 = `${colorSpace} ${values3.join(" ")}`) : values3 = `${values3.join(", ")}`, `${type}(${values3})`;
   }
   function hslToRgb(color2) {
     color2 = decomposeColor(color2);
@@ -23360,7 +23419,7 @@ Error generating stack: ` + x.message + `
     return (Math.max(lumA, lumB) + 0.05) / (Math.min(lumA, lumB) + 0.05);
   }
   function alpha(color2, value) {
-    return color2 = decomposeColor(color2), value = clampWrapper(value), (color2.type === "rgb" || color2.type === "hsl") && (color2.type += "a"), color2.type === "color" ? color2.values[3] = `/${value}` : color2.values[3] = value, recomposeColor(color2);
+    return color2 = decomposeColor(color2), value = clampWrapper(value), (color2.type === "rgb" || color2.type === "hsl") && (color2.type += "a"), color2.values[3] = value, recomposeColor(color2);
   }
   function private_safeAlpha(color2, value, warning) {
     try {
@@ -23428,9 +23487,6 @@ Error generating stack: ` + x.message + `
     return React10.useContext(ThemeContext_default);
   }
 
-  // node_modules/@mui/private-theming/ThemeProvider/nested.mjs
-  var hasSymbol = typeof Symbol == "function" && Symbol.for, nested_default = hasSymbol ? /* @__PURE__ */ Symbol.for("mui.nested") : "__THEME_NESTED__";
-
   // node_modules/@mui/private-theming/ThemeProvider/ThemeProvider.mjs
   var import_jsx_runtime4 = __toESM(require_jsx_runtime(), 1);
   function mergeOuterLocalTheme(outerTheme, localTheme) {
@@ -23443,12 +23499,9 @@ Error generating stack: ` + x.message + `
     let {
       children,
       theme: localTheme
-    } = props, outerTheme = useTheme3(), theme = React11.useMemo(() => {
-      let output = outerTheme === null ? {
-        ...localTheme
-      } : mergeOuterLocalTheme(outerTheme, localTheme);
-      return output != null && (output[nested_default] = outerTheme !== null), output;
-    }, [localTheme, outerTheme]);
+    } = props, outerTheme = useTheme3(), theme = React11.useMemo(() => outerTheme === null ? {
+      ...localTheme
+    } : mergeOuterLocalTheme(outerTheme, localTheme), [localTheme, outerTheme]);
     return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(ThemeContext_default.Provider, {
       value: theme,
       children
@@ -23530,7 +23583,7 @@ Error generating stack: ` + x.message + `
   // node_modules/@mui/system/ThemeProvider/useLayerOrder.mjs
   var import_jsx_runtime7 = __toESM(require_jsx_runtime(), 1);
   function useLayerOrder(theme) {
-    let upperTheme = useThemeWithoutDefault_default(), id = useId() || "", {
+    let upperTheme = useThemeWithoutDefault_default(), id = useId() || "", nonce = internal_useNonce(), {
       modularCssLayers
     } = theme, layerOrder = "mui.global, mui.components, mui.theme, mui.custom, mui.sx";
     return !modularCssLayers || upperTheme !== null ? layerOrder = "" : typeof modularCssLayers == "string" ? layerOrder = modularCssLayers.replace(/mui(?!\.)/g, layerOrder) : layerOrder = `@layer ${layerOrder};`, useEnhancedEffect_default(() => {
@@ -23542,10 +23595,10 @@ Error generating stack: ` + x.message + `
         if (firstChild && firstChild.hasAttribute?.("data-mui-layer-order") && firstChild.getAttribute("data-mui-layer-order") === id)
           return;
         let styleElement = document.createElement("style");
-        styleElement.setAttribute("data-mui-layer-order", id), styleElement.textContent = layerOrder, head.prepend(styleElement);
+        styleElement.setAttribute("data-mui-layer-order", id), nonce && styleElement.setAttribute("nonce", nonce), styleElement.textContent = layerOrder, head.prepend(styleElement);
       } else
         head.querySelector(`style[data-mui-layer-order="${id}"]`)?.remove();
-    }, [layerOrder, id]), layerOrder ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(GlobalStyles_default, {
+    }, [layerOrder, id, nonce]), layerOrder ? /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(GlobalStyles_default, {
       styles: layerOrder
     }) : null;
   }
@@ -23891,7 +23944,7 @@ try {
         defaultMode: initialMode = "system",
         forceThemeRerender = !1,
         noSsr
-      } = props, hasMounted = React18.useRef(!1), upperTheme = useTheme3(), ctx = React18.useContext(ColorSchemeContext), nested = !!ctx && !disableNestedContext, initialTheme = React18.useMemo(() => themeProp || (typeof defaultTheme4 == "function" ? defaultTheme4() : defaultTheme4), [themeProp]), scopedTheme = initialTheme[themeId], restThemeProp = scopedTheme || initialTheme, {
+      } = props, hasMounted = React18.useRef(!1), nonce = internal_useNonce(), upperTheme = useTheme3(), ctx = React18.useContext(ColorSchemeContext), nested = !!ctx && !disableNestedContext, initialTheme = React18.useMemo(() => themeProp || (typeof defaultTheme4 == "function" ? defaultTheme4() : defaultTheme4), [themeProp]), scopedTheme = initialTheme[themeId], restThemeProp = scopedTheme || initialTheme, {
         colorSchemes = defaultColorSchemes,
         components = defaultComponents,
         cssVarPrefix
@@ -23956,14 +24009,14 @@ try {
         let timer4;
         if (disableTransitionOnChange && hasMounted.current && documentNode) {
           let css2 = documentNode.createElement("style");
-          css2.appendChild(documentNode.createTextNode(DISABLE_CSS_TRANSITION)), documentNode.head.appendChild(css2), window.getComputedStyle(documentNode.body), timer4 = setTimeout(() => {
+          nonce && css2.setAttribute("nonce", nonce), css2.appendChild(documentNode.createTextNode(DISABLE_CSS_TRANSITION)), documentNode.head.appendChild(css2), window.getComputedStyle(documentNode.body), timer4 = setTimeout(() => {
             documentNode.head.removeChild(css2);
           }, 1);
         }
         return () => {
           clearTimeout(timer4);
         };
-      }, [colorScheme, disableTransitionOnChange, documentNode]), React18.useEffect(() => (hasMounted.current = !0, () => {
+      }, [colorScheme, disableTransitionOnChange, documentNode, nonce]), React18.useEffect(() => (hasMounted.current = !0, () => {
         hasMounted.current = !1;
       }), []);
       let contextValue = React18.useMemo(() => ({
@@ -24275,7 +24328,7 @@ try {
           margin: 0
         },
         "& > :not(style) ~ :not(style)": {
-          [`margin${getSideFromDirection(breakpoint ? directionValues[breakpoint] : ownerState.direction)}`]: getValue(transformer, propValue)
+          [`margin${getSideFromDirection(breakpoint && typeof directionValues == "object" ? directionValues[breakpoint] : ownerState.direction)}`]: getValue(transformer, propValue)
         }
       }));
     }
@@ -26733,7 +26786,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/lib/ui/settings.ts
-  var import_react10 = __toESM(require_react(), 1);
+  var import_react11 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Box/boxClasses.mjs
   var boxClasses = generateUtilityClasses("MuiBox", ["root"]), boxClasses_default = boxClasses;
@@ -30168,7 +30221,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
   function resolveRequestedItemId(requestedItemId, items, isFocusable) {
     let requestedItemIndex = findItemIndexById(items, requestedItemId);
-    return requestedItemIndex === -1 ? getFirstFocusableItemId(items, isFocusable) : isFocusable(items[requestedItemIndex]) ? items[requestedItemIndex].id : getNextActiveItem(items, requestedItemIndex, "next", !1, isFocusable)?.id ?? null;
+    return requestedItemIndex === -1 ? getFirstFocusableItemId(items, isFocusable) : isFocusable(items[requestedItemIndex]) ? items[requestedItemIndex].id : getNextActiveItem(items, requestedItemIndex, "next", !0, isFocusable)?.id ?? null;
   }
   function resolveDefaultItemId(items, isFocusable, getDefaultActiveItemId) {
     let defaultItemId = getDefaultActiveItemId?.(items);
@@ -30229,7 +30282,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return getOrderedItems(itemMap).filter(isConnectedItem);
   }
   function getNextIndex(currentIndex, lastIndex, direction, wrap2 = !0) {
-    return direction === "next" ? currentIndex === lastIndex ? wrap2 ? 0 : -1 : currentIndex + 1 : currentIndex === 0 ? wrap2 ? lastIndex : -1 : currentIndex - 1;
+    return direction === "next" ? currentIndex === lastIndex ? wrap2 ? 0 : -1 : currentIndex + 1 : currentIndex <= 0 ? wrap2 ? lastIndex : -1 : currentIndex - 1;
   }
   function isItemFocusable(item) {
     return item.element ? item.focusableWhenDisabled ? !0 : !item.disabled && !item.element.hasAttribute("disabled") && item.element.getAttribute("aria-disabled") !== "true" && item.element.hasAttribute("tabindex") : !1;
@@ -30258,7 +30311,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     if (parent.contains(child))
       return !0;
     let rootNode = child.getRootNode?.();
-    if (rootNode && rootNode instanceof ShadowRoot) {
+    if (rootNode && rootNode instanceof (child.ownerDocument?.defaultView?.ShadowRoot ?? ShadowRoot)) {
       let next3 = child;
       for (; next3; ) {
         if (parent === next3)
@@ -30572,7 +30625,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // node_modules/react-transition-group/esm/TransitionGroupContext.js
-  var import_react7 = __toESM(require_react()), TransitionGroupContext_default = import_react7.default.createContext(null);
+  var import_react8 = __toESM(require_react()), TransitionGroupContext_default = import_react8.default.createContext(null);
 
   // node_modules/@mui/material/internal/Transition.mjs
   var import_jsx_runtime37 = __toESM(require_jsx_runtime(), 1);
@@ -34441,7 +34494,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }), TextField_default = TextField;
 
   // src/containers/SettingsContext.tsx
-  var import_react8 = __toESM(require_react(), 1), import_jsx_runtime58 = __toESM(require_jsx_runtime(), 1), SettingsContext = (0, import_react8.createContext)(null);
+  var import_react9 = __toESM(require_react(), 1), import_jsx_runtime58 = __toESM(require_jsx_runtime(), 1), SettingsContext = (0, import_react9.createContext)(null);
   function SettingsProvider({
     value,
     children
@@ -34449,7 +34502,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime58.jsx)(SettingsContext, { value, children });
   }
   function useSettings() {
-    let value = (0, import_react8.useContext)(SettingsContext);
+    let value = (0, import_react9.useContext)(SettingsContext);
     if (value === null)
       throw new Error("useSettings must be used within SettingsProvider");
     return value;
@@ -34472,7 +34525,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/components/ShortcutTable.tsx
-  var import_react9 = __toESM(require_react(), 1);
+  var import_react10 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Table/Table.mjs
   var React85 = __toESM(require_react(), 1);
@@ -35202,8 +35255,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return query ? `${catalogActionLabel(row.id)} ${chords.map(chordLabel).join(" ")}`.toLowerCase().includes(query) : !0;
   }
   function ShortcutTable() {
-    let settings = useSettings(), overrides = settings.shortcuts, [filter, setFilter] = (0, import_react9.useState)(""), [capturingId, setCapturingId] = (0, import_react9.useState)(null), [status4, setStatus] = (0, import_react9.useState)(""), query = filter.trim().toLowerCase(), capturingIdRef = (0, import_react9.useRef)(capturingId), overridesRef = (0, import_react9.useRef)(overrides), saveRef = (0, import_react9.useRef)(settings.saveShortcuts);
-    capturingIdRef.current = capturingId, overridesRef.current = overrides, saveRef.current = settings.saveShortcuts, (0, import_react9.useLayoutEffect)(() => {
+    let settings = useSettings(), overrides = settings.shortcuts, [filter, setFilter] = (0, import_react10.useState)(""), [capturingId, setCapturingId] = (0, import_react10.useState)(null), [status4, setStatus] = (0, import_react10.useState)(""), query = filter.trim().toLowerCase(), capturingIdRef = (0, import_react10.useRef)(capturingId), overridesRef = (0, import_react10.useRef)(overrides), saveRef = (0, import_react10.useRef)(settings.saveShortcuts);
+    capturingIdRef.current = capturingId, overridesRef.current = overrides, saveRef.current = settings.saveShortcuts, (0, import_react10.useLayoutEffect)(() => {
       let onKey2 = (event) => {
         let id = capturingIdRef.current;
         if (!id || event.isComposing || HOLD_KEYS.has(event.key)) return;
@@ -35224,7 +35277,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
         window.removeEventListener("keydown", onKey2, !0), document.removeEventListener("keydown", onKey2, !0);
       };
     }, []);
-    let groups = (0, import_react9.useMemo)(() => GROUP_ORDER.map((group) => {
+    let groups = (0, import_react10.useMemo)(() => GROUP_ORDER.map((group) => {
       let rows = CATALOG.filter((row) => row.group !== group ? !1 : matchesFilter(row, query, chordsFor(row, overrides)));
       return { group, rows };
     }).filter((item) => item.rows.length > 0), [overrides, query]);
@@ -35746,7 +35799,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function mountSettings(host) {
     islandRoot?.unmount(), islandRoot = null;
     let root = host === void 0 ? document.getElementById("settings-dialog") : host;
-    root && (islandRoot = mountIsland(root, (0, import_react10.createElement)(SettingsPanel)));
+    root && (islandRoot = mountIsland(root, (0, import_react11.createElement)(SettingsPanel)));
   }
   function systemLanguages() {
     return Array.isArray(navigator.languages) && navigator.languages.length ? [...navigator.languages] : [navigator.language || "en"];
@@ -36062,18 +36115,18 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   // src/app/mui-theme-root.tsx
   var import_jsx_runtime67 = __toESM(require_jsx_runtime(), 1);
   function MuiThemeRoot({ children }) {
-    let [colorway, setColorway] = (0, import_react11.useState)(() => getSettingsState().colorway);
-    (0, import_react11.useEffect)(() => subscribeSettings(() => {
+    let [colorway, setColorway] = (0, import_react12.useState)(() => getSettingsState().colorway);
+    (0, import_react12.useEffect)(() => subscribeSettings(() => {
       (0, import_react_dom.flushSync)(() => {
         setColorway(getSettingsState().colorway);
       });
     }), []);
-    let theme = (0, import_react11.useMemo)(() => createAppTheme(colorway), [colorway]);
+    let theme = (0, import_react12.useMemo)(() => createAppTheme(colorway), [colorway]);
     return /* @__PURE__ */ (0, import_jsx_runtime67.jsx)(ThemeProvider4, { theme, children });
   }
 
   // src/containers/CrateContext.tsx
-  var import_react12 = __toESM(require_react(), 1), import_jsx_runtime68 = __toESM(require_jsx_runtime(), 1), CrateContext = (0, import_react12.createContext)(null);
+  var import_react13 = __toESM(require_react(), 1), import_jsx_runtime68 = __toESM(require_jsx_runtime(), 1), CrateContext = (0, import_react13.createContext)(null);
   function CrateProvider({
     value,
     children
@@ -36081,14 +36134,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime68.jsx)(CrateContext, { value, children });
   }
   function useCrates() {
-    let value = (0, import_react12.useContext)(CrateContext);
+    let value = (0, import_react13.useContext)(CrateContext);
     if (value === null)
       throw new Error("useCrates must be used within CrateProvider");
     return value;
   }
 
   // src/containers/FilesContext.tsx
-  var import_react13 = __toESM(require_react(), 1), import_jsx_runtime69 = __toESM(require_jsx_runtime(), 1), FilesContext = (0, import_react13.createContext)(null);
+  var import_react14 = __toESM(require_react(), 1), import_jsx_runtime69 = __toESM(require_jsx_runtime(), 1), FilesContext = (0, import_react14.createContext)(null);
   function FilesProvider({
     value,
     children
@@ -36096,14 +36149,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime69.jsx)(FilesContext, { value, children });
   }
   function useFiles() {
-    let value = (0, import_react13.useContext)(FilesContext);
+    let value = (0, import_react14.useContext)(FilesContext);
     if (value === null)
       throw new Error("useFiles must be used within FilesProvider");
     return value;
   }
 
   // src/containers/GigContext.tsx
-  var import_react14 = __toESM(require_react(), 1), import_jsx_runtime70 = __toESM(require_jsx_runtime(), 1), GigContext = (0, import_react14.createContext)(null);
+  var import_react15 = __toESM(require_react(), 1), import_jsx_runtime70 = __toESM(require_jsx_runtime(), 1), GigContext = (0, import_react15.createContext)(null);
   function GigStateProvider({
     value,
     children
@@ -36111,14 +36164,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime70.jsx)(GigContext, { value, children });
   }
   function useGig() {
-    let value = (0, import_react14.useContext)(GigContext);
+    let value = (0, import_react15.useContext)(GigContext);
     if (value === null)
       throw new Error("useGig must be used within GigStateProvider");
     return value;
   }
 
   // src/containers/HealthContext.tsx
-  var import_react15 = __toESM(require_react(), 1), import_jsx_runtime71 = __toESM(require_jsx_runtime(), 1), HealthContext = (0, import_react15.createContext)(null);
+  var import_react16 = __toESM(require_react(), 1), import_jsx_runtime71 = __toESM(require_jsx_runtime(), 1), HealthContext = (0, import_react16.createContext)(null);
   function HealthProvider({
     value,
     children
@@ -36126,14 +36179,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime71.jsx)(HealthContext, { value, children });
   }
   function useHealth() {
-    let value = (0, import_react15.useContext)(HealthContext);
+    let value = (0, import_react16.useContext)(HealthContext);
     if (value === null)
       throw new Error("useHealth must be used within HealthProvider");
     return value;
   }
 
   // src/containers/BatchContext.tsx
-  var import_react16 = __toESM(require_react(), 1);
+  var import_react17 = __toESM(require_react(), 1);
 
   // src/lib/batch/batch-store.ts
   var EMPTY_BATCH = {
@@ -36214,7 +36267,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/containers/BatchContext.tsx
-  var import_jsx_runtime72 = __toESM(require_jsx_runtime(), 1), BatchContext = (0, import_react16.createContext)(null);
+  var import_jsx_runtime72 = __toESM(require_jsx_runtime(), 1), BatchContext = (0, import_react17.createContext)(null);
   function BatchProvider({
     value,
     children
@@ -36222,14 +36275,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime72.jsx)(BatchContext, { value, children });
   }
   function useBatch() {
-    let value = (0, import_react16.useContext)(BatchContext);
+    let value = (0, import_react17.useContext)(BatchContext);
     if (value === null)
       throw new Error("useBatch must be used within BatchProvider");
     return value;
   }
 
   // src/containers/JobContext.tsx
-  var import_react17 = __toESM(require_react(), 1), import_jsx_runtime73 = __toESM(require_jsx_runtime(), 1), JobContext = (0, import_react17.createContext)(null);
+  var import_react18 = __toESM(require_react(), 1), import_jsx_runtime73 = __toESM(require_jsx_runtime(), 1), JobContext = (0, import_react18.createContext)(null);
   function JobProvider({
     value,
     children
@@ -36237,14 +36290,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime73.jsx)(JobContext, { value, children });
   }
   function useJobs() {
-    let value = (0, import_react17.useContext)(JobContext);
+    let value = (0, import_react18.useContext)(JobContext);
     if (value === null)
       throw new Error("useJobs must be used within JobProvider");
     return value;
   }
 
   // src/containers/NoticeContext.tsx
-  var import_react18 = __toESM(require_react(), 1), import_jsx_runtime74 = __toESM(require_jsx_runtime(), 1), NoticeContext = (0, import_react18.createContext)(null);
+  var import_react19 = __toESM(require_react(), 1), import_jsx_runtime74 = __toESM(require_jsx_runtime(), 1), NoticeContext = (0, import_react19.createContext)(null);
   function NoticeProvider({
     value,
     children
@@ -36252,14 +36305,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime74.jsx)(NoticeContext, { value, children });
   }
   function useNotice() {
-    let value = (0, import_react18.useContext)(NoticeContext);
+    let value = (0, import_react19.useContext)(NoticeContext);
     if (value === null)
       throw new Error("useNotice must be used within NoticeProvider");
     return value;
   }
 
   // src/containers/HistoryContext.tsx
-  var import_react19 = __toESM(require_react(), 1), import_jsx_runtime75 = __toESM(require_jsx_runtime(), 1), historyActions = {
+  var import_react20 = __toESM(require_react(), 1), import_jsx_runtime75 = __toESM(require_jsx_runtime(), 1), historyActions = {
     loadHistory: async () => {
     },
     openSession: async (_id) => {
@@ -36277,7 +36330,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function notifyHistory() {
     for (let listener of listeners7) listener();
   }
-  var HistoryContext = (0, import_react19.createContext)(null);
+  var HistoryContext = (0, import_react20.createContext)(null);
   function HistoryProvider({
     value,
     children
@@ -36285,14 +36338,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime75.jsx)(HistoryContext, { value, children });
   }
   function useHistory() {
-    let value = (0, import_react19.useContext)(HistoryContext);
+    let value = (0, import_react20.useContext)(HistoryContext);
     if (value === null)
       throw new Error("useHistory must be used within HistoryProvider");
     return value;
   }
 
   // src/containers/StatsContext.tsx
-  var import_react20 = __toESM(require_react(), 1), import_jsx_runtime76 = __toESM(require_jsx_runtime(), 1), StatsContext = (0, import_react20.createContext)(null);
+  var import_react21 = __toESM(require_react(), 1), import_jsx_runtime76 = __toESM(require_jsx_runtime(), 1), StatsContext = (0, import_react21.createContext)(null);
   function StatsProvider({
     value,
     children
@@ -36300,14 +36353,14 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime76.jsx)(StatsContext, { value, children });
   }
   function useStats() {
-    let value = (0, import_react20.useContext)(StatsContext);
+    let value = (0, import_react21.useContext)(StatsContext);
     if (value === null)
       throw new Error("useStats must be used within StatsProvider");
     return value;
   }
 
   // src/containers/PlayerContext.tsx
-  var import_react21 = __toESM(require_react(), 1), import_jsx_runtime77 = __toESM(require_jsx_runtime(), 1), PlayerContext = (0, import_react21.createContext)(null);
+  var import_react22 = __toESM(require_react(), 1), import_jsx_runtime77 = __toESM(require_jsx_runtime(), 1), PlayerContext = (0, import_react22.createContext)(null);
   function PlayerProvider({
     value,
     children
@@ -36315,23 +36368,23 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime77.jsx)(PlayerContext, { value, children });
   }
   function usePlayer() {
-    let value = (0, import_react21.useContext)(PlayerContext);
+    let value = (0, import_react22.useContext)(PlayerContext);
     if (value === null)
       throw new Error("usePlayer must be used within PlayerProvider");
     return value;
   }
 
   // src/containers/WaveformContext.tsx
-  var import_react22 = __toESM(require_react(), 1), import_react_dom2 = __toESM(require_react_dom(), 1);
+  var import_react23 = __toESM(require_react(), 1), import_react_dom2 = __toESM(require_react_dom(), 1);
 
   // src/lib/player/waveform.ts
   var WAVE_BG = { r: 35, g: 25, b: 16 }, OUTER_ALPHA = 0.6, PLAYED_SHADE = 0.45, BEAT_HEIGHT_RATIO = 0.12, DOWNBEAT_HEIGHT_RATIO = 0.18, BEAT_ALPHA = 0.28, DOWNBEAT_ALPHA = 0.35, DEFAULT_MARKER_COLOR = { r: 226, g: 59, b: 22 }, PLAYHEAD_COLOR = { r: 226, g: 59, b: 22 }, BEAT_MARK = { r: 255, g: 255, b: 255 }, HEADER_BYTES = 64, HEX_COLOR = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/, MAX_POINTS = 2e7, MAX_TICKS = 8192;
   function parseSwf1(input) {
     let bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
     if (bytes.byteLength < HEADER_BYTES || bytes[0] !== 83 || bytes[1] !== 87 || bytes[2] !== 70 || bytes[3] !== 49) return null;
-    let view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-    if (view.getUint16(4, !0) !== HEADER_BYTES) return null;
-    let version3 = view.getUint16(6, !0), flags = view.getUint16(8, !0), analyzerVersion = view.getUint16(10, !0), sampleRate = view.getUint32(12, !0), detailHzMilli = view.getUint32(16, !0), durationMs = view.getUint32(20, !0), detailCount = view.getUint32(24, !0), overviewCount = view.getUint32(28, !0), seratoColumns = view.getUint32(32, !0), seratoBands = view.getUint16(36, !0), lowHzMilli = view.getUint32(40, !0), highHzMilli = view.getUint32(44, !0);
+    let view2 = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    if (view2.getUint16(4, !0) !== HEADER_BYTES) return null;
+    let version3 = view2.getUint16(6, !0), flags = view2.getUint16(8, !0), analyzerVersion = view2.getUint16(10, !0), sampleRate = view2.getUint32(12, !0), detailHzMilli = view2.getUint32(16, !0), durationMs = view2.getUint32(20, !0), detailCount = view2.getUint32(24, !0), overviewCount = view2.getUint32(28, !0), seratoColumns = view2.getUint32(32, !0), seratoBands = view2.getUint16(36, !0), lowHzMilli = view2.getUint32(40, !0), highHzMilli = view2.getUint32(44, !0);
     if (detailCount > MAX_POINTS || overviewCount > MAX_POINTS || seratoColumns > MAX_POINTS) return null;
     let detailBytes = detailCount * 6, overviewBytes = overviewCount * 6, seratoBytes = seratoColumns * seratoBands;
     if (!Number.isSafeInteger(detailBytes + overviewBytes + seratoBytes) || HEADER_BYTES + detailBytes + overviewBytes + seratoBytes !== bytes.byteLength) return null;
@@ -36675,9 +36728,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     pps: 80,
     phase: "idle",
     overviewSource: ""
-  }, WaveformContext = (0, import_react22.createContext)(null), WaveformClockContext = (0, import_react22.createContext)(null);
+  }, WaveformContext = (0, import_react23.createContext)(null), WaveformClockContext = (0, import_react23.createContext)(null);
   function WaveformProvider({ children }) {
-    let [ui, setUi] = (0, import_react22.useState)(defaultUi), value = (0, import_react22.useMemo)(() => {
+    let [ui, setUi] = (0, import_react23.useState)(defaultUi), value = (0, import_react23.useMemo)(() => {
       let blocked = ui.phase === "reading" || ui.phase === "unavailable";
       return {
         ...ui,
@@ -36699,13 +36752,13 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     return /* @__PURE__ */ (0, import_jsx_runtime78.jsx)(WaveformClockContext, { value: clock, children });
   }
   function useWaveform() {
-    let value = (0, import_react22.useContext)(WaveformContext);
+    let value = (0, import_react23.useContext)(WaveformContext);
     if (value === null)
       throw new Error("useWaveform must be used within WaveformProvider");
     return value;
   }
   function useWaveformClockOverride() {
-    return (0, import_react22.useContext)(WaveformClockContext);
+    return (0, import_react23.useContext)(WaveformClockContext);
   }
 
   // src/lib/jobs/job-view.ts
@@ -36931,8 +36984,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     state.filesActive = Math.max(0, Math.min(rows.length - 1, index));
     let list = document.getElementById("files-list");
     if (list) {
-      let rowHeight = filesRowHeight(), view = list.clientHeight || 600, top2 = state.filesActive * rowHeight, maxScroll = Math.max(0, rows.length * rowHeight - view);
-      top2 < list.scrollTop && (list.scrollTop = top2), top2 + rowHeight > list.scrollTop + view && (list.scrollTop = Math.min(maxScroll, top2 + rowHeight - view));
+      let rowHeight = filesRowHeight(), view2 = list.clientHeight || 600, top2 = state.filesActive * rowHeight, maxScroll = Math.max(0, rows.length * rowHeight - view2);
+      top2 < list.scrollTop && (list.scrollTop = top2), top2 + rowHeight > list.scrollTop + view2 && (list.scrollTop = Math.min(maxScroll, top2 + rowHeight - view2));
     }
     renderFiles(), list?.querySelector(`[data-files-index="${state.filesActive}"]`)?.focus();
   }
@@ -37121,7 +37174,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/lib/gig/cloud.ts
-  var import_react24 = __toESM(require_react(), 1);
+  var import_react25 = __toESM(require_react(), 1);
 
   // src/lib/gig/cloud-files-view.ts
   var PROVIDER_KEYS = {
@@ -37151,7 +37204,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/pages/GigDetailsGroup.tsx
-  var import_react23 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
+  var import_react24 = __toESM(require_react(), 1), import_react_dom3 = __toESM(require_react_dom(), 1);
 
   // node_modules/@mui/material/Accordion/Accordion.mjs
   var React93 = __toESM(require_react(), 1);
@@ -37829,7 +37882,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   // src/pages/GigDetailsGroup.tsx
   var import_jsx_runtime84 = __toESM(require_jsx_runtime(), 1), LIST_CAP = 100;
   function GigDetailsGroup({ label, lines }) {
-    let [expanded2, setExpanded] = (0, import_react23.useState)(!1), [open, setOpen] = (0, import_react23.useState)(!0), shown = expanded2 || lines.length <= LIST_CAP ? lines : lines.slice(0, LIST_CAP);
+    let [expanded2, setExpanded] = (0, import_react24.useState)(!1), [open, setOpen] = (0, import_react24.useState)(!0), shown = expanded2 || lines.length <= LIST_CAP ? lines : lines.slice(0, LIST_CAP);
     return /* @__PURE__ */ (0, import_jsx_runtime84.jsxs)(
       Accordion_default,
       {
@@ -37927,7 +37980,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     let panel = el("cloud-panel");
     panel.dataset.cloudWired !== "true" && (panel.dataset.cloudWired = "true", el("cloud-refresh").addEventListener("click", () => {
       loadCloud();
-    }), islandRoot2 = mountIsland(el("cloud-report"), (0, import_react24.createElement)(CloudFilesReport)));
+    }), islandRoot2 = mountIsland(el("cloud-report"), (0, import_react25.createElement)(CloudFilesReport)));
   }
   async function loadCloud() {
     let token4 = ++state.cloudToken;
@@ -37962,10 +38015,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }
 
   // src/lib/gig/drift.ts
-  var import_react39 = __toESM(require_react(), 1);
+  var import_react40 = __toESM(require_react(), 1);
 
   // src/components/ReportGrid.tsx
-  var import_react38 = __toESM(require_react(), 1);
+  var import_react39 = __toESM(require_react(), 1);
 
   // node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
   function _objectWithoutPropertiesLoose(r2, e) {
@@ -43218,7 +43271,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   }, buildFormatNumber_default = buildFormatNumber;
 
   // node_modules/@mui/material/TablePagination/TablePagination.mjs
-  var import_jsx_runtime110 = __toESM(require_jsx_runtime(), 1), import_react25 = __toESM(require_react(), 1), _TablePaginationInput, formatNumber2 = buildFormatNumber_default("en-US"), TablePaginationRoot = styled_default2(TableCell_default, {
+  var import_jsx_runtime110 = __toESM(require_jsx_runtime(), 1), import_react26 = __toESM(require_react(), 1), _TablePaginationInput, formatNumber2 = buildFormatNumber_default("en-US"), TablePaginationRoot = styled_default2(TableCell_default, {
     name: "MuiTablePagination",
     slot: "Root"
   })(memoTheme_default(({
@@ -43434,7 +43487,7 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
           },
           disabled,
           ...selectSlotProps,
-          children: rowsPerPageOptions.map((rowsPerPageOption) => /* @__PURE__ */ (0, import_react25.createElement)(MenuItemSlot, {
+          children: rowsPerPageOptions.map((rowsPerPageOption) => /* @__PURE__ */ (0, import_react26.createElement)(MenuItemSlot, {
             ...menuItemSlotProps,
             key: rowsPerPageOption.label ? rowsPerPageOption.label : rowsPerPageOption,
             value: rowsPerPageOption.value ? rowsPerPageOption.value : rowsPerPageOption
@@ -48134,10 +48187,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       return scrollbarSize;
     if (element === null)
       return 0;
-    let htmlElement = element, doc = ownerDocument(element), view = doc.defaultView, devicePixelRatio2 = view?.devicePixelRatio ?? 1, cached = scrollbarSizeCache.get(element);
+    let htmlElement = element, doc = ownerDocument(element), view2 = doc.defaultView, devicePixelRatio2 = view2?.devicePixelRatio ?? 1, cached = scrollbarSizeCache.get(element);
     if (cached !== void 0 && cached.devicePixelRatio === devicePixelRatio2 && cached.measuredDirectly)
       return cached.size;
-    let computed = view?.getComputedStyle(htmlElement), canScrollY = computed?.overflowY === "auto" || computed?.overflowY === "scroll", canScrollX = computed?.overflowX === "auto" || computed?.overflowX === "scroll", hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight && htmlElement.offsetWidth > 0, hasScrollX = canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth && htmlElement.offsetHeight > 0, borderWidth = parseCSSPixelValue(computed?.borderLeftWidth) + parseCSSPixelValue(computed?.borderRightWidth), borderHeight = parseCSSPixelValue(computed?.borderTopWidth) + parseCSSPixelValue(computed?.borderBottomWidth), directSize = Math.max(hasScrollY ? htmlElement.offsetWidth - htmlElement.clientWidth - borderWidth : 0, hasScrollX ? htmlElement.offsetHeight - htmlElement.clientHeight - borderHeight : 0);
+    let computed = view2?.getComputedStyle(htmlElement), canScrollY = computed?.overflowY === "auto" || computed?.overflowY === "scroll", canScrollX = computed?.overflowX === "auto" || computed?.overflowX === "scroll", hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight && htmlElement.offsetWidth > 0, hasScrollX = canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth && htmlElement.offsetHeight > 0, borderWidth = parseCSSPixelValue(computed?.borderLeftWidth) + parseCSSPixelValue(computed?.borderRightWidth), borderHeight = parseCSSPixelValue(computed?.borderTopWidth) + parseCSSPixelValue(computed?.borderBottomWidth), directSize = Math.max(hasScrollY ? htmlElement.offsetWidth - htmlElement.clientWidth - borderWidth : 0, hasScrollX ? htmlElement.offsetHeight - htmlElement.clientHeight - borderHeight : 0);
     if (hasScrollY || hasScrollX) {
       let size2 = Math.max(0, directSize);
       return scrollbarSizeCache.set(element, {
@@ -52318,7 +52371,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/cell/GridEditSingleSelectCell.mjs
-  var import_react26 = __toESM(require_react(), 1), import_jsx_runtime136 = __toESM(require_jsx_runtime(), 1), _excluded42 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "className", "hasFocus", "isValidating", "isProcessingProps", "error", "onValueChange", "initialOpen", "slotProps"];
+  var import_react27 = __toESM(require_react(), 1), import_jsx_runtime136 = __toESM(require_jsx_runtime(), 1), _excluded42 = ["id", "value", "formattedValue", "api", "field", "row", "rowNode", "colDef", "cellMode", "isEditable", "tabIndex", "className", "hasFocus", "isValidating", "isProcessingProps", "error", "onValueChange", "initialOpen", "slotProps"];
   function isKeyboardEvent2(event) {
     return "key" in event && !!event.key;
   }
@@ -52387,7 +52440,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     }, other, slotProps?.root, rootProps.slotProps?.baseSelect, {
       children: valueOptions.map((valueOption) => {
         let value = getOptionValue(valueOption);
-        return /* @__PURE__ */ (0, import_react26.createElement)(rootProps.slots.baseSelectOption, _extends({}, rootProps.slotProps?.baseSelectOption || {}, {
+        return /* @__PURE__ */ (0, import_react27.createElement)(rootProps.slots.baseSelectOption, _extends({}, rootProps.slotProps?.baseSelectOption || {}, {
           native: isSelectNative,
           key: value,
           value
@@ -52399,7 +52452,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterInputSingleSelect.mjs
   var React167 = __toESM(require_react(), 1);
-  var import_react27 = __toESM(require_react(), 1), import_jsx_runtime137 = __toESM(require_jsx_runtime(), 1), _excluded43 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "tabIndex", "isFilterActive", "clearButton", "headerFilterMenu", "slotProps", "disableDebounce"], renderSingleSelectOptions = ({
+  var import_react28 = __toESM(require_react(), 1), import_jsx_runtime137 = __toESM(require_jsx_runtime(), 1), _excluded43 = ["item", "applyValue", "type", "apiRef", "focusElementRef", "tabIndex", "isFilterActive", "clearButton", "headerFilterMenu", "slotProps", "disableDebounce"], renderSingleSelectOptions = ({
     column: column2,
     OptionComponent,
     getOptionLabel,
@@ -52414,7 +52467,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
     });
     return (declaresBlankOption ? valueOptions : ["", ...valueOptions]).map((option, index) => {
       let isBlankOption = !declaresBlankOption && index === 0, value = isBlankOption ? "" : getOptionValue(option), label = isBlankOption ? blankOptionLabel : getOptionLabel(option);
-      return label === "" && (label = " "), /* @__PURE__ */ (0, import_react27.createElement)(OptionComponent, _extends({}, baseSelectOptionProps, {
+      return label === "" && (label = " "), /* @__PURE__ */ (0, import_react28.createElement)(OptionComponent, _extends({}, baseSelectOptionProps, {
         native: isSelectNative,
         key: value,
         value
@@ -56425,7 +56478,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterFormColumnInput.mjs
   var React225 = __toESM(require_react(), 1);
-  var import_react28 = __toESM(require_react(), 1), import_jsx_runtime188 = __toESM(require_jsx_runtime(), 1), _excluded66 = ["item", "columns", "value", "onChange", "disabled", "className"], FilterFormColumnInput = styled_default2("div", {
+  var import_react29 = __toESM(require_react(), 1), import_jsx_runtime188 = __toESM(require_jsx_runtime(), 1), _excluded66 = ["item", "columns", "value", "onChange", "disabled", "className"], FilterFormColumnInput = styled_default2("div", {
     name: "MuiDataGrid",
     slot: "FilterFormColumnInput"
   })({
@@ -56456,7 +56509,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
       native: isBaseSelectNative,
       disabled
     }, rootProps.slotProps?.baseSelect, {
-      children: columns.map((col) => /* @__PURE__ */ (0, import_react28.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+      children: columns.map((col) => /* @__PURE__ */ (0, import_react29.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
         native: isBaseSelectNative,
         key: col.field,
         value: col.field
@@ -56465,7 +56518,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
   }
 
   // node_modules/@mui/x-data-grid/components/panel/filterPanel/GridFilterFormBase.mjs
-  var import_jsx_runtime189 = __toESM(require_jsx_runtime(), 1), import_react29 = __toESM(require_react(), 1), _excluded67 = ["item", "hasMultipleFilters", "deleteFilter", "applyFilterChanges", "showMultiFilterOperators", "disableMultiFilterOperator", "applyMultiFilterOperatorChanges", "focusElementRef", "logicOperators", "columnsSort", "filterColumns", "deleteIconProps", "logicOperatorInputProps", "operatorInputProps", "columnInputProps", "valueInputProps", "disableDebounce", "readOnly", "filterModel", "children"], _excluded213 = ["InputComponentProps"], useUtilityClasses92 = (ownerState) => {
+  var import_jsx_runtime189 = __toESM(require_jsx_runtime(), 1), import_react30 = __toESM(require_react(), 1), _excluded67 = ["item", "hasMultipleFilters", "deleteFilter", "applyFilterChanges", "showMultiFilterOperators", "disableMultiFilterOperator", "applyMultiFilterOperatorChanges", "focusElementRef", "logicOperators", "columnsSort", "filterColumns", "deleteIconProps", "logicOperatorInputProps", "operatorInputProps", "columnInputProps", "valueInputProps", "disableDebounce", "readOnly", "filterModel", "children"], _excluded213 = ["InputComponentProps"], useUtilityClasses92 = (ownerState) => {
     let {
       classes: classes2
     } = ownerState;
@@ -56666,7 +56719,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         disabled: isLogicOperatorDisabled,
         native: isBaseSelectNative
       }, rootProps.slotProps?.baseSelect, {
-        children: logicOperators.map((logicOperator) => /* @__PURE__ */ (0, import_react29.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+        children: logicOperators.map((logicOperator) => /* @__PURE__ */ (0, import_react30.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
           native: isBaseSelectNative,
           key: logicOperator.toString(),
           value: logicOperator.toString()
@@ -56692,7 +56745,7 @@ return result$$;`.replaceAll("$$", String(filterItemsApplierId)));
         native: isBaseSelectNative,
         disabled: readOnly
       }, rootProps.slotProps?.baseSelect, {
-        children: currentColumn?.filterOperators?.map((operator) => /* @__PURE__ */ (0, import_react29.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
+        children: currentColumn?.filterOperators?.map((operator) => /* @__PURE__ */ (0, import_react30.createElement)(rootProps.slots.baseSelectOption, _extends({}, baseSelectOptionProps, {
           native: isBaseSelectNative,
           key: operator.value,
           value: operator.value
@@ -64398,7 +64451,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/TrackListWindow.tsx
-  var import_react37 = __toESM(require_react(), 1);
+  var import_react38 = __toESM(require_react(), 1);
 
   // src/lib/crates/field-edit-view.ts
   var EDIT_FIELDS = [
@@ -64571,6 +64624,50 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     );
   }
 
+  // src/lib/ui/prepped-mark.ts
+  var PREPPED_PIECES = ["cues", "analysed", "file"], PIECE_KEY = {
+    cues: "track.preppedPiece.cues",
+    analysed: "track.preppedPiece.analysed",
+    file: "track.preppedPiece.file"
+  };
+  function named(value) {
+    if (!Array.isArray(value)) return [];
+    let found = new Set(value);
+    return PREPPED_PIECES.filter((piece) => found.has(piece));
+  }
+  function joinPieces(list) {
+    return list.map((piece) => t(PIECE_KEY[piece])).join(", ");
+  }
+  function view(state2, visible, tip) {
+    let sentence = tip.params ? t(tip.key, tip.params) : t(tip.key);
+    return { state: state2, visible, sentence, tip };
+  }
+  function preppedView(track) {
+    if (!Object.prototype.hasOwnProperty.call(track, "prepped")) return null;
+    let missing = named(track.prepped_missing), unknown = named(track.prepped_unknown), missingText = joinPieces(missing), unknownText = joinPieces(unknown);
+    if (track.prepped === !0 && missing.length === 0 && unknown.length === 0)
+      return view("prepped", t("track.prepped"), { key: "tooltip.prepped" });
+    if (missing.length > 0 && unknown.length > 0)
+      return view("unknown", t("track.preppedMixedDetail", { missing: missingText, unknown: unknownText }), {
+        key: "tooltip.preppedMixed",
+        params: { missing: missingText, unknown: unknownText }
+      });
+    if (unknown.length > 0 || track.prepped !== !1) {
+      let pieces = unknownText || missingText || t("track.preppedUnchecked");
+      return view("unknown", t("track.preppedUncheckedDetail", { pieces }), {
+        key: "tooltip.preppedUnknown",
+        params: { pieces }
+      });
+    }
+    return missing.length === 0 ? view("missing", t("track.notPrepped"), {
+      key: "tooltip.preppedMissing",
+      params: { pieces: t("track.notPrepped") }
+    }) : view("missing", t("track.notPreppedDetail", { pieces: missingText }), {
+      key: "tooltip.preppedMissing",
+      params: { pieces: missingText }
+    });
+  }
+
   // src/lib/ui/track-list-columns.tsx
   var import_jsx_runtime232 = __toESM(require_jsx_runtime(), 1), HISTORY_PLAYED_WIDTH = 136, TRACK_COLUMN_FIELDS = [
     "name",
@@ -64616,11 +64713,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
   }
   function TrackTitleCell({ track }) {
-    let hex = colorHex(track.color);
+    let hex = colorHex(track.color), mark = preppedView(track);
     return /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime232.jsxs)("span", { className: "title-line", children: [
       hex ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
       track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { children: track.emoji }) : null,
       /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
+      mark ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)(
+        "span",
+        {
+          className: `prepped-mark prepped-mark-${mark.state}`,
+          tabIndex: 0,
+          "aria-label": mark.sentence,
+          ref: tooltipRef(mark.tip),
+          children: /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "prepped-word", "aria-hidden": "true", children: mark.visible })
+        }
+      ) : null,
       track.offline ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
       track.stems ? /* @__PURE__ */ (0, import_jsx_runtime232.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
     ] }) });
@@ -64769,8 +64876,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function cueSummary(cue, empty) {
     if (!cue) return empty;
-    let named = typeof cue.name == "string" ? cue.name.trim() : "", time = formatCueTime(cue.start_ms);
-    return named ? `${time} ${named}` : time;
+    let named2 = typeof cue.name == "string" ? cue.name.trim() : "", time = formatCueTime(cue.start_ms);
+    return named2 ? `${time} ${named2}` : time;
   }
   function cueDiffRows(before, after) {
     let beforeCues = cuesFromFrame(before), afterCues = cuesFromFrame(after), beforeSlots = cueSlots(beforeCues), afterSlots = cueSlots(afterCues), diffs = [];
@@ -64797,13 +64904,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/player/player.ts
-  var import_react34 = __toESM(require_react(), 1);
+  var import_react35 = __toESM(require_react(), 1);
 
   // src/components/PlayerBar.tsx
-  var import_react31 = __toESM(require_react(), 1);
+  var import_react32 = __toESM(require_react(), 1);
 
   // src/components/PlayerCuePads.tsx
-  var import_react30 = __toESM(require_react(), 1);
+  var import_react31 = __toESM(require_react(), 1);
   var import_jsx_runtime233 = __toESM(require_jsx_runtime(), 1);
   function slotsFromPlayerCues(cues2) {
     let slots = Array.from({ length: CUE_SLOT_COUNT }, () => null);
@@ -64817,7 +64924,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return cue.label.trim() || t("markers.cue", { number });
   }
   function PlayerCuePads() {
-    let { cues: cues2, currentTime: currentTime2, seek: seek2 } = usePlayer(), [lastClicked, setLastClicked] = (0, import_react30.useState)(null), slots = slotsFromPlayerCues(cues2), lit = activePadIndex(currentTime2, slots, lastClicked);
+    let { cues: cues2, currentTime: currentTime2, seek: seek2 } = usePlayer(), [lastClicked, setLastClicked] = (0, import_react31.useState)(null), slots = slotsFromPlayerCues(cues2), lit = activePadIndex(currentTime2, slots, lastClicked);
     return /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("div", { className: "player-cue-pads", children: slots.map((cue, slot) => {
       let number = slot + 1, color2 = slotColor(slot, cue?.color), style4 = color2 ? { background: color2 } : void 0, className = [
         "player-cue-pad",
@@ -64867,16 +64974,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     wave instanceof HTMLElement && wave.parentElement !== slot && slot.append(wave);
   }
   function PlayerBar() {
-    let player2 = usePlayer(), [innerWidth, setInnerWidth] = (0, import_react31.useState)(() => window.innerWidth), compact = innerWidth <= PLAYER_DECK_COMPACT_MAX, loaded = player2.trackId !== null, shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying, named = loaded ? player2.title || playerStrings.untitled : "";
-    (0, import_react31.useEffect)(() => {
+    let player2 = usePlayer(), [innerWidth, setInnerWidth] = (0, import_react32.useState)(() => window.innerWidth), compact = innerWidth <= PLAYER_DECK_COMPACT_MAX, loaded = player2.trackId !== null, shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying, named2 = loaded ? player2.title || playerStrings.untitled : "";
+    (0, import_react32.useEffect)(() => {
       let onResize = () => {
         setInnerWidth(window.innerWidth);
       };
       return window.addEventListener("resize", onResize), () => window.removeEventListener("resize", onResize);
-    }, []), (0, import_react31.useLayoutEffect)(() => {
+    }, []), (0, import_react32.useLayoutEffect)(() => {
       setPlayerWaveformCompact(compact);
     }, [compact]);
-    let playControl = /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(PlayButton, { variant: "bar", name: named }), title2 = /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(Typography_default, { className: "player-title", component: "p", noWrap: !0, title: shownTitle, children: shownTitle }), time = /* @__PURE__ */ (0, import_jsx_runtime234.jsxs)("span", { className: "player-time", children: [
+    let playControl = /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(PlayButton, { variant: "bar", name: named2 }), title2 = /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(Typography_default, { className: "player-title", component: "p", noWrap: !0, title: shownTitle, children: shownTitle }), time = /* @__PURE__ */ (0, import_jsx_runtime234.jsxs)("span", { className: "player-time", children: [
       /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
       /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
     ] }), status4 = /* @__PURE__ */ (0, import_jsx_runtime234.jsx)(Typography_default, { className: "player-status", component: "p", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error }), waveSlot = /* @__PURE__ */ (0, import_jsx_runtime234.jsx)("div", { ref: attachWaveSlot, className: "player-wave-slot" }, WAVE_SLOT_KEY);
@@ -64899,10 +65006,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/player/waveform-view.ts
-  var import_react33 = __toESM(require_react(), 1);
+  var import_react34 = __toESM(require_react(), 1);
 
   // src/components/WaveformPanel.tsx
-  var import_react32 = __toESM(require_react(), 1);
+  var import_react33 = __toESM(require_react(), 1);
 
   // node_modules/@mui/icons-material/Add.mjs
   var import_jsx_runtime235 = __toESM(require_jsx_runtime(), 1), Add_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime235.jsx)("path", {
@@ -64938,8 +65045,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     host,
     compact = !1
   }) {
-    let player2 = usePlayer(), wave = useWaveform(), override = useWaveformClockOverride(), clock = override ?? clockFromPlayer(player2), detailRef = (0, import_react32.useRef)(null), overviewCanvasRef = (0, import_react32.useRef)(null), overviewHitRef = (0, import_react32.useRef)(null);
-    return engine.setClock(clock), engine.setPublish(wave.publish), (0, import_react32.useLayoutEffect)(() => {
+    let player2 = usePlayer(), wave = useWaveform(), override = useWaveformClockOverride(), clock = override ?? clockFromPlayer(player2), detailRef = (0, import_react33.useRef)(null), overviewCanvasRef = (0, import_react33.useRef)(null), overviewHitRef = (0, import_react33.useRef)(null);
+    return engine.setClock(clock), engine.setPublish(wave.publish), (0, import_react33.useLayoutEffect)(() => {
       let detail2 = detailRef.current, overviewCanvas = overviewCanvasRef.current, overviewHit = overviewHitRef.current;
       if (!(!detail2 || !overviewCanvas || !overviewHit))
         return engine.attach({
@@ -64950,7 +65057,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }), () => {
           engine.detach();
         };
-    }, [engine, host]), (0, import_react32.useEffect)(() => {
+    }, [engine, host]), (0, import_react33.useEffect)(() => {
       override || engine.setTrack(player2.trackId);
     }, [engine, override, player2.trackId]), /* @__PURE__ */ (0, import_jsx_runtime237.jsxs)(import_jsx_runtime237.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime237.jsxs)("div", { className: "player-wave-main", children: [
@@ -65069,7 +65176,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountWaveform(host, hooks2, compact = !1) {
     let engine = new WaveformEngine(compact);
     host.classList.add("player-wave"), host.classList.toggle("player-wave-compact", compact), host.hidden = !0, hooks2 && engine.setClock(hooks2);
-    let panel = (0, import_react33.createElement)(WaveformPanel, { engine, host, compact }), tree = hooks2 ? (0, import_react33.createElement)(WaveformClockProvider, { clock: hooks2, children: panel }) : panel, root = mountIsland(host, tree);
+    let panel = (0, import_react34.createElement)(WaveformPanel, { engine, host, compact }), tree = hooks2 ? (0, import_react34.createElement)(WaveformClockProvider, { clock: hooks2, children: panel }) : panel, root = mountIsland(host, tree);
     return engine.bindRoot(root), engine;
   }
   var WaveformEngine = class {
@@ -65444,11 +65551,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     for (let cue of rows) {
       let start2 = Number(cue.start_ms);
       if (!Number.isFinite(start2) || start2 < 0) continue;
-      let index = Number(cue.index), named = typeof cue.name == "string" ? cue.name.trim() : "", fallback = Number.isInteger(index) ? index + 1 : found.length + 1, stored = typeof cue.color == "string" ? cue.color : "", color2 = slotColor(Number.isInteger(index) ? index : -1, stored);
+      let index = Number(cue.index), named2 = typeof cue.name == "string" ? cue.name.trim() : "", fallback = Number.isInteger(index) ? index + 1 : found.length + 1, stored = typeof cue.color == "string" ? cue.color : "", color2 = slotColor(Number.isInteger(index) ? index : -1, stored);
       found.push({
         seconds: start2 / 1e3,
         color: color2,
-        label: named || `${playerStrings.cue} ${fallback}`,
+        label: named2 || `${playerStrings.cue} ${fallback}`,
         index: Number.isInteger(index) && index >= 0 && index < 8 ? index : -1
       });
     }
@@ -65558,7 +65665,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let element = ensureMedia();
     root.replaceChildren(), element instanceof Node && root.append(element);
     let controls = document.createElement("div");
-    root.append(controls), barRoot = mountIsland(controls, (0, import_react34.createElement)(PlayerBar));
+    root.append(controls), barRoot = mountIsland(controls, (0, import_react35.createElement)(PlayerBar));
     let compact = controls.querySelector(".player-deck-compact") !== null;
     waveHost = document.createElement("div"), waveform = mountWaveform(waveHost, void 0, compact);
     let slot = controls.querySelector(".player-wave-slot");
@@ -65752,7 +65859,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/containers/TrackListContext.tsx
-  var import_react35 = __toESM(require_react(), 1), import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1), TrackListContext = (0, import_react35.createContext)(null);
+  var import_react36 = __toESM(require_react(), 1), import_jsx_runtime238 = __toESM(require_jsx_runtime(), 1), TrackListContext = (0, import_react36.createContext)(null);
   function TrackListProvider({
     value,
     children
@@ -65760,14 +65867,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return /* @__PURE__ */ (0, import_jsx_runtime238.jsx)(TrackListContext, { value, children });
   }
   function useTrackList() {
-    let value = (0, import_react35.useContext)(TrackListContext);
+    let value = (0, import_react36.useContext)(TrackListContext);
     if (value === null)
       throw new Error("useTrackList must be used within TrackListProvider");
     return value;
   }
 
   // src/components/FieldEditorBar.tsx
-  var import_react36 = __toESM(require_react(), 1);
+  var import_react37 = __toESM(require_react(), 1);
 
   // src/lib/crates/field-edit.ts
   function body(action, ids, field2, value, files) {
@@ -65802,12 +65909,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return EDIT_FIELDS.includes(value) ? value : "genre";
   }
   function FieldEditorBar({ selectedIds }) {
-    let list = useTrackList(), [field2, setField] = (0, import_react36.useState)("genre"), [value, setValue] = (0, import_react36.useState)(""), [plan, setPlan] = (0, import_react36.useState)(null), [previewed, setPreviewed] = (0, import_react36.useState)(null), [busy8, setBusy] = (0, import_react36.useState)(!1), [status4, setStatus] = (0, import_react36.useState)(""), [writeFiles, setWriteFiles] = (0, import_react36.useState)(!1), idsKey = selectedIds.join(",");
-    (0, import_react36.useEffect)(() => {
+    let list = useTrackList(), [field2, setField] = (0, import_react37.useState)("genre"), [value, setValue] = (0, import_react37.useState)(""), [plan, setPlan] = (0, import_react37.useState)(null), [previewed, setPreviewed] = (0, import_react37.useState)(null), [busy8, setBusy] = (0, import_react37.useState)(!1), [status4, setStatus] = (0, import_react37.useState)(""), [writeFiles, setWriteFiles] = (0, import_react37.useState)(!1), idsKey = selectedIds.join(",");
+    (0, import_react37.useEffect)(() => {
       let count = idsKey === "" ? 0 : idsKey.split(",").filter(Boolean).length;
       setPlan(null), setPreviewed(null), setBusy(!1), setStatus(fieldEditShows(count) ? fieldEditSelectedText(count) : "");
     }, [idsKey]);
-    let current4 = (0, import_react36.useMemo)(
+    let current4 = (0, import_react37.useMemo)(
       () => ({ ids: [...selectedIds], field: field2, value, files: writeFiles }),
       [selectedIds, field2, value, writeFiles]
     ), applyReady = fieldEditApplyReady(plan, previewed, current4, list.writable, busy8);
@@ -65986,9 +66093,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       setTooltip(element, tips.columnMenu);
     }
   }
-  function idsFromModel(next3, view) {
+  function idsFromModel(next3, view2) {
     if (next3.type === "exclude")
-      return view.map((row) => row.id).filter((id) => !next3.ids.has(id));
+      return view2.map((row) => row.id).filter((id) => !next3.ids.has(id));
     let ids = [];
     for (let id of next3.ids)
       typeof id == "number" && ids.push(id);
@@ -65999,22 +66106,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackListWindow({ pane, onFocusList }) {
     ensureGridDom();
-    let list = useTrackList(), hostRef = (0, import_react37.useRef)(null), [height2, setHeight] = (0, import_react37.useState)(() => 600), view = pane === "b" ? list.viewB : list.view, history2 = list.mode === "history", cratesMode = list.mode === "crates", [selectedIds, setSelectedIds] = (0, import_react37.useState)(
+    let list = useTrackList(), hostRef = (0, import_react38.useRef)(null), [height2, setHeight] = (0, import_react38.useState)(() => 600), view2 = pane === "b" ? list.viewB : list.view, history2 = list.mode === "history", cratesMode = list.mode === "crates", [selectedIds, setSelectedIds] = (0, import_react38.useState)(
       () => list.selectedId == null ? [] : [list.selectedId]
-    ), columns = (0, import_react37.useMemo)(
+    ), columns = (0, import_react38.useMemo)(
       () => trackListColumns(history2, {
         selectTrack: list.selectTrack,
         onFocusList
       }),
       [history2, list.selectTrack, list.locale, onFocusList]
-    ), sortModel = (0, import_react37.useMemo)(() => list.sort ? [{ field: list.sort, sort: list.sortDir < 0 ? "desc" : "asc" }] : [], [list.sort, list.sortDir]), rowSelectionModel = (0, import_react37.useMemo)(() => cratesMode ? { type: "include", ids: new Set(selectedIds) } : {
+    ), sortModel = (0, import_react38.useMemo)(() => list.sort ? [{ field: list.sort, sort: list.sortDir < 0 ? "desc" : "asc" }] : [], [list.sort, list.sortDir]), rowSelectionModel = (0, import_react38.useMemo)(() => cratesMode ? { type: "include", ids: new Set(selectedIds) } : {
       type: "include",
       ids: list.selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([list.selectedId])
-    }, [cratesMode, list.selectedId, selectedIds]), localeText = (0, import_react37.useMemo)(() => gridLocaleText(list.locale), [list.locale]), [page, setPage] = (0, import_react37.useState)(0), maxPage = Math.max(0, Math.ceil(view.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react37.useMemo)(
+    }, [cratesMode, list.selectedId, selectedIds]), localeText = (0, import_react38.useMemo)(() => gridLocaleText(list.locale), [list.locale]), [page, setPage] = (0, import_react38.useState)(0), maxPage = Math.max(0, Math.ceil(view2.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react38.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
-    ), hideFooter = view.length <= GRID_PAGE_SIZE;
-    (0, import_react37.useEffect)(() => {
+    ), hideFooter = view2.length <= GRID_PAGE_SIZE;
+    (0, import_react38.useEffect)(() => {
       if (cratesMode) {
         if (list.selectedId == null) {
           setSelectedIds([]);
@@ -66022,37 +66129,37 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
         setSelectedIds((prev2) => prev2.includes(list.selectedId) ? prev2 : [list.selectedId]);
       }
-    }, [cratesMode, list.selectedId]), (0, import_react37.useEffect)(() => {
+    }, [cratesMode, list.selectedId]), (0, import_react38.useEffect)(() => {
       function onSelectAll() {
-        cratesMode && setSelectedIds(view.filter((row) => !row.entry).map((row) => row.id));
+        cratesMode && setSelectedIds(view2.filter((row) => !row.entry).map((row) => row.id));
       }
       return document.addEventListener(SELECT_ALL_EVENT, onSelectAll), () => document.removeEventListener(SELECT_ALL_EVENT, onSelectAll);
-    }, [cratesMode, view]), (0, import_react37.useLayoutEffect)(() => {
+    }, [cratesMode, view2]), (0, import_react38.useLayoutEffect)(() => {
       setPage(0);
-    }, [history2, list.mode, list.sort, list.sortDir, view.length]), (0, import_react37.useLayoutEffect)(() => {
+    }, [history2, list.mode, list.sort, list.sortDir, view2.length]), (0, import_react38.useLayoutEffect)(() => {
       let parent = hostRef.current?.parentElement ?? null, measure = () => {
         setHeight(paneHeight(parent));
       };
       if (measure(), typeof ResizeObserver != "function" || !parent) return;
       let observer = new ResizeObserver(measure);
       return observer.observe(parent), () => observer.disconnect();
-    }, []), (0, import_react37.useLayoutEffect)(() => {
+    }, []), (0, import_react38.useLayoutEffect)(() => {
       let node2 = hostRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, view, list.locale, height2]), (0, import_react37.useEffect)(() => {
+    }, [columns, view2, list.locale, height2]), (0, import_react38.useEffect)(() => {
       let node2 = hostRef.current;
       node2 && attachGridTooltips(node2);
-    }, [columns, view, list.locale, height2]);
+    }, [columns, view2, list.locale, height2]);
     function onSortModelChange(model) {
       let next3 = model[0]?.field;
       !next3 || next3 === "play" || list.setSort(next3);
     }
     function onRowSelectionModelChange(next3) {
       if (cratesMode) {
-        let ids = idsFromModel(next3, view);
+        let ids = idsFromModel(next3, view2);
         if (!ids.length) {
           let fallback = list.selectedId == null ? [] : [list.selectedId];
           sameIds(selectedIds, fallback) || setSelectedIds(fallback);
@@ -66062,7 +66169,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         setSelectedIds(ids);
         let last = ids[ids.length - 1];
         if (last !== list.selectedId) {
-          let track2 = view.find((row) => row.id === last);
+          let track2 = view2.find((row) => row.id === last);
           track2?.entry ? list.selectEntry(track2.id) : track2 && list.selectTrack(track2.id);
         }
         onFocusList();
@@ -66070,7 +66177,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       let id = [...next3.ids][0];
       if (typeof id != "number" || id === list.selectedId) return;
-      let track = view.find((row) => row.id === id);
+      let track = view2.find((row) => row.id === id);
       track && (track.entry ? list.selectEntry(track.id) : list.selectTrack(track.id), onFocusList());
     }
     function onRowDoubleClick(params) {
@@ -66085,7 +66192,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       /* @__PURE__ */ (0, import_jsx_runtime240.jsx)(
         DataGrid2,
         {
-          rows: [...view],
+          rows: [...view2],
           columns,
           getRowId: (row) => row.id,
           rowHeight: 36,
@@ -66123,7 +66230,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           }
         },
-        `${history2 ? "history" : "tracks"}-${view.length === 0 ? "empty" : "data"}`
+        `${history2 ? "history" : "tracks"}-${view2.length === 0 ? "empty" : "data"}`
       )
     ] });
   }
@@ -66139,13 +66246,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     getRowId
   }) {
     ensureGridDom();
-    let hostRef = (0, import_react38.useRef)(null), locale = getLocale(), localeText = (0, import_react38.useMemo)(() => gridLocaleText2(locale), [locale]), [page, setPage] = (0, import_react38.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react38.useMemo)(
+    let hostRef = (0, import_react39.useRef)(null), locale = getLocale(), localeText = (0, import_react39.useMemo)(() => gridLocaleText2(locale), [locale]), [page, setPage] = (0, import_react39.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react39.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
     ), hideFooter = rows.length <= GRID_PAGE_SIZE, height2 = Math.max(180, Math.min(36 * (rows.length + 2) + (hideFooter ? 0 : 52), 400));
-    return (0, import_react38.useLayoutEffect)(() => {
+    return (0, import_react39.useLayoutEffect)(() => {
       setPage(0);
-    }, [rows.length]), (0, import_react38.useLayoutEffect)(() => {
+    }, [rows.length]), (0, import_react39.useLayoutEffect)(() => {
       let node2 = hostRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
@@ -66289,7 +66396,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("drift-panel");
     panel.dataset.driftWired !== "true" && (panel.dataset.driftWired = "true", el("drift-refresh").addEventListener("click", () => {
       loadDrift();
-    }), islandRoot3 = mountIsland(el("drift-report"), (0, import_react39.createElement)(DriftReport)));
+    }), islandRoot3 = mountIsland(el("drift-report"), (0, import_react40.createElement)(DriftReport)));
   }
   async function loadDrift() {
     let token4 = ++state.driftToken;
@@ -66329,7 +66436,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/octave.ts
-  var import_react40 = __toESM(require_react(), 1);
+  var import_react41 = __toESM(require_react(), 1);
 
   // src/lib/gig/octave-apply.ts
   init_shared_dialog();
@@ -66513,7 +66620,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("octave-panel");
     panel.dataset.octaveWired !== "true" && (panel.dataset.octaveWired = "true", onOctaveReload(() => loadOctave()), onOctaveBusy(setOctaveBusy), el("octave-refresh").addEventListener("click", () => {
       loadOctave();
-    }), islandRoot4 = mountIsland(el("octave-report"), (0, import_react40.createElement)(OctaveReport)));
+    }), islandRoot4 = mountIsland(el("octave-report"), (0, import_react41.createElement)(OctaveReport)));
   }
   async function loadOctave() {
     let token4 = ++state.octaveToken;
@@ -66553,7 +66660,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/players.ts
-  var import_react41 = __toESM(require_react(), 1);
+  var import_react42 = __toESM(require_react(), 1);
 
   // src/lib/gig/players-view.ts
   var REASON_KEYS2 = {
@@ -66778,7 +66885,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       loadPlayers();
     }), el("players-show").addEventListener("change", () => {
       show2 = el("players-show").value || "problems", emit10();
-    }), islandRoot5 = mountIsland(el("players-report"), (0, import_react41.createElement)(PlayerCompatReport)));
+    }), islandRoot5 = mountIsland(el("players-report"), (0, import_react42.createElement)(PlayerCompatReport)));
   }
   async function loadPlayers() {
     let token4 = ++state.playersToken;
@@ -66816,10 +66923,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/gig/portable.ts
-  var import_react44 = __toESM(require_react(), 1);
+  var import_react45 = __toESM(require_react(), 1);
 
   // src/components/StickCuePanel.tsx
-  var import_react43 = __toESM(require_react(), 1);
+  var import_react44 = __toESM(require_react(), 1);
 
   // src/lib/gig/portable-view.ts
   var KIND_KEY = {
@@ -66942,7 +67049,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/StickBackupPanel.tsx
-  var import_react42 = __toESM(require_react(), 1);
+  var import_react43 = __toESM(require_react(), 1);
 
   // src/lib/gig/stick-backup.ts
   async function getStickBackup(source, dest) {
@@ -66998,8 +67105,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/StickBackupPanel.tsx
   var import_jsx_runtime246 = __toESM(require_jsx_runtime(), 1), BUTTON_SX2 = { textTransform: "none", minHeight: 44 };
   function StickBackupPanel() {
-    let live = (0, import_react42.useSyncExternalStore)(subscribePortable, portableSnapshot, portableSnapshot), source = portableDriveRoot(live.stickDrive || ""), [dest, setDest] = (0, import_react42.useState)(""), [report, setReport] = (0, import_react42.useState)(null), [error2, setError] = (0, import_react42.useState)(""), [busy8, setBusy] = (0, import_react42.useState)(!1), tokenRef = (0, import_react42.useRef)(0), ready = !!source && hasStickBackupDest(dest) && !busy8;
-    (0, import_react42.useEffect)(() => {
+    let live = (0, import_react43.useSyncExternalStore)(subscribePortable, portableSnapshot, portableSnapshot), source = portableDriveRoot(live.stickDrive || ""), [dest, setDest] = (0, import_react43.useState)(""), [report, setReport] = (0, import_react43.useState)(null), [error2, setError] = (0, import_react43.useState)(""), [busy8, setBusy] = (0, import_react43.useState)(!1), tokenRef = (0, import_react43.useRef)(0), ready = !!source && hasStickBackupDest(dest) && !busy8;
+    (0, import_react43.useEffect)(() => {
       if (!source) {
         setReport(null);
         return;
@@ -67103,7 +67210,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     surface,
     report: reportOverride
   }) {
-    let live = (0, import_react43.useSyncExternalStore)(subscribePortable, portableSnapshot, portableSnapshot), report = reportOverride !== void 0 ? reportOverride : live.stickReport ?? null, status4 = reportOverride !== void 0 ? "" : live.stickStatus ?? "", listed = listedStickCues(report), suffix = surface === "files" ? "-files" : "", titleId = `stick-title${suffix}`, statusId = `stick-status${suffix}`, listId = `stick-list${suffix}`, detail2 = status4;
+    let live = (0, import_react44.useSyncExternalStore)(subscribePortable, portableSnapshot, portableSnapshot), report = reportOverride !== void 0 ? reportOverride : live.stickReport ?? null, status4 = reportOverride !== void 0 ? "" : live.stickStatus ?? "", listed = listedStickCues(report), suffix = surface === "files" ? "-files" : "", titleId = `stick-title${suffix}`, statusId = `stick-status${suffix}`, listId = `stick-list${suffix}`, detail2 = status4;
     !detail2 && report && (detail2 = libraryNote(report), !detail2 && report.status === "ready" && listed.length === 0 && (detail2 = t("stick.empty")));
     async function review() {
       let drive = portableSnapshot().stickDrive ?? "";
@@ -67336,7 +67443,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       confirmPortableRestore();
     }), el("portable-smart-overwrite").addEventListener("click", () => {
       overwritePortableSmart();
-    }), islandRoot6 = mountIsland(el("portable-view-findings"), (0, import_react44.createElement)(PortableFindings)));
+    }), islandRoot6 = mountIsland(el("portable-view-findings"), (0, import_react45.createElement)(PortableFindings)));
   }
   function renderPortableReport(report) {
     latest5 = report;
@@ -67508,16 +67615,16 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/health.ts
-  var import_react49 = __toESM(require_react(), 1);
+  var import_react50 = __toESM(require_react(), 1);
 
   // src/lib/ui/shared-dialog-mount.tsx
-  var import_react47 = __toESM(require_react(), 1);
+  var import_react48 = __toESM(require_react(), 1);
 
   // src/pages/SharedDialogs.tsx
-  var import_react46 = __toESM(require_react(), 1), import_react_dom4 = __toESM(require_react_dom(), 1);
+  var import_react47 = __toESM(require_react(), 1), import_react_dom4 = __toESM(require_react_dom(), 1);
 
   // src/components/CenteredDialog.tsx
-  var import_react45 = __toESM(require_react(), 1);
+  var import_react46 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/Dialog/Dialog.mjs
   var React306 = __toESM(require_react(), 1);
@@ -67929,8 +68036,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     contentRef,
     onRoot
   }) {
-    let open = isSharedDialogOpen(id), rootRef = (0, import_react45.useRef)(null);
-    return (0, import_react45.useLayoutEffect)(() => {
+    let open = isSharedDialogOpen(id), rootRef = (0, import_react46.useRef)(null);
+    return (0, import_react46.useLayoutEffect)(() => {
       rootRef.current?.setAttribute("data-open", open ? "true" : "false");
     }, [open]), /* @__PURE__ */ (0, import_jsx_runtime250.jsx)(
       Dialog_default,
@@ -68285,7 +68392,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     labelledBy,
     describedBy
   }) {
-    return (0, import_react46.useLayoutEffect)(() => {
+    return (0, import_react47.useLayoutEffect)(() => {
       adoptNative(id), placeBucket(id, null);
     }, [id]), /* @__PURE__ */ (0, import_jsx_runtime256.jsx)(
       CenteredDialog,
@@ -68307,8 +68414,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     );
   }
   function SharedDialogs() {
-    let [, setEpoch] = (0, import_react46.useState)(0);
-    return (0, import_react46.useEffect)(() => subscribeSharedDialogs(() => {
+    let [, setEpoch] = (0, import_react47.useState)(0);
+    return (0, import_react47.useEffect)(() => subscribeSharedDialogs(() => {
       (0, import_react_dom4.flushSync)(() => {
         setEpoch((value) => value + 1);
       });
@@ -68333,7 +68440,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let host = document.getElementById("shared-dialogs");
     if (!(host instanceof HTMLElement)) return;
     let nativeLeft = !!document.querySelector("dialog#rekordbox-dialog");
-    islandRoot7 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot7), islandRoot7 = mountIsland(host, (0, import_react47.createElement)(SharedDialogs)), islandHost = host);
+    islandRoot7 && islandHost === host && host.isConnected && !nativeLeft || (safeUnmount(islandRoot7), islandRoot7 = mountIsland(host, (0, import_react48.createElement)(SharedDialogs)), islandHost = host);
   }
   bindSharedDialogMount(mountSharedDialogs);
 
@@ -68427,7 +68534,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/HealthPanel.tsx
-  var import_react48 = __toESM(require_react(), 1);
+  var import_react49 = __toESM(require_react(), 1);
 
   // src/lib/health/path-forms.ts
   function requestBody(action, confirm) {
@@ -68496,7 +68603,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     slotProps: { transition: { timeout: 0 } }
   };
   function useSectionOpen(start2) {
-    let [open, setOpen] = (0, import_react48.useState)(start2);
+    let [open, setOpen] = (0, import_react49.useState)(start2);
     return {
       expanded: open,
       onChange: (_event, next3) => {
@@ -68663,7 +68770,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     section,
     onReload
   }) {
-    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react48.useState)(""), [busy8, setBusy] = (0, import_react48.useState)(!1), [canApply, setCanApply] = (0, import_react48.useState)(!1);
+    let count = section?.count ?? 0, tracks = section?.tracks ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react49.useState)(""), [busy8, setBusy] = (0, import_react49.useState)(!1), [canApply, setCanApply] = (0, import_react49.useState)(!1);
     async function review() {
       setBusy(!0), setCanApply(!1);
       try {
@@ -68807,7 +68914,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     section,
     onReload
   }) {
-    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react48.useState)(""), [busy8, setBusy] = (0, import_react48.useState)(!1), [canApply, setCanApply] = (0, import_react48.useState)(!1);
+    let count = section?.count ?? 0, groups = section?.groups ?? [], accordion = useSectionOpen(count > 0), [note, setNote] = (0, import_react49.useState)(""), [busy8, setBusy] = (0, import_react49.useState)(!1), [canApply, setCanApply] = (0, import_react49.useState)(!1);
     async function review() {
       setBusy(!0), setCanApply(!1);
       try {
@@ -68950,7 +69057,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { id: "health-status", className: "gig-status", role: "status", "aria-live": "polite", children: health.healthStatus }),
       /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("div", { id: "health-report", className: "gig-report", tabIndex: -1, children: payload ? /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_jsx_runtime257.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime257.jsx)("p", { className: "gig-note", children: t("health.summary", { count: payload.checked }) }),
-        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_react48.Fragment, { children: [
+        SECTIONS.map((spec2) => /* @__PURE__ */ (0, import_jsx_runtime257.jsxs)(import_react49.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime257.jsx)(
             Section,
             {
@@ -69023,13 +69130,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function wireHealth(navigate) {
     go = navigate;
     let panel = el("health-panel");
-    panelRoot && panelHost !== panel && (panelRoot.unmount(), panelRoot = void 0), panelHost = panel, panelRoot = mountIsland(panel, (0, import_react49.createElement)(HealthPanel), panelRoot), mountHealthListChrome(), albumArtWired || (albumArtWired = !0, wireAlbumArt(() => {
+    panelRoot && panelHost !== panel && (panelRoot.unmount(), panelRoot = void 0), panelHost = panel, panelRoot = mountIsland(panel, (0, import_react50.createElement)(HealthPanel), panelRoot), mountHealthListChrome(), albumArtWired || (albumArtWired = !0, wireAlbumArt(() => {
       loadHealth();
     }));
   }
   function mountHealthListChrome() {
     let host = document.getElementById("health-list-chrome");
-    host instanceof HTMLElement && (listRoot && listHost !== host && (listRoot.unmount(), listRoot = void 0), listHost = host, listRoot = mountIsland(host, (0, import_react49.createElement)(HealthListChrome), listRoot), emitHealth());
+    host instanceof HTMLElement && (listRoot && listHost !== host && (listRoot.unmount(), listRoot = void 0), listHost = host, listRoot = mountIsland(host, (0, import_react50.createElement)(HealthListChrome), listRoot), emitHealth());
   }
   async function loadHealth() {
     let token4 = ++state.healthToken;
@@ -69073,10 +69180,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/history/history-stats.ts
-  var import_react51 = __toESM(require_react(), 1);
+  var import_react52 = __toESM(require_react(), 1);
 
   // src/pages/StatsPanel.tsx
-  var import_react50 = __toESM(require_react(), 1);
+  var import_react51 = __toESM(require_react(), 1);
   var import_jsx_runtime259 = __toESM(require_jsx_runtime(), 1), LIST_CAP2 = 100, BUTTON_SX6 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX2 = {
     disableGutters: !0,
     square: !0,
@@ -69084,7 +69191,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     slotProps: { transition: { timeout: 0 } }
   };
   function useSectionOpen2(start2) {
-    let [open, setOpen] = (0, import_react50.useState)(start2);
+    let [open, setOpen] = (0, import_react51.useState)(start2);
     return {
       expanded: open,
       onChange: (_event, next3) => {
@@ -69298,7 +69405,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }), el("stats-csv").addEventListener("click", () => {
       let link = document.createElement("a");
       link.href = csvHref(currentQuery()), link.download = "play-stats.csv", link.click();
-    }), syncPeriodFields()), reportHost = report, panelRoot2 = mountIsland(report, (0, import_react51.createElement)(StatsPanel), panelRoot2);
+    }), syncPeriodFields()), reportHost = report, panelRoot2 = mountIsland(report, (0, import_react52.createElement)(StatsPanel), panelRoot2);
   }
   async function loadHistoryStats() {
     let token4 = ++state.statsToken;
@@ -69408,13 +69515,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/scan.ts
-  var import_react54 = __toESM(require_react(), 1);
+  var import_react55 = __toESM(require_react(), 1);
 
   // src/pages/ScanPanel.tsx
-  var import_react53 = __toESM(require_react(), 1);
+  var import_react54 = __toESM(require_react(), 1);
 
   // src/components/HealthDataGrid.tsx
-  var import_react52 = __toESM(require_react(), 1);
+  var import_react53 = __toESM(require_react(), 1);
   var import_jsx_runtime260 = __toESM(require_jsx_runtime(), 1);
   function gridLocaleText3(locale) {
     return (locale.startsWith("es") ? esES : enUS).components.MuiDataGrid.defaultProps.localeText;
@@ -69426,22 +69533,22 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     onSelectId
   }) {
     ensureGridDom();
-    let hostRef = (0, import_react52.useRef)(null), locale = getLocale(), localeText = (0, import_react52.useMemo)(() => gridLocaleText3(locale), [locale]), [page, setPage] = (0, import_react52.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react52.useMemo)(
+    let hostRef = (0, import_react53.useRef)(null), locale = getLocale(), localeText = (0, import_react53.useMemo)(() => gridLocaleText3(locale), [locale]), [page, setPage] = (0, import_react53.useState)(0), maxPage = Math.max(0, Math.ceil(rows.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react53.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
-    ), hideFooter = rows.length <= GRID_PAGE_SIZE, rowSelectionModel = (0, import_react52.useMemo)(() => ({
+    ), hideFooter = rows.length <= GRID_PAGE_SIZE, rowSelectionModel = (0, import_react53.useMemo)(() => ({
       type: "include",
       ids: selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([selectedId])
     }), [selectedId]);
-    (0, import_react52.useLayoutEffect)(() => {
+    (0, import_react53.useLayoutEffect)(() => {
       setPage(0);
-    }, [rows.length]), (0, import_react52.useLayoutEffect)(() => {
+    }, [rows.length]), (0, import_react53.useLayoutEffect)(() => {
       let node2 = hostRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, rows, locale, paginationModel]), (0, import_react52.useEffect)(() => {
+    }, [columns, rows, locale, paginationModel]), (0, import_react53.useEffect)(() => {
       let node2 = hostRef.current;
       node2 && attachGridTooltips(node2);
     }, [columns, rows, locale, paginationModel]);
@@ -69516,10 +69623,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/pages/ScanPanel.tsx
   var import_jsx_runtime261 = __toESM(require_jsx_runtime(), 1), BUTTON_SX7 = { textTransform: "none", minHeight: 44 };
   function ScanPanel() {
-    let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [], rows = (0, import_react53.useMemo)(
+    let health = useHealth(), payload = health.scanReport, problems = payload?.problems ?? [], rows = (0, import_react54.useMemo)(
       () => problems.map((item) => ({ ...item, id: item.id })),
       [problems]
-    ), columns = (0, import_react53.useMemo)(() => [
+    ), columns = (0, import_react54.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -69608,7 +69715,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function wireScan() {
     let panel = el("scan-panel");
-    panelRoot3 && panelHost2 !== panel && (panelRoot3.unmount(), panelRoot3 = void 0), panelHost2 = panel, panelRoot3 = mountIsland(panel, (0, import_react54.createElement)(ScanPanel), panelRoot3);
+    panelRoot3 && panelHost2 !== panel && (panelRoot3.unmount(), panelRoot3 = void 0), panelHost2 = panel, panelRoot3 = mountIsland(panel, (0, import_react55.createElement)(ScanPanel), panelRoot3);
   }
   async function loadScan(depth) {
     let chosen = resolveDepth(depth), token4 = ++state.scanToken;
@@ -69661,13 +69768,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/tags.ts
-  var import_react57 = __toESM(require_react(), 1);
+  var import_react58 = __toESM(require_react(), 1);
 
   // src/pages/TagsPanel.tsx
-  var import_react56 = __toESM(require_react(), 1);
+  var import_react57 = __toESM(require_react(), 1);
 
   // src/components/GenreFamilies.tsx
-  var import_react55 = __toESM(require_react(), 1);
+  var import_react56 = __toESM(require_react(), 1);
 
   // src/lib/health/genre-families.ts
   function isRecord5(value) {
@@ -69780,8 +69887,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     paused,
     revision
   }) {
-    let space = state.space, [report, setReport] = (0, import_react55.useState)(null), [status4, setStatus] = (0, import_react55.useState)(() => t("families.loading")), [drag, setDrag] = (0, import_react55.useState)(""), [drop, setDrop] = (0, import_react55.useState)(""), [genre, setGenre] = (0, import_react55.useState)(""), [parent, setParent] = (0, import_react55.useState)(""), [field2, setField] = (0, import_react55.useState)("grouping"), [overwrite, setOverwrite] = (0, import_react55.useState)(!1), [plan, setPlan] = (0, import_react55.useState)(null), [busy8, setBusy] = (0, import_react55.useState)(!1);
-    (0, import_react55.useEffect)(() => {
+    let space = state.space, [report, setReport] = (0, import_react56.useState)(null), [status4, setStatus] = (0, import_react56.useState)(() => t("families.loading")), [drag, setDrag] = (0, import_react56.useState)(""), [drop, setDrop] = (0, import_react56.useState)(""), [genre, setGenre] = (0, import_react56.useState)(""), [parent, setParent] = (0, import_react56.useState)(""), [field2, setField] = (0, import_react56.useState)("grouping"), [overwrite, setOverwrite] = (0, import_react56.useState)(!1), [plan, setPlan] = (0, import_react56.useState)(null), [busy8, setBusy] = (0, import_react56.useState)(!1);
+    (0, import_react56.useEffect)(() => {
       let controller = new AbortController(), alive = !0;
       return (async () => {
         try {
@@ -70294,7 +70401,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function TagsPanel() {
-    let health = useHealth(), field2 = health.tagsField, groups = health.tagsClusters?.groups ?? [], [selectedKey, setSelectedKey] = (0, import_react56.useState)(""), selected2 = groups.find((row) => row.key === selectedKey) ?? groups[0];
+    let health = useHealth(), field2 = health.tagsField, groups = health.tagsClusters?.groups ?? [], [selectedKey, setSelectedKey] = (0, import_react57.useState)(""), selected2 = groups.find((row) => row.key === selectedKey) ?? groups[0];
     function onField(next3) {
       health.tagsField !== next3 && (health.setTagsField(next3), health.loadTags());
     }
@@ -70302,10 +70409,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let plan = health.tagsPlans.get(key), group = groups.find((row) => row.key === key), value = health.tagsSelected.get(key) ?? group?.suggested ?? "";
       return !!(plan && plan.value === value && plan.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== key);
     }
-    let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY), rows = (0, import_react56.useMemo)(
+    let canApplyTitles = !!(health.titlePlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== TITLE_KEY), canApplyMappings = !!(health.mappingPlan?.changes.length && health.tagsWritable && !health.tagsBusy && health.tagsActionKey !== MAPPING_KEY), rows = (0, import_react57.useMemo)(
       () => groups.map((group) => ({ ...group, id: group.key })),
       [groups]
-    ), columns = (0, import_react56.useMemo)(() => [
+    ), columns = (0, import_react57.useMemo)(() => [
       {
         field: "suggested",
         headerName: t("tags.column.suggested"),
@@ -70498,7 +70605,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function wireTags() {
     field = "genre";
     let panel = el("tags-panel");
-    panelRoot4 && panelHost3 !== panel && (panelRoot4.unmount(), panelRoot4 = void 0), panelHost3 = panel, panelRoot4 = mountIsland(panel, (0, import_react57.createElement)(TagsPanel), panelRoot4);
+    panelRoot4 && panelHost3 !== panel && (panelRoot4.unmount(), panelRoot4 = void 0), panelHost3 = panel, panelRoot4 = mountIsland(panel, (0, import_react58.createElement)(TagsPanel), panelRoot4);
   }
   async function loadTags() {
     let token4 = ++state.tagsToken;
@@ -70674,7 +70781,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/containers/SnapshotsContext.tsx
-  var import_react58 = __toESM(require_react(), 1), import_jsx_runtime265 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react58.createContext)(null);
+  var import_react59 = __toESM(require_react(), 1), import_jsx_runtime265 = __toESM(require_jsx_runtime(), 1), SnapshotsContext = (0, import_react59.createContext)(null);
   function SnapshotsProvider({
     value,
     children
@@ -70682,14 +70789,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return /* @__PURE__ */ (0, import_jsx_runtime265.jsx)(SnapshotsContext, { value, children });
   }
   function useSnapshots() {
-    let value = (0, import_react58.useContext)(SnapshotsContext);
+    let value = (0, import_react59.useContext)(SnapshotsContext);
     if (value === null)
       throw new Error("useSnapshots must be used within SnapshotsProvider");
     return value;
   }
 
   // src/containers/WizardContext.tsx
-  var import_react59 = __toESM(require_react(), 1);
+  var import_react60 = __toESM(require_react(), 1);
 
   // src/lib/wizard/wizard.ts
   function createWizard(input) {
@@ -70745,7 +70852,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       onBrowse: noopPath
     };
   }
-  var WizardContext = (0, import_react59.createContext)(null);
+  var WizardContext = (0, import_react60.createContext)(null);
   function WizardProvider({
     value,
     children
@@ -70754,7 +70861,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/snapshots/restore.ts
-  var import_react65 = __toESM(require_react(), 1);
+  var import_react66 = __toESM(require_react(), 1);
 
   // src/lib/snapshots/restore-view.ts
   var OPERATION_ACTIONS = {
@@ -70994,7 +71101,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/SnapshotsPanel.tsx
-  var import_react64 = __toESM(require_react(), 1);
+  var import_react65 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/ListItem/ListItem.mjs
   var React312 = __toESM(require_react(), 1);
@@ -71309,7 +71416,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/LanStagePanel.tsx
-  var import_react60 = __toESM(require_react(), 1);
+  var import_react61 = __toESM(require_react(), 1);
 
   // src/lib/snapshots/lan-stage.ts
   async function fetchLanStage() {
@@ -71382,7 +71489,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/LanStagePanel.tsx
   var import_jsx_runtime271 = __toESM(require_jsx_runtime(), 1), BUTTON_SX10 = { textTransform: "none", minHeight: 44 };
   function LanStagePanel() {
-    let [host, setHost] = (0, import_react60.useState)(""), [port, setPort] = (0, import_react60.useState)("8766"), [code, setCode] = (0, import_react60.useState)(""), [selected2, setSelected] = (0, import_react60.useState)([]), [previewIds, setPreviewIds] = (0, import_react60.useState)([]), [fingerprint, setFingerprint] = (0, import_react60.useState)(""), [report, setReport] = (0, import_react60.useState)(null), [status4, setStatus] = (0, import_react60.useState)(null), [inboxId, setInboxId] = (0, import_react60.useState)(""), [acceptReady, setAcceptReady] = (0, import_react60.useState)(!1), [discardArmed, setDiscardArmed] = (0, import_react60.useState)(!1), [error2, setError] = (0, import_react60.useState)(""), [busy8, setBusy] = (0, import_react60.useState)(!1), tokenRef = (0, import_react60.useRef)(0), crates = state.crates.filter((crate) => crate.name), portNumber = Number(port), sendReady = canSend(selected2, previewIds, fingerprint) && host.trim() !== "" && Number.isInteger(portNumber), snapshotId3 = report?.snapshot_id || status4?.inbox?.find((item) => item.id === inboxId)?.snapshot_id || "";
+    let [host, setHost] = (0, import_react61.useState)(""), [port, setPort] = (0, import_react61.useState)("8766"), [code, setCode] = (0, import_react61.useState)(""), [selected2, setSelected] = (0, import_react61.useState)([]), [previewIds, setPreviewIds] = (0, import_react61.useState)([]), [fingerprint, setFingerprint] = (0, import_react61.useState)(""), [report, setReport] = (0, import_react61.useState)(null), [status4, setStatus] = (0, import_react61.useState)(null), [inboxId, setInboxId] = (0, import_react61.useState)(""), [acceptReady, setAcceptReady] = (0, import_react61.useState)(!1), [discardArmed, setDiscardArmed] = (0, import_react61.useState)(!1), [error2, setError] = (0, import_react61.useState)(""), [busy8, setBusy] = (0, import_react61.useState)(!1), tokenRef = (0, import_react61.useRef)(0), crates = state.crates.filter((crate) => crate.name), portNumber = Number(port), sendReady = canSend(selected2, previewIds, fingerprint) && host.trim() !== "" && Number.isInteger(portNumber), snapshotId3 = report?.snapshot_id || status4?.inbox?.find((item) => item.id === inboxId)?.snapshot_id || "";
     function toggleCrate3(id, on) {
       setSelected((prev2) => on ? prev2.includes(id) ? prev2 : [...prev2, id] : prev2.filter((value) => value !== id)), setFingerprint(""), setPreviewIds([]);
     }
@@ -71714,7 +71821,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/MusicMirrorPanel.tsx
-  var import_react61 = __toESM(require_react(), 1);
+  var import_react62 = __toESM(require_react(), 1);
 
   // src/lib/snapshots/music-mirror.ts
   async function fetchMirrorPreview(dest) {
@@ -71753,7 +71860,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/MusicMirrorPanel.tsx
   var import_jsx_runtime272 = __toESM(require_jsx_runtime(), 1), BUTTON_SX11 = { textTransform: "none", minHeight: 44 };
   function MusicMirrorPanel() {
-    let [dest, setDest] = (0, import_react61.useState)(""), [report, setReport] = (0, import_react61.useState)(null), [error2, setError] = (0, import_react61.useState)(""), [busy8, setBusy] = (0, import_react61.useState)(!1), tokenRef = (0, import_react61.useRef)(0), ready = hasMirrorDest(dest) && !busy8;
+    let [dest, setDest] = (0, import_react62.useState)(""), [report, setReport] = (0, import_react62.useState)(null), [error2, setError] = (0, import_react62.useState)(""), [busy8, setBusy] = (0, import_react62.useState)(!1), tokenRef = (0, import_react62.useRef)(0), ready = hasMirrorDest(dest) && !busy8;
     async function run(action, confirm) {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -71936,7 +72043,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/GigLockPanel.tsx
-  var import_react62 = __toESM(require_react(), 1);
+  var import_react63 = __toESM(require_react(), 1);
 
   // src/lib/snapshots/write-queue.ts
   async function fetchWriteQueue() {
@@ -71974,7 +72081,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/GigLockPanel.tsx
   var import_jsx_runtime274 = __toESM(require_jsx_runtime(), 1), BUTTON_SX12 = { textTransform: "none", minHeight: 44 };
   function GigLockPanel() {
-    let [listing, setListing] = (0, import_react62.useState)(null), [error2, setError] = (0, import_react62.useState)(""), [busy8, setBusy] = (0, import_react62.useState)(!1), tokenRef = (0, import_react62.useRef)(0);
+    let [listing, setListing] = (0, import_react63.useState)(null), [error2, setError] = (0, import_react63.useState)(""), [busy8, setBusy] = (0, import_react63.useState)(!1), tokenRef = (0, import_react63.useRef)(0);
     async function load() {
       let token4 = ++tokenRef.current;
       setBusy(!0), setError("");
@@ -72003,7 +72110,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         token4 === tokenRef.current && setBusy(!1);
       }
     }
-    (0, import_react62.useEffect)(() => {
+    (0, import_react63.useEffect)(() => {
       load();
     }, []);
     let pending = listing?.pending ?? [], undo = listing?.undo ?? [], locked = listing?.locked === !0, hasPending = pending.length > 0;
@@ -72087,13 +72194,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/BatchPanel.tsx
-  var import_react63 = __toESM(require_react(), 1);
+  var import_react64 = __toESM(require_react(), 1);
   var import_jsx_runtime275 = __toESM(require_jsx_runtime(), 1), BUTTON_SX13 = { textTransform: "none", minHeight: 44 };
   function BatchPanel() {
     let batch = useBatch();
     useCrates();
-    let [error2, setError] = (0, import_react63.useState)(""), [busy8, setBusy] = (0, import_react63.useState)(!1), listing = batch.listing, queued = listing.queue.length > 0, canDest = canQueueActiveCrate();
-    (0, import_react63.useEffect)(() => {
+    let [error2, setError] = (0, import_react64.useState)(""), [busy8, setBusy] = (0, import_react64.useState)(!1), listing = batch.listing, queued = listing.queue.length > 0, canDest = canQueueActiveCrate();
+    (0, import_react64.useEffect)(() => {
       refreshBatch().catch(() => {
       });
     }, []);
@@ -72215,7 +72322,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function SnapshotsPanel() {
     ensureGridDom();
-    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, pruneSnapshot2 = snapshots.pruneSnapshot, failSnapshots2 = snapshots.failSnapshots, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react64.useMemo)(
+    let snapshots = useSnapshots(), locale = getLocale(), writeBlock = snapshots.writeBlock ? codedText(snapshots.writeBlock, snapshots.writeBlockCode, snapshots.writeBlockParams) : "", undoId = snapshots.snapshotUndo?.restore_id, failed = snapshots.operations[snapshots.operations.length - 1]?.result === "rollback_failed", openSnapshotPlan2 = snapshots.openSnapshotPlan, pruneSnapshot2 = snapshots.pruneSnapshot, failSnapshots2 = snapshots.failSnapshots, setSnapshotDialogStatus2 = snapshots.setSnapshotDialogStatus, columns = (0, import_react65.useMemo)(
       () => snapshotColumns({
         onRestore: (snapshotId3) => {
           openSnapshotPlan2(snapshotId3).catch((error2) => setSnapshotDialogStatus2(failureOf(error2).message));
@@ -72225,11 +72332,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       }),
       [locale, openSnapshotPlan2, pruneSnapshot2, failSnapshots2, setSnapshotDialogStatus2]
-    ), localeText = (0, import_react64.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react64.useMemo)(
+    ), localeText = (0, import_react65.useMemo)(() => gridLocaleText4(locale), [locale]), operations = (0, import_react65.useMemo)(
       () => [...snapshots.operations].reverse(),
       [snapshots.operations]
-    ), listRef = (0, import_react64.useRef)(null);
-    return (0, import_react64.useLayoutEffect)(() => {
+    ), listRef = (0, import_react65.useRef)(null);
+    return (0, import_react65.useLayoutEffect)(() => {
       let node2 = listRef.current;
       if (!node2) return;
       attachGridTooltips(node2);
@@ -72482,7 +72589,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     hosts.set(host, mountIsland(host, node2, existing));
   }
   function mountSnapshots() {
-    bindHost(document.getElementById("snapshots-panel"), (0, import_react65.createElement)(SnapshotsPanel)), bindHost(document.getElementById("snapshot-dialog-host"), (0, import_react65.createElement)(RestoreDialog));
+    bindHost(document.getElementById("snapshots-panel"), (0, import_react66.createElement)(SnapshotsPanel)), bindHost(document.getElementById("snapshot-dialog-host"), (0, import_react66.createElement)(RestoreDialog));
   }
   function ensureMounted() {
     mountSnapshots();
@@ -72760,13 +72867,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function PlayerProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readPlayerValue);
-    (0, import_react66.useEffect)(() => subscribe(() => {
+    let [value, setValue] = (0, import_react67.useState)(readPlayerValue);
+    (0, import_react67.useEffect)(() => subscribe(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readPlayerValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(PlayerProvider, { value: current4, children });
   }
   function readHistoryValue() {
@@ -72782,13 +72889,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HistoryProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readHistoryValue);
-    (0, import_react66.useEffect)(() => subscribeHistory(() => {
+    let [value, setValue] = (0, import_react67.useState)(readHistoryValue);
+    (0, import_react67.useEffect)(() => subscribeHistory(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readHistoryValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(HistoryProvider, { value: current4, children });
   }
   function readStatsValue() {
@@ -72798,18 +72905,18 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function StatsRoot({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readStatsValue);
-    (0, import_react66.useLayoutEffect)(() => subscribeStats(() => {
+    let [value, setValue] = (0, import_react67.useState)(readStatsValue);
+    (0, import_react67.useLayoutEffect)(() => subscribeStats(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readStatsValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(StatsProvider, { value: current4, children });
   }
   function GigProvider({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readGigValue);
-    (0, import_react66.useEffect)(() => {
+    let [value, setValue] = (0, import_react67.useState)(readGigValue);
+    (0, import_react67.useEffect)(() => {
       let refresh = () => {
         (0, import_react_dom5.flushSync)(() => {
           setValue(readGigValue());
@@ -72819,12 +72926,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stopGig(), stopCloud(), stopDrift(), stopOctave(), stopPlayers(), stopPortable();
       };
     }, []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(GigStateProvider, { value: current4, children });
   }
   function FilesProvider2({ children }) {
-    let hostRef = (0, import_react66.useRef)(null), [value, setValue] = (0, import_react66.useState)(readFilesValue);
-    (0, import_react66.useEffect)(() => {
+    let hostRef = (0, import_react67.useRef)(null), [value, setValue] = (0, import_react67.useState)(readFilesValue);
+    (0, import_react67.useEffect)(() => {
       let refresh = () => {
         hostRef.current?.isConnected && (0, import_react_dom5.flushSync)(() => {
           setValue(readFilesValue());
@@ -72834,25 +72941,25 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         unsub(), document.removeEventListener(LOCALE_EVENT, refresh);
       };
     }, []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsxs)(FilesProvider, { value: current4, children: [
       /* @__PURE__ */ (0, import_jsx_runtime277.jsx)("span", { ref: hostRef, hidden: !0 }),
       children
     ] });
   }
   function CrateProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readCrateValue);
-    (0, import_react66.useEffect)(() => subscribeCrates(() => {
+    let [value, setValue] = (0, import_react67.useState)(readCrateValue);
+    (0, import_react67.useEffect)(() => subscribeCrates(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readCrateValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(CrateProvider, { value: current4, children });
   }
   function SettingsProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readSettingsValue);
-    (0, import_react66.useEffect)(() => {
+    let [value, setValue] = (0, import_react67.useState)(readSettingsValue);
+    (0, import_react67.useEffect)(() => {
       let refresh = () => {
         (0, import_react_dom5.flushSync)(() => {
           setValue(readSettingsValue());
@@ -72862,7 +72969,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         stopStore(), stopLocale();
       };
     }, []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(SettingsProvider, { value: current4, children });
   }
   function readTrackListValue() {
@@ -72872,13 +72979,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function TrackListRoot({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readTrackListValue);
-    (0, import_react66.useLayoutEffect)(() => subscribeTrackList(() => {
+    let [value, setValue] = (0, import_react67.useState)(readTrackListValue);
+    (0, import_react67.useLayoutEffect)(() => subscribeTrackList(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readTrackListValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(TrackListProvider, { value: current4, children });
   }
   function readSnapshotsValue() {
@@ -72900,17 +73007,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function SnapshotsProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readSnapshotsValue);
-    (0, import_react66.useEffect)(() => subscribe2(() => {
+    let [value, setValue] = (0, import_react67.useState)(readSnapshotsValue);
+    (0, import_react67.useEffect)(() => subscribe2(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readSnapshotsValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(SnapshotsProvider, { value: current4, children });
   }
   function WizardProvider2({ children }) {
-    let value = (0, import_react66.useMemo)(() => idleWizardValue(), []);
+    let value = (0, import_react67.useMemo)(() => idleWizardValue(), []);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(WizardProvider, { value, children });
   }
   function readHealthValue() {
@@ -72933,26 +73040,26 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function HealthProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readHealthValue);
-    (0, import_react66.useLayoutEffect)(() => subscribeHealth(() => {
+    let [value, setValue] = (0, import_react67.useState)(readHealthValue);
+    (0, import_react67.useLayoutEffect)(() => subscribeHealth(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readHealthValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(HealthProvider, { value: current4, children });
   }
   function readNoticeValue() {
     return { notice: getNotice(), dismiss: dismissNotice };
   }
   function NoticeProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readNoticeValue);
-    (0, import_react66.useLayoutEffect)(() => subscribeNotice(() => {
+    let [value, setValue] = (0, import_react67.useState)(readNoticeValue);
+    (0, import_react67.useLayoutEffect)(() => subscribeNotice(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readNoticeValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(NoticeProvider, { value: current4, children });
   }
   function readBatchValue() {
@@ -72964,13 +73071,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function BatchProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readBatchValue);
-    (0, import_react66.useLayoutEffect)(() => subscribeBatch(() => {
+    let [value, setValue] = (0, import_react67.useState)(readBatchValue);
+    (0, import_react67.useLayoutEffect)(() => subscribeBatch(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readBatchValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(BatchProvider, { value: current4, children });
   }
   function readJobValue() {
@@ -72988,13 +73095,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     };
   }
   function JobProvider2({ children }) {
-    let [value, setValue] = (0, import_react66.useState)(readJobValue);
-    (0, import_react66.useLayoutEffect)(() => subscribeJobs(() => {
+    let [value, setValue] = (0, import_react67.useState)(readJobValue);
+    (0, import_react67.useLayoutEffect)(() => subscribeJobs(() => {
       (0, import_react_dom5.flushSync)(() => {
         setValue(readJobValue());
       });
     }), []);
-    let current4 = (0, import_react66.useMemo)(() => value, [value]);
+    let current4 = (0, import_react67.useMemo)(() => value, [value]);
     return /* @__PURE__ */ (0, import_jsx_runtime277.jsx)(JobProvider, { value: current4, children });
   }
   function AppProviders({ children }) {
@@ -73279,7 +73386,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       loadGigCheck(!0);
     }), el("tonight-build").addEventListener("click", () => {
       buildTonightCrates();
-    }), mountIsland(el("gig-report"), (0, import_react67.createElement)(GigReport)));
+    }), mountIsland(el("gig-report"), (0, import_react68.createElement)(GigReport)));
   }
   async function loadGigCheck(keepStep = !1) {
     let token4 = ++state.gigToken;
@@ -73314,10 +73421,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/bitrate.ts
-  var import_react69 = __toESM(require_react(), 1);
+  var import_react70 = __toESM(require_react(), 1);
 
   // src/pages/BitrateReport.tsx
-  var import_react68 = __toESM(require_react(), 1);
+  var import_react69 = __toESM(require_react(), 1);
 
   // src/lib/health/bitrate-view.ts
   var REASON_KEYS3 = {
@@ -73362,10 +73469,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     cratePlan: cratePlan3,
     writable
   }) {
-    let suspects = payload.suspects || [], rows = (0, import_react68.useMemo)(
+    let suspects = payload.suspects || [], rows = (0, import_react69.useMemo)(
       () => suspects.map((item) => ({ ...item, id: item.id })),
       [suspects]
-    ), columns = (0, import_react68.useMemo)(() => [
+    ), columns = (0, import_react69.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -73456,7 +73563,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("bitrate-report");
     reportRoot && reportHost2 !== report && (reportRoot.unmount(), reportRoot = void 0), reportHost2 = report, reportRoot = mountIsland(
       report,
-      (0, import_react69.createElement)(BitrateReport, {
+      (0, import_react70.createElement)(BitrateReport, {
         payload,
         cratePlan,
         writable: state.writable
@@ -73539,10 +73646,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/lost-tags.ts
-  var import_react71 = __toESM(require_react(), 1);
+  var import_react72 = __toESM(require_react(), 1);
 
   // src/pages/LostTagsPanel.tsx
-  var import_react70 = __toESM(require_react(), 1);
+  var import_react71 = __toESM(require_react(), 1);
   var import_jsx_runtime281 = __toESM(require_jsx_runtime(), 1);
   function pairLabel(name, artist2) {
     let title2 = name.trim(), who = artist2.trim();
@@ -73552,10 +73659,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return pairLabel(proposed.name ?? "", proposed.artist ?? "");
   }
   function LostTagsPanel({ payload }) {
-    let fixes = payload.fixes || [], rows = (0, import_react70.useMemo)(
+    let fixes = payload.fixes || [], rows = (0, import_react71.useMemo)(
       () => fixes.map((item) => ({ ...item, id: item.asset_id })),
       [fixes]
-    ), columns = (0, import_react70.useMemo)(() => [
+    ), columns = (0, import_react71.useMemo)(() => [
       {
         field: "path",
         headerName: t("lost.column.path"),
@@ -73627,7 +73734,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("lost-report");
     reportRoot2 && reportHost3 !== report && (reportRoot2.unmount(), reportRoot2 = void 0), reportHost3 = report, reportRoot2 = mountIsland(
       report,
-      (0, import_react71.createElement)(LostTagsPanel, { payload }),
+      (0, import_react72.createElement)(LostTagsPanel, { payload }),
       reportRoot2
     );
   }
@@ -73688,19 +73795,19 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/energy.ts
-  var import_react73 = __toESM(require_react(), 1);
+  var import_react74 = __toESM(require_react(), 1);
 
   // src/pages/EnergyPanel.tsx
-  var import_react72 = __toESM(require_react(), 1);
+  var import_react73 = __toESM(require_react(), 1);
   var import_jsx_runtime282 = __toESM(require_jsx_runtime(), 1);
   function sourceLabel(source) {
     return source === "tag" ? t("energy.source.tag") : t("energy.source.audio");
   }
   function EnergyPanel({ payload }) {
-    let fixes = payload.fixes || [], rows = (0, import_react72.useMemo)(
+    let fixes = payload.fixes || [], rows = (0, import_react73.useMemo)(
       () => fixes.map((item) => ({ ...item, id: item.asset_id })),
       [fixes]
-    ), columns = (0, import_react72.useMemo)(() => [
+    ), columns = (0, import_react73.useMemo)(() => [
       {
         field: "path",
         headerName: t("energy.column.path"),
@@ -73782,7 +73889,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("energy-report");
     reportRoot3 && reportHost4 !== report && (reportRoot3.unmount(), reportRoot3 = void 0), reportHost4 = report, reportRoot3 = mountIsland(
       report,
-      (0, import_react73.createElement)(EnergyPanel, { payload }),
+      (0, import_react74.createElement)(EnergyPanel, { payload }),
       reportRoot3
     );
   }
@@ -73847,10 +73954,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/reanalyze.ts
-  var import_react75 = __toESM(require_react(), 1);
+  var import_react76 = __toESM(require_react(), 1);
 
   // src/pages/ReanalyzePanel.tsx
-  var import_react74 = __toESM(require_react(), 1);
+  var import_react75 = __toESM(require_react(), 1);
   var import_jsx_runtime283 = __toESM(require_jsx_runtime(), 1), BUTTON_SX15 = { textTransform: "none", minHeight: 44 };
   function trackLabel(row) {
     let title2 = row.name.trim(), who = row.artist.trim();
@@ -73861,10 +73968,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     writable,
     confirmReady
   }) {
-    let tracks = payload.tracks || [], rows = (0, import_react74.useMemo)(
+    let tracks = payload.tracks || [], rows = (0, import_react75.useMemo)(
       () => tracks.map((item) => ({ ...item, id: item.id })),
       [tracks]
-    ), columns = (0, import_react74.useMemo)(() => [
+    ), columns = (0, import_react75.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -73969,7 +74076,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("reanalyze-report");
     reportRoot4 && reportHost5 !== report && (reportRoot4.unmount(), reportRoot4 = void 0), reportHost5 = report, reportRoot4 = mountIsland(
       report,
-      (0, import_react75.createElement)(ReanalyzePanel, {
+      (0, import_react76.createElement)(ReanalyzePanel, {
         payload,
         writable: state.writable,
         confirmReady: !!(payload.preview && payload.count && state.writable)
@@ -74069,10 +74176,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/audio-changed.ts
-  var import_react77 = __toESM(require_react(), 1);
+  var import_react78 = __toESM(require_react(), 1);
 
   // src/pages/AudioChangedPanel.tsx
-  var import_react76 = __toESM(require_react(), 1);
+  var import_react77 = __toESM(require_react(), 1);
   var import_jsx_runtime284 = __toESM(require_jsx_runtime(), 1), BUTTON_SX16 = { textTransform: "none", minHeight: 44 };
   function reasonLabel(reason) {
     return reason === "size" ? t("audio.field.size") : reason === "duration" ? t("audio.field.duration") : reason === "hash" ? t("audio.field.hash") : reason;
@@ -74087,10 +74194,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     reanalyzePlan: reanalyzePlan2,
     writable
   }) {
-    let changed = payload.changed || [], rows = (0, import_react76.useMemo)(
+    let changed = payload.changed || [], rows = (0, import_react77.useMemo)(
       () => changed.map((item) => ({ ...item, id: item.id })),
       [changed]
-    ), columns = (0, import_react76.useMemo)(() => [
+    ), columns = (0, import_react77.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -74196,7 +74303,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("audio-report");
     reportRoot5 && reportHost6 !== report && (reportRoot5.unmount(), reportRoot5 = void 0), reportHost6 = report, reportRoot5 = mountIsland(
       report,
-      (0, import_react77.createElement)(AudioChangedPanel, {
+      (0, import_react78.createElement)(AudioChangedPanel, {
         payload,
         cratePlan: cratePlan2,
         reanalyzePlan,
@@ -74302,10 +74409,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/gain-changed.ts
-  var import_react79 = __toESM(require_react(), 1);
+  var import_react80 = __toESM(require_react(), 1);
 
   // src/pages/GainChangedPanel.tsx
-  var import_react78 = __toESM(require_react(), 1);
+  var import_react79 = __toESM(require_react(), 1);
   var import_jsx_runtime285 = __toESM(require_jsx_runtime(), 1), BUTTON_SX17 = { textTransform: "none", minHeight: 44 };
   function trackLabel3(row) {
     let title2 = row.name.trim(), who = row.artist.trim();
@@ -74317,10 +74424,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     confirmReset: confirmReset2,
     writable
   }) {
-    let tracks = payload.tracks || [], rows = (0, import_react78.useMemo)(
+    let tracks = payload.tracks || [], rows = (0, import_react79.useMemo)(
       () => tracks.map((item) => ({ ...item, id: item.id })),
       [tracks]
-    ), columns = (0, import_react78.useMemo)(() => [
+    ), columns = (0, import_react79.useMemo)(() => [
       {
         field: "track",
         headerName: t("health.column.track"),
@@ -74436,7 +74543,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("gain-report");
     reportRoot6 && reportHost7 !== report && (reportRoot6.unmount(), reportRoot6 = void 0), reportHost7 = report, reportRoot6 = mountIsland(
       report,
-      (0, import_react79.createElement)(GainChangedPanel, {
+      (0, import_react80.createElement)(GainChangedPanel, {
         payload,
         confirmCrate,
         confirmReset,
@@ -74544,7 +74651,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/broken-smart.ts
-  var import_react80 = __toESM(require_react(), 1);
+  var import_react81 = __toESM(require_react(), 1);
 
   // src/pages/BrokenSmartPanel.tsx
   var import_jsx_runtime286 = __toESM(require_jsx_runtime(), 1), BUTTON_SX18 = { textTransform: "none", minHeight: 44 }, SOURCES = {
@@ -74666,7 +74773,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("broken-report");
     reportRoot7 && reportHost8 !== report && (reportRoot7.unmount(), reportRoot7 = void 0), reportHost8 = report, reportRoot7 = mountIsland(
       report,
-      (0, import_react80.createElement)(BrokenSmartPanel, {
+      (0, import_react81.createElement)(BrokenSmartPanel, {
         payload: latest18,
         selected,
         confirm: confirming2,
@@ -74798,10 +74905,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/health/streaming-swap.ts
-  var import_react82 = __toESM(require_react(), 1);
+  var import_react83 = __toESM(require_react(), 1);
 
   // src/pages/StreamingSwapPanel.tsx
-  var import_react81 = __toESM(require_react(), 1);
+  var import_react82 = __toESM(require_react(), 1);
   var import_jsx_runtime287 = __toESM(require_jsx_runtime(), 1), BUTTON_SX19 = { textTransform: "none", minHeight: 44 };
   function highSwaps(payload) {
     let swaps = [];
@@ -74831,10 +74938,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     confirmRepair: confirmRepair3,
     writable
   }) {
-    let tracks = payload.tracks || [], repairs = highSwaps(payload).length, rows = (0, import_react81.useMemo)(
+    let tracks = payload.tracks || [], repairs = highSwaps(payload).length, rows = (0, import_react82.useMemo)(
       () => tracks.map((item) => ({ ...item, id: item.asset_id })),
       [tracks]
-    ), columns = (0, import_react81.useMemo)(() => [
+    ), columns = (0, import_react82.useMemo)(() => [
       {
         field: "track",
         headerName: t("streams.column.track"),
@@ -74963,7 +75070,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("streams-report");
     reportRoot8 && reportHost9 !== report && (reportRoot8.unmount(), reportRoot8 = void 0), reportHost9 = report, reportRoot8 = mountIsland(
       report,
-      (0, import_react82.createElement)(StreamingSwapPanel, {
+      (0, import_react83.createElement)(StreamingSwapPanel, {
         payload,
         confirmRepair: confirmRepair2,
         writable: state.writable
@@ -75004,10 +75111,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/crates/crate-compare.ts
-  var import_react84 = __toESM(require_react(), 1);
+  var import_react85 = __toESM(require_react(), 1);
 
   // src/pages/CrateComparePanel.tsx
-  var import_react83 = __toESM(require_react(), 1);
+  var import_react84 = __toESM(require_react(), 1);
   var import_jsx_runtime288 = __toESM(require_jsx_runtime(), 1), BUTTON_SX20 = { textTransform: "none", minHeight: 44 }, ACCORDION_SX3 = {
     disableGutters: !0,
     square: !0,
@@ -75015,7 +75122,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     slotProps: { transition: { timeout: 0 } }
   };
   function useSectionOpen3(start2) {
-    let [open, setOpen] = (0, import_react83.useState)(start2);
+    let [open, setOpen] = (0, import_react84.useState)(start2);
     return {
       expanded: open,
       onChange: (_event, next3) => {
@@ -75030,7 +75137,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     writable,
     busy: busy8
   }) {
-    let accordion = useSectionOpen3(tracks.length > 0), columns = (0, import_react83.useMemo)(() => [
+    let accordion = useSectionOpen3(tracks.length > 0), columns = (0, import_react84.useMemo)(() => [
       {
         field: "name",
         headerName: t("column.title"),
@@ -75164,7 +75271,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let report = el("compare-report");
     reportRoot9 && reportHost10 !== report && (reportRoot9.unmount(), reportRoot9 = void 0), reportHost10 = report, reportRoot9 = mountIsland(
       report,
-      (0, import_react84.createElement)(CrateComparePanel, {
+      (0, import_react85.createElement)(CrateComparePanel, {
         payload,
         writable: state.writable,
         busy: busy7
@@ -75240,7 +75347,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/files/files-mount.tsx
-  var import_react86 = __toESM(require_react(), 1);
+  var import_react87 = __toESM(require_react(), 1);
 
   // src/pages/FilesDialog.tsx
   var import_jsx_runtime289 = __toESM(require_jsx_runtime(), 1);
@@ -75372,7 +75479,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/pages/FilesPanel.tsx
-  var import_react85 = __toESM(require_react(), 1), import_react_dom7 = __toESM(require_react_dom(), 1);
+  var import_react86 = __toESM(require_react(), 1), import_react_dom7 = __toESM(require_react_dom(), 1);
 
   // node_modules/@mui/material/Breadcrumbs/Breadcrumbs.mjs
   var React313 = __toESM(require_react(), 1);
@@ -75841,12 +75948,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   var FILE_OVERSCAN = 8;
   function visibleWindow(rowCount, scrollTop, viewHeight, rowHeight) {
-    let view = viewHeight || 600, maxScroll = Math.max(0, rowCount * rowHeight - view), top2 = Math.min(Math.max(0, scrollTop), maxScroll), start2 = Math.max(0, Math.floor(top2 / rowHeight) - FILE_OVERSCAN), end2 = Math.min(rowCount, Math.ceil((top2 + view) / rowHeight) + FILE_OVERSCAN);
+    let view2 = viewHeight || 600, maxScroll = Math.max(0, rowCount * rowHeight - view2), top2 = Math.min(Math.max(0, scrollTop), maxScroll), start2 = Math.max(0, Math.floor(top2 / rowHeight) - FILE_OVERSCAN), end2 = Math.min(rowCount, Math.ceil((top2 + view2) / rowHeight) + FILE_OVERSCAN);
     return { start: start2, end: end2 };
   }
   function FilesList() {
-    let files = useFiles(), listRef = (0, import_react85.useRef)(null), [scrollTop, setScrollTop] = (0, import_react85.useState)(0), [viewHeight, setViewHeight] = (0, import_react85.useState)(600);
-    (0, import_react85.useLayoutEffect)(() => {
+    let files = useFiles(), listRef = (0, import_react86.useRef)(null), [scrollTop, setScrollTop] = (0, import_react86.useState)(0), [viewHeight, setViewHeight] = (0, import_react86.useState)(600);
+    (0, import_react86.useLayoutEffect)(() => {
       let list = listRef.current;
       if (!list) return;
       setViewHeight(list.clientHeight || 600), setScrollTop(list.scrollTop);
@@ -76051,7 +76158,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function mountFilesIslands() {
     let panel = el("files-panel"), dialog = el("files-dialog"), portable = el("portable-dialog");
-    panelRoot5 = mountIsland(panel, (0, import_react86.createElement)(FilesPanel), rootFor(panel, panelRoot5, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react86.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react86.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
+    panelRoot5 = mountIsland(panel, (0, import_react87.createElement)(FilesPanel), rootFor(panel, panelRoot5, panelHost4)), dialogRoot = mountIsland(dialog, (0, import_react87.createElement)(FilesDialog), rootFor(dialog, dialogRoot, dialogHost)), portableRoot = mountIsland(portable, (0, import_react87.createElement)(PortableDialog), rootFor(portable, portableRoot, portableHost)), panelHost4 = panel, dialogHost = dialog, portableHost = portable;
   }
   bindFilesMount(mountFilesIslands);
   bindPortableMount(mountFilesIslands);
@@ -76105,10 +76212,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/views.ts
-  var import_react94 = __toESM(require_react(), 1);
+  var import_react95 = __toESM(require_react(), 1);
 
   // src/components/CrateOverflowMenu.tsx
-  var import_react87 = __toESM(require_react(), 1);
+  var import_react88 = __toESM(require_react(), 1);
   var import_jsx_runtime295 = __toESM(require_jsx_runtime(), 1), BUTTON_SX21 = { textTransform: "none", minWidth: 0 };
   function moreInk(ink) {
     return ink === "sheet" ? "var(--color-text)" : "var(--color-text-muted-on-dark)";
@@ -76131,10 +76238,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ink = "rail",
     items
   }) {
-    let [anchor, setAnchor] = (0, import_react87.useState)(null), [colorway, setColorway] = (0, import_react87.useState)(() => getSettingsState().colorway), moreRef = (0, import_react87.useRef)(null), skipRestore = (0, import_react87.useRef)(!1), open = !!anchor, label = moreLabel ?? t("crates.moreActions"), bindTooltip = tooltipRef4(moreTip);
-    (0, import_react87.useLayoutEffect)(() => subscribeSettings(() => {
+    let [anchor, setAnchor] = (0, import_react88.useState)(null), [colorway, setColorway] = (0, import_react88.useState)(() => getSettingsState().colorway), moreRef = (0, import_react88.useRef)(null), skipRestore = (0, import_react88.useRef)(!1), open = !!anchor, label = moreLabel ?? t("crates.moreActions"), bindTooltip = tooltipRef4(moreTip);
+    (0, import_react88.useLayoutEffect)(() => subscribeSettings(() => {
       setColorway(getSettingsState().colorway);
-    }), []), (0, import_react87.useLayoutEffect)(() => {
+    }), []), (0, import_react88.useLayoutEffect)(() => {
       let node2 = moreRef.current;
       node2 && paintMoreInk(node2, ink);
     }, [colorway, ink]);
@@ -76562,7 +76669,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/HistoryRescuePanel.tsx
-  var import_react88 = __toESM(require_react(), 1);
+  var import_react89 = __toESM(require_react(), 1);
 
   // src/lib/history/history-rescue.ts
   async function fetchHistoryRescueCatalog() {
@@ -76650,7 +76757,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/HistoryRescuePanel.tsx
   var import_jsx_runtime301 = __toESM(require_jsx_runtime(), 1), BUTTON_SX23 = { textTransform: "none", minHeight: 44 };
   function HistoryRescuePanel() {
-    let [source, setSource] = (0, import_react88.useState)(""), [selected2, setSelected] = (0, import_react88.useState)([]), [sources, setSources] = (0, import_react88.useState)([]), [report, setReport] = (0, import_react88.useState)(null), [error2, setError] = (0, import_react88.useState)(""), [busy8, setBusy] = (0, import_react88.useState)(!1), tokenRef = (0, import_react88.useRef)(0), rows = historyRescueSessionRows(report), ids = selected2.filter((id) => rows.some((row) => row.id === id && row.selectable)), readyCompare = !!source && !busy8, readyWrite = ids.length > 0 && !busy8;
+    let [source, setSource] = (0, import_react89.useState)(""), [selected2, setSelected] = (0, import_react89.useState)([]), [sources, setSources] = (0, import_react89.useState)([]), [report, setReport] = (0, import_react89.useState)(null), [error2, setError] = (0, import_react89.useState)(""), [busy8, setBusy] = (0, import_react89.useState)(!1), tokenRef = (0, import_react89.useRef)(0), rows = historyRescueSessionRows(report), ids = selected2.filter((id) => rows.some((row) => row.id === id && row.selectable)), readyCompare = !!source && !busy8, readyWrite = ids.length > 0 && !busy8;
     function toggleSession(id, on) {
       setSelected((prev2) => on ? prev2.includes(id) ? prev2 : [...prev2, id] : prev2.filter((value) => value !== id));
     }
@@ -76812,7 +76919,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/TrackDetail.tsx
-  var import_react92 = __toESM(require_react(), 1);
+  var import_react93 = __toESM(require_react(), 1);
 
   // src/components/BeatgridBlock.tsx
   var import_jsx_runtime302 = __toESM(require_jsx_runtime(), 1);
@@ -76837,7 +76944,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/CueEditor.tsx
-  var import_react89 = __toESM(require_react(), 1);
+  var import_react90 = __toESM(require_react(), 1);
 
   // src/lib/cues/cue-edit.ts
   function padsFromCues(cues2) {
@@ -76870,8 +76977,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function padSummary(pad, empty) {
     if (!pad) return empty;
-    let named = pad.name.trim(), time = formatCueTime(pad.start_ms);
-    return named ? `${time} ${named}` : time;
+    let named2 = pad.name.trim(), time = formatCueTime(pad.start_ms);
+    return named2 ? `${time} ${named2}` : time;
   }
   function cueEditReasonMessage(reason) {
     if (!reason) return null;
@@ -76924,7 +77031,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/CuePads.tsx
   var import_jsx_runtime303 = __toESM(require_jsx_runtime(), 1);
   function CueSlot({ slot, cue }) {
-    let color2 = slotColor(slot, cue?.color), named = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0, jumpable = !!cue && slot >= 0 && slot < 8;
+    let color2 = slotColor(slot, cue?.color), named2 = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0, jumpable = !!cue && slot >= 0 && slot < 8;
     function onJump() {
       jumpable && jumpCue(slot);
     }
@@ -76943,7 +77050,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
           /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("span", { className: "swatch", style: swatchStyle }),
           /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
-          /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+          /* @__PURE__ */ (0, import_jsx_runtime303.jsx)("span", { children: cue ? named2 || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
         ]
       }
     );
@@ -76971,8 +77078,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     "#6823B6"
   ], lastUndoSnapshot = null;
   function CueEditor({ track, writable }) {
-    let list = useTrackList(), player2 = usePlayer(), liveRegionId = (0, import_react89.useId)(), space = list.space || "Serato Library", [baseline, setBaseline] = (0, import_react89.useState)(() => padsFromCues(track.cues)), [pending, setPending] = (0, import_react89.useState)(() => padsFromCues(track.cues)), [fingerprint, setFingerprint] = (0, import_react89.useState)(null), [palette2, setPalette] = (0, import_react89.useState)(DEFAULT_PALETTE), [beatMs, setBeatMs] = (0, import_react89.useState)(null), [editable, setEditable] = (0, import_react89.useState)(!1), [reasonText3, setReasonText] = (0, import_react89.useState)(null), [busy8, setBusy] = (0, import_react89.useState)(!1), [swapFrom, setSwapFrom] = (0, import_react89.useState)(null), [status4, setStatus] = (0, import_react89.useState)(""), [undoId, setUndoId] = (0, import_react89.useState)(lastUndoSnapshot), dirty = padsDirty(baseline, pending), diffs = pendingDiffs(baseline, pending), canEdit = writable && editable && !busy8;
-    (0, import_react89.useEffect)(() => {
+    let list = useTrackList(), player2 = usePlayer(), liveRegionId = (0, import_react90.useId)(), space = list.space || "Serato Library", [baseline, setBaseline] = (0, import_react90.useState)(() => padsFromCues(track.cues)), [pending, setPending] = (0, import_react90.useState)(() => padsFromCues(track.cues)), [fingerprint, setFingerprint] = (0, import_react90.useState)(null), [palette2, setPalette] = (0, import_react90.useState)(DEFAULT_PALETTE), [beatMs, setBeatMs] = (0, import_react90.useState)(null), [editable, setEditable] = (0, import_react90.useState)(!1), [reasonText3, setReasonText] = (0, import_react90.useState)(null), [busy8, setBusy] = (0, import_react90.useState)(!1), [swapFrom, setSwapFrom] = (0, import_react90.useState)(null), [status4, setStatus] = (0, import_react90.useState)(""), [undoId, setUndoId] = (0, import_react90.useState)(lastUndoSnapshot), dirty = padsDirty(baseline, pending), diffs = pendingDiffs(baseline, pending), canEdit = writable && editable && !busy8;
+    (0, import_react90.useEffect)(() => {
       let cancelled = !1;
       return setBaseline(padsFromCues(track.cues)), setPending(padsFromCues(track.cues)), setSwapFrom(null), setStatus(""), previewCueEdit(track.id, space).then((plan) => {
         if (cancelled) return;
@@ -77289,7 +77396,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/DetailChrome.tsx
-  var import_react90 = __toESM(require_react(), 1);
+  var import_react91 = __toESM(require_react(), 1);
 
   // node_modules/@mui/icons-material/ContentCopy.mjs
   var import_jsx_runtime305 = __toESM(require_jsx_runtime(), 1), ContentCopy_default = createSvgIcon(/* @__PURE__ */ (0, import_jsx_runtime305.jsx)("path", {
@@ -77439,7 +77546,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     event.preventDefault();
   }
   function DetailActionsMenu() {
-    let list = useTrackList(), detail2 = list.detail.kind === "track" ? list.detail.track : null, [anchor, setAnchor] = (0, import_react90.useState)(null), buttonRef = (0, import_react90.useRef)(null), skipRestore = (0, import_react90.useRef)(!1), open = !!anchor, bindTooltip = tooltipRef(tips.detailActions);
+    let list = useTrackList(), detail2 = list.detail.kind === "track" ? list.detail.track : null, [anchor, setAnchor] = (0, import_react91.useState)(null), buttonRef = (0, import_react91.useRef)(null), skipRestore = (0, import_react91.useRef)(!1), open = !!anchor, bindTooltip = tooltipRef(tips.detailActions);
     if (!detail2) return null;
     let writable = !!(detail2.serato?.writable && list.writable), manager2 = detail2.serato?.file_manager || list.serato?.file_manager || "Finder", items = [
       {
@@ -77584,7 +77691,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/components/RelatedTracks.tsx
-  var import_react91 = __toESM(require_react(), 1);
+  var import_react92 = __toESM(require_react(), 1);
   init_shared_dialog();
   var import_jsx_runtime311 = __toESM(require_jsx_runtime(), 1);
   function relatedPath(track) {
@@ -77604,8 +77711,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     embedded = !1,
     onSavedCount
   }) {
-    let list = useTrackList(), path = relatedPath(track), [busy8, setBusy] = (0, import_react91.useState)(!!path), [loadError, setLoadError] = (0, import_react91.useState)(""), [payload, setPayload] = (0, import_react91.useState)(null), [query, setQuery] = (0, import_react91.useState)(""), [chosen, setChosen] = (0, import_react91.useState)(null), [note, setNote] = (0, import_react91.useState)(""), [rating, setRating] = (0, import_react91.useState)(""), [mutual, setMutual] = (0, import_react91.useState)(!0), [versionOf, setVersionOf] = (0, import_react91.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react91.useState)(null), [versionBusy, setVersionBusy] = (0, import_react91.useState)(!1), [saving2, setSaving] = (0, import_react91.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react91.useState)(!1);
-    (0, import_react91.useEffect)(() => {
+    let list = useTrackList(), path = relatedPath(track), [busy8, setBusy] = (0, import_react92.useState)(!!path), [loadError, setLoadError] = (0, import_react92.useState)(""), [payload, setPayload] = (0, import_react92.useState)(null), [query, setQuery] = (0, import_react92.useState)(""), [chosen, setChosen] = (0, import_react92.useState)(null), [note, setNote] = (0, import_react92.useState)(""), [rating, setRating] = (0, import_react92.useState)(""), [mutual, setMutual] = (0, import_react92.useState)(!0), [versionOf, setVersionOf] = (0, import_react92.useState)(!1), [versionGroups, setVersionGroups] = (0, import_react92.useState)(null), [versionBusy, setVersionBusy] = (0, import_react92.useState)(!1), [saving2, setSaving] = (0, import_react92.useState)(!1), [crateOnly, setCrateOnly] = (0, import_react92.useState)(!1);
+    (0, import_react92.useEffect)(() => {
       if (!path) {
         setBusy(!1), setPayload(null), setLoadError("");
         return;
@@ -77626,7 +77733,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       })(), () => {
         cancelled = !0;
       };
-    }, [path, list.space, list.activeCrate, crateOnly, track.id]), (0, import_react91.useEffect)(() => {
+    }, [path, list.space, list.activeCrate, crateOnly, track.id]), (0, import_react92.useEffect)(() => {
       if (!onSavedCount) return;
       if (!path) {
         onSavedCount(0);
@@ -77638,10 +77745,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       let savedNow = Array.isArray(payload?.saved) ? payload.saved.length : 0;
       onSavedCount(savedNow);
-    }, [onSavedCount, path, busy8, payload]), (0, import_react91.useEffect)(() => {
+    }, [onSavedCount, path, busy8, payload]), (0, import_react92.useEffect)(() => {
       setVersionGroups(null), setVersionOf(!1);
     }, [track.id]);
-    let hits2 = (0, import_react91.useMemo)(() => {
+    let hits2 = (0, import_react92.useMemo)(() => {
       let parsed = parseQuery(query);
       return !parsed.terms.length && !parsed.filters.length ? null : list.tracks.filter((item) => item.id !== track.id && matchesQuery(item, parsed)).slice(0, 8);
     }, [query, list.tracks, track.id]);
@@ -78105,7 +78212,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return /* @__PURE__ */ (0, import_jsx_runtime312.jsx)(import_jsx_runtime312.Fragment, { children: (track.groups || []).map((group) => /* @__PURE__ */ (0, import_jsx_runtime312.jsx)(FieldGroupBlock, { group }, group.name ?? "")) });
   }
   function FieldGroupBlock({ group }) {
-    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react92.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime312.jsxs)("div", { className: "field", children: [
+    let open = group.name !== "Search copies", [shown, setShown] = (0, import_react93.useState)(open), rows = group.fields.map((field2, index) => /* @__PURE__ */ (0, import_jsx_runtime312.jsxs)("div", { className: "field", children: [
       /* @__PURE__ */ (0, import_jsx_runtime312.jsxs)("div", { className: "label", children: [
         field2.label ?? "",
         /* @__PURE__ */ (0, import_jsx_runtime312.jsx)("span", { className: "column", children: field2.column ?? "" })
@@ -78232,9 +78339,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return value ? String(value) : "—";
   }
   function TrackBody({ track }) {
-    let list = useTrackList(), writable = !!(track.serato?.writable && list.writable), playTitle = track.title || track.name || playerStrings.untitled, bodyRef = (0, import_react92.useRef)(null), jumpLock = (0, import_react92.useRef)(null), jumpTimer = (0, import_react92.useRef)(0), [active2, setActive] = (0, import_react92.useState)("related"), path = track.resolved_path || track.edit?.portable_id || "", pathKey = `${track.id}:${path}`, [countKey, setCountKey] = (0, import_react92.useState)(pathKey), [relatedCount, setRelatedCount] = (0, import_react92.useState)(path ? null : 0);
+    let list = useTrackList(), writable = !!(track.serato?.writable && list.writable), playTitle = track.title || track.name || playerStrings.untitled, bodyRef = (0, import_react93.useRef)(null), jumpLock = (0, import_react93.useRef)(null), jumpTimer = (0, import_react93.useRef)(0), [active2, setActive] = (0, import_react93.useState)("related"), path = track.resolved_path || track.edit?.portable_id || "", pathKey = `${track.id}:${path}`, [countKey, setCountKey] = (0, import_react93.useState)(pathKey), [relatedCount, setRelatedCount] = (0, import_react93.useState)(path ? null : 0);
     countKey !== pathKey && (setCountKey(pathKey), setRelatedCount(path ? null : 0));
-    let reportSaved = (0, import_react92.useCallback)((count) => {
+    let reportSaved = (0, import_react93.useCallback)((count) => {
       setRelatedCount(count);
     }, []), mixes = t("detail.nav.related"), cuesLabel = t("detail.nav.markers"), cratesLabel = t("crates.heading"), copiesLabel = t("detail.nav.copies"), tagsLabel = t("detail.nav.fields"), chips = [
       { id: "related", label: mixes, count: relatedCount },
@@ -78250,7 +78357,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let scope = bodyRef.current;
       scope && scrollDetailSection(id, scope);
     }
-    return (0, import_react92.useEffect)(() => {
+    return (0, import_react93.useEffect)(() => {
       let scope = bodyRef.current;
       if (!scope || typeof IntersectionObserver > "u") return;
       jumpLock.current = null, window.clearTimeout(jumpTimer.current), setActive("related");
@@ -78427,12 +78534,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
 
   // src/lib/ui/virtual-scroll.ts
-  var import_react93 = __toESM(require_react(), 1);
+  var import_react94 = __toESM(require_react(), 1);
   var paneRoots = /* @__PURE__ */ new WeakMap();
   function mountPane(list, pane) {
     let root = mountIsland(
       list,
-      (0, import_react93.createElement)(TrackListWindow, {
+      (0, import_react94.createElement)(TrackListWindow, {
         pane,
         onFocusList: () => {
           list.focus({ preventScroll: !0 });
@@ -78456,7 +78563,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     moveSelection(delta, viewForList(list), list);
   }
   function openTrackList() {
-    let view = viewForList(focusedList()), current4 = view.find((track) => track.id === state.selectedId) ?? view[0];
+    let view2 = viewForList(focusedList()), current4 = view2.find((track) => track.id === state.selectedId) ?? view2[0];
     current4 && (current4.entry ? bridge.selectEntry(current4.id) : bridge.selectTrack(current4.id));
   }
   function focusedList() {
@@ -78468,30 +78575,30 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function scrollerFor(list) {
     return list.querySelector(".MuiDataGrid-virtualScroller") ?? list;
   }
-  function moveSelection(delta, view, list) {
-    let index = view.findIndex((track) => track.id === state.selectedId), next3 = view[Math.max(0, Math.min(view.length - 1, index + delta))];
+  function moveSelection(delta, view2, list) {
+    let index = view2.findIndex((track) => track.id === state.selectedId), next3 = view2[Math.max(0, Math.min(view2.length - 1, index + delta))];
     if (!next3) return;
     next3.entry ? bridge.selectEntry(next3.id) : bridge.selectTrack(next3.id);
-    let rowTop = view.indexOf(next3) * 36, scroller = scrollerFor(list);
+    let rowTop = view2.indexOf(next3) * 36, scroller = scrollerFor(list);
     rowTop < scroller.scrollTop && (scroller.scrollTop = rowTop), rowTop + 36 > scroller.scrollTop + scroller.clientHeight && (scroller.scrollTop = rowTop + 36 - scroller.clientHeight);
   }
-  function focusedTrack(target, view) {
+  function focusedTrack(target, view2) {
     if (!(target instanceof Element)) return;
     let row = target.closest(".row, .MuiDataGrid-row");
     if (!row) return;
     let id = Number(row.getAttribute("data-id"));
     if (Number.isInteger(id))
-      return view.find((item) => item.id === id);
+      return view2.find((item) => item.id === id);
   }
   function wireListKeys(list) {
     list.addEventListener("keydown", (event) => {
-      let view = viewForList(list);
+      let view2 = viewForList(list);
       if (event.key === "ArrowDown")
-        event.preventDefault(), moveSelection(1, view, list);
+        event.preventDefault(), moveSelection(1, view2, list);
       else if (event.key === "ArrowUp")
-        event.preventDefault(), moveSelection(-1, view, list);
+        event.preventDefault(), moveSelection(-1, view2, list);
       else if (event.key === "Enter") {
-        let chosen = focusedTrack(event.target, view) ?? view.find((item) => item.id === state.selectedId);
+        let chosen = focusedTrack(event.target, view2) ?? view2.find((item) => item.id === state.selectedId);
         if (!chosen || chosen.entry) return;
         event.preventDefault(), bridge.selectTrack(chosen.id), play(chosen.id);
       }
@@ -78553,8 +78660,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let showStrip = group.modes.length > 1 && !drawerIsMini();
     strip.hidden = !showStrip, strip.setAttribute("aria-label", t(group.labelKey));
     for (let button of strip.querySelectorAll("[data-view]")) {
-      let view = button.dataset.view ?? "", inGroup = group.modes.includes(view);
-      button.hidden = !inGroup, button.setAttribute("aria-selected", String(view === mode));
+      let view2 = button.dataset.view ?? "", inGroup = group.modes.includes(view2);
+      button.hidden = !inGroup, button.setAttribute("aria-selected", String(view2 === mode));
     }
   }
 
@@ -78571,8 +78678,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return VIEW_MODES.has(mode);
   }
   function formatHash(space, mode, crate) {
-    let slug = SPACE_TO_SLUG[space] ?? "library", view = isViewMode(mode) ? mode : "crates";
-    return crate === "all" || typeof crate != "number" || !Number.isInteger(crate) || crate < 0 ? `#${slug}/${view}` : `#${slug}/${view}/${crate}`;
+    let slug = SPACE_TO_SLUG[space] ?? "library", view2 = isViewMode(mode) ? mode : "crates";
+    return crate === "all" || typeof crate != "number" || !Number.isInteger(crate) || crate < 0 ? `#${slug}/${view2}` : `#${slug}/${view2}/${crate}`;
   }
   function parseHash(hash5) {
     let raw = hash5.replace(/^#/, "").trim();
@@ -78647,8 +78754,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return CRATE_SCOPED_MODES.includes(mode);
   }
   function sheetTitle(mode, space) {
-    let key = VIEW_LABEL_KEYS[mode] ?? "view.crates", view = t(key), trimmed = space.trim();
-    return trimmed ? t("sheet.title", { view, space: trimmed }) : view;
+    let key = VIEW_LABEL_KEYS[mode] ?? "view.crates", view2 = t(key), trimmed = space.trim();
+    return trimmed ? t("sheet.title", { view: view2, space: trimmed }) : view2;
   }
   function sheetScopeCrate(activeCrate, crates) {
     return activeCrate === "all" ? t("crates.allTracks") : crates.find((row) => row.id === activeCrate)?.name || t("crates.allTracks");
@@ -78675,7 +78782,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot?.unmount(), historyDetailRoot = null, historyDetailHost = null;
   }
   function paintDetailIsland() {
-    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react94.createElement)(TrackDetailPane));
+    clearDetailIslands(), detailRoot = mountIsland(el("detail"), (0, import_react95.createElement)(TrackDetailPane));
   }
   function remountIsland(host, node2, slot) {
     return slot.root && slot.host !== host && (slot.root.unmount(), slot.root = null), slot.host = host, slot.root = mountIsland(host, node2, slot.root ?? void 0), slot.root;
@@ -78686,21 +78793,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountCrates() {
     let list = document.getElementById("crate-list"), listMount = mountCrateIsland(
       list instanceof HTMLElement ? list : null,
-      (0, import_react94.createElement)(CrateTree),
+      (0, import_react95.createElement)(CrateTree),
       crateListRoot,
       crateListHost
     );
     crateListRoot = listMount.root, crateListHost = listMount.host;
     let actions3 = document.getElementById("crate-actions"), actionsMount = mountCrateIsland(
       actions3 instanceof HTMLElement ? actions3 : null,
-      (0, import_react94.createElement)(CrateActions),
+      (0, import_react95.createElement)(CrateActions),
       crateActionsRoot,
       crateActionsHost
     );
     crateActionsRoot = actionsMount.root, crateActionsHost = actionsMount.host;
     let browser = document.getElementById("crate-browser-actions"), browserMount = mountCrateIsland(
       browser instanceof HTMLElement ? browser : null,
-      (0, import_react94.createElement)(CrateBrowserActions),
+      (0, import_react95.createElement)(CrateBrowserActions),
       crateBrowserRoot,
       crateBrowserHost
     );
@@ -78926,13 +79033,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       return;
     }
     renderColumns();
-    let view = buildView();
+    let view2 = buildView();
     if (state.mode === "crates" && state.splitCrates ? el("count").textContent = t("count.split", {
-      a: t("count.tracks", { count: view.length }),
+      a: t("count.tracks", { count: view2.length }),
       b: t("count.tracks", { count: state.viewB.length })
-    }) : el("count").textContent = t(state.mode === "history" ? "count.plays" : "count.tracks", { count: view.length }), state.mode === "crates" ? renderCrates() : document.querySelector(".rules")?.remove(), paintDualChrome(), paintRows(), !view.some((track) => track.id === state.selectedId))
-      if (view.length)
-        state.mode === "history" ? selectEntry(view[0].id) : selectTrack(view[0].id);
+    }) : el("count").textContent = t(state.mode === "history" ? "count.plays" : "count.tracks", { count: view2.length }), state.mode === "crates" ? renderCrates() : document.querySelector(".rules")?.remove(), paintDualChrome(), paintRows(), !view2.some((track) => track.id === state.selectedId))
+      if (view2.length)
+        state.mode === "history" ? selectEntry(view2[0].id) : selectTrack(view2[0].id);
       else if (state.selectedId = null, state.mode === "history") {
         let empty = document.createElement("p");
         empty.className = "detail-empty", empty.textContent = state.historyId ? t("list.noMatches") : t("history.chooseSession"), clearDetailIslands(), el("detail").replaceChildren(empty);
@@ -78983,7 +79090,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function selectEntry(id) {
     if (state.selectedId = id, paintRows(), notifyHistory(), !state.entries.some((item) => item.id === id)) return;
     let host = el("detail");
-    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react94.createElement)(HistoryDetail), {
+    detailRoot?.unmount(), detailRoot = null, detailPlayRoot?.unmount(), detailPlayRoot = null, historyDetailRoot = remountIsland(host, (0, import_react95.createElement)(HistoryDetail), {
       host: historyDetailHost,
       root: historyDetailRoot
     }), historyDetailHost = host;
@@ -79298,14 +79405,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function renderSessions() {
     notifyHistory();
     let host = el("session-list");
-    sessionRoot = remountIsland(host, (0, import_react94.createElement)(HistorySessions), {
+    sessionRoot = remountIsland(host, (0, import_react95.createElement)(HistorySessions), {
       host: sessionHost,
       root: sessionRoot
     }), sessionHost = host, renderHistoryRescue();
   }
   function renderHistoryRescue() {
     let node2 = document.getElementById("history-rescue-host");
-    node2 instanceof HTMLElement && (historyRescueRoot = remountIsland(node2, (0, import_react94.createElement)(HistoryRescuePanel), {
+    node2 instanceof HTMLElement && (historyRescueRoot = remountIsland(node2, (0, import_react95.createElement)(HistoryRescuePanel), {
       host: historyRescueHost,
       root: historyRescueRoot
     }), historyRescueHost = node2);
@@ -81529,10 +81636,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   });
 
   // src/lib/ui/app-shell.ts
-  var import_react97 = __toESM(require_react(), 1);
+  var import_react98 = __toESM(require_react(), 1);
 
   // src/pages/AppShell.tsx
-  var import_react96 = __toESM(require_react(), 1);
+  var import_react97 = __toESM(require_react(), 1);
 
   // node_modules/@mui/material/AppBar/AppBar.mjs
   var React314 = __toESM(require_react(), 1);
@@ -82138,10 +82245,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }), "PendingActions");
 
   // src/components/ActivityTray.tsx
-  var import_react95 = __toESM(require_react(), 1);
+  var import_react96 = __toESM(require_react(), 1);
   var import_jsx_runtime319 = __toESM(require_jsx_runtime(), 1);
   function ActivityTray() {
-    let jobs2 = useJobs(), [anchor, setAnchor] = (0, import_react95.useState)(null), running = jobs2.running, recent = jobs2.jobs.filter((job) => isTerminal(job.state)).slice(0, 8), open = !!anchor;
+    let jobs2 = useJobs(), [anchor, setAnchor] = (0, import_react96.useState)(null), running = jobs2.running, recent = jobs2.jobs.filter((job) => isTerminal(job.state)).slice(0, 8), open = !!anchor;
     return /* @__PURE__ */ (0, import_jsx_runtime319.jsxs)(import_jsx_runtime319.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime319.jsx)(
         IconButton_default,
@@ -82939,14 +83046,14 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     !slot || !node2 || node2.parentElement !== slot && slot.append(node2);
   }
   function AppShell() {
-    let [savedOpen, setSavedOpen] = (0, import_react96.useState)(null), [innerWidth, setInnerWidth] = (0, import_react96.useState)(() => window.innerWidth), [hasTrack, setHasTrack] = (0, import_react96.useState)(() => getPlayerState().trackId !== null), open = drawerExpanded(savedOpen, innerWidth), deckOpen = hasTrack && !playerDeckIsCompact(innerWidth), postedOpen = (0, import_react96.useRef)(!1), [, setLocaleTick] = (0, import_react96.useState)(0), headingSlot = (0, import_react96.useRef)(null), generationSlot = (0, import_react96.useRef)(null), actionsSlot = (0, import_react96.useRef)(null), playerSlot = (0, import_react96.useRef)(null), lockSlot = (0, import_react96.useRef)(null), navSlot = (0, import_react96.useRef)(null), bodySlot = (0, import_react96.useRef)(null);
-    (0, import_react96.useEffect)(() => onLocaleChange(() => {
+    let [savedOpen, setSavedOpen] = (0, import_react97.useState)(null), [innerWidth, setInnerWidth] = (0, import_react97.useState)(() => window.innerWidth), [hasTrack, setHasTrack] = (0, import_react97.useState)(() => getPlayerState().trackId !== null), open = drawerExpanded(savedOpen, innerWidth), deckOpen = hasTrack && !playerDeckIsCompact(innerWidth), postedOpen = (0, import_react97.useRef)(!1), [, setLocaleTick] = (0, import_react97.useState)(0), headingSlot = (0, import_react97.useRef)(null), generationSlot = (0, import_react97.useRef)(null), actionsSlot = (0, import_react97.useRef)(null), playerSlot = (0, import_react97.useRef)(null), lockSlot = (0, import_react97.useRef)(null), navSlot = (0, import_react97.useRef)(null), bodySlot = (0, import_react97.useRef)(null);
+    (0, import_react97.useEffect)(() => onLocaleChange(() => {
       setLocaleTick((n) => n + 1);
-    }), []), (0, import_react96.useEffect)(() => subscribeDrawerOpen((saved) => {
+    }), []), (0, import_react97.useEffect)(() => subscribeDrawerOpen((saved) => {
       postedOpen.current || setSavedOpen(saved);
-    }), []), (0, import_react96.useEffect)(() => subscribe((snapshot4) => {
+    }), []), (0, import_react97.useEffect)(() => subscribe((snapshot4) => {
       setHasTrack(snapshot4.trackId !== null);
-    }), []), (0, import_react96.useEffect)(() => {
+    }), []), (0, import_react97.useEffect)(() => {
       let onResize = () => {
         setInnerWidth(window.innerWidth);
       };
@@ -82956,7 +83063,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       let next3 = !open;
       postedOpen.current = !0, setSavedOpen(next3), saveDrawerOpen(next3);
     }
-    return (0, import_react96.useLayoutEffect)(() => {
+    return (0, import_react97.useLayoutEffect)(() => {
       adoptNode(headingSlot.current, document.querySelector(".brand h1")), adopt(generationSlot.current, "library-generation"), adopt(generationSlot.current, "library-generation-note"), adopt(actionsSlot.current, "open-help"), adopt(actionsSlot.current, "open-settings"), adopt(playerSlot.current, "player-bar"), adopt(lockSlot.current, "status"), adopt(lockSlot.current, "status-refresh"), adopt(lockSlot.current, "folder-access"), adopt(lockSlot.current, "folder-access-allow"), adopt(navSlot.current, "views"), adopt(bodySlot.current, "app-body"), paintNav(state.mode);
     }, [open]), /* @__PURE__ */ (0, import_jsx_runtime329.jsxs)(
       Box_default,
@@ -83140,7 +83247,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function mountAppShell(host) {
     islandRoot8?.unmount(), islandRoot8 = null;
     let root = host === void 0 ? document.getElementById("app-shell") : host;
-    root && (islandRoot8 = mountIsland(root, (0, import_react97.createElement)(AppShell)));
+    root && (islandRoot8 = mountIsland(root, (0, import_react98.createElement)(AppShell)));
   }
 
   // src/lib/ui/desktop-actions.ts
@@ -83230,9 +83337,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       select.value = action.slice(6), select.dispatchEvent(new Event("change", { bubbles: !0 }));
       return;
     }
-    let view = VIEWS[action];
-    if (view) {
-      setMode(view);
+    let view2 = VIEWS[action];
+    if (view2) {
+      setMode(view2);
       return;
     }
     let id = CLICKS[action];

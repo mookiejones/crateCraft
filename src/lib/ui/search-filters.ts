@@ -159,8 +159,8 @@ function hasKey(track: Track): boolean {
 /**
  * Read whether the track has cue data the list already knows.
  *
- * GET /api/library does not open audio files, so most rows omit these
- * fields and this returns null. Tests and GET /api/track can set them.
+ * Library load opens local audio headers, so `has_cues` can be true,
+ * false, or null. Null (file not opened) does not match `cues:none`.
  *
  * @param {Track} track Track or history row.
  * @returns {boolean | null} True, false, or null when unknown.
