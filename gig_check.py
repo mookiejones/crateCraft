@@ -28,6 +28,7 @@ import gig_snapshots
 import library
 import snapshots
 import unplayable
+import update_safety
 from gig_snapshots import (
     ChangeReport,
     CueMark,
@@ -198,7 +199,7 @@ class GigReport:
         score: Ready score from 0 to 100.
         hard_red: True when a drive is absent, the selected crate has
             missing files, a file is cloud-only, or the Serato folder is
-            inside a cloud folder.
+            inside a cloud folder. ``update_safety`` does not set this.
         holding_it_back: Each deduction, hard reds first.
         missing_files: Files that are gone on a drive that is connected.
         unavailable_drives: Absent drives, one row per name.
@@ -220,6 +221,8 @@ class GigReport:
             They are not listed as missing files.
         unchecked_tracks: Tracks the check could not run, for example a
             permission error. They are not cloud-unknown and not missing.
+        update_safety: Read-only Serato, OS, and hardware verdict. ``unknown``
+            does not set ``hard_red``.
         deck_freeze: Warning for a large library on an XDJ-1000MK2, or None.
             It does not change the score. Other models are not named.
     """
@@ -245,6 +248,7 @@ class GigReport:
     local_count: int = 0
     no_path_tracks: tuple[MissingFile, ...] = ()
     unchecked_tracks: tuple[MissingFile, ...] = ()
+    update_safety: update_safety.UpdateSafety | None = None
     deck_freeze: DeckFreezeWarning | None = None
 
 
@@ -1598,6 +1602,13 @@ def run_gig_check(
     crate_id: int | None = None,
     snapshots_reader: GigSnapshotReader | None = None,
     now: datetime | None = None,
+    *,
+    safety_serato: str | None = None,
+    safety_os_name: str | None = None,
+    safety_os_version: str | None = None,
+    safety_hardware: Sequence[str] | None = None,
+    safety_facts: update_safety.VendorFacts | None = None,
+    safety_fetch: Callable[[], update_safety.VendorFacts] | None = None,
     target: str = UNKNOWN_TARGET,
 ) -> GigReport:
     """Check one space, or one crate, without writing.
@@ -1609,6 +1620,14 @@ def run_gig_check(
         snapshots_reader: Where saved snapshots come from. None reads the
             snapshot store beside the database, without writing.
         now: Clock for the seven-day window. None uses the current UTC time.
+        safety_serato: Installed Serato version. None reads the install.
+        safety_os_name: OS name. None uses ``platform``.
+        safety_os_version: OS version. None uses ``platform``.
+        safety_hardware: Hardware names. None stays unknown. This app has
+            no connected-hardware reader.
+        safety_facts: Vendor table. None uses the baked table.
+        safety_fetch: Optional version-list loader. A failure is unknown.
+            The default does not use the network.
         target: Player id from the Won't play list, or ``unknown``. The
             default does not warn. Only ``xdj-1000mk2`` can warn, and only
             when the space has at least 10000 tracks.
@@ -1616,8 +1635,8 @@ def run_gig_check(
     Returns:
         A frozen report. Missing files in the selected scope, any absent
         drive in that scope, a cloud-only file, and a Serato folder inside
-        a cloud folder set ``ready`` false. ``deck_freeze`` does not change
-        the score or ``ready``.
+        a cloud folder set ``ready`` false. ``update_safety`` does not.
+        ``deck_freeze`` does not change the score or ``ready``.
 
     Raises:
         library.LibraryError: If the space name is not one this app reads,
@@ -1634,6 +1653,19 @@ def run_gig_check(
     classified = _classify(loaded, path)
     note, changes, fresh, snapshot_id = _changes(reader, loaded, classified, moment)
     score, ready, hard, lines = _score(classified, fresh, changes, loaded.scope_crate)
+    # A check of some other database must not read this computer's app or logs.
+    serato_for_safety = safety_serato
+    if serato_for_safety is None and path.resolve() != Path(library.LIVE_MASTER).resolve():
+        serato_for_safety = "unknown"
+    safety = update_safety.for_this_machine(
+        today=moment.date(),
+        serato_version=serato_for_safety,
+        os_name=safety_os_name,
+        os_version=safety_os_version,
+        hardware=safety_hardware,
+        facts=safety_facts,
+        fetch=safety_fetch,
+    )
     return GigReport(
         ready,
         score,
@@ -1656,6 +1688,7 @@ def run_gig_check(
         classified.local_count,
         classified.no_path,
         classified.unchecked,
+        safety,
         deck_freeze_warning(len(loaded.assets), target),
     )
 
@@ -1771,6 +1804,9 @@ def report_to_dict(report: GigReport) -> dict[str, object]:
             "crate_name": report.scope_crate,
         },
         "checked_at": report.checked_at.isoformat(),
+        "update_safety": update_safety.to_dict(report.update_safety)
+        if report.update_safety is not None
+        else None,
         "deck_freeze": _deck_freeze_dict(report.deck_freeze),
     }
 
@@ -1992,7 +2028,9 @@ def format_report(report: GigReport) -> str:
     blocks = [
         f"Ready score: {report.score}",
         "Ready" if report.ready else "Not ready",
+        "",
     ]
+    blocks.extend(update_safety.format_lines(report.update_safety))
     if report.deck_freeze is not None:
         blocks.extend(["", "XDJ-1000MK2", report.deck_freeze.summary])
     blocks.extend(["", "Holding it back"])

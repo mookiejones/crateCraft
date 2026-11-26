@@ -16,6 +16,12 @@ import {
   gigLinesFor,
   tagEditLines,
 } from "../lib/gig/gig-view";
+import {
+  LEXICON_UPDATES,
+  MACOS_27_ARTICLE,
+  SERATO_DOWNLOADS,
+  updateSafetyView,
+} from "../lib/gig/update-safety-view";
 import { openSnapshotPlan } from "../lib/snapshots/restore";
 import { state } from "../lib/state";
 import { setTooltip } from "../lib/ui/tooltip";
@@ -23,7 +29,7 @@ import { tips, type TipSpec } from "../lib/ui/tooltip-strings";
 import { GigDetailsGroup } from "./GigDetailsGroup";
 
 function tooltipRef(spec: TipSpec) {
-  return (element: HTMLButtonElement | null) => {
+  return (element: HTMLElement | null) => {
     if (element) setTooltip(element, spec);
   };
 }
@@ -63,6 +69,59 @@ function GigActions({ primary, stepIndex }: { primary: string | null; stepIndex:
         {t("gig.exit")}
       </button>
     </div>
+  );
+}
+
+function GigUpdate({ payload }: { payload: GigPayload }) {
+  const view = updateSafetyView(payload.update_safety);
+  if (!view) return null;
+  return (
+    <section className="gig-update" aria-labelledby="gig-update-heading">
+      <p id="gig-update-heading" className="gig-kicker">{t("gig.updateSafety")}</p>
+      <p
+        className={view.verdict === "not_cleared" ? "gig-update-line not-cleared" : "gig-update-line"}
+        role="status"
+      >
+        {view.line}
+      </p>
+      <p className="gig-note">{view.combo}</p>
+      {view.reasons.length
+        ? (
+          <ul>
+            {view.reasons.map((reason, index) => <li key={`${index}:${reason}`}>{reason}</li>)}
+          </ul>
+        )
+        : null}
+      {view.warnings.map((warning, index) => (
+        <p key={`${index}:${warning}`} className="gig-update-fresh" role="status">{warning}</p>
+      ))}
+      <p className="gig-update-links">
+        <a
+          href={SERATO_DOWNLOADS}
+          target="_blank"
+          rel="noreferrer noopener"
+          ref={tooltipRef(tips.gigUpdateDownloads)}
+        >
+          {t("gig.updateDownloads")}
+        </a>
+        <a
+          href={MACOS_27_ARTICLE}
+          target="_blank"
+          rel="noreferrer noopener"
+          ref={tooltipRef(tips.gigUpdateSupport)}
+        >
+          {t("gig.updateSupport")}
+        </a>
+        <a
+          href={LEXICON_UPDATES}
+          target="_blank"
+          rel="noreferrer noopener"
+          ref={tooltipRef(tips.gigUpdateLexicon)}
+        >
+          {t("gig.updateLexicon")}
+        </a>
+      </p>
+    </section>
   );
 }
 
@@ -141,6 +200,7 @@ export function GigReport() {
           {t(payload.ready ? "gig.verdictReady" : "gig.verdictNotReady")}
         </span>
       </p>
+      <GigUpdate payload={payload} />
       {freezeText
         ? <p id="gig-deck-freeze" className="gig-note" role="status">{freezeText}</p>
         : null}

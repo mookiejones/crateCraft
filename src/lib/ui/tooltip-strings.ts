@@ -435,6 +435,9 @@ export const tips = {
   gigRefresh: spec("tooltip.gigRefresh"),
   gigTarget: spec("tooltip.gigTarget"),
   gigTonight: spec("tooltip.gigTonight"),
+  gigUpdateDownloads: spec("tooltip.gigUpdateDownloads"),
+  gigUpdateSupport: spec("tooltip.gigUpdateSupport"),
+  gigUpdateLexicon: spec("tooltip.gigUpdateLexicon"),
   scanQuick: spec("tooltip.scanQuick"),
   scanFull: spec("tooltip.scanFull"),
   bitrateRefresh: spec("tooltip.bitrateRefresh"),
@@ -941,6 +944,10 @@ export function wizardFolder(name: string): TipSpec {
 
 export function keepCopy(name: string): TipSpec {
   return spec("tooltip.keepCopy", { name });
+}
+
+export function rekordboxSmartFreeze(name: string): TipSpec {
+  return spec("tooltip.rekordboxSmartFreeze", { name });
 }
 
 export function quickOpenHit(kind: string, title: string, detail: string): TipSpec {

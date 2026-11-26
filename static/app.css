@@ -905,6 +905,38 @@ button:disabled { cursor: default; }
   font-size: var(--font-caption);
 }
 
+.rekordbox-smart {
+  border: 0;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.rekordbox-smart legend {
+  font-weight: 600;
+  padding: 0;
+}
+
+.rekordbox-smart-crate + .rekordbox-smart-crate {
+  margin-top: var(--space-3);
+}
+
+.rekordbox-smart-freeze {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+}
+
+.rekordbox-smart ul,
+.rekordbox-smart p {
+  margin: 0;
+}
+
+.rekordbox-smart ul {
+  padding-left: 1.25rem;
+}
+
 .notice {
   margin: 0 var(--space-4) var(--space-2);
   color: var(--quiet);
@@ -2440,6 +2472,33 @@ dialog .settings-field select {
 }
 
 .gig-verdict.not-ready { color: var(--missing); }
+
+.gig-update { margin: var(--space-3) 0 var(--space-2); }
+
+.gig-update-line { margin: var(--space-1) 0; }
+
+.gig-update-line.not-cleared { color: var(--missing); }
+
+.gig-update-fresh {
+  margin: var(--space-1) 0;
+  color: var(--color-warn-text);
+}
+
+.gig-update-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-2) 0;
+}
+
+.gig-update-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-6);
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 .gig-kicker {
   margin: var(--space-4) 0 var(--space-1);
