@@ -904,6 +904,38 @@ button:disabled { cursor: default; }
   font-size: var(--font-caption);
 }
 
+.rekordbox-smart {
+  border: 0;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.rekordbox-smart legend {
+  font-weight: 600;
+  padding: 0;
+}
+
+.rekordbox-smart-crate + .rekordbox-smart-crate {
+  margin-top: var(--space-3);
+}
+
+.rekordbox-smart-freeze {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+}
+
+.rekordbox-smart ul,
+.rekordbox-smart p {
+  margin: 0;
+}
+
+.rekordbox-smart ul {
+  padding-left: 1.25rem;
+}
+
 .notice {
   margin: 0 var(--space-4) var(--space-2);
   color: var(--quiet);

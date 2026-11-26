@@ -6,7 +6,17 @@
  * Confirm still posts only after the person confirms.
  */
 
+import { createElement } from "react";
+import { flushSync } from "react-dom";
+import { createRoot, type Root } from "react-dom/client";
 import { failureOf, getRelink, postJSON, readJSONOr } from "../api";
+import { RekordboxSmartRules } from "../../components/RekordboxSmartRules";
+import {
+  frozenParam,
+  nextFrozenChoice,
+  readSmartCrates,
+  type SmartCrateRow,
+} from "./rekordbox-smart";
 import { isQueuedWrite } from "../crates/queue-notice";
 import type { LibraryStatusNotice, OpenOptions } from "../../wizard-view";
 import type {
@@ -78,6 +88,10 @@ export {
 };
 
 let rekordboxXml = "";
+/** Null omits `frozen`, which freezes every smart crate in the export. */
+let frozenChoice: ReadonlySet<number> | null = null;
+let smartRows: SmartCrateRow[] = [];
+let smartRoot: Root | null = null;
 let mergePreview: MergePreview | null = null;
 let mergeToken = 0;
 let mergeLoading = false;
@@ -100,6 +114,8 @@ const relinkChecked = new Set<number>();
  * XML download, which starts only after the dialog is confirmed.
  * Hot loops sends ``hot_loops=1`` while the box is checked and
  * ``hot_loops=0`` while it is clear. The box starts clear.
+ * ``frozen`` is omitted until a freeze box changes. Omitted freezes every
+ * smart crate. ``frozen=none`` freezes none.
  * wireDialogs loads the saved dialog options before the person exports.
  * Off Crates the crate is ``all``, but the Rekordbox button does not fetch.
  *
@@ -111,8 +127,50 @@ export function rekordboxExportUrl(report: boolean) {
   const memory = el("rekordbox-memory").checked ? "1" : "0";
   const hotLoops = el("rekordbox-hot-loops").checked ? "1" : "0";
   const key = el("rekordbox-key").value;
-  const base = `/api/export.rekordbox.xml?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&memory=${memory}&hot_loops=${hotLoops}&key=${encodeURIComponent(key)}`;
+  const frozen = frozenParam(frozenChoice);
+  const base = `/api/export.rekordbox.xml?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&memory=${memory}&hot_loops=${hotLoops}&key=${encodeURIComponent(key)}${frozen}`;
   return report ? `${base}&report=1` : base;
+}
+
+/**
+ * Drop the smart-crate island and the freeze choice.
+ *
+ * The next export starts with every smart crate frozen. Call this before
+ * a test replaces the page.
+ *
+ * @returns {void}
+ */
+export function unmountRekordboxSmart(): void {
+  smartRoot?.unmount();
+  smartRoot = null;
+  frozenChoice = null;
+  smartRows = [];
+}
+
+/**
+ * Paint the smart-crate classes into the export dialog.
+ *
+ * The host is the adopted dialog markup. An empty list clears it.
+ * Does not fetch.
+ *
+ * @returns {void}
+ */
+function paintRekordboxSmart(): void {
+  const host = document.getElementById("rekordbox-smart");
+  if (!(host instanceof HTMLElement)) return;
+  smartRoot ??= createRoot(host);
+  const rows = smartRows;
+  flushSync(() => {
+    smartRoot?.render(createElement(RekordboxSmartRules, {
+      crates: rows,
+      onFreeze: (id: number, frozen: boolean) => {
+        frozenChoice = nextFrozenChoice(frozenChoice, smartRows, id, frozen);
+        smartRows = smartRows.map((row) => (row.id === id ? { ...row, frozen } : row));
+        paintRekordboxSmart();
+        requestRekordboxReport();
+      },
+    }));
+  });
 }
 
 /** Bumps when the Rekordbox options change, so a late settings response is ignored. */
@@ -214,6 +272,8 @@ function requestRekordboxReport(): void {
       }
       rekordboxXml = body.xml;
       fillRekordboxReport(body.report || []);
+      smartRows = readSmartCrates(body);
+      paintRekordboxSmart();
       el("rekordbox-status").textContent = "";
       if (!el("rekordbox-dialog").open) el("rekordbox-dialog").showModal();
     })
@@ -1177,6 +1237,9 @@ export function wireDialogs(): void {
   });
   el("export-rekordbox").addEventListener("click", () => {
     if (playlistCrate() == null) return;
+    frozenChoice = null;
+    smartRows = [];
+    paintRekordboxSmart();
     requestRekordboxReport();
   });
 

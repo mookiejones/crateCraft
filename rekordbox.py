@@ -11,6 +11,10 @@ does not. Emoji and non-Latin crate names are kept and named.
 
 Device Library Plus and OneLibrary USB drives are not written. A
 synthetic export.pdb page is parsed by export_pdb.py, not by this module.
+
+Smart-crate rules are classified by smart_rule_map. The file still
+writes an ordinary playlist. Rules are not copied, and a rule is not
+rewritten as a different field.
 """
 
 from __future__ import annotations
@@ -35,6 +39,8 @@ from xml.etree import ElementTree
 import app_config
 import app_log
 import library
+import smart_rule_map
+import smart_rules
 import tags
 
 
@@ -465,6 +471,41 @@ def _place_tempo_markers(
     return write_at
 
 
+def parse_frozen(raw: str | None) -> frozenset[int] | None:
+    """Read which smart crates should be frozen as static playlists.
+
+    Args:
+        raw: Query or CLI text. None freezes every smart crate in the
+            export. ``none`` freezes none. A comma-separated list freezes
+            those crate ids.
+
+    Returns:
+        None when every smart crate is frozen. An empty set when none are.
+        Otherwise the requested ids.
+
+    Raises:
+        library.LibraryError: If the text is not ``none`` or crate ids.
+            The status is 400.
+    """
+    if raw is None:
+        return None
+    text = raw.strip()
+    if text.lower() == "none":
+        return frozenset()
+    if not text:
+        raise library.LibraryError("That request is not valid.")
+    ids: list[int] = []
+    for part in text.split(","):
+        piece = part.strip()
+        if not piece.isascii() or not piece.isdigit():
+            raise library.LibraryError("That request is not valid.")
+        number = int(piece, 10)
+        if number > 2**63 - 1:
+            raise library.LibraryError("That request is not valid.")
+        ids.append(number)
+    return frozenset(ids)
+
+
 def export_rekordbox(
     space: str,
     crate_id: int | None,
@@ -472,6 +513,8 @@ def export_rekordbox(
     memory_cues: bool = True,
     hot_loops: bool = False,
     key_notation: str = "asis",
+    frozen: frozenset[int] | None = None,
+    summary: list[dict[str, object]] | None = None,
 ) -> tuple[str, list[str]]:
     """Build a rekordbox.xml document for one Serato space.
 
@@ -482,9 +525,20 @@ def export_rekordbox(
     space. A crate id exports that crate and its subcrates only. The space
     root is not a playlist.
 
+    A smart crate stays an ordinary playlist. ``frozen`` None puts the
+    tracks Serato had stored into that playlist. Any other set freezes
+    only those ids. A smart crate that is not frozen is an empty playlist.
+    Its rules are classified and are not rewritten as another field.
+
     Args:
         space: Space name. Must be one of library.ALLOWED_SPACES.
         crate_id: Crate to export, including subcrates. None exports the space.
+        memory_cues: Whether hot cues were duplicated as memory cues.
+        hot_loops: Whether loops were allowed onto free hot cue pads.
+        key_notation: ``asis``, ``camelot``, or ``classical``.
+        frozen: Smart-crate ids to freeze. None freezes every smart crate
+            in this export.
+        summary: When not None, filled with one dict per exported smart crate.
 
     Returns:
         The XML text, including the declaration and a trailing newline, and
@@ -519,6 +573,14 @@ def export_rekordbox(
             for crate in selected:
                 wanted.update(membership.get(crate, ()))
             tracks = [row for row in tracks if int(row["id"]) in wanted]
+        rule_blobs = _load_rule_blobs(
+            conn,
+            [
+                int(cast(int, crate["id"]))
+                for crate in crates
+                if int(cast(int, crate["type"])) == 2 and int(cast(int, crate["id"])) in selected
+            ],
+        )
     present: set[int] = set()
     track_elements: list[ElementTree.Element] = []
     stats: dict[str, int] = {}
@@ -549,13 +611,21 @@ def export_rekordbox(
             continue
         track_elements.append(element)
         present.add(int(row["id"]))
+    frozen_ids = _frozen_ids(crates, selected, frozen)
+    smart_lines, smart_summary = _smart_section(
+        crates, selected, membership, present, frozen_ids, rule_blobs
+    )
+    if summary is not None:
+        summary.extend(smart_summary)
     collection = ElementTree.Element("COLLECTION", Entries=str(len(track_elements)))
     collection.extend(track_elements)
     root_node = ElementTree.Element("NODE", Type="0", Name="ROOT")
     for crate in roots:
         if crate["id"] not in selected:
             continue
-        root_node.append(_crate_node(crate, crates, selected, membership, present, display_names))
+        root_node.append(
+            _crate_node(crate, crates, selected, membership, present, display_names, frozen_ids)
+        )
     root_node.set("Count", str(len(list(root_node))))
     playlists = ElementTree.Element("PLAYLISTS")
     playlists.append(root_node)
@@ -584,6 +654,7 @@ def export_rekordbox(
         grid_notes,
         deduped_names,
         trimmed_names,
+        smart_lines,
     )
 
 
@@ -737,6 +808,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         choices=_KEY_NOTATIONS,
         help="Key text to write: asis, camelot, or classical (default: asis).",
     )
+    parser.add_argument(
+        "--frozen",
+        default=None,
+        help="Smart crate ids to freeze as static playlists, comma-separated, or none. "
+        "Default freezes every smart crate.",
+    )
     args = parser.parse_args(list(argv) if argv is not None else None)
     crate_text = str(args.crate)
     if crate_text in {"", "all"}:
@@ -748,12 +825,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             print("Crate id needs a number, or all.", file=sys.stderr)
             return 2
     try:
+        frozen = parse_frozen(None if args.frozen is None else str(args.frozen))
+    except library.LibraryError as exc:
+        print(exc.message, file=sys.stderr)
+        return 2
+    try:
         xml_text, report = export_rekordbox(
             str(args.space),
             crate_id,
             memory_cues=bool(args.memory_cues),
             hot_loops=bool(args.hot_loops),
             key_notation=str(args.key),
+            frozen=frozen,
         )
         write_export(Path(str(args.output)), xml_text)
     except library.LibraryError as exc:
@@ -1313,6 +1396,7 @@ def _loss_report(
     grid_notes: Sequence[str] = (),
     deduped_names: Sequence[str] = (),
     trimmed_names: Sequence[str] = (),
+    smart_lines: Sequence[str] = (),
 ) -> list[str]:
     """Build the lines that say what this export cannot carry into Rekordbox.
 
@@ -1329,6 +1413,8 @@ def _loss_report(
         deduped_names: Cues kept once because another cue was at the same
             millisecond.
         trimmed_names: Memory cues left out by the memory-cue cap.
+        smart_lines: Per-crate smart-rule lines. They follow the sentence
+            that says smart-crate rules are not copied.
 
     Returns:
         One sentence per line. The import warning is always first.
@@ -1448,6 +1534,7 @@ def _loss_report(
     )
     lines.append("Beatgrid lock, replay gain, overview waveforms, stems, and play history are not copied.")
     lines.append("Smart crates are ordinary playlists in this file. Their rules are not copied.")
+    lines.extend(smart_lines)
     if key_notation == "asis":
         lines.append("Musical key is the text Serato stores. It was not translated between Camelot and classical.")
     elif key_notation == "camelot":
@@ -1797,6 +1884,151 @@ def _whole(value: object) -> str:
     if text.isdigit():
         return str(int(text))
     return "0"
+
+
+def _frozen_ids(
+    crates: Sequence[Mapping[str, object]],
+    selected: set[int],
+    frozen: frozenset[int] | None,
+) -> set[int]:
+    """Resolve which smart crates keep their stored tracks.
+
+    Args:
+        crates: Crates in the space.
+        selected: Crate ids included in this export.
+        frozen: Requested ids. None means every selected smart crate.
+
+    Returns:
+        Smart-crate ids whose playlists list stored members. A normal crate
+        id in ``frozen`` is ignored.
+    """
+    smart = {
+        int(cast(int, crate["id"]))
+        for crate in crates
+        if int(cast(int, crate["type"])) == 2 and int(cast(int, crate["id"])) in selected
+    }
+    if frozen is None:
+        return smart
+    return {crate_id for crate_id in frozen if crate_id in smart}
+
+
+def _load_rule_blobs(conn: sqlite3.Connection, ids: Sequence[int]) -> dict[int, object]:
+    """Read stored smart-crate JSON for the given crates.
+
+    Args:
+        conn: Open read connection.
+        ids: Smart-crate ids in this export.
+
+    Returns:
+        Crate id to the ``rules`` column. A crate with no row is absent.
+        A missing table returns an empty dict.
+    """
+    if not ids:
+        return {}
+    exists = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'smart_crate_rules'"
+    ).fetchone()
+    if exists is None:
+        return {}
+    marks = ",".join("?" * len(ids))
+    found: dict[int, object] = {}
+    for row in conn.execute(
+        f"SELECT container_id, rules FROM smart_crate_rules WHERE container_id IN ({marks})",
+        tuple(ids),
+    ):
+        found[int(row["container_id"])] = row["rules"]
+    return found
+
+
+def _stored_members(crate_id: int, membership: Mapping[int, Sequence[int]]) -> list[int]:
+    """List the distinct tracks Serato had stored for one crate.
+
+    Args:
+        crate_id: Container id.
+        membership: Crate id to asset ids, in playlist order.
+
+    Returns:
+        Asset ids, in first-seen order. A track that was not written is
+        still included.
+    """
+    found: list[int] = []
+    seen: set[int] = set()
+    for asset_id in membership.get(crate_id, ()):
+        if asset_id in seen:
+            continue
+        seen.add(asset_id)
+        found.append(asset_id)
+    return found
+
+
+def _smart_section(
+    crates: Sequence[Mapping[str, object]],
+    selected: set[int],
+    membership: Mapping[int, Sequence[int]],
+    present: set[int],
+    frozen_ids: set[int],
+    rule_blobs: Mapping[int, object],
+) -> tuple[list[str], list[dict[str, object]]]:
+    """Classify each exported smart crate and compare stored and written counts.
+
+    Args:
+        crates: Crates in list order.
+        selected: Crate ids included in this export.
+        membership: Crate id to stored asset ids.
+        present: Asset ids written to the collection.
+        frozen_ids: Smart crates that keep their stored tracks.
+        rule_blobs: Crate id to the stored rules column.
+
+    Returns:
+        Loss-report lines and one JSON-ready dict per smart crate. The count
+        is Serato's stored members against tracks in that playlist. It is not
+        a count Rekordbox computed.
+    """
+    lines: list[str] = []
+    rows: list[dict[str, object]] = []
+    for crate in crates:
+        crate_id = int(cast(int, crate["id"]))
+        if crate_id not in selected or int(cast(int, crate["type"])) != 2:
+            continue
+        raw_name = library.display_name(str(crate["name"] or ""))
+        name = _xml_text(raw_name).strip() or "Crate"
+        stored = _stored_members(crate_id, membership)
+        frozen_on = crate_id in frozen_ids
+        written = [asset_id for asset_id in stored if asset_id in present] if frozen_on else []
+        if crate_id not in rule_blobs:
+            status, leaves = "unreadable", []
+        else:
+            parsed = smart_rules.parse_rules(rule_blobs[crate_id])
+            if parsed is None:
+                status, leaves = "unreadable", []
+            else:
+                status, leaves = smart_rule_map.classify_blob(parsed)
+        shown = smart_rule_map.visible_rules(status, leaves)
+        lines.extend(
+            smart_rule_map.report_lines(
+                name,
+                status,
+                leaves,
+                frozen=frozen_on,
+                stored=len(stored),
+                written=len(written),
+            )
+        )
+        rows.append(
+            {
+                "id": crate_id,
+                "name": name,
+                "frozen": frozen_on,
+                "stored_count": len(stored),
+                "written_count": len(written),
+                "mismatch": len(stored) != len(written),
+                "status": status,
+                "rules": [
+                    {"label": rule.label, "classification": rule.classification} for rule in shown
+                ],
+            }
+        )
+    return lines, rows
 
 
 def _load_crates(conn: sqlite3.Connection, space: str) -> list[dict[str, object]]:
@@ -2169,6 +2401,7 @@ def _crate_node(
     membership: Mapping[int, Sequence[int]],
     present: set[int],
     display_names: list[str],
+    frozen_ids: set[int],
 ) -> ElementTree.Element:
     """Build the playlist node for one crate and its selected subcrates.
 
@@ -2184,6 +2417,8 @@ def _crate_node(
         present: Asset ids included in COLLECTION.
         display_names: Crate names a player may not display. This crate is
             appended when its written name qualifies.
+        frozen_ids: Smart crates whose stored tracks are written. A smart
+            crate that is not in this set is an empty playlist.
 
     Returns:
         A folder NODE when the crate has subcrates, otherwise a playlist NODE.
@@ -2201,13 +2436,17 @@ def _crate_node(
         if child["parent_id"] == crate_id and int(cast(int, child["id"])) in selected
     ]
     tracks = _crate_tracks(crate_id, membership, present)
+    if int(cast(int, crate["type"])) == 2 and crate_id not in frozen_ids:
+        tracks = []
     if not children:
         return _playlist(name, tracks)
     folder = ElementTree.Element("NODE", Type="0", Name=name)
     if tracks:
         folder.append(_playlist(name, tracks))
     for child in children:
-        folder.append(_crate_node(child, crates, selected, membership, present, display_names))
+        folder.append(
+            _crate_node(child, crates, selected, membership, present, display_names, frozen_ids)
+        )
     folder.set("Count", str(len(list(folder))))
     return folder
 
