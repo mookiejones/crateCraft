@@ -2,8 +2,8 @@
  * MUI X Data Grid column defs for crate and history lists.
  *
  * Play is its own first column. Title is the name plus swatch, emoji,
- * and missing/offline/stems badges. Cells are read-only. Sort keys match
- * the keys `buildView` already uses.
+ * a prepped mark, a named unplayable reason, and missing or offline badges.
+ * Sort keys match the keys `buildView` already uses.
  */
 
 import type { MouseEvent } from "react";
@@ -14,6 +14,7 @@ import { formatNumber, t, type MessageKey } from "../i18n";
 import { playerStrings } from "../player/player-strings";
 import { PlayButton } from "../../components/PlayButton";
 import { isUnplayableReason, unplayableLabel, unplayableTip } from "../tracks/unplayable-reason";
+import { preppedView } from "./prepped-mark";
 import { tooltipRef } from "./tooltip";
 import { sortTip, tips, type TipSpec } from "./tooltip-strings";
 
@@ -95,16 +96,18 @@ function Cell({ text, numeric = false }: { text: string; numeric?: boolean }) {
 }
 
 /**
- * Title cell: name, color swatch, emoji, and status badges.
+ * Title cell: name, color swatch, emoji, prepped mark, and unplayable word.
  *
- * Play lives in its own column. This cell is the name only plus the
- * badges that sit beside it.
+ * Play lives in its own column. The mark is omitted when the row has no
+ * `prepped` field, which is how history rows stay unmarked. A live
+ * unplayable reason replaces the older missing and offline badges.
  *
  * @param track Row.
  * @returns Title contents.
  */
 export function TrackTitleCell({ track }: { track: Track }) {
   const hex = colorHex(track.color);
+  const mark = preppedView(track);
   const reason = isUnplayableReason(track.unplayable_reason) ? track.unplayable_reason : null;
   return (
     <span className="cell">
@@ -112,6 +115,16 @@ export function TrackTitleCell({ track }: { track: Track }) {
         {hex ? <span className="swatch" style={{ background: hex }} /> : null}
         {track.emoji ? <span>{track.emoji}</span> : null}
         <span className="title">{track.name || t("track.untitled")}</span>
+        {mark ? (
+          <span
+            className={`prepped-mark prepped-mark-${mark.state}`}
+            tabIndex={0}
+            aria-label={mark.sentence}
+            ref={tooltipRef(mark.tip)}
+          >
+            <span className="prepped-word" aria-hidden="true">{mark.visible}</span>
+          </span>
+        ) : null}
         {reason ? (
           <span className="unplayable-word" tabIndex={0} ref={tooltipRef(unplayableTip(reason))}>
             {unplayableLabel(reason)}

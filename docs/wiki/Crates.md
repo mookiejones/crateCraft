@@ -17,7 +17,7 @@ flowchart TD
   tools["New, Rename, Delete, More"] --> quit["Quit Serato DJ Pro first"]
 ```
 
-The track list puts a checkbox first, then **Play**. **Title** is the name. Headers stay over the cells when you scroll. Drag a header edge to resize. The column menu can hide a column. A library larger than 100 tracks pages 100 at a time.
+The track list puts a checkbox first, then **Play**. **Title** is the name. A small mark on the title says **Prepped** when the file has cues, Serato has analysed it, and the file is here. **Not prepped** names the missing piece. **Not checked** means that piece could not be checked, and that row is not shown as prepped. Nothing is written. Headers stay over the cells when you scroll. Drag a header edge to resize. The column menu can hide a column. A library larger than 100 tracks pages 100 at a time.
 
 Check two or more rows to rewrite one text field on those tracks. Choose the field, type the value, click **Review**, then **Apply**. Apply stays off until Review matches, the library is writable, and at least one row would change. Check **Write to files too** to also write ID3 and MP4. Quit Serato DJ Pro first. History has no checkboxes.
 

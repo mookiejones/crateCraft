@@ -31,6 +31,7 @@ import audio_stream
 import batch_run
 import bitrate_check
 import bpm_sanity
+import cloud_files
 import crate_compare
 import crate_trees
 import folder_sync
@@ -61,6 +62,7 @@ import music_roots
 import path_forms
 import player_compat
 import portable_smart
+import prepped
 import rekordbox
 import related
 import relink
@@ -1388,8 +1390,11 @@ def _load_library(space: str) -> dict[str, object]:
 
     Returns:
         The cached payload for that space. Each track includes comments,
-        grouping, and composer so the page can search those fields. The
-        cache drops when the database stamp changes.
+        grouping, and composer so the page can search those fields, plus
+        the read-only prepped fields. The cache drops when the database
+        stamp changes. Local audio headers are opened after the database
+        connection closes. An unplugged drive and a cloud placeholder are
+        not opened. Nothing is written.
 
     Raises:
         FileNotFoundError: If the master database is missing.
@@ -1402,10 +1407,11 @@ def _load_library(space: str) -> dict[str, object]:
     if cached is not None:
         return cached
 
+    mounts = volumes.Mounts()
+    prepped_rows: list[tuple[dict[str, object], str, str, object]] = []
     with closing(connect()) as conn:
         tracks: list[dict[str, object]] = []
         uris = _connection_uris(conn)
-        mounts = volumes.Mounts()
         for row in conn.execute(
             """
             SELECT a.id, a.name, a.artist, a.album, a.genre, a.bpm, a.key,
@@ -1413,7 +1419,7 @@ def _load_library(space: str) -> dict[str, object]:
                    a.file_size, a.time_added, a.rating, a.emoji,
                    a.comments, a.grouping, a.composer,
                    a.is_beatgrid_locked, a.dj_play_count, a.stems_analyze_state,
-                   a.file_bit_rate, a.portable_id, a.location_id, a.third_party_type,
+                   a.file_bit_rate, a.analysis_flags, a.portable_id, a.location_id, a.third_party_type,
                    (SELECT MAX(e.start_time) FROM history_entry e
                     WHERE e.asset_id = a.id AND e.played) AS last_played
             FROM asset a
@@ -1462,6 +1468,7 @@ def _load_library(space: str) -> dict[str, object]:
                 track["offline"] = 1
                 track["offline_drive"] = drive
             tracks.append(track)
+            prepped_rows.append((track, portable, uri, cell(row, "analysis_flags")))
 
         crates: list[_Crate] = []
         root_id: object | None = None
@@ -1568,6 +1575,10 @@ def _load_library(space: str) -> dict[str, object]:
             elif crate["id"] in absent_crates:
                 crate["drive_status"] = "not_connected"
                 crate["drive_name"] = absent_crates[crate["id"]]
+
+    roots = cloud_files.discover_roots()
+    for track, portable, uri, flags in prepped_rows:
+        track.update(prepped.assess(portable, uri, flags, mounts, roots))
 
     payload: dict[str, object] = {
         "source": str(db_path()),
@@ -1827,6 +1838,15 @@ def load_track(asset_id: int, space: str | None = None) -> dict[str, object] | N
     if drive is not None:
         payload["offline"] = True
         payload["offline_drive"] = drive
+    payload.update(
+        prepped.assess(
+            portable or "",
+            location_uri,
+            data.get("analysis_flags"),
+            volumes.Mounts(),
+            cloud_files.discover_roots(),
+        )
+    )
     party = data.get("third_party_type")
     outcome = unplayable.unplayable_reason(portable or "", location_uri, _party_type(party))
     if outcome.reason in unplayable.REASONS:

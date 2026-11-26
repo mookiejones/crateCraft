@@ -58,9 +58,22 @@ export const nightTrack: Track = storyTrack(4, "Night", {
     { position: "2.000", bpm: 128 },
   ],
   edit: { name: "Night", artist: "Ada" },
+  prepped: true,
+  prepped_missing: [],
+  prepped_unknown: [],
+  has_cues: true,
+  analysed: true,
+  file_present: true,
 });
 
-export const dawnTrack: Track = storyTrack(5, "Dawn");
+export const dawnTrack: Track = storyTrack(5, "Dawn", {
+  prepped: false,
+  prepped_missing: ["cues"],
+  prepped_unknown: [],
+  has_cues: false,
+  analysed: true,
+  file_present: true,
+});
 
 export const crateRows: CrateRailRow[] = [
   {

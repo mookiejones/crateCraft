@@ -14910,6 +14910,10 @@ Error generating stack: ` + x.message + `
     "tooltip.portableSmartRestore": "Preview how these smart crates would land in this library. Nothing is written yet.",
     "tooltip.prepareAdd": "Send this track to Prepare.",
     "tooltip.prepareRemove": "Take this track out of Prepare.",
+    "tooltip.prepped": "Prepped. This track has cues, is analysed, and the file is here. Nothing is written.",
+    "tooltip.preppedMissing": "Not prepped. Missing: {pieces}. Nothing is written.",
+    "tooltip.preppedMixed": "Missing: {missing}. Not checked: {unknown}. Nothing is written.",
+    "tooltip.preppedUnknown": "Not checked. Could not check: {pieces}. Nothing is written.",
     "tooltip.presetBpm": "The tempo in the middle of the range.",
     "tooltip.presetCancel": "Close without making a crate.",
     "tooltip.presetCreate": "Save the matching tracks as a new crate.",
@@ -15090,6 +15094,15 @@ Error generating stack: ` + x.message + `
     "tooltip.trackReason.noPath": "This track has no file path and no drive location.",
     "tooltip.trackReason.streaming": "This track is streaming. It is not a file on this computer.",
     "tooltip.trackReason.unknown": "This track could not be checked. Nothing was changed.",
+    "track.notPrepped": "Not prepped",
+    "track.notPreppedDetail": "Not prepped: {pieces}",
+    "track.prepped": "Prepped",
+    "track.preppedMixedDetail": "Not prepped: {missing}. Not checked: {unknown}",
+    "track.preppedPiece.analysed": "analysed",
+    "track.preppedPiece.cues": "cues",
+    "track.preppedPiece.file": "file",
+    "track.preppedUnchecked": "Not checked",
+    "track.preppedUncheckedDetail": "Not checked: {pieces}",
     "track.missingBadge": "missing",
     "track.offlineBadge": "offline",
     "track.reason.driveOffline": "drive offline",
@@ -17787,6 +17800,10 @@ Error generating stack: ` + x.message + `
     "tooltip.portableSmartRestore": "Muestra cómo quedarían estas cajas inteligentes en esta biblioteca. Todavía no se escribe nada.",
     "tooltip.prepareAdd": "Envía esta pista a Preparar.",
     "tooltip.prepareRemove": "Quita esta pista de Preparar.",
+    "tooltip.prepped": "Preparada. Esta pista tiene cues, está analizada y el archivo está aquí. No se escribe nada.",
+    "tooltip.preppedMissing": "No preparada. Falta: {pieces}. No se escribe nada.",
+    "tooltip.preppedMixed": "Falta: {missing}. Sin comprobar: {unknown}. No se escribe nada.",
+    "tooltip.preppedUnknown": "Sin comprobar. No se pudo comprobar: {pieces}. No se escribe nada.",
     "tooltip.presetBpm": "El tempo en el centro del rango.",
     "tooltip.presetCancel": "Cierra sin crear una caja.",
     "tooltip.presetCreate": "Guarda las pistas que coinciden como una caja nueva.",
@@ -17967,6 +17984,15 @@ Error generating stack: ` + x.message + `
     "tooltip.trackReason.noPath": "Esta pista no tiene ruta de archivo ni ubicación de unidad.",
     "tooltip.trackReason.streaming": "Esta pista es streaming. No es un archivo en este ordenador.",
     "tooltip.trackReason.unknown": "No se pudo comprobar esta pista. No se cambió nada.",
+    "track.notPrepped": "No preparada",
+    "track.notPreppedDetail": "No preparada: {pieces}",
+    "track.prepped": "Preparada",
+    "track.preppedMixedDetail": "No preparada: {missing}. Sin comprobar: {unknown}",
+    "track.preppedPiece.analysed": "análisis",
+    "track.preppedPiece.cues": "cues",
+    "track.preppedPiece.file": "archivo",
+    "track.preppedUnchecked": "Sin comprobar",
+    "track.preppedUncheckedDetail": "Sin comprobar: {pieces}",
     "track.missingBadge": "no encontrada",
     "track.offlineBadge": "desconectada",
     "track.reason.driveOffline": "unidad desconectada",
@@ -19169,7 +19195,7 @@ Error generating stack: ` + x.message + `
       gig: tips.navGig
     }[id];
   }
-  function viewTip(view) {
+  function viewTip(view2) {
     return {
       crates: tips.viewCrates,
       history: tips.viewHistory,
@@ -19197,7 +19223,7 @@ Error generating stack: ` + x.message + `
       gain: tips.viewGain,
       broken: tips.viewBroken,
       streams: tips.viewStreams
-    }[view];
+    }[view2];
   }
   function crateSortTip(key) {
     if (key === "order") return tips.sortOrder;
@@ -19975,9 +20001,9 @@ Error generating stack: ` + x.message + `
     let inA = id === a, inB = b != null && id === b;
     return inA && inB ? "both" : inA ? "a" : inB ? "b" : null;
   }
-  function saveViewIds(view) {
+  function saveViewIds(view2) {
     let seen = /* @__PURE__ */ new Set(), ids = [];
-    for (let track of view)
+    for (let track of view2)
       track.entry || !Number.isInteger(track.id) || track.id < 0 || seen.has(track.id) || (seen.add(track.id), ids.push(track.id));
     return ids;
   }
@@ -36531,9 +36557,9 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
   function parseSwf1(input) {
     let bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
     if (bytes.byteLength < HEADER_BYTES || bytes[0] !== 83 || bytes[1] !== 87 || bytes[2] !== 70 || bytes[3] !== 49) return null;
-    let view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-    if (view.getUint16(4, !0) !== HEADER_BYTES) return null;
-    let version3 = view.getUint16(6, !0), flags = view.getUint16(8, !0), analyzerVersion = view.getUint16(10, !0), sampleRate = view.getUint32(12, !0), detailHzMilli = view.getUint32(16, !0), durationMs = view.getUint32(20, !0), detailCount = view.getUint32(24, !0), overviewCount = view.getUint32(28, !0), seratoColumns = view.getUint32(32, !0), seratoBands = view.getUint16(36, !0), lowHzMilli = view.getUint32(40, !0), highHzMilli = view.getUint32(44, !0);
+    let view2 = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    if (view2.getUint16(4, !0) !== HEADER_BYTES) return null;
+    let version3 = view2.getUint16(6, !0), flags = view2.getUint16(8, !0), analyzerVersion = view2.getUint16(10, !0), sampleRate = view2.getUint32(12, !0), detailHzMilli = view2.getUint32(16, !0), durationMs = view2.getUint32(20, !0), detailCount = view2.getUint32(24, !0), overviewCount = view2.getUint32(28, !0), seratoColumns = view2.getUint32(32, !0), seratoBands = view2.getUint16(36, !0), lowHzMilli = view2.getUint32(40, !0), highHzMilli = view2.getUint32(44, !0);
     if (detailCount > MAX_POINTS || overviewCount > MAX_POINTS || seratoColumns > MAX_POINTS) return null;
     let detailBytes = detailCount * 6, overviewBytes = overviewCount * 6, seratoBytes = seratoColumns * seratoBands;
     if (!Number.isSafeInteger(detailBytes + overviewBytes + seratoBytes) || HEADER_BYTES + detailBytes + overviewBytes + seratoBytes !== bytes.byteLength) return null;
@@ -37133,8 +37159,8 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
     state.filesActive = Math.max(0, Math.min(rows.length - 1, index));
     let list = document.getElementById("files-list");
     if (list) {
-      let rowHeight = filesRowHeight(), view = list.clientHeight || 600, top2 = state.filesActive * rowHeight, maxScroll = Math.max(0, rows.length * rowHeight - view);
-      top2 < list.scrollTop && (list.scrollTop = top2), top2 + rowHeight > list.scrollTop + view && (list.scrollTop = Math.min(maxScroll, top2 + rowHeight - view));
+      let rowHeight = filesRowHeight(), view2 = list.clientHeight || 600, top2 = state.filesActive * rowHeight, maxScroll = Math.max(0, rows.length * rowHeight - view2);
+      top2 < list.scrollTop && (list.scrollTop = top2), top2 + rowHeight > list.scrollTop + view2 && (list.scrollTop = Math.min(maxScroll, top2 + rowHeight - view2));
     }
     renderFiles(), list?.querySelector(`[data-files-index="${state.filesActive}"]`)?.focus();
   }
@@ -48329,10 +48355,10 @@ To suppress this warning, you need to explicitly provide the \`palette.${key}Cha
       return scrollbarSize;
     if (element === null)
       return 0;
-    let htmlElement = element, doc = ownerDocument(element), view = doc.defaultView, devicePixelRatio2 = view?.devicePixelRatio ?? 1, cached = scrollbarSizeCache.get(element);
+    let htmlElement = element, doc = ownerDocument(element), view2 = doc.defaultView, devicePixelRatio2 = view2?.devicePixelRatio ?? 1, cached = scrollbarSizeCache.get(element);
     if (cached !== void 0 && cached.devicePixelRatio === devicePixelRatio2 && cached.measuredDirectly)
       return cached.size;
-    let computed = view?.getComputedStyle(htmlElement), canScrollY = computed?.overflowY === "auto" || computed?.overflowY === "scroll", canScrollX = computed?.overflowX === "auto" || computed?.overflowX === "scroll", hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight && htmlElement.offsetWidth > 0, hasScrollX = canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth && htmlElement.offsetHeight > 0, borderWidth = parseCSSPixelValue(computed?.borderLeftWidth) + parseCSSPixelValue(computed?.borderRightWidth), borderHeight = parseCSSPixelValue(computed?.borderTopWidth) + parseCSSPixelValue(computed?.borderBottomWidth), directSize = Math.max(hasScrollY ? htmlElement.offsetWidth - htmlElement.clientWidth - borderWidth : 0, hasScrollX ? htmlElement.offsetHeight - htmlElement.clientHeight - borderHeight : 0);
+    let computed = view2?.getComputedStyle(htmlElement), canScrollY = computed?.overflowY === "auto" || computed?.overflowY === "scroll", canScrollX = computed?.overflowX === "auto" || computed?.overflowX === "scroll", hasScrollY = canScrollY && htmlElement.scrollHeight > htmlElement.clientHeight && htmlElement.offsetWidth > 0, hasScrollX = canScrollX && htmlElement.scrollWidth > htmlElement.clientWidth && htmlElement.offsetHeight > 0, borderWidth = parseCSSPixelValue(computed?.borderLeftWidth) + parseCSSPixelValue(computed?.borderRightWidth), borderHeight = parseCSSPixelValue(computed?.borderTopWidth) + parseCSSPixelValue(computed?.borderBottomWidth), directSize = Math.max(hasScrollY ? htmlElement.offsetWidth - htmlElement.clientWidth - borderWidth : 0, hasScrollX ? htmlElement.offsetHeight - htmlElement.clientHeight - borderHeight : 0);
     if (hasScrollY || hasScrollX) {
       let size2 = Math.max(0, directSize);
       return scrollbarSizeCache.set(element, {
@@ -64796,6 +64822,50 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return TIP[reason];
   }
 
+  // src/lib/ui/prepped-mark.ts
+  var PREPPED_PIECES = ["cues", "analysed", "file"], PIECE_KEY = {
+    cues: "track.preppedPiece.cues",
+    analysed: "track.preppedPiece.analysed",
+    file: "track.preppedPiece.file"
+  };
+  function named(value) {
+    if (!Array.isArray(value)) return [];
+    let found = new Set(value);
+    return PREPPED_PIECES.filter((piece) => found.has(piece));
+  }
+  function joinPieces(list) {
+    return list.map((piece) => t(PIECE_KEY[piece])).join(", ");
+  }
+  function view(state2, visible, tip) {
+    let sentence = tip.params ? t(tip.key, tip.params) : t(tip.key);
+    return { state: state2, visible, sentence, tip };
+  }
+  function preppedView(track) {
+    if (!Object.prototype.hasOwnProperty.call(track, "prepped")) return null;
+    let missing = named(track.prepped_missing), unknown = named(track.prepped_unknown), missingText = joinPieces(missing), unknownText = joinPieces(unknown);
+    if (track.prepped === !0 && missing.length === 0 && unknown.length === 0)
+      return view("prepped", t("track.prepped"), { key: "tooltip.prepped" });
+    if (missing.length > 0 && unknown.length > 0)
+      return view("unknown", t("track.preppedMixedDetail", { missing: missingText, unknown: unknownText }), {
+        key: "tooltip.preppedMixed",
+        params: { missing: missingText, unknown: unknownText }
+      });
+    if (unknown.length > 0 || track.prepped !== !1) {
+      let pieces = unknownText || missingText || t("track.preppedUnchecked");
+      return view("unknown", t("track.preppedUncheckedDetail", { pieces }), {
+        key: "tooltip.preppedUnknown",
+        params: { pieces }
+      });
+    }
+    return missing.length === 0 ? view("missing", t("track.notPrepped"), {
+      key: "tooltip.preppedMissing",
+      params: { pieces: t("track.notPrepped") }
+    }) : view("missing", t("track.notPreppedDetail", { pieces: missingText }), {
+      key: "tooltip.preppedMissing",
+      params: { pieces: missingText }
+    });
+  }
+
   // src/lib/ui/track-list-columns.tsx
   var import_jsx_runtime233 = __toESM(require_jsx_runtime(), 1), HISTORY_PLAYED_WIDTH = 136, TRACK_COLUMN_FIELDS = [
     "name",
@@ -64841,11 +64911,21 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: numeric ? "cell num" : "cell", children: text2 });
   }
   function TrackTitleCell({ track }) {
-    let hex = colorHex(track.color), reason = isUnplayableReason(track.unplayable_reason) ? track.unplayable_reason : null;
+    let hex = colorHex(track.color), mark = preppedView(track), reason = isUnplayableReason(track.unplayable_reason) ? track.unplayable_reason : null;
     return /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: "cell", children: /* @__PURE__ */ (0, import_jsx_runtime233.jsxs)("span", { className: "title-line", children: [
       hex ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: "swatch", style: { background: hex } }) : null,
       track.emoji ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { children: track.emoji }) : null,
       /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: "title", children: track.name || t("track.untitled") }),
+      mark ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)(
+        "span",
+        {
+          className: `prepped-mark prepped-mark-${mark.state}`,
+          tabIndex: 0,
+          "aria-label": mark.sentence,
+          ref: tooltipRef(mark.tip),
+          children: /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: "prepped-word", "aria-hidden": "true", children: mark.visible })
+        }
+      ) : null,
       reason ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: "unplayable-word", tabIndex: 0, ref: tooltipRef(unplayableTip(reason)), children: unplayableLabel(reason) }) : track.offline ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: "offline-word", children: t("track.offlineBadge") }) : track.missing ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: "missing-word", children: t("track.missingBadge") }) : null,
       track.stems ? /* @__PURE__ */ (0, import_jsx_runtime233.jsx)("span", { className: "missing-word", children: t("track.stemsBadge") }) : null
     ] }) });
@@ -64994,8 +65074,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function cueSummary(cue, empty) {
     if (!cue) return empty;
-    let named = typeof cue.name == "string" ? cue.name.trim() : "", time = formatCueTime(cue.start_ms);
-    return named ? `${time} ${named}` : time;
+    let named2 = typeof cue.name == "string" ? cue.name.trim() : "", time = formatCueTime(cue.start_ms);
+    return named2 ? `${time} ${named2}` : time;
   }
   function cueDiffRows(before, after) {
     let beforeCues = cuesFromFrame(before), afterCues = cuesFromFrame(after), beforeSlots = cueSlots(beforeCues), afterSlots = cueSlots(afterCues), diffs = [];
@@ -65092,7 +65172,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     wave instanceof HTMLElement && wave.parentElement !== slot && slot.append(wave);
   }
   function PlayerBar() {
-    let player2 = usePlayer(), [innerWidth, setInnerWidth] = (0, import_react32.useState)(() => window.innerWidth), compact = innerWidth <= PLAYER_DECK_COMPACT_MAX, loaded = player2.trackId !== null, shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying, named = loaded ? player2.title || playerStrings.untitled : "";
+    let player2 = usePlayer(), [innerWidth, setInnerWidth] = (0, import_react32.useState)(() => window.innerWidth), compact = innerWidth <= PLAYER_DECK_COMPACT_MAX, loaded = player2.trackId !== null, shownTitle = loaded ? player2.title || playerStrings.untitled : playerStrings.nothingPlaying, named2 = loaded ? player2.title || playerStrings.untitled : "";
     (0, import_react32.useEffect)(() => {
       let onResize = () => {
         setInnerWidth(window.innerWidth);
@@ -65101,7 +65181,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     }, []), (0, import_react32.useLayoutEffect)(() => {
       setPlayerWaveformCompact(compact);
     }, [compact]);
-    let playControl = /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(PlayButton, { variant: "bar", name: named }), title2 = /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(Typography_default, { className: "player-title", component: "p", noWrap: !0, title: shownTitle, children: shownTitle }), time = /* @__PURE__ */ (0, import_jsx_runtime235.jsxs)("span", { className: "player-time", children: [
+    let playControl = /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(PlayButton, { variant: "bar", name: named2 }), title2 = /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(Typography_default, { className: "player-title", component: "p", noWrap: !0, title: shownTitle, children: shownTitle }), time = /* @__PURE__ */ (0, import_jsx_runtime235.jsxs)("span", { className: "player-time", children: [
       /* @__PURE__ */ (0, import_jsx_runtime235.jsx)("span", { className: "visually-hidden", children: playerStrings.elapsed }),
       /* @__PURE__ */ (0, import_jsx_runtime235.jsx)("span", { children: formatPlayerTime(player2.currentTime) })
     ] }), status4 = /* @__PURE__ */ (0, import_jsx_runtime235.jsx)(Typography_default, { className: "player-status", component: "p", role: "status", hidden: player2.error === "", title: player2.error, children: player2.error }), waveSlot = /* @__PURE__ */ (0, import_jsx_runtime235.jsx)("div", { ref: attachWaveSlot, className: "player-wave-slot" }, WAVE_SLOT_KEY);
@@ -65669,11 +65749,11 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     for (let cue of rows) {
       let start2 = Number(cue.start_ms);
       if (!Number.isFinite(start2) || start2 < 0) continue;
-      let index = Number(cue.index), named = typeof cue.name == "string" ? cue.name.trim() : "", fallback = Number.isInteger(index) ? index + 1 : found.length + 1, stored = typeof cue.color == "string" ? cue.color : "", color2 = slotColor(Number.isInteger(index) ? index : -1, stored);
+      let index = Number(cue.index), named2 = typeof cue.name == "string" ? cue.name.trim() : "", fallback = Number.isInteger(index) ? index + 1 : found.length + 1, stored = typeof cue.color == "string" ? cue.color : "", color2 = slotColor(Number.isInteger(index) ? index : -1, stored);
       found.push({
         seconds: start2 / 1e3,
         color: color2,
-        label: named || `${playerStrings.cue} ${fallback}`,
+        label: named2 || `${playerStrings.cue} ${fallback}`,
         index: Number.isInteger(index) && index >= 0 && index < 8 ? index : -1
       });
     }
@@ -66211,9 +66291,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       setTooltip(element, tips.columnMenu);
     }
   }
-  function idsFromModel(next3, view) {
+  function idsFromModel(next3, view2) {
     if (next3.type === "exclude")
-      return view.map((row) => row.id).filter((id) => !next3.ids.has(id));
+      return view2.map((row) => row.id).filter((id) => !next3.ids.has(id));
     let ids = [];
     for (let id of next3.ids)
       typeof id == "number" && ids.push(id);
@@ -66224,7 +66304,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function TrackListWindow({ pane, onFocusList }) {
     ensureGridDom();
-    let list = useTrackList(), hostRef = (0, import_react38.useRef)(null), [height2, setHeight] = (0, import_react38.useState)(() => 600), view = pane === "b" ? list.viewB : list.view, history2 = list.mode === "history", cratesMode = list.mode === "crates", [selectedIds, setSelectedIds] = (0, import_react38.useState)(
+    let list = useTrackList(), hostRef = (0, import_react38.useRef)(null), [height2, setHeight] = (0, import_react38.useState)(() => 600), view2 = pane === "b" ? list.viewB : list.view, history2 = list.mode === "history", cratesMode = list.mode === "crates", [selectedIds, setSelectedIds] = (0, import_react38.useState)(
       () => list.selectedId == null ? [] : [list.selectedId]
     ), columns = (0, import_react38.useMemo)(
       () => trackListColumns(history2, {
@@ -66235,10 +66315,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ), sortModel = (0, import_react38.useMemo)(() => list.sort ? [{ field: list.sort, sort: list.sortDir < 0 ? "desc" : "asc" }] : [], [list.sort, list.sortDir]), rowSelectionModel = (0, import_react38.useMemo)(() => cratesMode ? { type: "include", ids: new Set(selectedIds) } : {
       type: "include",
       ids: list.selectedId == null ? /* @__PURE__ */ new Set() : /* @__PURE__ */ new Set([list.selectedId])
-    }, [cratesMode, list.selectedId, selectedIds]), localeText = (0, import_react38.useMemo)(() => gridLocaleText(list.locale), [list.locale]), [page, setPage] = (0, import_react38.useState)(0), maxPage = Math.max(0, Math.ceil(view.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react38.useMemo)(
+    }, [cratesMode, list.selectedId, selectedIds]), localeText = (0, import_react38.useMemo)(() => gridLocaleText(list.locale), [list.locale]), [page, setPage] = (0, import_react38.useState)(0), maxPage = Math.max(0, Math.ceil(view2.length / GRID_PAGE_SIZE) - 1), paginationModel = (0, import_react38.useMemo)(
       () => ({ page: Math.min(page, maxPage), pageSize: GRID_PAGE_SIZE }),
       [page, maxPage]
-    ), hideFooter = view.length <= GRID_PAGE_SIZE;
+    ), hideFooter = view2.length <= GRID_PAGE_SIZE;
     (0, import_react38.useEffect)(() => {
       if (cratesMode) {
         if (list.selectedId == null) {
@@ -66249,12 +66329,12 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
     }, [cratesMode, list.selectedId]), (0, import_react38.useEffect)(() => {
       function onSelectAll() {
-        cratesMode && setSelectedIds(view.filter((row) => !row.entry).map((row) => row.id));
+        cratesMode && setSelectedIds(view2.filter((row) => !row.entry).map((row) => row.id));
       }
       return document.addEventListener(SELECT_ALL_EVENT, onSelectAll), () => document.removeEventListener(SELECT_ALL_EVENT, onSelectAll);
-    }, [cratesMode, view]), (0, import_react38.useLayoutEffect)(() => {
+    }, [cratesMode, view2]), (0, import_react38.useLayoutEffect)(() => {
       setPage(0);
-    }, [history2, list.mode, list.sort, list.sortDir, view.length]), (0, import_react38.useLayoutEffect)(() => {
+    }, [history2, list.mode, list.sort, list.sortDir, view2.length]), (0, import_react38.useLayoutEffect)(() => {
       let parent = hostRef.current?.parentElement ?? null, measure = () => {
         setHeight(paneHeight(parent));
       };
@@ -66267,17 +66347,17 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       attachGridTooltips(node2);
       let observer = new MutationObserver(() => attachGridTooltips(node2));
       return observer.observe(node2, { subtree: !0, childList: !0 }), () => observer.disconnect();
-    }, [columns, view, list.locale, height2]), (0, import_react38.useEffect)(() => {
+    }, [columns, view2, list.locale, height2]), (0, import_react38.useEffect)(() => {
       let node2 = hostRef.current;
       node2 && attachGridTooltips(node2);
-    }, [columns, view, list.locale, height2]);
+    }, [columns, view2, list.locale, height2]);
     function onSortModelChange(model) {
       let next3 = model[0]?.field;
       !next3 || next3 === "play" || list.setSort(next3);
     }
     function onRowSelectionModelChange(next3) {
       if (cratesMode) {
-        let ids = idsFromModel(next3, view);
+        let ids = idsFromModel(next3, view2);
         if (!ids.length) {
           let fallback = list.selectedId == null ? [] : [list.selectedId];
           sameIds(selectedIds, fallback) || setSelectedIds(fallback);
@@ -66287,7 +66367,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         setSelectedIds(ids);
         let last = ids[ids.length - 1];
         if (last !== list.selectedId) {
-          let track2 = view.find((row) => row.id === last);
+          let track2 = view2.find((row) => row.id === last);
           track2?.entry ? list.selectEntry(track2.id) : track2 && list.selectTrack(track2.id);
         }
         onFocusList();
@@ -66295,7 +66375,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       }
       let id = [...next3.ids][0];
       if (typeof id != "number" || id === list.selectedId) return;
-      let track = view.find((row) => row.id === id);
+      let track = view2.find((row) => row.id === id);
       track && (track.entry ? list.selectEntry(track.id) : list.selectTrack(track.id), onFocusList());
     }
     function onRowDoubleClick(params) {
@@ -66310,7 +66390,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       /* @__PURE__ */ (0, import_jsx_runtime241.jsx)(
         DataGrid2,
         {
-          rows: [...view],
+          rows: [...view2],
           columns,
           getRowId: (row) => row.id,
           rowHeight: 36,
@@ -66348,7 +66428,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
             }
           }
         },
-        `${history2 ? "history" : "tracks"}-${view.length === 0 ? "empty" : "data"}`
+        `${history2 ? "history" : "tracks"}-${view2.length === 0 ? "empty" : "data"}`
       )
     ] });
   }
@@ -73393,20 +73473,20 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     ] });
   }
   function GigUpdate({ payload }) {
-    let view = updateSafetyView(payload.update_safety);
-    return view ? /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("section", { className: "gig-update", "aria-labelledby": "gig-update-heading", children: [
+    let view2 = updateSafetyView(payload.update_safety);
+    return view2 ? /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("section", { className: "gig-update", "aria-labelledby": "gig-update-heading", children: [
       /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { id: "gig-update-heading", className: "gig-kicker", children: t("gig.updateSafety") }),
       /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
         "p",
         {
-          className: view.verdict === "not_cleared" ? "gig-update-line not-cleared" : "gig-update-line",
+          className: view2.verdict === "not_cleared" ? "gig-update-line not-cleared" : "gig-update-line",
           role: "status",
-          children: view.line
+          children: view2.line
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "gig-note", children: view.combo }),
-      view.reasons.length ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("ul", { children: view.reasons.map((reason, index) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("li", { children: reason }, `${index}:${reason}`)) }) : null,
-      view.warnings.map((warning, index) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "gig-update-fresh", role: "status", children: warning }, `${index}:${warning}`)),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "gig-note", children: view2.combo }),
+      view2.reasons.length ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("ul", { children: view2.reasons.map((reason, index) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("li", { children: reason }, `${index}:${reason}`)) }) : null,
+      view2.warnings.map((warning, index) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "gig-update-fresh", role: "status", children: warning }, `${index}:${warning}`)),
       /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("p", { className: "gig-update-links", children: [
         /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
           "a",
@@ -76180,7 +76260,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   var FILE_OVERSCAN = 8;
   function visibleWindow(rowCount, scrollTop, viewHeight, rowHeight) {
-    let view = viewHeight || 600, maxScroll = Math.max(0, rowCount * rowHeight - view), top2 = Math.min(Math.max(0, scrollTop), maxScroll), start2 = Math.max(0, Math.floor(top2 / rowHeight) - FILE_OVERSCAN), end2 = Math.min(rowCount, Math.ceil((top2 + view) / rowHeight) + FILE_OVERSCAN);
+    let view2 = viewHeight || 600, maxScroll = Math.max(0, rowCount * rowHeight - view2), top2 = Math.min(Math.max(0, scrollTop), maxScroll), start2 = Math.max(0, Math.floor(top2 / rowHeight) - FILE_OVERSCAN), end2 = Math.min(rowCount, Math.ceil((top2 + view2) / rowHeight) + FILE_OVERSCAN);
     return { start: start2, end: end2 };
   }
   function FilesList() {
@@ -77209,8 +77289,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   }
   function padSummary(pad, empty) {
     if (!pad) return empty;
-    let named = pad.name.trim(), time = formatCueTime(pad.start_ms);
-    return named ? `${time} ${named}` : time;
+    let named2 = pad.name.trim(), time = formatCueTime(pad.start_ms);
+    return named2 ? `${time} ${named2}` : time;
   }
   function cueEditReasonMessage(reason) {
     if (!reason) return null;
@@ -77263,7 +77343,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   // src/components/CuePads.tsx
   var import_jsx_runtime304 = __toESM(require_jsx_runtime(), 1);
   function CueSlot({ slot, cue }) {
-    let color2 = slotColor(slot, cue?.color), named = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0, jumpable = !!cue && slot >= 0 && slot < 8;
+    let color2 = slotColor(slot, cue?.color), named2 = cue && typeof cue.name == "string" ? cue.name.trim() : "", swatchStyle = color2 ? { background: color2 } : void 0, jumpable = !!cue && slot >= 0 && slot < 8;
     function onJump() {
       jumpable && jumpCue(slot);
     }
@@ -77282,7 +77362,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           /* @__PURE__ */ (0, import_jsx_runtime304.jsx)("span", { className: "marker-slot", children: slot >= 0 ? String(slot + 1) : "" }),
           /* @__PURE__ */ (0, import_jsx_runtime304.jsx)("span", { className: "swatch", style: swatchStyle }),
           /* @__PURE__ */ (0, import_jsx_runtime304.jsx)("span", { children: cue ? formatCueTime(cue.start_ms) : "—" }),
-          /* @__PURE__ */ (0, import_jsx_runtime304.jsx)("span", { children: cue ? named || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
+          /* @__PURE__ */ (0, import_jsx_runtime304.jsx)("span", { children: cue ? named2 || t("markers.cue", { number: slot >= 0 ? slot + 1 : 0 }) : t("markers.cueEmpty") })
         ]
       }
     );
@@ -78795,7 +78875,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     moveSelection(delta, viewForList(list), list);
   }
   function openTrackList() {
-    let view = viewForList(focusedList()), current4 = view.find((track) => track.id === state.selectedId) ?? view[0];
+    let view2 = viewForList(focusedList()), current4 = view2.find((track) => track.id === state.selectedId) ?? view2[0];
     current4 && (current4.entry ? bridge.selectEntry(current4.id) : bridge.selectTrack(current4.id));
   }
   function focusedList() {
@@ -78807,30 +78887,30 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function scrollerFor(list) {
     return list.querySelector(".MuiDataGrid-virtualScroller") ?? list;
   }
-  function moveSelection(delta, view, list) {
-    let index = view.findIndex((track) => track.id === state.selectedId), next3 = view[Math.max(0, Math.min(view.length - 1, index + delta))];
+  function moveSelection(delta, view2, list) {
+    let index = view2.findIndex((track) => track.id === state.selectedId), next3 = view2[Math.max(0, Math.min(view2.length - 1, index + delta))];
     if (!next3) return;
     next3.entry ? bridge.selectEntry(next3.id) : bridge.selectTrack(next3.id);
-    let rowTop = view.indexOf(next3) * 36, scroller = scrollerFor(list);
+    let rowTop = view2.indexOf(next3) * 36, scroller = scrollerFor(list);
     rowTop < scroller.scrollTop && (scroller.scrollTop = rowTop), rowTop + 36 > scroller.scrollTop + scroller.clientHeight && (scroller.scrollTop = rowTop + 36 - scroller.clientHeight);
   }
-  function focusedTrack(target, view) {
+  function focusedTrack(target, view2) {
     if (!(target instanceof Element)) return;
     let row = target.closest(".row, .MuiDataGrid-row");
     if (!row) return;
     let id = Number(row.getAttribute("data-id"));
     if (Number.isInteger(id))
-      return view.find((item) => item.id === id);
+      return view2.find((item) => item.id === id);
   }
   function wireListKeys(list) {
     list.addEventListener("keydown", (event) => {
-      let view = viewForList(list);
+      let view2 = viewForList(list);
       if (event.key === "ArrowDown")
-        event.preventDefault(), moveSelection(1, view, list);
+        event.preventDefault(), moveSelection(1, view2, list);
       else if (event.key === "ArrowUp")
-        event.preventDefault(), moveSelection(-1, view, list);
+        event.preventDefault(), moveSelection(-1, view2, list);
       else if (event.key === "Enter") {
-        let chosen = focusedTrack(event.target, view) ?? view.find((item) => item.id === state.selectedId);
+        let chosen = focusedTrack(event.target, view2) ?? view2.find((item) => item.id === state.selectedId);
         if (!chosen || chosen.entry) return;
         event.preventDefault(), bridge.selectTrack(chosen.id), play(chosen.id);
       }
@@ -78892,8 +78972,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let showStrip = group.modes.length > 1 && !drawerIsMini();
     strip.hidden = !showStrip, strip.setAttribute("aria-label", t(group.labelKey));
     for (let button of strip.querySelectorAll("[data-view]")) {
-      let view = button.dataset.view ?? "", inGroup = group.modes.includes(view);
-      button.hidden = !inGroup, button.setAttribute("aria-selected", String(view === mode));
+      let view2 = button.dataset.view ?? "", inGroup = group.modes.includes(view2);
+      button.hidden = !inGroup, button.setAttribute("aria-selected", String(view2 === mode));
     }
   }
 
@@ -78910,8 +78990,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return VIEW_MODES.has(mode);
   }
   function formatHash(space, mode, crate) {
-    let slug = SPACE_TO_SLUG[space] ?? "library", view = isViewMode(mode) ? mode : "crates";
-    return crate === "all" || typeof crate != "number" || !Number.isInteger(crate) || crate < 0 ? `#${slug}/${view}` : `#${slug}/${view}/${crate}`;
+    let slug = SPACE_TO_SLUG[space] ?? "library", view2 = isViewMode(mode) ? mode : "crates";
+    return crate === "all" || typeof crate != "number" || !Number.isInteger(crate) || crate < 0 ? `#${slug}/${view2}` : `#${slug}/${view2}/${crate}`;
   }
   function parseHash(hash5) {
     let raw = hash5.replace(/^#/, "").trim();
@@ -78986,8 +79066,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return CRATE_SCOPED_MODES.includes(mode);
   }
   function sheetTitle(mode, space) {
-    let key = VIEW_LABEL_KEYS[mode] ?? "view.crates", view = t(key), trimmed = space.trim();
-    return trimmed ? t("sheet.title", { view, space: trimmed }) : view;
+    let key = VIEW_LABEL_KEYS[mode] ?? "view.crates", view2 = t(key), trimmed = space.trim();
+    return trimmed ? t("sheet.title", { view: view2, space: trimmed }) : view2;
   }
   function sheetScopeCrate(activeCrate, crates) {
     return activeCrate === "all" ? t("crates.allTracks") : crates.find((row) => row.id === activeCrate)?.name || t("crates.allTracks");
@@ -79265,13 +79345,13 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       return;
     }
     renderColumns();
-    let view = buildView();
+    let view2 = buildView();
     if (state.mode === "crates" && state.splitCrates ? el("count").textContent = t("count.split", {
-      a: t("count.tracks", { count: view.length }),
+      a: t("count.tracks", { count: view2.length }),
       b: t("count.tracks", { count: state.viewB.length })
-    }) : el("count").textContent = t(state.mode === "history" ? "count.plays" : "count.tracks", { count: view.length }), state.mode === "crates" ? renderCrates() : document.querySelector(".rules")?.remove(), paintDualChrome(), paintRows(), !view.some((track) => track.id === state.selectedId))
-      if (view.length)
-        state.mode === "history" ? selectEntry(view[0].id) : selectTrack(view[0].id);
+    }) : el("count").textContent = t(state.mode === "history" ? "count.plays" : "count.tracks", { count: view2.length }), state.mode === "crates" ? renderCrates() : document.querySelector(".rules")?.remove(), paintDualChrome(), paintRows(), !view2.some((track) => track.id === state.selectedId))
+      if (view2.length)
+        state.mode === "history" ? selectEntry(view2[0].id) : selectTrack(view2[0].id);
       else if (state.selectedId = null, state.mode === "history") {
         let empty = document.createElement("p");
         empty.className = "detail-empty", empty.textContent = state.historyId ? t("list.noMatches") : t("history.chooseSession"), clearDetailIslands(), el("detail").replaceChildren(empty);
@@ -83583,9 +83663,9 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
       select.value = action.slice(6), select.dispatchEvent(new Event("change", { bubbles: !0 }));
       return;
     }
-    let view = VIEWS[action];
-    if (view) {
-      setMode(view);
+    let view2 = VIEWS[action];
+    if (view2) {
+      setMode(view2);
       return;
     }
     let id = CLICKS[action];

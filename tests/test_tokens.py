@@ -686,6 +686,7 @@ _TEXT: tuple[tuple[str, tuple[str, ...], float, int], ...] = (
     (".cell.num", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".missing-word", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".offline-word", ("--color-card", "--color-selection", "hover"), 15, 400),
+    (".prepped-mark", ("--color-card", "--color-selection", "hover"), 12, 400),
     (".unplayable-word", ("--color-card", "--color-selection", "hover"), 15, 400),
     (".empty-list", ("--color-card",), 15, 400),
     (".detail-empty", ("--color-card",), 15, 400),
@@ -845,6 +846,8 @@ _DECORATIVE = {
     ".detail-swatch-empty",
     ".cue-edit-row[data-swap=\"true\"]",
     ".cue-editor-pending",
+    # The prepped chip border is a 1px frame. The words name the state.
+    ".prepped-mark",
 }
 
 # The only visible edge of these fields. Card surfaces use the sheet.
@@ -1009,6 +1012,7 @@ class ContrastTests(unittest.TestCase):
             ".player-toggle",
             ".waveform-zoom-button",
             ".waveform-overview:focus-visible",
+            ".prepped-mark:focus-visible",
             ".unplayable-word:focus-visible",
             "#portable-view-verdict:focus-visible",
             ".detail-play",
