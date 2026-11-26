@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { GigReport } from "../lib/api-types";
 import { loadGigCheck, repaintGig, wireGigCheck } from "../lib/gig/gig";
 import { tagDiffText, tagEditLines } from "../lib/gig/gig-view";
-import { setLocale } from "../lib/i18n";
+import { setLocale, t } from "../lib/i18n";
 import * as restore from "../lib/snapshots/restore";
 import { applyStaticTooltips } from "../lib/ui/tooltip";
 import { state } from "../lib/state";
@@ -94,7 +94,9 @@ describe("gig", () => {
     const fetchMock = vi.fn(async () => reply(report));
     vi.stubGlobal("fetch", fetchMock);
     await loadGigCheck();
-    expect(fetchMock).toHaveBeenCalledWith("/api/gig-check?space=Serato%20Library&crate=5");
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/gig-check?space=Serato%20Library&crate=5&target=unknown",
+    );
     const score = document.querySelector(".gig-score")!;
     expect(score.getAttribute("aria-label")).toBe("Ready score 72 out of 100, not ready");
     expect(score.textContent).toContain("72/100");
@@ -279,6 +281,32 @@ describe("gig in the active language", () => {
     expect(document.querySelector('[data-gig-action="exit"]')!.textContent).toBe("Salir de la comprobación");
   });
 
+  it("paints the XDJ-1000MK2 warning in Spanish", async () => {
+    setLocale("es");
+    const categories = ["TIME", "HOT CUE BANK", "FILE NAME", "BITRATE"];
+    vi.stubGlobal("fetch", vi.fn(async () => reply({
+      ...clear,
+      deck_freeze: {
+        player: "xdj-1000mk2",
+        track_count: 14100,
+        categories,
+        summary: "This library has 14,100 tracks.",
+      },
+    })));
+    await loadGigCheck();
+    const warning = document.getElementById("gig-deck-freeze");
+    expect(warning).not.toBeNull();
+    expect(warning!.textContent).toBe(t("gig.deckFreeze", {
+      count: 14100,
+      categories: categories.join(", "),
+    }));
+    expect(warning!.textContent).toContain("congelarse");
+    expect(warning!.textContent).toContain("Inactivo");
+    for (const name of categories) expect(warning!.textContent).toContain(name);
+    expect(warning!.textContent).not.toContain("may freeze");
+    expect(warning!.textContent).not.toContain("CDJ-900");
+  });
+
   it("repaints the last report on a language change without asking the server again", async () => {
     const fetchMock = vi.fn(() => Promise.resolve(reply(report)));
     vi.stubGlobal("fetch", fetchMock);
@@ -297,6 +325,7 @@ describe("gig in the active language", () => {
     vi.stubGlobal("fetch", vi.fn(() => Promise.resolve(reply(report))));
     applyStaticTooltips();
     expect(document.getElementById("gig-refresh")!.dataset.tooltipKey).toBe("tooltip.gigRefresh");
+    expect(document.getElementById("gig-target")!.dataset.tooltipKey).toBe("tooltip.gigTarget");
     expect(document.querySelector<HTMLElement>('[data-view="gig"]')!.dataset.tooltipKey).toBe("tooltip.viewGig");
     await loadGigCheck();
     const keys = (action: string): string | undefined =>
@@ -314,6 +343,56 @@ describe("gig in the active language", () => {
       (button) => !button.dataset.tooltipKey,
     );
     expect(untipped).toEqual([]);
+  });
+
+  it("warns only for a large library on an XDJ-1000MK2", async () => {
+    const categories = ["TIME", "HOT CUE BANK", "FILE NAME", "BITRATE"];
+    const freeze = {
+      player: "xdj-1000mk2",
+      track_count: 14100,
+      categories,
+      summary: "server summary stays off the page",
+    };
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const target = new URL(String(input), "http://127.0.0.1").searchParams.get("target");
+      return reply(target === "xdj-1000mk2" ? { ...clear, deck_freeze: freeze } : clear);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    await loadGigCheck();
+    expect(String(fetchMock.mock.calls[0]?.[0])).toContain("target=unknown");
+    expect(document.getElementById("gig-deck-freeze")).toBeNull();
+    expect(reportText()).not.toContain("may freeze");
+    expect(reportText()).not.toContain("server summary");
+
+    const select = document.getElementById("gig-target") as HTMLSelectElement;
+    expect(select.value).toBe("unknown");
+    select.value = "cdj-3000";
+    select.dispatchEvent(new Event("change"));
+    await vi.waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    await Promise.all(fetchMock.mock.results.map((result) => result.value));
+    expect(String(fetchMock.mock.calls[1]?.[0])).toContain("target=cdj-3000");
+    expect(document.getElementById("gig-deck-freeze")).toBeNull();
+
+    select.value = "xdj-1000mk2";
+    select.dispatchEvent(new Event("change"));
+    await vi.waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledTimes(3);
+      expect(document.getElementById("gig-deck-freeze")).not.toBeNull();
+    });
+    expect(String(fetchMock.mock.calls[2]?.[0])).toContain("target=xdj-1000mk2");
+    const warning = document.getElementById("gig-deck-freeze");
+    expect(warning).not.toBeNull();
+    expect(warning!.textContent).toBe(t("gig.deckFreeze", {
+      count: 14100,
+      categories: categories.join(", "),
+    }));
+    for (const name of categories) expect(warning!.textContent).toContain(name);
+    expect(warning!.textContent).toContain("14,100");
+    expect(warning!.textContent).toContain("Inactive");
+    expect(warning!.textContent).not.toContain("CDJ-900");
+    expect(warning!.textContent).not.toContain("CDJ-2000NXS2");
+    expect(warning!.textContent).not.toMatch(/other models/i);
+    expect(warning!.getAttribute("role")).toBe("status");
   });
 
   it("uses the singular for one unavailable track", async () => {
