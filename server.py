@@ -2191,7 +2191,12 @@ class Handler(BaseHTTPRequestHandler):
             if parsed.path == "/api/gig-check":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
-                report = gig_check.run_gig_check(space=space, crate_id=crate_query(raw_crate))
+                raw_target = query_text(query, "target", gig_check.UNKNOWN_TARGET) or gig_check.UNKNOWN_TARGET
+                report = gig_check.run_gig_check(
+                    space=space,
+                    crate_id=crate_query(raw_crate),
+                    target=raw_target,
+                )
                 self.send_json(gig_check.report_to_dict(report))
                 return
             if parsed.path == "/api/cloud-files":

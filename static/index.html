@@ -250,6 +250,18 @@
         <h2 id="gig-heading" class="visually-hidden" data-i18n="gig.heading">Gig check</h2>
         <div class="browser-bar">
           <p id="gig-scope" class="files-path" data-i18n="gig.wholeSpace">Whole space</p>
+          <label class="stats-field">
+            <span data-i18n="players.player">Player</span>
+            <select id="gig-target" aria-label="Player for this gig" data-i18n-attr="aria-label:gig.targetLabel">
+              <option value="unknown" selected data-i18n="gig.target.unknown">Not chosen</option>
+              <option value="club" data-i18n="players.player.club">Common club players</option>
+              <option value="cdj-3000" data-i18n="players.player.cdj3000">CDJ-3000</option>
+              <option value="cdj-2000nxs2" data-i18n="players.player.cdj2000nxs2">CDJ-2000NXS2</option>
+              <option value="cdj-2000nxs" data-i18n="players.player.cdj2000nxs">CDJ-2000NXS</option>
+              <option value="xdj-xz" data-i18n="players.player.xdjxz">XDJ-XZ</option>
+              <option value="xdj-1000mk2" data-i18n="players.player.xdj1000mk2">XDJ-1000MK2</option>
+            </select>
+          </label>
           <button id="gig-refresh" type="button" data-i18n="gig.checkAgain">Check again</button>
           <button id="tonight-build" type="button" data-i18n="gig.tonight">Tonight crates</button>
         </div>
