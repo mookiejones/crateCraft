@@ -867,11 +867,20 @@ export interface CloudFilesReport {
   error?: string;
 }
 
+/** Read-only XDJ-1000MK2 warning. Null when the check did not warn. */
+export interface DeckFreezeWarning {
+  player: string;
+  track_count: number;
+  categories: string[];
+  summary: string;
+}
+
 export interface GigReport {
   ready: boolean;
   score: number;
   hard_red: boolean;
   holding_it_back?: GigDeduction[];
+  deck_freeze?: DeckFreezeWarning | null;
   missing_files?: Array<{ path: string; title: string; artist: string; crate: string }>;
   unavailable_drives?: Array<{ name: string; track_count: number; crates: string[] }>;
   streaming_tracks?: Array<{ service: string; path: string; title: string; artist: string; crate: string }>;
