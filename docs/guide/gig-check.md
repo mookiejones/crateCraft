@@ -11,6 +11,16 @@
 5. Read the score on each step. It shows the number out of 100, such as **72/100**, and **✓ Ready** or **✕ Not ready**. Color is not the only signal. **Ready** means the score is at least 70 and nothing below is a hard stop. **Not ready** means do not treat the crate as ready to play.
 6. The last screen says whether you are ready for the gig, the score, the crate, and the time of the check. **Check again** after you plug a drive back in or move a file. The new check reads the drives again. A drive that is plugged in is not still called **drive offline**. The report stays up while the new check runs. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
 
+## Older deck
+
+**Player** sits next to **Check again**. **Not chosen** is the default. That choice does not warn.
+
+Pick **XDJ-1000MK2** when that deck will play this library. When the space has 10,000 tracks or more, Ready shows a warning on every step. The warning names TIME, HOT CUE BANK, FILE NAME, and BITRATE. Those four root categories have no precomputed list, so that deck may scan every track and freeze. In rekordbox, open **Preferences › Category** and set those four to **Inactive**.
+
+The count is every track in the space. A crate you selected does not shrink the count. A library under 10,000 tracks shows no warning. An empty library shows no warning. **Not chosen**, **Common club players**, and every other player in the list show no warning. The warning names only the XDJ-1000MK2.
+
+This check does not change rekordbox. It does not write a USB stick. The score does not drop because of this warning.
+
 ## Tonight crates
 
 **Tonight crates** sits next to **Check again** on Ready. One confirm builds ready-to-play crates under **`_crateCraft generated` / `Tonight`**: **Newest adds**, **Most played**, and one crate per decade from the year field. Quit Serato DJ Pro before confirm. A re-run replaces only that Tonight folder and the crates inside it. Crates you made yourself stay put. An empty plan does not write.
@@ -21,7 +31,7 @@ The same check from a terminal, in the repository directory:
 python3 gig_check.py
 ```
 
-`--crate` is a crate id, or `all`. `--space` selects the space. The default space is Serato Library. The command prints the report. It does not write a file.
+`--crate` is a crate id, or `all`. `--space` selects the space. The default space is Serato Library. `--target` is a player id, or `unknown`. The default is `unknown`. `xdj-1000mk2` is the only id that can show the older-deck warning. The command prints the report. It does not write a file.
 
 ## Holding it back
 

@@ -1325,6 +1325,7 @@ class GigCheckTests(unittest.TestCase):
             "snapshot_id",
             "changes",
             "tag_diffs",
+            "deck_freeze",
         ):
             self.assertIn(field, script)
         self.assertNotIn("innerHTML", src_page_text())
@@ -1363,6 +1364,16 @@ class GigCheckApiTests(unittest.TestCase):
                 with urllib.request.urlopen(f"http://{host}:{port}/api/gig-check?crate=5") as response:
                     body = response.read()
                     status = response.status
+                with urllib.request.urlopen(
+                    f"http://{host}:{port}/api/gig-check?crate=5&target=xdj-1000mk2"
+                ) as targeted:
+                    targeted_body = targeted.read()
+                    targeted_status = targeted.status
+                with urllib.request.urlopen(
+                    f"http://{host}:{port}/api/gig-check?crate=5&target=cdj-900"
+                ) as other:
+                    other_body = other.read()
+                    other_status = other.status
             finally:
                 httpd.shutdown()
                 httpd.server_close()
@@ -1377,6 +1388,11 @@ class GigCheckApiTests(unittest.TestCase):
             self.assertEqual(payload["snapshot_note"], gig_check.NO_SNAPSHOTS)
             self.assertEqual(payload["snapshot_id"], "")
             self.assertEqual(payload["empty_crates"][0]["warning"], gig_check.EMPTY_CRATE_WARNING)
+            self.assertIsNone(payload["deck_freeze"])
+            self.assertEqual(targeted_status, 200)
+            self.assertIsNone(json.loads(targeted_body.decode("utf-8"))["deck_freeze"])
+            self.assertEqual(other_status, 200)
+            self.assertIsNone(json.loads(other_body.decode("utf-8"))["deck_freeze"])
             self.assertEqual(_digest(library_fixture.db), before)
             self.assertEqual(_names(library_fixture.root), names)
             httpd = ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
@@ -1398,6 +1414,246 @@ class GigCheckApiTests(unittest.TestCase):
                 thread.join(timeout=3)
         finally:
             library_fixture.__exit__(None, None, None)
+
+
+def _add_many(conn: sqlite3.Connection, count: int) -> None:
+    """Insert ``count`` Apple Music rows so the size check does not open audio.
+
+    Args:
+        conn: Open database.
+        count: How many tracks. Each row is a track. Type 6 skips file probes.
+    """
+    conn.executemany(
+        """
+        INSERT INTO asset
+            (id, name, artist, album, genre, key, bpm, comments, portable_id,
+             file_name, third_party_type, location_id, is_missing)
+        VALUES (?, ?, 'Artist', '', '', '', NULL, '', ?, ?, 6, NULL, 0)
+        """,
+        [
+            (index, f"Track {index}", f"track-{index}", f"track-{index}.mp3")
+            for index in range(1, count + 1)
+        ],
+    )
+    conn.executemany(
+        "INSERT INTO space_asset (id, asset_id, space_id) VALUES (?, ?, 1)",
+        [(index, index) for index in range(1, count + 1)],
+    )
+
+
+def _sized_library(root: Path, count: int, *, crate: bool = False) -> Path:
+    """Build a library with ``count`` tracks.
+
+    Args:
+        root: Temporary directory.
+        count: Track rows in the Serato Library space.
+        crate: When true, also add one crate that holds only the first track.
+
+    Returns:
+        Path to master.sqlite.
+    """
+    def setup(conn: sqlite3.Connection) -> None:
+        if count:
+            _add_many(conn, count)
+        if crate:
+            _add_crate(conn, 5, "Friday")
+            conn.execute(
+                """
+                INSERT INTO container_asset (id, asset_id, container_id, list_order)
+                VALUES (1, 1, 5, 1)
+                """
+            )
+
+    return _write_db(root, setup)
+
+
+class DeckFreezeTests(unittest.TestCase):
+    """Large-library warning for the one documented deck (#364)."""
+
+    def test_pure_boundaries(self) -> None:
+        """Warn only at 10000 tracks on xdj-1000mk2.
+
+        Returns:
+            None. The test fails if another size or player warns, or if the
+            four categories are missing.
+        """
+        quiet = (
+            (0, "xdj-1000mk2"),
+            (9999, "xdj-1000mk2"),
+            (9999, "XDJ-1000MK2"),
+            (10000, "unknown"),
+            (10000, ""),
+            (10000, None),
+            (10000, "club"),
+            (10000, "cdj-3000"),
+            (10000, "cdj-2000nxs2"),
+            (10000, "cdj-900"),
+            (10000, "xdj-xz"),
+            (10000, "xdj-1000"),
+            (-1, "xdj-1000mk2"),
+        )
+        for count, target in quiet:
+            with self.subTest(count=count, target=target):
+                self.assertIsNone(gig_check.deck_freeze_warning(count, target))
+        self.assertIsNone(gig_check.deck_freeze_warning(True, "xdj-1000mk2"))  # type: ignore[arg-type]
+        warned = gig_check.deck_freeze_warning(10000, "  XDJ-1000MK2  ")
+        self.assertIsNotNone(warned)
+        assert warned is not None
+        self.assertEqual(warned.player, "xdj-1000mk2")
+        self.assertEqual(warned.track_count, 10000)
+        self.assertEqual(warned.categories, gig_check.DECK_FREEZE_CATEGORIES)
+        for name in gig_check.DECK_FREEZE_CATEGORIES:
+            self.assertIn(name, warned.summary)
+        self.assertIn("10,000", warned.summary)
+        self.assertIn("Inactive", warned.summary)
+        self.assertIn("Preferences › Category", warned.summary)
+        self.assertIn("This check does not change rekordbox or a USB stick.", warned.summary)
+        self.assertNotIn("CDJ", warned.summary)
+        self.assertNotIn("other model", warned.summary.lower())
+
+    def test_empty_and_small_libraries_do_not_warn(self) -> None:
+        """An empty library and a three-track library stay quiet on an XDJ-1000MK2.
+
+        Returns:
+            None. The test fails if either report warns or the database changes.
+        """
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            empty_root = root / "empty"
+            empty_root.mkdir()
+            empty = _sized_library(empty_root, 0)
+            before = _digest(empty)
+            report = gig_check.run_gig_check(
+                empty,
+                snapshots_reader=gig_snapshots.NoSnapshots(),
+                now=NOW,
+                target="xdj-1000mk2",
+            )
+            self.assertIsNone(report.deck_freeze)
+            self.assertEqual(_digest(empty), before)
+
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            song = root / "song.mp3"
+            song.write_bytes(b"not audio")
+
+            def setup(conn: sqlite3.Connection) -> None:
+                for asset_id in range(1, 4):
+                    _add_track(conn, asset_id, str(song), title=f"Track {asset_id}")
+
+            database = _write_db(root, setup)
+            before = _digest(database)
+            names = _names(root)
+            report = gig_check.run_gig_check(
+                database,
+                snapshots_reader=gig_snapshots.NoSnapshots(),
+                now=NOW,
+                target="XDJ-1000MK2",
+            )
+            self.assertIsNone(report.deck_freeze)
+            self.assertEqual(_digest(database), before)
+            self.assertEqual(_names(root), names)
+
+    def test_large_xdj_warns_and_other_targets_do_not(self) -> None:
+        """10,000 tracks warn only for the XDJ-1000MK2, and nothing is written.
+
+        A one-track crate in that space still warns. The count is the space.
+        9,999 tracks do not warn. The score is the same with or without the warning.
+
+        Returns:
+            None. The test fails if a category is missing, another model warns,
+            or the database hash changes.
+        """
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            database = _sized_library(root, gig_check.DECK_FREEZE_MIN_TRACKS - 1)
+            below = gig_check.run_gig_check(
+                database,
+                snapshots_reader=gig_snapshots.NoSnapshots(),
+                now=NOW,
+                target="xdj-1000mk2",
+            )
+            self.assertIsNone(below.deck_freeze)
+
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            database = _sized_library(root, gig_check.DECK_FREEZE_MIN_TRACKS, crate=True)
+            before = _digest(database)
+            names = _names(root)
+            reader = gig_snapshots.NoSnapshots()
+            warned = gig_check.run_gig_check(
+                database,
+                snapshots_reader=reader,
+                now=NOW,
+                target="xdj-1000mk2",
+            )
+            self.assertIsNotNone(warned.deck_freeze)
+            assert warned.deck_freeze is not None
+            self.assertEqual(warned.deck_freeze.categories, gig_check.DECK_FREEZE_CATEGORIES)
+            self.assertEqual(warned.deck_freeze.track_count, gig_check.DECK_FREEZE_MIN_TRACKS)
+            payload = gig_check.report_to_dict(warned)
+            frozen = payload["deck_freeze"]
+            assert isinstance(frozen, dict)
+            self.assertEqual(frozen["categories"], list(gig_check.DECK_FREEZE_CATEGORIES))
+            self.assertEqual(frozen["player"], "xdj-1000mk2")
+            text = gig_check.format_report(warned)
+            self.assertIn("XDJ-1000MK2", text)
+            for category in gig_check.DECK_FREEZE_CATEGORIES:
+                self.assertIn(category, text)
+            self.assertNotIn("CDJ-900", text)
+            self.assertNotIn("CDJ-2000NXS2", text)
+            scoped = gig_check.run_gig_check(
+                database,
+                crate_id=5,
+                snapshots_reader=reader,
+                now=NOW,
+                target="XDJ-1000MK2",
+            )
+            assert scoped.deck_freeze is not None
+            self.assertEqual(scoped.deck_freeze.track_count, gig_check.DECK_FREEZE_MIN_TRACKS)
+            self.assertEqual(scoped.scope_crate_id, 5)
+            for target in ("unknown", "club", "cdj-3000", "cdj-2000nxs2", "cdj-900"):
+                with self.subTest(target=target):
+                    quiet = gig_check.run_gig_check(
+                        database,
+                        snapshots_reader=reader,
+                        now=NOW,
+                        target=target,
+                    )
+                    self.assertIsNone(quiet.deck_freeze)
+                    self.assertEqual(quiet.score, warned.score)
+                    self.assertEqual(quiet.ready, warned.ready)
+                    self.assertEqual(quiet.holding_it_back, warned.holding_it_back)
+            self.assertEqual(_digest(database), before)
+            self.assertEqual(_names(root), names)
+            stdout = StringIO()
+            with redirect_stdout(stdout):
+                code = gig_check.main(["--database", str(database), "--target", "xdj-1000mk2"])
+            self.assertEqual(code, 0 if warned.ready else 1)
+            self.assertIn("HOT CUE BANK", stdout.getvalue())
+            self.assertEqual(_digest(database), before)
+            quiet_out = StringIO()
+            with redirect_stdout(quiet_out):
+                gig_check.main(["--database", str(database)])
+            self.assertNotIn("HOT CUE BANK", quiet_out.getvalue())
+            self.assertEqual(_digest(database), before)
+
+    def test_guide_names_the_four_categories_and_only_this_deck(self) -> None:
+        """The user guide states the warning and does not name other freezes.
+
+        Returns:
+            None. The test fails if a category or the read-only line is missing.
+        """
+        guide = (ROOT / "docs" / "guide" / "gig-check.md").read_text(encoding="utf-8")
+        for name in gig_check.DECK_FREEZE_CATEGORIES:
+            self.assertIn(name, guide)
+        self.assertIn("XDJ-1000MK2", guide)
+        self.assertIn("Inactive", guide)
+        self.assertIn("10,000", guide)
+        self.assertIn("does not change rekordbox", guide)
+        self.assertIn("does not write a USB stick", guide)
+        self.assertNotIn("CDJ-900", guide)
+        self.assertNotIn("CDJ-2000NXS2", guide)
 
 
 if __name__ == "__main__":

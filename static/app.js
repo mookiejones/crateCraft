@@ -13413,6 +13413,7 @@ Error generating stack: ` + x.message + `
     "gig.cratesEdited": "Crates edited",
     "gig.cratesRemoved": "Crates removed",
     "gig.cuesEdited": "Cues edited",
+    "gig.deckFreeze": "This library has {count} tracks. An XDJ-1000MK2 may freeze when it opens {categories}, because those categories have no precomputed list. In rekordbox, open Preferences › Category and set those four to Inactive. This check does not change rekordbox or a USB stick.",
     "gig.done": "Done",
     "gig.doneNotReady": "Not ready for the gig: {score}/100, checked {crate} at {time}",
     "gig.doneReady": "Ready for the gig: {score}/100, checked {crate} at {time}",
@@ -13451,6 +13452,8 @@ Error generating stack: ` + x.message + `
     "gig.streaming": "Streaming",
     "gig.streamingAction": "Review streaming tracks",
     "gig.streamingEmpty": "No streaming tracks.",
+    "gig.target.unknown": "Not chosen",
+    "gig.targetLabel": "Player for this gig",
     "gig.tagDiff": "{name}: {fields}",
     "gig.tagEmpty": "(empty)",
     "gig.tagField": "{field} {before} → {after}",
@@ -14746,6 +14749,7 @@ Error generating stack: ` + x.message + `
     "tooltip.gigRefresh": "Run the gig check again.",
     "tooltip.gigRevert": "Open the restore plan for the snapshot this check compared. Confirm stays off while Serato is running. Nothing is written until you confirm.",
     "tooltip.gigShowAll": "Show every item in this list.",
+    "tooltip.gigTarget": "Choose the player for this gig. A library of 10,000 tracks or more warns only for the XDJ-1000MK2. Nothing is written.",
     "tooltip.gigTonight": "Build Newest adds, Most played, and by-decade crates under _crateCraft generated / Tonight. Re-run replaces only that Tonight folder. Quit Serato first.",
     "tooltip.gridCell": "Select this row.",
     "tooltip.gridPagination": "Show the next or previous hundred tracks.",
@@ -16253,6 +16257,7 @@ Error generating stack: ` + x.message + `
     "gig.cratesEdited": "Cajas editadas",
     "gig.cratesRemoved": "Cajas eliminadas",
     "gig.cuesEdited": "Cues editados",
+    "gig.deckFreeze": "Esta biblioteca tiene {count} pistas. Un XDJ-1000MK2 puede congelarse al abrir {categories}, porque esas categorías no tienen una lista ya calculada. En rekordbox, abre Preferencias › Categoría y pon esas cuatro en Inactivo. Esta comprobación no cambia rekordbox ni un USB.",
     "gig.done": "Listo",
     "gig.doneNotReady": "No listo para el bolo: {score}/100, se comprobó {crate} a las {time}",
     "gig.doneReady": "Listo para el bolo: {score}/100, se comprobó {crate} a las {time}",
@@ -16291,6 +16296,8 @@ Error generating stack: ` + x.message + `
     "gig.streaming": "Streaming",
     "gig.streamingAction": "Revisar pistas en streaming",
     "gig.streamingEmpty": "No hay pistas en streaming.",
+    "gig.target.unknown": "Sin elegir",
+    "gig.targetLabel": "Reproductor para este bolo",
     "gig.tagDiff": "{name}: {fields}",
     "gig.tagEmpty": "(vacío)",
     "gig.tagField": "{field} {before} → {after}",
@@ -17586,6 +17593,7 @@ Error generating stack: ` + x.message + `
     "tooltip.gigRefresh": "Vuelve a hacer la comprobación del bolo.",
     "tooltip.gigRevert": "Abre el plan de restauración de la instantánea que comparó esta comprobación. Confirmar queda desactivado mientras Serato está abierto. No se escribe nada hasta que confirmes.",
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
+    "tooltip.gigTarget": "Elige el reproductor de este bolo. Una biblioteca de 10.000 pistas o más avisa solo para el XDJ-1000MK2. No se escribe nada.",
     "tooltip.gigTonight": "Crea cajas de Añadidos recientes, Más reproducidas y por década bajo _crateCraft generated / Tonight. Al repetirlo solo se sustituye esa carpeta Tonight. Cierra Serato primero.",
     "tooltip.gridCell": "Selecciona esta fila.",
     "tooltip.gridPagination": "Muestra las cien pistas siguientes o anteriores.",
@@ -19482,6 +19490,7 @@ Error generating stack: ` + x.message + `
     tagsSpelling: spec("tooltip.tagsSpelling"),
     tagsWriteFiles: spec("tooltip.tagsWriteFiles"),
     gigRefresh: spec("tooltip.gigRefresh"),
+    gigTarget: spec("tooltip.gigTarget"),
     gigTonight: spec("tooltip.gigTonight"),
     scanQuick: spec("tooltip.scanQuick"),
     scanFull: spec("tooltip.scanFull"),
@@ -19658,6 +19667,7 @@ Error generating stack: ` + x.message + `
       "operations-list": tips.operationsList,
       "snapshots-refresh": tips.snapshotsRefresh,
       "gig-refresh": tips.gigRefresh,
+      "gig-target": tips.gigTarget,
       "tonight-build": tips.gigTonight,
       "drift-refresh": tips.driftRefresh,
       "cloud-refresh": tips.cloudRefresh,
@@ -73211,7 +73221,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   function GigReport() {
     let { gig } = useGig(), payload = gig.report;
     if (!payload) return null;
-    let done = gig.stepIndex >= GIG_STEP_COUNT, step = done ? null : GIG_STEPS[gig.stepIndex], verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady"), crate = payload.scope?.crate_name || t("gig.wholeSpaceInline"), time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "", holding = (payload.holding_it_back || []).map((item) => item.summary), lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [];
+    let done = gig.stepIndex >= GIG_STEP_COUNT, step = done ? null : GIG_STEPS[gig.stepIndex], verdictWord = t(payload.ready ? "gig.wordReady" : "gig.wordNotReady"), crate = payload.scope?.crate_name || t("gig.wholeSpaceInline"), time = gig.checkedAt ? formatDate(gig.checkedAt, { hour: "numeric", minute: "2-digit" }) : "", holding = (payload.holding_it_back || []).map((item) => item.summary), lines = step && gig.stepIndex < GIG_STEP_COUNT - 1 ? gigLinesFor(payload, gig.stepIndex) : [], freeze = payload.deck_freeze, freezeText = freeze ? t("gig.deckFreeze", {
+      count: freeze.track_count,
+      categories: freeze.categories.join(", ")
+    }) : "";
     return /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)(import_jsx_runtime279.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)(
         "p",
@@ -73224,6 +73237,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           ]
         }
       ),
+      freezeText ? /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("p", { id: "gig-deck-freeze", className: "gig-note", role: "status", children: freezeText }) : null,
       done ? /* @__PURE__ */ (0, import_jsx_runtime279.jsxs)(import_jsx_runtime279.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),
         /* @__PURE__ */ (0, import_jsx_runtime279.jsx)("div", { id: "gig-ready-art", className: "gig-art-slot", "data-slot": "gig-ready", "aria-hidden": "true" }),
@@ -73351,6 +73365,8 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     let panel = el("gig-panel");
     panel.dataset.gigWired !== "true" && (panel.dataset.gigWired = "true", el("gig-refresh").addEventListener("click", () => {
       loadGigCheck(!0);
+    }), el("gig-target").addEventListener("change", () => {
+      loadGigCheck(!0);
     }), el("tonight-build").addEventListener("click", () => {
       buildTonightCrates();
     }), mountIsland(el("gig-report"), (0, import_react67.createElement)(GigReport)));
@@ -73358,10 +73374,10 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
   async function loadGigCheck(keepStep = !1) {
     let token4 = ++state.gigToken;
     keepStep || (stepIndex = 0), beginBusy10();
-    let settle = "none", crate = state.activeCrate === "all" ? "all" : String(state.activeCrate);
+    let settle = "none", crate = state.activeCrate === "all" ? "all" : String(state.activeCrate), target = el("gig-target").value || "unknown";
     try {
       let response = await fetch(
-        `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}`
+        `/api/gig-check?space=${encodeURIComponent(state.space)}&crate=${encodeURIComponent(crate)}&target=${encodeURIComponent(target)}`
       );
       if (token4 !== state.gigToken) return;
       let payload = await readJSON(response).catch(() => null);
