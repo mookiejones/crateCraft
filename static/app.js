@@ -13476,6 +13476,27 @@ Error generating stack: ` + x.message + `
     "gig.tonightConfirm": "Create {count} crates under {folder} / {tonight}? Re-running replaces only that Tonight folder. Quit Serato first.",
     "gig.tonightEmpty": "No tracks fit tonight crates.",
     "gig.tonightWritten": "Tonight crates ready under {folder} / {tonight} ({count} crates).",
+    "gig.updateSafety": "Safe to update?",
+    "gig.updateYes": "Yes. This Serato, this system, and the connected hardware are cleared.",
+    "gig.updateNotCleared": "Not cleared. Do not update before the gig.",
+    "gig.updateUnknown": "Unknown. This check cannot say this combo is safe.",
+    "gig.updateCombo": "Serato {serato} on {os}. Hardware: {hardware}.",
+    "gig.updateValueUnknown": "unknown",
+    "gig.updateNoHardware": "none listed",
+    "gig.updateFresh": "{product} {version} came out in the last 7 days. Wait until after the gig.",
+    "gig.updateFreshGeneric": "A Serato or system update came out in the last 7 days. Wait until after the gig.",
+    "gig.updateReason.seratoBelowOs": "macOS {os} needs Serato DJ Pro or Lite {need} or newer. This install is {installed}.",
+    "gig.updateReason.hardwareInTesting": "{name} is still in testing. It is not cleared.",
+    "gig.updateReason.hardwareUnsupported": "{name} is not supported on this system. It is not cleared.",
+    "gig.updateReason.hardwareUnknown": "{name} is not on the cleared list.",
+    "gig.updateReason.hardwareMissing": "No connected hardware was listed, so this check cannot say the combo is safe.",
+    "gig.updateReason.seratoUnknown": "The Serato version could not be read.",
+    "gig.updateReason.osUnknown": "The system version could not be read.",
+    "gig.updateReason.noOsRule": "This check has no cleared list for {os}.",
+    "gig.updateReason.fetchFailed": "The version list could not be read. Nothing was updated.",
+    "gig.updateDownloads": "Serato downloads",
+    "gig.updateSupport": "macOS 27 hardware note",
+    "gig.updateLexicon": "Lexicon DJ software updates",
     "gigLock.apply": "Apply queued writes",
     "gigLock.conflict": "Kept both: {layer}",
     "gigLock.count": "{count} queued",
@@ -14762,6 +14783,9 @@ Error generating stack: ` + x.message + `
     "tooltip.gigShowAll": "Show every item in this list.",
     "tooltip.gigTarget": "Choose the player for this gig. A library of 10,000 tracks or more warns only for the XDJ-1000MK2. Nothing is written.",
     "tooltip.gigTonight": "Build Newest adds, Most played, and by-decade crates under _crateCraft generated / Tonight. Re-run replaces only that Tonight folder. Quit Serato first.",
+    "tooltip.gigUpdateDownloads": "Open Serato's download page. crateCraft does not download or install Serato.",
+    "tooltip.gigUpdateSupport": "Open Serato's note on macOS 27 and Serato DJ Pro or Lite 5.1.0. crateCraft does not change the system.",
+    "tooltip.gigUpdateLexicon": "Open Lexicon's DJ software updates page. crateCraft does not read that page.",
     "tooltip.gridCell": "Select this row.",
     "tooltip.gridPagination": "Show the next or previous hundred tracks.",
     "tooltip.healthArtCancel": "Close the album art dialog without writing. Esc.",
@@ -16319,6 +16343,27 @@ Error generating stack: ` + x.message + `
     "gig.tonightConfirm": "¿Crear {count} cajas bajo {folder} / {tonight}? Al repetirlo solo se sustituye esa carpeta Tonight. Cierra Serato primero.",
     "gig.tonightEmpty": "Ninguna pista encaja en las cajas de esta noche.",
     "gig.tonightWritten": "Cajas de esta noche listas bajo {folder} / {tonight} ({count} cajas).",
+    "gig.updateSafety": "¿Seguro actualizar?",
+    "gig.updateYes": "Sí. Esta versión de Serato, este sistema y el hardware conectado están aprobados.",
+    "gig.updateNotCleared": "No aprobado. No actualices antes del bolo.",
+    "gig.updateUnknown": "Desconocido. Esta comprobación no puede decir que esta combinación es segura.",
+    "gig.updateCombo": "Serato {serato} en {os}. Hardware: {hardware}.",
+    "gig.updateValueUnknown": "desconocido",
+    "gig.updateNoHardware": "ninguno en la lista",
+    "gig.updateFresh": "{product} {version} salió en los últimos 7 días. Espera a después del bolo.",
+    "gig.updateFreshGeneric": "Una actualización de Serato o del sistema salió en los últimos 7 días. Espera a después del bolo.",
+    "gig.updateReason.seratoBelowOs": "macOS {os} necesita Serato DJ Pro o Lite {need} o más nuevo. Esta instalación es {installed}.",
+    "gig.updateReason.hardwareInTesting": "{name} sigue en pruebas. No está aprobado.",
+    "gig.updateReason.hardwareUnsupported": "{name} no es compatible con este sistema. No está aprobado.",
+    "gig.updateReason.hardwareUnknown": "{name} no está en la lista aprobada.",
+    "gig.updateReason.hardwareMissing": "No hay hardware conectado en la lista, así que esta comprobación no puede decir que la combinación es segura.",
+    "gig.updateReason.seratoUnknown": "No se pudo leer la versión de Serato.",
+    "gig.updateReason.osUnknown": "No se pudo leer la versión del sistema.",
+    "gig.updateReason.noOsRule": "Esta comprobación no tiene una lista aprobada para {os}.",
+    "gig.updateReason.fetchFailed": "No se pudo leer la lista de versiones. No se actualizó nada.",
+    "gig.updateDownloads": "Descargas de Serato",
+    "gig.updateSupport": "Nota de hardware de macOS 27",
+    "gig.updateLexicon": "Actualizaciones de software DJ en Lexicon",
     "gigLock.apply": "Aplicar escrituras en cola",
     "gigLock.conflict": "Se conservaron ambas: {layer}",
     "gigLock.count": "{count} en cola",
@@ -17605,6 +17650,9 @@ Error generating stack: ` + x.message + `
     "tooltip.gigShowAll": "Muestra todos los elementos de esta lista.",
     "tooltip.gigTarget": "Elige el reproductor de este bolo. Una biblioteca de 10.000 pistas o más avisa solo para el XDJ-1000MK2. No se escribe nada.",
     "tooltip.gigTonight": "Crea cajas de Añadidos recientes, Más reproducidas y por década bajo _crateCraft generated / Tonight. Al repetirlo solo se sustituye esa carpeta Tonight. Cierra Serato primero.",
+    "tooltip.gigUpdateDownloads": "Abre la página de descargas de Serato. crateCraft no descarga ni instala Serato.",
+    "tooltip.gigUpdateSupport": "Abre la nota de Serato sobre macOS 27 y Serato DJ Pro o Lite 5.1.0. crateCraft no cambia el sistema.",
+    "tooltip.gigUpdateLexicon": "Abre la página de actualizaciones de software DJ de Lexicon. crateCraft no lee esa página.",
     "tooltip.gridCell": "Selecciona esta fila.",
     "tooltip.gridPagination": "Muestra las cien pistas siguientes o anteriores.",
     "tooltip.healthArtCancel": "Cierra el diálogo de carátula sin escribir. Esc.",
@@ -19040,6 +19088,9 @@ Error generating stack: ` + x.message + `
     gigRefresh: spec("tooltip.gigRefresh"),
     gigTarget: spec("tooltip.gigTarget"),
     gigTonight: spec("tooltip.gigTonight"),
+    gigUpdateDownloads: spec("tooltip.gigUpdateDownloads"),
+    gigUpdateSupport: spec("tooltip.gigUpdateSupport"),
+    gigUpdateLexicon: spec("tooltip.gigUpdateLexicon"),
     scanQuick: spec("tooltip.scanQuick"),
     scanFull: spec("tooltip.scanFull"),
     bitrateRefresh: spec("tooltip.bitrateRefresh"),
@@ -73184,6 +73235,45 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
     return payload.scope?.crate_name || t("gig.wholeSpace");
   }
 
+  // src/lib/gig/update-safety-view.ts
+  var SERATO_DOWNLOADS = "https://serato.com/dj/pro/downloads", MACOS_27_ARTICLE = "https://support.serato.com/hc/en-us/articles/18264025096975-macOS-27-Golden-Gate-supported-from-Serato-DJ-Pro-Lite-5-1-0-primary-hardware-compatibility", LEXICON_UPDATES = "https://www.lexicondj.com/dj-software-updates", VERDICT_LINE = {
+    yes: "gig.updateYes",
+    not_cleared: "gig.updateNotCleared",
+    unknown: "gig.updateUnknown"
+  }, REASON_KEY = {
+    serato_below_os: "gig.updateReason.seratoBelowOs",
+    hardware_in_testing: "gig.updateReason.hardwareInTesting",
+    hardware_unsupported: "gig.updateReason.hardwareUnsupported",
+    hardware_unknown: "gig.updateReason.hardwareUnknown",
+    hardware_missing: "gig.updateReason.hardwareMissing",
+    serato_unknown: "gig.updateReason.seratoUnknown",
+    os_unknown: "gig.updateReason.osUnknown",
+    no_os_rule: "gig.updateReason.noOsRule",
+    fetch_failed: "gig.updateReason.fetchFailed"
+  };
+  function updateSafetyView(safety) {
+    if (!safety) return null;
+    let verdict = safety.verdict === "yes" || safety.verdict === "not_cleared" ? safety.verdict : "unknown", reasons = (safety.reasons || []).map((item) => {
+      let key = REASON_KEY[item.code];
+      return key ? t(key, item.params) : item.summary;
+    }), releases = safety.releases || [], warnings = safety.new_release_within_7_days ? releases.length ? releases.map((release) => t("gig.updateFresh", {
+      product: release.label || release.product,
+      version: release.version
+    })) : [t("gig.updateFreshGeneric")] : [], hardware = (safety.hardware || []).map((name) => name.trim()).filter(Boolean).join(", ");
+    return {
+      verdict,
+      line: t(VERDICT_LINE[verdict] ?? "gig.updateUnknown"),
+      combo: t("gig.updateCombo", {
+        serato: safety.serato_version?.trim() || t("gig.updateValueUnknown"),
+        os: safety.os_label?.trim() || t("gig.updateValueUnknown"),
+        hardware: hardware || t("gig.updateNoHardware")
+      }),
+      reasons,
+      warnings,
+      hardRed: !1
+    };
+  }
+
   // src/pages/GigReport.tsx
   var import_jsx_runtime280 = __toESM(require_jsx_runtime(), 1);
   function tooltipRef7(spec2) {
@@ -73227,6 +73317,55 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
         }
       )
     ] });
+  }
+  function GigUpdate({ payload }) {
+    let view = updateSafetyView(payload.update_safety);
+    return view ? /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("section", { className: "gig-update", "aria-labelledby": "gig-update-heading", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { id: "gig-update-heading", className: "gig-kicker", children: t("gig.updateSafety") }),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+        "p",
+        {
+          className: view.verdict === "not_cleared" ? "gig-update-line not-cleared" : "gig-update-line",
+          role: "status",
+          children: view.line
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "gig-note", children: view.combo }),
+      view.reasons.length ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("ul", { children: view.reasons.map((reason, index) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("li", { children: reason }, `${index}:${reason}`)) }) : null,
+      view.warnings.map((warning, index) => /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { className: "gig-update-fresh", role: "status", children: warning }, `${index}:${warning}`)),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)("p", { className: "gig-update-links", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          "a",
+          {
+            href: SERATO_DOWNLOADS,
+            target: "_blank",
+            rel: "noreferrer noopener",
+            ref: tooltipRef7(tips.gigUpdateDownloads),
+            children: t("gig.updateDownloads")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          "a",
+          {
+            href: MACOS_27_ARTICLE,
+            target: "_blank",
+            rel: "noreferrer noopener",
+            ref: tooltipRef7(tips.gigUpdateSupport),
+            children: t("gig.updateSupport")
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(
+          "a",
+          {
+            href: LEXICON_UPDATES,
+            target: "_blank",
+            rel: "noreferrer noopener",
+            ref: tooltipRef7(tips.gigUpdateLexicon),
+            children: t("gig.updateLexicon")
+          }
+        )
+      ] })
+    ] }) : null;
   }
   function GigSince({ payload }) {
     let note = payload.snapshot_note?.trim() ?? "", changes = payload.changes, groups = GIG_CHANGE_GROUPS.map(([label, key]) => [
@@ -73272,6 +73411,7 @@ Pass \`onStylesheetError\` to the export to handle this yourself.`)
           ]
         }
       ),
+      /* @__PURE__ */ (0, import_jsx_runtime280.jsx)(GigUpdate, { payload }),
       freezeText ? /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("p", { id: "gig-deck-freeze", className: "gig-note", role: "status", children: freezeText }) : null,
       done ? /* @__PURE__ */ (0, import_jsx_runtime280.jsxs)(import_jsx_runtime280.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime280.jsx)("h3", { id: "gig-step-heading", tabIndex: -1, children: t("gig.done") }),

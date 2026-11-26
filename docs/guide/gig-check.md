@@ -11,6 +11,20 @@
 5. Read the score on each step. It shows the number out of 100, such as **72/100**, and **✓ Ready** or **✕ Not ready**. Color is not the only signal. **Ready** means the score is at least 70 and nothing below is a hard stop. **Not ready** means do not treat the crate as ready to play.
 6. The last screen says whether you are ready for the gig, the score, the crate, and the time of the check. **Check again** after you plug a drive back in or move a file. The report stays up while the new check runs. If the page cannot reach the library server, it says **Couldn't reach the library server. Check it's running, then press Check again**.
 
+## Safe to update?
+
+**Safe to update?** sits under the score on every step. It does not change the score. It does not update Serato, macOS, Windows, or firmware.
+
+**Yes** means this Serato version, this system, and the connected hardware are on the cleared list.
+
+**Not cleared** means do not update before the gig. macOS 27 needs Serato DJ Pro or Lite 5.1.0 or newer. Hardware Serato still marks as in testing is not cleared.
+
+**Unknown** means this check cannot say the combo is safe. Unknown does not turn **✕ Not ready** on by itself. When no connected hardware is listed, the answer stays Unknown.
+
+A line can also say a Serato or system release came out in the last 7 days. That warning can show even when the answer is Yes. Wait until after the gig.
+
+**Serato downloads**, **macOS 27 hardware note**, and **Lexicon DJ software updates** open those pages in the browser. crateCraft does not download Serato and does not read the Lexicon page.
+
 ## Older deck
 
 **Player** sits next to **Check again**. **Not chosen** is the default. That choice does not warn.
