@@ -2434,6 +2434,33 @@ dialog .settings-field select {
 
 .gig-verdict.not-ready { color: var(--missing); }
 
+.gig-update { margin: var(--space-3) 0 var(--space-2); }
+
+.gig-update-line { margin: var(--space-1) 0; }
+
+.gig-update-line.not-cleared { color: var(--missing); }
+
+.gig-update-fresh {
+  margin: var(--space-1) 0;
+  color: var(--color-warn-text);
+}
+
+.gig-update-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-2) 0;
+}
+
+.gig-update-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--space-6);
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .gig-kicker {
   margin: var(--space-4) 0 var(--space-1);
   font-size: var(--font-caption);

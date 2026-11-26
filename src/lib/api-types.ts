@@ -867,6 +867,32 @@ export interface CloudFilesReport {
   error?: string;
 }
 
+export interface GigUpdateReason {
+  code: string;
+  summary: string;
+  params?: Record<string, string>;
+}
+
+export interface GigUpdateRelease {
+  product: string;
+  label: string;
+  version: string;
+  published: string;
+}
+
+/** Safe-to-update verdict. Unknown does not hard-red the ready score. */
+export interface GigUpdateSafety {
+  verdict: string;
+  reasons?: GigUpdateReason[];
+  new_release_within_7_days: boolean;
+  releases?: GigUpdateRelease[];
+  serato_version?: string;
+  os_name?: string;
+  os_version?: string;
+  os_label?: string;
+  hardware?: string[];
+}
+
 /** Read-only XDJ-1000MK2 warning. Null when the check did not warn. */
 export interface DeckFreezeWarning {
   player: string;
@@ -894,6 +920,7 @@ export interface GigReport {
   changes?: GigChanges | null;
   scope?: { space: string; crate_id: number | null; crate_name: string | null };
   checked_at?: string;
+  update_safety?: GigUpdateSafety | null;
   error?: string;
 }
 
