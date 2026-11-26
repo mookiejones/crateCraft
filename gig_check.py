@@ -27,6 +27,7 @@ import cloud_files
 import gig_snapshots
 import library
 import snapshots
+import unplayable
 import update_safety
 from gig_snapshots import (
     ChangeReport,
@@ -41,10 +42,8 @@ from gig_snapshots import (
 )
 from tags import read_serato_tags
 from volumes import Mounts as _Mounts
-from volumes import Volume as _Volume
 from volumes import external_volume as _external_volume
 from volumes import location_path as _location_path
-from volumes import opens_for_read as _opens_for_read
 from volumes import path_candidates as _candidates
 
 # Apple Music is third_party_type 6.
@@ -111,12 +110,15 @@ class MissingFile:
         title: Track title.
         artist: Artist.
         crate: Crate the track was checked in.
+        reason: ``file missing`` for a gone file. ``no path`` and
+            ``unknown`` use the same row shape on their own lists.
     """
 
     path: str
     title: str
     artist: str
     crate: str
+    reason: str = unplayable.FILE_MISSING
 
 
 @dataclass(frozen=True, slots=True)
@@ -127,11 +129,13 @@ class UnavailableDrive:
         name: Drive name, once, such as ``GIGDRIVE`` or ``E:``.
         track_count: Tracks in scope that live on this drive.
         crates: Crate labels in scope that live on this drive.
+        reason: ``drive offline``. The drive is not a missing file.
     """
 
     name: str
     track_count: int
     crates: tuple[str, ...]
+    reason: str = unplayable.DRIVE_OFFLINE
 
 
 @dataclass(frozen=True, slots=True)
@@ -144,6 +148,7 @@ class StreamingTrack:
         title: Track title.
         artist: Artist.
         crate: Crate the track was checked in.
+        reason: ``streaming``. A streaming track is not a missing file.
     """
 
     service: str
@@ -151,6 +156,7 @@ class StreamingTrack:
     title: str
     artist: str
     crate: str
+    reason: str = unplayable.STREAMING
 
 
 @dataclass(frozen=True, slots=True)
@@ -211,6 +217,10 @@ class GigReport:
         unknown_tracks: Files this check could not prove are on this computer.
         cloud_locations: Serato or music folders that sit in a cloud folder.
         local_count: Tracks whose audio is on this computer.
+        no_path_tracks: Tracks with no stored path and no location URI.
+            They are not listed as missing files.
+        unchecked_tracks: Tracks the check could not run, for example a
+            permission error. They are not cloud-unknown and not missing.
         update_safety: Read-only Serato, OS, and hardware verdict. ``unknown``
             does not set ``hard_red``.
         deck_freeze: Warning for a large library on an XDJ-1000MK2, or None.
@@ -236,6 +246,8 @@ class GigReport:
     unknown_tracks: tuple[cloud_files.CloudTrack, ...] = ()
     cloud_locations: tuple[cloud_files.CloudLocation, ...] = ()
     local_count: int = 0
+    no_path_tracks: tuple[MissingFile, ...] = ()
+    unchecked_tracks: tuple[MissingFile, ...] = ()
     update_safety: update_safety.UpdateSafety | None = None
     deck_freeze: DeckFreezeWarning | None = None
 
@@ -311,6 +323,8 @@ class _Classified:
     unknown: tuple[cloud_files.CloudTrack, ...] = ()
     locations: tuple[cloud_files.CloudLocation, ...] = ()
     local_count: int = 0
+    no_path: tuple[MissingFile, ...] = ()
+    unchecked: tuple[MissingFile, ...] = ()
 
 
 def open_read_only(path: Path) -> sqlite3.Connection:
@@ -710,10 +724,11 @@ def _classify(library_rows: _Library, database: Path | None = None) -> _Classifi
             inside a cloud folder. None skips that warning.
 
     Returns:
-        The groups the score reads. Tracks on an absent drive are unavailable
-        and are not opened, so they cannot be counted as missing files.
-        A cloud placeholder and a file this check cannot prove is local are
-        not opened, so the check does not download them.
+        The groups the score reads. Reasons come from ``unplayable.unplayable_reason``
+        on this call. Tracks on an absent drive are unavailable and are not
+        opened, so they cannot be counted as missing files. A cloud placeholder
+        and a file this check cannot prove is local are not opened, so the
+        check does not download them. A track with no path is not a missing file.
     """
     mounts = _Mounts()
     roots = cloud_files.discover_roots()
@@ -721,6 +736,8 @@ def _classify(library_rows: _Library, database: Path | None = None) -> _Classifi
     crate_names = _asset_crates(library_rows)
     scope_name = library_rows.scope_crate
     missing: list[MissingFile] = []
+    no_path: list[MissingFile] = []
+    unchecked: list[MissingFile] = []
     streaming: list[StreamingTrack] = []
     cloud: list[cloud_files.CloudTrack] = []
     unknown: list[cloud_files.CloudTrack] = []
@@ -740,66 +757,51 @@ def _classify(library_rows: _Library, database: Path | None = None) -> _Classifi
 
     for asset in _scope_assets(library_rows):
         crate = scope_name or (crate_names.get(asset.asset_id) or ("",))[0]
-        service = _streaming_service(asset.third_party_type)
-        if service is not None:
+        location_uri = library_rows.locations.get(asset.location_id or -1, "")
+        outcome = unplayable.unplayable_reason(
+            asset.portable_id,
+            location_uri,
+            asset.third_party_type,
+            mounts=mounts,
+            roots=roots,
+        )
+        if outcome.reason == unplayable.STREAMING:
+            service = _streaming_service(asset.third_party_type) or "Apple Music"
             streaming.append(
                 StreamingTrack(service, asset.portable_id, asset.title, asset.artist, crate)
             )
             continue
-        location_uri = library_rows.locations.get(asset.location_id or -1, "")
-        location_volume = _external_volume(_location_path(location_uri)) if location_uri else None
-        path_volume = _external_volume(asset.portable_id) if Path(asset.portable_id).is_absolute() else None
-        absent: _Volume | None = None
-        if location_volume is not None and not mounts.mounted(location_volume):
-            absent = location_volume
-        if absent is None and path_volume is not None and not mounts.mounted(path_volume):
-            absent = path_volume
-        if absent is not None:
-            remember_drive(absent.name, crate, True)
+        if outcome.reason == unplayable.DRIVE_OFFLINE:
+            remember_drive(outcome.drive, crate, True)
             continue
-        external_root = None
-        if location_volume is not None and mounts.mounted(location_volume):
-            external_root = location_volume.root
-        elif path_volume is not None and mounts.mounted(path_volume):
-            external_root = path_volume.root
-        candidates = _candidates(asset.portable_id, external_root)
-        opened: Path | None = None
-        cloud_hit: tuple[Path, cloud_files.Availability] | None = None
-        unknown_hit: tuple[Path, cloud_files.Availability] | None = None
-        for candidate in candidates:
-            probe = cloud_files.probe_path(candidate)
-            provider = cloud_files.provider_for(str(candidate), roots)
-            availability = cloud_files.classify(probe, provider)
-            if availability.status == "cloud":
-                cloud_hit = (candidate, availability)
-                break
-            if availability.status == "unknown":
-                unknown_hit = (candidate, availability)
-                break
-            if availability.status != "local":
-                continue
-            if _opens_for_read(candidate):
-                opened = candidate
-                break
-        if opened is not None:
-            present[asset.asset_id] = str(opened)
-            seen_paths.append(str(opened))
-            local_count += 1
+        if outcome.reason == unplayable.NO_PATH:
+            no_path.append(MissingFile("", asset.title, asset.artist, crate, unplayable.NO_PATH))
             continue
-        if cloud_hit is not None:
-            path, availability = cloud_hit
-            cloud.append(_track_row(str(path), asset, crate, availability))
-            seen_paths.append(str(path))
+        availability = outcome.availability
+        if availability is not None and availability.status == "cloud":
+            cloud.append(_track_row(outcome.path, asset, crate, availability))
+            seen_paths.append(outcome.path)
             continue
-        if unknown_hit is not None:
-            path, availability = unknown_hit
-            unknown.append(_track_row(str(path), asset, crate, availability))
-            seen_paths.append(str(path))
+        if availability is not None and availability.status == "unknown":
+            unknown.append(_track_row(outcome.path, asset, crate, availability))
+            seen_paths.append(outcome.path)
             continue
-        reported = str(candidates[0]) if candidates else asset.portable_id
-        missing.append(MissingFile(reported, asset.title, asset.artist, crate))
-        if reported:
-            seen_paths.append(reported)
+        if outcome.reason == unplayable.UNKNOWN:
+            unchecked.append(
+                MissingFile(outcome.path, asset.title, asset.artist, crate, unplayable.UNKNOWN)
+            )
+            if outcome.path:
+                seen_paths.append(outcome.path)
+            continue
+        if outcome.reason == unplayable.FILE_MISSING:
+            missing.append(MissingFile(outcome.path, asset.title, asset.artist, crate))
+            if outcome.path:
+                seen_paths.append(outcome.path)
+            continue
+        present[asset.asset_id] = outcome.path
+        if outcome.path:
+            seen_paths.append(outcome.path)
+        local_count += 1
 
     for crate in library_rows.crates:
         if library_rows.scope_ids is not None and crate.crate_id not in library_rows.scope_ids:
@@ -836,6 +838,8 @@ def _classify(library_rows: _Library, database: Path | None = None) -> _Classifi
         tuple(sorted(unknown, key=lambda item: item.path)),
         locations,
         local_count,
+        tuple(sorted(no_path, key=lambda item: (item.title, item.path))),
+        tuple(sorted(unchecked, key=lambda item: item.path)),
     )
 
 
@@ -1411,6 +1415,17 @@ def _score(
                 f"Not ready: {_count(len(classified.missing), 'missing file')} {place}.",
             )
         )
+    if classified.no_path:
+        hard = True
+        points = min(MISSING_CAP, MISSING_POINTS * len(classified.no_path))
+        lines.append(
+            Deduction(
+                "no_path",
+                points,
+                True,
+                f"Not ready: {_count(len(classified.no_path), 'track')} {place} with no path.",
+            )
+        )
     if classified.cloud:
         hard = True
         lines.append(
@@ -1440,6 +1455,16 @@ def _score(
                 False,
                 f"{_count(len(classified.unknown), 'file')} {place} could not be checked. "
                 "They are not counted as on this computer.",
+            )
+        )
+    if classified.unchecked:
+        lines.append(
+            Deduction(
+                "unplayable_unknown",
+                min(UNKNOWN_CAP, UNKNOWN_POINTS * len(classified.unchecked)),
+                False,
+                f"{_count(len(classified.unchecked), 'track')} {place} could not be checked. "
+                "Nothing was changed.",
             )
         )
     music_locations = tuple(item for item in classified.locations if item.role == "music")
@@ -1661,6 +1686,8 @@ def run_gig_check(
         classified.unknown,
         classified.locations,
         classified.local_count,
+        classified.no_path,
+        classified.unchecked,
         safety,
         deck_freeze_warning(len(loaded.assets), target),
     )
@@ -1714,11 +1741,22 @@ def report_to_dict(report: GigReport) -> dict[str, object]:
             for line in report.holding_it_back
         ],
         "missing_files": [
-            {"path": item.path, "title": item.title, "artist": item.artist, "crate": item.crate}
+            {
+                "path": item.path,
+                "title": item.title,
+                "artist": item.artist,
+                "crate": item.crate,
+                "reason": item.reason,
+            }
             for item in report.missing_files
         ],
         "unavailable_drives": [
-            {"name": drive.name, "track_count": drive.track_count, "crates": list(drive.crates)}
+            {
+                "name": drive.name,
+                "track_count": drive.track_count,
+                "crates": list(drive.crates),
+                "reason": drive.reason,
+            }
             for drive in report.unavailable_drives
         ],
         "streaming_tracks": [
@@ -1728,8 +1766,29 @@ def report_to_dict(report: GigReport) -> dict[str, object]:
                 "title": item.title,
                 "artist": item.artist,
                 "crate": item.crate,
+                "reason": item.reason,
             }
             for item in report.streaming_tracks
+        ],
+        "no_path_tracks": [
+            {
+                "path": item.path,
+                "title": item.title,
+                "artist": item.artist,
+                "crate": item.crate,
+                "reason": item.reason,
+            }
+            for item in report.no_path_tracks
+        ],
+        "unchecked_tracks": [
+            {
+                "path": item.path,
+                "title": item.title,
+                "artist": item.artist,
+                "crate": item.crate,
+                "reason": item.reason,
+            }
+            for item in report.unchecked_tracks
         ],
         "empty_crates": [{"name": item.name, "warning": item.warning} for item in report.empty_crates],
         "cloud_files": [_cloud_track_dict(item) for item in report.cloud_tracks],
@@ -1983,10 +2042,14 @@ def format_report(report: GigReport) -> str:
     blocks.extend(
         _section(
             "Missing files",
-            [item.path for item in report.missing_files],
+            [f"{item.path} — {item.reason}" for item in report.missing_files],
         )
     )
     if report.missing_files:
+        blocks.append("")
+    no_path_lines = [f"{item.title or item.path} — {item.reason}" for item in report.no_path_tracks]
+    blocks.extend(_section("No path", no_path_lines))
+    if no_path_lines:
         blocks.append("")
     cloud_lines = [item.path for item in report.cloud_tracks]
     blocks.extend(_section("Cloud-only files", cloud_lines))
@@ -1994,6 +2057,7 @@ def format_report(report: GigReport) -> str:
         blocks.append(CLOUD_GUIDANCE)
         blocks.append("")
     unknown_lines = [f"{item.path} ({item.reason})" for item in report.unknown_tracks]
+    unknown_lines.extend(f"{item.path} ({item.reason})" for item in report.unchecked_tracks)
     blocks.extend(_section("Could not check", unknown_lines))
     if unknown_lines:
         blocks.append("")
@@ -2002,14 +2066,16 @@ def format_report(report: GigReport) -> str:
     if location_lines:
         blocks.append("")
     drive_lines = [
-        f"{drive.name}: {_count(drive.track_count, 'track')} unavailable"
+        f"{drive.name}: {_count(drive.track_count, 'track')} unavailable — {drive.reason}"
         for drive in report.unavailable_drives
     ]
     blocks.extend(_section("Unavailable drives", drive_lines))
     if drive_lines:
         blocks.append("")
     stream_lines = [
-        f"{item.service}: {item.title}" + (f" — {item.artist}" if item.artist else "")
+        f"{item.service}: {item.title}"
+        + (f" — {item.artist}" if item.artist else "")
+        + f" — {item.reason}"
         for item in report.streaming_tracks
     ]
     blocks.extend(_section("Streaming tracks", stream_lines))

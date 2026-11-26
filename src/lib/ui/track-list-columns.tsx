@@ -13,6 +13,8 @@ import { clockLabel, colorHex, dateLabel, lengthLabel, trackEnergy } from "../fo
 import { formatNumber, t, type MessageKey } from "../i18n";
 import { playerStrings } from "../player/player-strings";
 import { PlayButton } from "../../components/PlayButton";
+import { isUnplayableReason, unplayableLabel, unplayableTip } from "../tracks/unplayable-reason";
+import { tooltipRef } from "./tooltip";
 import { sortTip, tips, type TipSpec } from "./tooltip-strings";
 
 export type TrackColumnField =
@@ -103,13 +105,18 @@ function Cell({ text, numeric = false }: { text: string; numeric?: boolean }) {
  */
 export function TrackTitleCell({ track }: { track: Track }) {
   const hex = colorHex(track.color);
+  const reason = isUnplayableReason(track.unplayable_reason) ? track.unplayable_reason : null;
   return (
     <span className="cell">
       <span className="title-line">
         {hex ? <span className="swatch" style={{ background: hex }} /> : null}
         {track.emoji ? <span>{track.emoji}</span> : null}
         <span className="title">{track.name || t("track.untitled")}</span>
-        {track.offline ? (
+        {reason ? (
+          <span className="unplayable-word" tabIndex={0} ref={tooltipRef(unplayableTip(reason))}>
+            {unplayableLabel(reason)}
+          </span>
+        ) : track.offline ? (
           <span className="offline-word">{t("track.offlineBadge")}</span>
         ) : track.missing ? (
           <span className="missing-word">{t("track.missingBadge")}</span>

@@ -8,6 +8,7 @@
 import type { GigChanges, GigReport, GigTagDiff } from "../api-types";
 import { t, type MessageKey } from "../i18n";
 import { fileName } from "../snapshots/restore-view";
+import { isUnplayableReason, unplayableLabel, type UnplayableReason } from "../tracks/unplayable-reason";
 import { cloudLocationText } from "./cloud-files-view";
 
 export const GIG_STEP_COUNT = 6;
@@ -89,20 +90,44 @@ export function tagEditLines(changes: GigChanges | null | undefined): string[] {
  * @param index Step from 0 to 4.
  * @returns Display rows for that step.
  */
+function withReason(text: string, reason: string | undefined, fallback: UnplayableReason): string {
+  const code = isUnplayableReason(reason) ? reason : fallback;
+  return `${text} — ${unplayableLabel(code)}`;
+}
+
 export function gigLinesFor(payload: GigReport, index: number): string[] {
   if (index === 0) {
     return (payload.unavailable_drives || []).map((drive) =>
-      t("gig.driveUnavailable", { name: drive.name, count: drive.track_count }),
+      withReason(
+        t("gig.driveUnavailable", { name: drive.name, count: drive.track_count }),
+        drive.reason,
+        "drive offline",
+      ),
     );
   }
-  if (index === 1) return (payload.missing_files || []).map((item) => item.path);
+  if (index === 1) {
+    const missing = (payload.missing_files || []).map((item) =>
+      withReason(item.path, item.reason, "file missing"),
+    );
+    const noPath = (payload.no_path_tracks || []).map((item) =>
+      withReason(item.path || item.title, item.reason, "no path"),
+    );
+    return [...missing, ...noPath];
+  }
   if (index === 2) {
     const locations = (payload.cloud_locations || []).map((item) => cloudLocationText(item));
     const files = (payload.cloud_files || []).map((item) => item.path);
     const unknown = (payload.unknown_files || []).map((item) => t("gig.cloudUnknown", { path: item.path }));
-    return [...locations, ...files, ...unknown];
+    const unchecked = (payload.unchecked_tracks || []).map((item) =>
+      withReason(item.path || item.title, item.reason, "unknown"),
+    );
+    return [...locations, ...files, ...unknown, ...unchecked];
   }
-  if (index === 3) return (payload.streaming_tracks || []).map((item) => `${item.service}: ${item.title}`);
+  if (index === 3) {
+    return (payload.streaming_tracks || []).map((item) =>
+      withReason(`${item.service}: ${item.title}`, item.reason, "streaming"),
+    );
+  }
   if (index === 4) return (payload.empty_crates || []).map((item) => `${item.name} — ${item.warning}`);
   return [];
 }
