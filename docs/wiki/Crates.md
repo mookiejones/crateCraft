@@ -27,7 +27,7 @@ The space menu shows **Library**, **Video**, **Apple Music**, and **Prepare**. E
 
 **Find a crate** keeps a parent visible when a nested name matches. **Order** is Serato's own order. **Name** is alphabetical. **Added** is the date the crate was created. A long crate list scrolls inside that pane. Collapsing the navigation drawer leaves crate names in the main column.
 
-**New**, **Rename**, and **Delete** stay on the crate action row. A chip on that row names the live library and each complete snapshot. **Color**, **Preset**, **Tree**, **Sync folder**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list.
+**New**, **Rename**, and **Delete** stay on the crate action row. A chip on that row names the live library and each complete snapshot. **Color**, **Preset**, **Tree**, **Sync folder**, **Local copy**, and the rest sit under **More**. **Split**, **Save view**, and **Export** sit under **More** above the track list.
 
 Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Serato is open, a notice under the top bar says edits stay off.
 
@@ -40,10 +40,13 @@ Quit Serato DJ Pro before **New**, **Rename**, **Color**, or **Delete**. When Se
 | **Preset** | Choose Mixes with a key, BPM range, Not played lately, or Custom rules. Preview, then Create crate. When the rules fit, this is a live smart crate. Mixed AND/OR, play history, and a crate limit stay a copy crate whose name ends in ⟳. |
 | **Tree** | Choose BPM bands, Keys, Genres, or Genre families. Preview, then Create tree. Empty subcrates are not made. Optional **Only tracks in** limits to the selected crate. |
 | **Sync folder** | Type a folder path. Preview, then confirm. Library tracks whose files sit in that folder are added. Files that are not in the library stay skipped. Optional subcrates map each subfolder to a child crate. Optional full remove takes out members whose files left that crate's folder. |
+| **Local copy** | Preview, then **Make local copy**. The new crate holds only the local tracks. Streaming tracks stay in the original. The copy sits under `_crateCraft generated` / `Local copies`. A crate that is already local, all streaming, or already a generated copy is not written. |
 
 There is no drag and drop. This app does not move an existing crate to a new parent. **New** does not make a smart crate. **Preset** writes one when the rules fit what Serato stores. You can still make one in Serato, then edit the rules here.
 
 A smart crate shows **smart**. You cannot tick it in the track's crate list. Putting a crate inside it says **A smart crate cannot contain another crate.** Adding a track by hand says **Smart crates choose their tracks from rules.**
+
+**Local copy** under **More** makes a crate of the local tracks in the selected crate. Streaming tracks stay in the original. The copy is named with `local` under `_crateCraft generated` / `Local copies`. Quit Serato first. A re-run replaces only that copy.
 
 **Tonight crates** on **Ready** (under Gig) builds **Newest adds**, **Most played**, and by-decade crates under `_crateCraft generated` / `Tonight`. Quit Serato first. A re-run replaces only that Tonight folder. Crates you made yourself stay put.
 

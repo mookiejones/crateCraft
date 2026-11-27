@@ -7399,7 +7399,7 @@ def export_m3u(space: str, crate_id: int | None) -> str:
         crate_id: Crate to export. None exports every track in the space.
 
     Returns:
-        Playlist text ending in a newline. A track with no path is named in a comment and left out. A missing length is written as -1.
+        Playlist text ending in a newline. A streaming track is named in a comment and left out. A track with no path is named in a comment and left out. A missing length is written as -1.
 
     Raises:
         LibraryError: If the space is not allowed or the crate is not in that space.
@@ -7407,9 +7407,12 @@ def export_m3u(space: str, crate_id: int | None) -> str:
     if space not in ALLOWED_SPACES:
         raise LibraryError("That space is not available here.")
     with closing(read_conn()) as conn:
+        import local_mirrors
+
+        columns = local_mirrors.asset_columns(conn)
         rows = conn.execute(
-            """
-            SELECT a.id, a.name, a.artist, a.length_ms, a.portable_id, a.is_missing
+            f"""
+            SELECT {columns}
             FROM asset a
             JOIN space_asset sa ON sa.asset_id = a.id
             JOIN space s ON s.id = sa.space_id
@@ -7437,10 +7440,31 @@ def export_m3u(space: str, crate_id: int | None) -> str:
                     (crate_id,),
                 )
             ]
+        services: dict[int, str] = {}
+        for row in rows:
+            found = local_mirrors.service_of(row)
+            if found:
+                services[int(row["id"])] = found
+        by_id = {int(row["id"]): row for row in rows}
+        streaming_notes: list[str] = []
+        if member_ids is None:
+            for row in rows:
+                service = services.get(int(row["id"]))
+                if service:
+                    streaming_notes.append(local_mirrors.m3u_omit_line(row, service))
+        else:
+            for asset_id in member_ids:
+                service = services.get(asset_id)
+                source = by_id.get(asset_id)
+                if service and source is not None:
+                    streaming_notes.append(local_mirrors.m3u_omit_line(source, service))
+            member_ids = [asset_id for asset_id in member_ids if asset_id not in services]
+        rows = [row for row in rows if int(row["id"]) not in services]
     import path_forms
 
     rows = path_forms.rows_for_m3u(rows, member_ids)
     lines = ["#EXTM3U", f"#PLAYLIST:{title}"]
+    lines.extend(streaming_notes)
     for row in rows:
         artist = row["artist"] or ""
         name = row["name"] or "Untitled"

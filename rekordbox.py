@@ -573,6 +573,9 @@ def export_rekordbox(
             for crate in selected:
                 wanted.update(membership.get(crate, ()))
             tracks = [row for row in tracks if int(row["id"]) in wanted]
+        import local_mirrors
+
+        tracks, membership, streaming_names = local_mirrors.omit_streaming(tracks, membership)
         rule_blobs = _load_rule_blobs(
             conn,
             [
@@ -655,6 +658,7 @@ def export_rekordbox(
         deduped_names,
         trimmed_names,
         smart_lines,
+        streaming_names,
     )
 
 
@@ -1397,6 +1401,7 @@ def _loss_report(
     deduped_names: Sequence[str] = (),
     trimmed_names: Sequence[str] = (),
     smart_lines: Sequence[str] = (),
+    streaming_names: Sequence[str] = (),
 ) -> list[str]:
     """Build the lines that say what this export cannot carry into Rekordbox.
 
@@ -1415,6 +1420,7 @@ def _loss_report(
         trimmed_names: Memory cues left out by the memory-cue cap.
         smart_lines: Per-crate smart-rule lines. They follow the sentence
             that says smart-crate rules are not copied.
+        streaming_names: Streaming tracks left out of this export.
 
     Returns:
         One sentence per line. The import warning is always first.
@@ -1427,6 +1433,9 @@ def _loss_report(
     omitted = stats.get("omitted", 0)
     if omitted:
         lines.append(f"{omitted} tracks had no path and were left out.")
+    if streaming_names:
+        shown, extra = _name_list(streaming_names)
+        lines.append(f"{len(streaming_names)} streaming tracks were left out: {shown}{extra}.")
     missing = stats.get("missing_file", 0)
     if missing:
         lines.append(f"{missing} tracks were not on disk, so the path spelling was left as Serato stored it.")

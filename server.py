@@ -79,6 +79,7 @@ import tag_cleanup
 import tempo_drift
 import telemetry
 import tonight_crates
+import local_mirrors
 import reanalyze
 import update_check
 import version_info
@@ -2329,6 +2330,13 @@ class Handler(BaseHTTPRequestHandler):
                     )
                 )
                 return
+            if parsed.path == "/api/local-mirror":
+                space = require_space(query_text(query, "space"))
+                crate_id = crate_query(query_text(query, "crate", "") or "")
+                if crate_id is None:
+                    raise library.LibraryError("That request is not valid.")
+                self.send_json(local_mirrors.preview(Path(library.MASTER), space, crate_id))
+                return
             if parsed.path == "/api/export.rekordbox.xml":
                 space = require_space(query_text(query, "space"))
                 raw_crate = query_text(query, "crate", "all") or "all"
@@ -2546,6 +2554,7 @@ class Handler(BaseHTTPRequestHandler):
                     sticking = parsed.path == "/api/stick-cues"
                     history = parsed.path == "/api/history-stats"
                     tonight = parsed.path == "/api/tonight"
+                    local_mirror = parsed.path == "/api/local-mirror"
                     reanalyzing = parsed.path == "/api/reanalyze"
                     comparing = parsed.path == "/api/crate-compare"
                     mirroring = parsed.path == "/api/music-mirror"
@@ -2562,6 +2571,16 @@ class Handler(BaseHTTPRequestHandler):
                         or (history and payload.get("action") == "preview")
                         or (
                             tonight
+                            and (
+                                payload.get("action") == "preview"
+                                or (
+                                    payload.get("action") == "create"
+                                    and payload.get("confirm") is not True
+                                )
+                            )
+                        )
+                        or (
+                            local_mirror
                             and (
                                 payload.get("action") == "preview"
                                 or (
@@ -2746,6 +2765,16 @@ class Handler(BaseHTTPRequestHandler):
                         request = dict(payload)
                         request["space"] = require_space(optional_text(payload.get("space")))
                         result = tonight_crates.action(request)
+                        if (
+                            request.get("action") == "create"
+                            and request.get("confirm") is True
+                            and result.get("written")
+                        ):
+                            telemetry.capture(telemetry.EVENT_CRATE_CREATED)
+                    elif local_mirror:
+                        request = dict(payload)
+                        request["space"] = require_space(optional_text(payload.get("space")))
+                        result = local_mirrors.action(request)
                         if (
                             request.get("action") == "create"
                             and request.get("confirm") is True

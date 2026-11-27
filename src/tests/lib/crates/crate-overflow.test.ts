@@ -25,6 +25,7 @@ describe("crate overflow membership", () => {
       "crate-preset",
       "crate-tree",
       "crate-folder-sync",
+      "crate-local-mirror",
       "crate-rename-from-tags",
       "crate-refresh",
       "crate-queue-batch",
