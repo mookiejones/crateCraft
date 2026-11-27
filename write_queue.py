@@ -42,6 +42,7 @@ import snapshots
 import stored_gain
 import tag_cleanup
 import tonight_crates
+import local_mirrors
 
 STORE_NAME = "write-queue.json"
 UNDO_DAYS = 30
@@ -78,6 +79,7 @@ QUEUEABLE = frozenset(
         "/api/folder-sync",
         "/api/history-stats",
         "/api/tonight",
+        "/api/local-mirror",
         "/api/tag-clusters",
         "/api/lost-tags",
         "/api/broken-smart",
@@ -530,6 +532,8 @@ def _replay(path: str, payload: Mapping[str, object]) -> dict[str, object]:
         return history_stats.action(request)
     if path == "/api/tonight":
         return tonight_crates.action(request)
+    if path == "/api/local-mirror":
+        return local_mirrors.action(request)
     if path == "/api/tag-clusters":
         return tag_cleanup.action(request)
     if path == "/api/lost-tags":

@@ -12,6 +12,7 @@ export const CRATE_RAIL_OVERFLOW_IDS = [
   "crate-preset",
   "crate-tree",
   "crate-folder-sync",
+  "crate-local-mirror",
   "crate-rename-from-tags",
   "crate-refresh",
   "crate-queue-batch",
