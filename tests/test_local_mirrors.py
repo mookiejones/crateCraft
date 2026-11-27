@@ -372,8 +372,10 @@ class ExportTests(unittest.TestCase):
             self.assertEqual(_digest(temp.db), before)
             self.assertIn("# omitted, streaming (Apple Music): Apple - Cloud", text)
             self.assertEqual(text.count("#EXTINF:"), 1)
-            self.assertNotIn("stream:apple", text.split("#EXTINF:", 1)[-1])
-            self.assertIn("Music/local.mp3", text)
+            written = text.split("#EXTINF:", 1)[-1]
+            self.assertNotIn("stream:apple", written)
+            # Resolved paths use the platform separator. Windows is Music\local.mp3.
+            self.assertIn(str(Path("Music") / "local.mp3"), written)
             self.assertEqual(_members(crate_id), [local_id, 2])
 
     def test_m3u_space_comment_is_in_query_order(self) -> None:
